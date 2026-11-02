@@ -16,7 +16,11 @@ const width = +(process.env.VIEW_W || 1366), height = +(process.env.VIEW_H || 90
   const snap=async path=>{const {data}=await cdp.send('Page.captureScreenshot',{format:'png',fromSurface:true,captureBeyondViewport:false});fs.writeFileSync(path,Buffer.from(data,'base64'));};
   await page.goto(target,{waitUntil:'networkidle',timeout:60000});
   await page.waitForFunction(()=>!!window.__chainTycoon3d,{timeout:30000});
-  await page.waitForFunction(()=>!!window.__cryptoVisualV3&&window.__cryptoVisualV3.version==='v3.0-reference-composite'&&document.documentElement.dataset.visualPipeline==='v3',{timeout:30000});
+  await page.waitForFunction(()=>!!window.__cryptoVisualV3||window.__cryptoBoot?.stage==='failed'||document.body.dataset.bootError,{timeout:30000});
+  const boot=await page.evaluate(()=>({boot:window.__cryptoBoot||null,bodyError:document.body.dataset.bootError||null,visual:window.__cryptoVisualV3?.version||null}));
+  if(boot.boot?.stage==='failed'||boot.bodyError) throw new Error(`visual boot failed: ${JSON.stringify(boot)} | ${errors.join(' | ')}`);
+  if(!boot.visual) throw new Error(`visual v3 missing after boot: ${JSON.stringify(boot)} | ${errors.join(' | ')}`);
+  await page.waitForFunction(()=>window.__cryptoVisualV3.version==='v3.0-reference-composite'&&document.documentElement.dataset.visualPipeline==='v3',{timeout:10000});
   const visualDiag=await page.evaluate(()=>window.__cryptoVisualV3.diagnostics());
   if(!visualDiag?.keyArtLoaded) throw new Error(`key-art reference did not decode: ${JSON.stringify(visualDiag)}`);
   if(visualDiag.tokens!==4) throw new Error(`expected four live 3D token overlays: ${JSON.stringify(visualDiag)}`);
