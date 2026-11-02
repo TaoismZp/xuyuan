@@ -31,7 +31,7 @@ jobs:
       - name: Verify iPhone gameplay and render
         run: TARGET_URL='http://127.0.0.1:4173/crypto-tycoon/premium.html?test=1' SHOT_PREFIX=crypto-premium-mobile VIEW_W=390 VIEW_H=844 node tests/crypto-premium-e2e.js
       - name: Verify public delivery surface
-        run: TARGET_URL="https://cdn.jsdelivr.net/gh/TaoismZp/xuyuan@${{ github.sha }}/crypto-tycoon/premium.html?test=1" SHOT_PREFIX=crypto-premium-public VIEW_W=1366 VIEW_H=900 node tests/crypto-premium-e2e.js
+        run: TARGET_URL="https://html-preview.github.io/?url=https://github.com/TaoismZp/xuyuan/blob/${{ github.sha }}/crypto-tycoon/premium-live.html&test=1" SHOT_PREFIX=crypto-premium-public VIEW_W=1366 VIEW_H=900 node tests/crypto-premium-e2e.js
       - name: Upload visual QA evidence
         if: always()
         uses: actions/upload-artifact@v4
