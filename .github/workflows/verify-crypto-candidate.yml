@@ -1,10 +1,11 @@
 name: Supervise Crypto Tycoon Candidate
-# v7.5 construction-supervision trigger; controlling blueprint: crypto-tycoon/BUILD_BLUEPRINT_V3.md
+# v7.5 construction supervision; controlling blueprint: crypto-tycoon/BUILD_BLUEPRINT_V4.md
 
 on:
   push:
     branches: [main]
     paths:
+      - 'crypto-tycoon/BUILD_BLUEPRINT_V4.md'
       - 'crypto-tycoon/candidate-v1.js'
       - 'crypto-tycoon/candidate-v2.css'
       - 'crypto-tycoon/candidate-v2-augment.js'
@@ -31,6 +32,11 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+      - name: Verify controlling blueprint
+        run: |
+          test -f crypto-tycoon/BUILD_BLUEPRINT_V4.md
+          grep -q 'WISH_DELIVERY_V7.md.*v7.5' crypto-tycoon/BUILD_BLUEPRINT_V4.md
+          git hash-object crypto-tycoon/BUILD_BLUEPRINT_V4.md
       - name: Install CJK supervision fonts
         run: |
           sudo apt-get update -qq
@@ -60,6 +66,6 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: crypto-candidate-supervisor-evidence-v6-cjk
+          name: crypto-candidate-supervisor-evidence-v6-v75
           path: artifacts/*
           if-no-files-found: warn
