@@ -3,6 +3,17 @@ const fs = require('fs');
 const target = process.env.TARGET_URL;
 fs.mkdirSync('artifacts', { recursive: true });
 
+async function captureViewport(page, path) {
+  const client = await page.context().newCDPSession(page);
+  const shot = await client.send('Page.captureScreenshot', {
+    format: 'png',
+    fromSurface: true,
+    captureBeyondViewport: false
+  });
+  fs.writeFileSync(path, Buffer.from(shot.data, 'base64'));
+  await client.detach();
+}
+
 async function verifySurface(browser, viewport, prefix, doRoll = false) {
   const page = await browser.newPage({ viewport });
   const errors = [];
@@ -21,14 +32,14 @@ async function verifySurface(browser, viewport, prefix, doRoll = false) {
     }));
     throw new Error('boot timeout ' + JSON.stringify(diag) + ' console=' + errors.join(' | '));
   }
-  await page.screenshot({ path: `artifacts/${prefix}-intro.png`, fullPage: true });
+  await captureViewport(page, `artifacts/${prefix}-intro.png`);
   await page.getByRole('button', { name: '进入牌桌' }).click();
   await page.waitForFunction(() => JSON.parse(window.render_game_to_text()).players?.length === 4, { timeout: 15000 });
   const before = JSON.parse(await page.evaluate(() => window.render_game_to_text()));
   if (before.tiles !== 24 || before.players.length !== 4) throw new Error('bad public state ' + JSON.stringify(before));
   await page.waitForFunction(() => !document.querySelector('#roll').disabled, { timeout: 10000 });
   await page.waitForTimeout(1200);
-  await page.screenshot({ path: `artifacts/${prefix}-active.png`, fullPage: true });
+  await captureViewport(page, `artifacts/${prefix}-active.png`);
   if (doRoll) {
     await page.locator('#roll').click();
     await page.waitForFunction(() => {
@@ -36,7 +47,7 @@ async function verifySurface(browser, viewport, prefix, doRoll = false) {
       return s.players[0].pos !== 0 || document.querySelector('#modal.show');
     }, { timeout: 15000 });
     await page.waitForTimeout(700);
-    await page.screenshot({ path: `artifacts/${prefix}-after-roll.png`, fullPage: true });
+    await captureViewport(page, `artifacts/${prefix}-after-roll.png`);
   }
   await page.close();
 }
