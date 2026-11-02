@@ -1,0 +1,38 @@
+name: Supervise Crypto Tycoon Candidate
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'crypto-tycoon/candidate-v1.html'
+      - 'crypto-tycoon/candidate-v1.css'
+      - 'crypto-tycoon/candidate-v1.js'
+      - 'tests/crypto-candidate-visual.js'
+      - '.github/workflows/verify-crypto-candidate.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  visual-supervisor:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install Playwright Chromium
+        run: |
+          npm init -y
+          npm install --save-dev playwright
+          npx playwright install --with-deps chromium
+      - name: Capture real public candidate
+        run: TARGET_URL="https://taoismzp.github.io/xuyuan/crypto-tycoon/candidate-v1.html?test=1" node tests/crypto-candidate-visual.js
+      - name: Upload supervisor evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: crypto-candidate-supervisor-evidence
+          path: artifacts/*
+          if-no-files-found: warn
