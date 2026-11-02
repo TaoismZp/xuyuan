@@ -11,6 +11,7 @@ on:
       - 'crypto-tycoon/keyart-data.js'
       - 'crypto-tycoon/keyart-chunk-*.js'
       - 'tests/crypto-premium-e2e.js'
+      - 'tests/verify-crypto-keyart.mjs'
       - '.github/workflows/verify-crypto-premium.yml'
   workflow_dispatch:
 permissions:
@@ -23,6 +24,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+      - name: Verify key-art asset integrity first
+        run: node tests/verify-crypto-keyart.mjs
       - name: Install Playwright
         run: |
           npm init -y
