@@ -1,77 +1,115 @@
-# Crypto Tycoon — Asset Manifest v1
+# Crypto Tycoon — Asset Manifest v2
 
 ## Production Strategy
-The visual bottleneck is commercial 3D art fidelity, not game logic. Use a hybrid pipeline:
-1. Locked key-art reference for composition and perceptual target.
-2. Authored Three.js geometry for interactive hero objects, tokens, dice, landmarks, lights and VFX.
-3. Reference-derived 2.5D environment/backplate where full real-time reconstruction adds little interaction value but strongly improves perceptual match.
-4. Replace temporary procedural stand-ins only when they are visible in the reference camera and fail the silhouette/material bar.
+The production bottleneck is **commercial 3D art fidelity**, not rules, deployment or CI.
 
-## Hero Assets — must pass first
-| Asset | Role | Required look | Source |
-|---|---|---|---|
-| Central logo + crown | Main focal point | thick gold 3D lettering / plaque, warm rim, layered depth | Three.js text/sprite + extruded plaque |
-| Market globe / ticker stage | Center motion | cyan holographic globe + candlestick ring + gold pedestal | Three.js geometry + canvas textures |
-| Dice pair | Primary action prop | ivory/gold rounded dice, physical roll animation, contact shadow | Three.js rounded box approximation |
-| Human astronaut token | Player hero | collectible toy silhouette with helmet, backpack, gold base | procedural authored model |
-| Doge token | Bot hero | sunglasses dog collectible, chain/coin cue, red/gold base | procedural authored model |
-| NFT pixel token | Bot hero | pixel-head collectible, blue neon base | procedural authored model |
-| Bull token | Bot hero | bull collectible with horns/sunglasses, green base | procedural authored model |
+The rebuild uses a true real-time 3D pipeline. The previous `reference-derived 2.5D environment/backplate` strategy is revoked.
 
-## Signature Landmarks — at least 6 visible
-- Exchange tower with roof logo and market screen.
-- Bull-market sculpture with rising arrow.
-- Bear-market sculpture with falling arrow.
-- Halving rocket with plume/cloud base.
-- Whale with neon BTC badge.
-- NFT display / pixel portrait.
-- Mining rig cluster.
-- Staking vault / lock stack.
-- Airdrop parachute package.
-- Liquidation warning / broken platform.
+Priority order follows `threejs-aaa-graphics-builder`:
+
+**authored forms → materials → lighting → effects**
+
+Reference pixels are not allowed in the runtime.
+
+## Hero Assets — Vertical Slice must prove these first
+| Asset | Role | Required look | Production source | Reject if |
+|---|---|---|---|---|
+| Central title/crown monument | Main focal point | layered gold monument, crown, crypto medallion, physical depth | authored Three.js geometry + vector/canvas text texture only for lettering | looks like flat UI plaque |
+| Market globe/ticker stage | Center motion | glass cyan globe, candlestick halo, pedestal, emissive rings | authored Three.js geometry + shader/canvas data texture | just a glowing sphere |
+| Dice pair | Primary action prop | bevelled ivory/gold dice, recessed pips, physical roll | authored rounded geometry | raw cubes |
+| Astronaut token | Player hero | collectible toy astronaut, helmet/visor/backpack/base | authored multi-part 3D model; generated/imported GLB preferred if capability available | reads as capsules/spheres |
+| Doge token | Bot hero | stylized dog collectible, glasses/chain/base | authored multi-part model or imported/generated GLB | needs label to read as dog |
+| NFT token | Bot hero | pixel/cyber collectible, strong head silhouette | authored model or imported/generated GLB | generic box person |
+| Bull token | Bot hero | muscular toy bull, horns, glasses/base | authored model or imported/generated GLB | sphere + cone horns |
+
+## Signature Landmarks — minimum 8 authored hero props
+1. Exchange tower with layered roof crown and live market facade.
+2. Bull-market sculpture with upward chart motif.
+3. Bear-market sculpture with downward chart motif.
+4. Halving rocket with engine/plume gantry.
+5. Whale sculpture with BTC medallion and water/light base.
+6. Mining rig cluster with fans/frames/cables/light strips.
+7. Staking vault with lock, coin stack and yield hologram.
+8. NFT gallery / pixel portrait kiosk.
+9. Airdrop parachute crate.
+10. Liquidation hazard platform / warning beacon.
+
+At least 6 must be visible in the reference camera; at least 8 must exist before full-board expansion.
+
+## Board Kit
+- thick square-loop board base with rounded corners and layered trim;
+- 24 raised tile plinths with chamfer/bevel profile;
+- gold edge rail + cyan under-lighting;
+- per-tile category icon plate;
+- ownership ring / level pylons;
+- physical corner structures, not blank corners;
+- central recessed stage with 2–3 elevation levels.
 
 ## Environment Kit
-- Neon crypto city skyline with 3 depth layers.
-- Financial chart billboard.
-- Floating BTC / ETH holograms.
-- Coin/chip stacks around board.
-- Event-card and market-card decks in foreground.
-- Edge rail lights and gold trim.
-- Small practical lamps / signs to remove dead zones.
+- three depth layers of authored skyline silhouettes;
+- rooftop antennas / billboards / chart panels;
+- coin/chip clusters in foreground and board edges;
+- holographic BTC / ETH / chart elements;
+- small practical lamps, rails, cables, vents and signs;
+- distant haze only after geometry exists.
+
+## Material Library
+- polished gold metal;
+- dark blue-black lacquer;
+- glossy enamel tile colors;
+- ivory resin/plastic;
+- tinted glass/cyan hologram;
+- matte toy resin;
+- dark brushed metal;
+- emissive cyan/magenta/red/green accents.
+
+Each material needs visible roughness/metalness separation. Emissive must never be the only detail source.
+
+## Lighting Rig
+- warm key from upper-left/front;
+- cyan rim from right/back;
+- violet ambient fill;
+- soft contact shadows under all hero assets;
+- practical emissive lights in environment;
+- tone mapping and bloom only after material/geometry review.
 
 ## UI Assets
-- 4 ranked player cards with portrait circles.
-- Round / objective panel.
-- Vertical utility buttons.
-- Oversized circular physical roll control.
-- Asset / event modal using same gold/navy toy-casino language.
+- compact 4-player leaderboard with portrait medallions;
+- round / objective plaque;
+- three contextual action chips;
+- oversized physical roll control visually anchored near the board;
+- modal cards with gold/navy toy-casino language;
+- tablet layout preserving the same 3D world.
 
 ## VFX
-- Dice roll: squash/ease + gold spark burst.
-- Movement: base glow pulse + short light trail.
-- Buy asset: coin burst + tile rim pulse.
-- Bull / bear: green or red board-wide sweep.
-- Airdrop: descending package + confetti.
-- Liquidation: red shock ring + camera micro-shake.
-- Halving: rocket plume + gold radial pulse.
+- dice roll sparks + contact bounce;
+- player move trail + landing pulse;
+- buy asset coin burst + ownership ring;
+- bull/bear green/red sweep;
+- airdrop descent + confetti;
+- liquidation shock ring + camera micro-shake;
+- halving rocket plume + gold radial pulse.
 
-## Rejection Rules
-Reject any asset if one of these is true in the main active camera:
-- reads as sphere/box/cone assembly before reading as the intended object;
-- needs a text label to explain what it is;
-- flat color/emissive replaces material authorship;
-- no contact with the world (floating/no shadow/no base);
-- detail disappears at thumbnail size because silhouette is generic;
-- occupies reference hero space but has no comparable visual weight.
+VFX is polish, not geometry replacement.
+
+## Performance Budget (iPad Safari target)
+Vertical slice target before optimization:
+- draw calls: target < 180, hard ceiling 260;
+- visible triangles: target < 350k, hard ceiling 600k;
+- texture memory: avoid large unique textures; prefer atlases/canvas textures;
+- pixel ratio capped around 1.5–1.75 on tablet;
+- shadows only for hero lights / critical objects;
+- repeated city/rail/coin props instanced.
 
 ## Vertical Slice Scope
-Before full production, only the following need to be finished to target quality:
-- central stage;
-- 8–10 front/right/upper visible tiles;
-- astronaut + Doge + NFT + bull tokens;
-- exchange, bull, whale, rocket, NFT, staking landmarks;
+Before full production, finish only:
+- full board base + 10–12 visible high-quality tiles;
+- central title/crown + market globe stage;
+- 4 player tokens;
+- exchange, bull, bear, whale, rocket, staking landmarks;
 - foreground dice + coin stacks;
-- skyline + chart screen;
-- real HUD.
+- 3-layer skyline + one chart billboard;
+- real HUD;
+- final camera / materials / lighting / tone mapping.
 
-If that active-play screenshot still feels like a different product class from the locked reference, do not expand the remaining board.
+If this active-play screenshot still feels like a different product class from the locked Reference Fixture, full board expansion is forbidden.
