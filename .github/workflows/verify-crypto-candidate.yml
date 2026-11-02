@@ -5,6 +5,7 @@ on:
   push:
     branches: [main]
     paths:
+      - 'wish-delivery/versions/v7.5.md'
       - 'crypto-tycoon/BUILD_BLUEPRINT_V4.md'
       - 'crypto-tycoon/candidate-v1.js'
       - 'crypto-tycoon/candidate-v2.css'
@@ -17,6 +18,8 @@ on:
       - 'crypto-tycoon/candidate-v5-augment.js'
       - 'crypto-tycoon/candidate-v6.html'
       - 'crypto-tycoon/candidate-v6-augment.js'
+      - 'crypto-tycoon/candidate-v7.html'
+      - 'crypto-tycoon/candidate-v7-augment.js'
       - 'tests/crypto-candidate-visual.js'
       - '.github/workflows/verify-crypto-candidate.yml'
   workflow_dispatch:
@@ -32,11 +35,14 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Verify controlling blueprint
+      - name: Verify controlling blueprint and protocol identity
         run: |
+          test -f wish-delivery/versions/v7.5.md
           test -f crypto-tycoon/BUILD_BLUEPRINT_V4.md
-          grep -q 'WISH_DELIVERY_V7.md.*v7.5' crypto-tycoon/BUILD_BLUEPRINT_V4.md
-          git hash-object crypto-tycoon/BUILD_BLUEPRINT_V4.md
+          grep -q 'wish-delivery/versions/v7.5.md' crypto-tycoon/BUILD_BLUEPRINT_V4.md
+          echo "PROTOCOL_SHA=$(git hash-object wish-delivery/versions/v7.5.md)"
+          echo "BLUEPRINT_SHA=$(git hash-object crypto-tycoon/BUILD_BLUEPRINT_V4.md)"
+          echo "CANDIDATE_COMMIT=$GITHUB_SHA"
       - name: Install CJK supervision fonts
         run: |
           sudo apt-get update -qq
@@ -51,21 +57,21 @@ jobs:
           python3 -m http.server 8080 >/tmp/crypto-candidate-http.log 2>&1 &
           echo $! > /tmp/crypto-candidate-http.pid
           for i in {1..30}; do
-            curl -fsS http://127.0.0.1:8080/crypto-tycoon/candidate-v6.html >/dev/null && exit 0
+            curl -fsS http://127.0.0.1:8080/crypto-tycoon/candidate-v7.html >/dev/null && exit 0
             sleep 1
           done
           cat /tmp/crypto-candidate-http.log
           exit 1
       - name: Capture same-commit vertical slice
         env:
-          TARGET_URL: http://127.0.0.1:8080/crypto-tycoon/candidate-v6.html?test=1
-          EXPECTED_VERSION: candidate-v6
+          TARGET_URL: http://127.0.0.1:8080/crypto-tycoon/candidate-v7.html?test=1
+          EXPECTED_VERSION: candidate-v7
           PW_CHANNEL: chrome
         run: node tests/crypto-candidate-visual.js
       - name: Upload supervisor evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: crypto-candidate-supervisor-evidence-v6-v75
+          name: crypto-candidate-supervisor-evidence-v7
           path: artifacts/*
           if-no-files-found: warn
