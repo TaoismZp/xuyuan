@@ -4,8 +4,7 @@
 
 ## 直接试玩
 
-- 推荐入口：https://raw.githack.com/TaoismZp/xuyuan/main/crypto-tycoon/index.html
-- 备用入口：https://html-preview.github.io/?url=https://github.com/TaoismZp/xuyuan/blob/main/crypto-tycoon/index.html
+- 推荐入口：https://html-preview.github.io/?url=https://github.com/TaoismZp/xuyuan/blob/main/crypto-tycoon/index.html
 
 ## 核心玩法
 
@@ -17,7 +16,7 @@
 - 市场每轮在牛 / 熊 / 狂热 / 恐慌 / 震荡间切换，改变资产估值和现金流；
 - Airdrop、Gas、Rug、Hack、ETF、清算、Halving 等特殊格与事件抉择；
 - 现金不足会自动折价卖资产；救不回来则爆仓出局；
-- 12 轮后按净值排名，或仅剩一人时提前结束；
+- 12 轮后按净值排名，或玩家爆仓时提前结算；
 - 自动保存，可断点续玩；
 - 结局会给出你的「链上人格」。
 
