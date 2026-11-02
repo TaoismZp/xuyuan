@@ -23,10 +23,16 @@ async function capture(browser, viewport, name) {
 
   await page.goto(target, { waitUntil:'networkidle', timeout:60000 });
   await page.waitForFunction(v => document.documentElement.dataset.sliceReady === '1' && !!window.__cryptoSliceReady && (!v || window.__cryptoSliceReady.version === v), expectedVersion, { timeout:45000 });
-  await page.waitForTimeout(900);
+  await page.waitForTimeout(1200);
 
-  // Playwright's page.screenshot can block while software WebGL keeps presenting frames.
-  // CDP captures the composed viewport surface directly and has proven stable for this project.
+  // Freeze only the CI browser after the final candidate has rendered. This is analogous to
+  // stopping motion for a construction inspection photo; it does not change production code.
+  await page.evaluate(() => {
+    window.__SUPERVISION_FREEZE__ = true;
+    window.requestAnimationFrame = () => 0;
+  });
+  await page.waitForTimeout(300);
+
   const cdp = await context.newCDPSession(page);
   const shot = await cdp.send('Page.captureScreenshot', {
     format:'png',
@@ -41,7 +47,8 @@ async function capture(browser, viewport, name) {
     viewport: { w: innerWidth, h: innerHeight },
     referenceImports: [...document.scripts].map(s=>s.src).filter(src=>/keyart|visual-v3/i.test(src)),
     referenceCss: getComputedStyle(document.body).backgroundImage,
-    sliceVersion: document.documentElement.dataset.sliceVersion
+    sliceVersion: document.documentElement.dataset.sliceVersion,
+    supervisionFreeze: !!window.__SUPERVISION_FREEZE__
   }));
 
   if(expectedVersion && state.ready.version !== expectedVersion) throw new Error(`wrong candidate version: ${state.ready.version} !== ${expectedVersion}`);
