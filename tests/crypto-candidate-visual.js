@@ -30,7 +30,9 @@ async function capture(browser, viewport, name) {
 }
 
 (async()=>{
-  const browser=await chromium.launch({headless:true,args:['--use-angle=swiftshader','--enable-webgl','--ignore-gpu-blocklist']});
+  const launch = { headless:true, args:['--use-angle=swiftshader','--enable-webgl','--ignore-gpu-blocklist'] };
+  if (process.env.PW_CHANNEL) launch.channel = process.env.PW_CHANNEL;
+  const browser=await chromium.launch(launch);
   await capture(browser,{width:1672,height:941},'candidate-desktop');
   await capture(browser,{width:1194,height:834},'candidate-ipad');
   await browser.close();
