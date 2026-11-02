@@ -24,12 +24,18 @@ FIN·TYPE 现在已经从“金融版 MBTI 问卷”升级为一局可玩的金�
 
 ## 自动回归
 
-仓库已加入 GitHub Actions 浏览器回归：每次更新会自动启动静态站，并用真实浏览器走完“开始 → 18 次决策 → 6 幕切换 → 结果页 → 重新开局”。
+仓库已加入 GitHub Actions 浏览器回归：每次更新会自动启动静态站，并用真实浏览器走完整核心闭环。
 
-当前最新回归：PASS。
+## 许愿式交付
+
+“许愿式交付”本身已作为独立、可版本化的系统规范存入本仓库：
+
+- 当前规范：[`wish-delivery/README.md`](./wish-delivery/README.md)
+- 版本历史：[`wish-delivery/CHANGELOG.md`](./wish-delivery/CHANGELOG.md)
+- 当前不可变版本：[`wish-delivery/versions/v7.1.md`](./wish-delivery/versions/v7.1.md)
+
+从 v7.1 起，每一次对“许愿式交付”的实质迭代，都必须先形成新的不可变版本文件并提交 GitHub，旧版本不覆盖。
 
 ## 源码
 
-`index.html` + `styles.css` + `data.js` + `app.js`
-
-GitHub Pages 仍需仓库首次手工启用，所以当前先使用无需额外配置的公开预览入口。
+当前主产品为单文件 `index.html`；历史拆分文件仍保留用于回溯。
