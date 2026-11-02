@@ -2,6 +2,17 @@
 
 > 说明：v1.0–v7.0 为根据实际项目事故与迭代过程整理出的历史脉络；从 v7.1 起，每次实质迭代都必须在 GitHub 产生不可变版本文件。
 
+## v7.2 — Compound Quality Reset
+**触发事故**：FIN·TYPE 已经能真实打开、完整运行、自动回归通过，但用户同时否定“美工”和“题目”两个一级质量维度。
+
+**新增硬规则**：
+- 两个或以上一级质量维度被否定时，禁止局部打补丁，必须回退到 Pre-Production；
+- 内容、玩法、视觉、结果、交付分别拥有独立否决权，任何一项 FAIL 都不能 Final；
+- 新增 Question Quality Contract：金融题必须 domain-native、无明显正确答案、低社会期许偏差、有真实 trade-off、构念相对纯净并通过对抗审查；
+- 新增 Visual Quality Contract：真实成熟产品做外部 benchmark，至少三个真正不同的视觉方向，生产者不能独占评价；
+- 新增 Pre-Build Benchmark Gate：先用代表性小样 head-to-head，证明新路线优于旧版，再扩到完整版；
+- 用户对已内部 PASS 的一级维度做整体否定，优先判定为 Evaluator Failure，而非普通偏好差异。
+
 ## v7.1 — Git Persistence
 **触发事故**：系统规则只存在于聊天/记忆中，长期项目容易出现“已经约定但无法恢复”的问题。
 
@@ -85,3 +96,5 @@
 - Producer-as-Judge
 - Process Leakage
 - Retry-as-Workflow
+- Delivery-Success-as-Product-Success
+- Multi-Dimension-Quality-Failure
