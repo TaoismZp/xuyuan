@@ -47,9 +47,12 @@ GitHub Actions 会在每次更新后：
 
 - 当前规范：[`wish-delivery/README.md`](./wish-delivery/README.md)
 - 版本历史：[`wish-delivery/CHANGELOG.md`](./wish-delivery/CHANGELOG.md)
-- 当前不可变版本：[`wish-delivery/versions/v7.2.md`](./wish-delivery/versions/v7.2.md)
+- 当前不可变版本：[`wish-delivery/versions/v7.4.md`](./wish-delivery/versions/v7.4.md)
+- 建房式交付模板：[`wish-delivery/templates/`](./wish-delivery/templates/)
 
 从 v7.1 起，每一次对“许愿式交付”的实质迭代都必须写入新的不可变版本并提交 GitHub，旧版本不覆盖。
+
+当前 v7.4 强制采用：**效果图 → 施工图 → 按图施工 → 独立监理 → 验收 → 交付**。复杂项目必须真实存在 Vision Fixture、Build Blueprint、Supervision Report、Acceptance Report 四件套；效果图只能作为验收裁判，禁止直接混入成品制造 Fake Convergence。
 
 ## 源码
 
