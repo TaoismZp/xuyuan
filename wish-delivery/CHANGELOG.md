@@ -2,6 +2,23 @@
 
 > 说明：v1.0–v7.0 为根据实际项目事故与迭代过程整理出的历史脉络；从 v7.1 起，每次实质迭代都必须在 GitHub 产生不可变版本文件。
 
+## v7.4 — Construction-Style Delivery
+**触发事故**：币圈大富翁在“功能真实、3D 真实、公网真实”之后，仍与参考效果图存在巨大感知差距；随后为了追求相似度，又出现把效果图本身作为背景层、再叠真实 3D 棋子和骰子的 Fake Convergence。与此同时，多次 CI / 部署 PASS 被错误地当成最终用户交付 PASS。
+
+**根因**：只有目标和验收，没有把中间的生产系统正式制度化；效果图没有被转译成施工图，施工者又长期兼任监理和验收者，因此容易一边施工一边改标准、一边自我打分。
+
+**新增硬规则**：
+- 正式采用“修房子”生产制度：**效果图 → 施工图 → 按图施工 → 独立监理 → 验收 → 交付**；
+- 新增 Mandatory Four-Pack：每个复杂项目必须真实存在 Vision Fixture、Build Blueprint、Supervision Report、Acceptance Report 四件套；
+- 新增 No Build Without Blueprint：没有施工图不得进入大规模施工；
+- 新增 Reference Non-Substitution：效果图只能当裁判，不能直接混入成品主体；
+- 新增 Fake Convergence：相似度提升若来自把参考答案本身放进成品，自动 FAIL；
+- 新增 Independent Supervision + Stop-Work：施工者不能成为唯一裁判，监理发现生产范式错误有权叫停并退回上游；
+- 新增 No-PASS-Substitution：功能、CI、部署、局部视觉、首屏任一单项 PASS 都不能替代总体验收；
+- 新增 Delivery-after-Acceptance：验收未通过不得宣布“完成”“交付”“可以用了”；
+- Visual Vertical Slice 必须在真实资产、真实材质、真实灯光和真实 UI 下证明“系统真的能制造目标世界”，再扩完整产品；
+- 把 Reference-as-Product、Fake Convergence、CI-as-Acceptance、Deployment-as-Delivery、Builder-as-Inspector、Build-Without-Blueprint、Progress-Without-Convergence 纳入永久失败样本。
+
 ## v7.3 — Reference Reality & Skill Proof
 **触发事故**：币圈大富翁已经可运行、可玩并做了所谓“3D 版”，但与先生成的目标效果图相比仍是“天壤之别”；同时复盘发现 Skill 只被写进记录，没有形成真实搜索、读取、筛选、实测、采用和影响施工的证据链。
 
@@ -113,3 +130,10 @@
 - Reference-Without-Contract
 - Skill-Record-Without-Skill-Use
 - CSS-Perspective-as-3D
+- Reference-as-Product
+- Fake-Convergence
+- CI-as-Acceptance
+- Deployment-as-Delivery
+- Builder-as-Inspector
+- Build-Without-Blueprint
+- Progress-Without-Convergence
