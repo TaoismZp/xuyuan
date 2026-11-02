@@ -25,19 +25,19 @@ const width = +(process.env.VIEW_W || 1366), height = +(process.env.VIEW_H || 90
   await snap(`artifacts/${shot}-board.png`);
   await page.waitForFunction(()=>{const b=document.querySelector('#roll');return !!(b&&!b.disabled)},{timeout:20000});
   await page.locator('#roll').click();
-  for(let guard=0;guard<80;guard++){
+  for(let guard=0;guard<300;guard++){
     const modal=page.locator('#modal.show');
     if(await modal.count()){
       const primary=modal.locator('button.primaryBtn');
       const any=modal.locator('button');
       if(await primary.count()) await primary.first().click(); else if(await any.count()) await any.first().click();
     }
-    const ready=await page.evaluate(()=>{const s=JSON.parse(window.render_game_to_text());const b=document.querySelector('#roll');return s.gameover||s.round>=2||!!(b&&!b.disabled)});
-    if(ready) break;
+    state=JSON.parse(await page.evaluate(()=>window.render_game_to_text()));
+    if(state.gameover||state.round>=2) break;
     await page.waitForTimeout(100);
   }
   state=JSON.parse(await page.evaluate(()=>window.render_game_to_text()));
-  if(state.round<2&&!state.gameover) throw new Error('one full four-player round did not complete');
+  if(state.round<2&&!state.gameover) throw new Error(`one full four-player round did not complete: ${JSON.stringify(state)}`);
   await snap(`artifacts/${shot}-active.png`);
   if(!state.gameover) await page.evaluate(()=>window.__chainTycoon3d.finish());
   await page.locator('#end.show').waitFor({state:'visible',timeout:5000});
