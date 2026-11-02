@@ -5,14 +5,15 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1"/>
 <meta name="theme-color" content="#071020"/>
 <title>币圈大富翁 3D｜Crypto Tycoon</title>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/TaoismZp/xuyuan@c19f0fc4500182210be84183581325da682b58ec/crypto-tycoon/premium.css"/>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/TaoismZp/xuyuan@c19f0fc4500182210be84183581325da682b58ec/crypto-tycoon/visual-v2.css"/>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/TaoismZp/xuyuan@c19f0fc4500182210be84183581325da682b58ec/crypto-tycoon/visual-v3.css"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/TaoismZp/xuyuan@e3828f36200565cb4541dc8801cd8deeb07db110/crypto-tycoon/premium.css"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/TaoismZp/xuyuan@e3828f36200565cb4541dc8801cd8deeb07db110/crypto-tycoon/visual-v3.css"/>
 </head>
 <body>
+<div id="keyArtLayer" aria-hidden="true"></div>
+<div id="keyArtShade" aria-hidden="true"></div>
 <canvas id="scene" aria-hidden="true"></canvas>
-<canvas id="heroScene" aria-label="币圈大富翁高保真三维棋盘"></canvas>
-<div id="keyartLayer" aria-hidden="true"></div>
+<canvas id="heroScene" aria-hidden="true"></canvas>
+<canvas id="overlayScene" aria-label="币圈大富翁动态三维棋子与骰子"></canvas>
 <div id="hud">
   <section id="leaderboard" class="glass" aria-label="玩家排行榜"></section>
   <section id="roundPanel" class="glass"></section>
@@ -27,14 +28,10 @@
 <div id="srStatus" class="sr-only" aria-live="polite"></div>
 <script>
 (async()=>{
-  const base='https://cdn.jsdelivr.net/gh/TaoismZp/xuyuan@c19f0fc4500182210be84183581325da682b58ec/crypto-tycoon/';
+  const base='https://cdn.jsdelivr.net/gh/TaoismZp/xuyuan@e3828f36200565cb4541dc8801cd8deeb07db110/crypto-tycoon/';
   try {
     await import(base+'premium.js');
-    await import(base+'visual-v2.js');
-    await import(base+'visual-v2-tune.js');
-    await import(base+'visual-v2-tune2.js');
-    await import(base+'visual-v3.js');
-    await import(base+'engine-throttle.js');
+    await import(base+'visual-v3-fixed.js');
   } catch (error) {
     console.error('Crypto Tycoon boot failed', error);
     document.body.dataset.bootError=String(error && (error.stack||error.message||error));
