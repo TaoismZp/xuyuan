@@ -7,11 +7,12 @@ const width = +(process.env.VIEW_W || 1366), height = +(process.env.VIEW_H || 90
   const browser=await chromium.launch({headless:true,args:['--use-angle=swiftshader','--enable-webgl']});
   const page=await browser.newPage({viewport:{width,height},deviceScaleFactor:1});
   page.setDefaultTimeout(30000);
+  const cdp=await page.context().newCDPSession(page);
   const errors=[];
   page.on('pageerror',e=>errors.push('page: '+String(e)));
   page.on('console',m=>{if(m.type()==='error')errors.push('console: '+m.text())});
   fs.mkdirSync('artifacts',{recursive:true});
-  const snap=path=>page.screenshot({path,fullPage:false,timeout:90000,animations:'disabled'});
+  const snap=async path=>{const {data}=await cdp.send('Page.captureScreenshot',{format:'png',fromSurface:true,captureBeyondViewport:false});fs.writeFileSync(path,Buffer.from(data,'base64'));};
   await page.goto(target,{waitUntil:'networkidle',timeout:60000});
   await page.waitForFunction(()=>!!window.__chainTycoon3d,{timeout:30000});
   await snap(`artifacts/${shot}-intro.png`);
