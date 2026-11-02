@@ -27,9 +27,9 @@ jobs:
           python3 -m http.server 4173 > /tmp/chain-tycoon-http.log 2>&1 &
           sleep 2
       - name: Verify local build
-        run: TARGET_URL='http://127.0.0.1:4173/crypto-tycoon/index.html?test=1' SHOT_PREFIX=crypto-local node tests/crypto-e2e.js
+        run: TARGET_URL='http://127.0.0.1:4173/crypto-tycoon/play.html?test=1' SHOT_PREFIX=crypto-local node tests/crypto-e2e.js
       - name: Verify public delivery surface
-        run: TARGET_URL="https://html-preview.github.io/?url=https://github.com/TaoismZp/xuyuan/blob/${{ github.sha }}/crypto-tycoon/index.html&test=1" SHOT_PREFIX=crypto-public node tests/crypto-e2e.js
+        run: TARGET_URL="https://html-preview.github.io/?url=https://github.com/TaoismZp/xuyuan/blob/${{ github.sha }}/crypto-tycoon/play.html&test=1" SHOT_PREFIX=crypto-public node tests/crypto-e2e.js
       - name: Upload visual QA evidence
         if: always()
         uses: actions/upload-artifact@v4
