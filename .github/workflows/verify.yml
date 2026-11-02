@@ -15,7 +15,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Verify 16-type reachability
+      - name: Verify 16-type code space
         run: node tests/types.js
       - name: Install Playwright
         run: |
@@ -26,5 +26,13 @@ jobs:
         run: |
           python3 -m http.server 4173 > /tmp/fintype-http.log 2>&1 &
           sleep 2
-      - name: Run browser + semantic regression
-        run: node tests/e2e.js
+      - name: Verify local build
+        run: TARGET_URL=http://127.0.0.1:4173 SHOT_PREFIX=local node tests/e2e.js
+      - name: Verify public delivery surface
+        run: TARGET_URL=https://raw.githack.com/TaoismZp/xuyuan/${{ github.sha }}/index.html SHOT_PREFIX=public node tests/e2e.js
+      - name: Upload visual QA evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fintype-visual-qa
+          path: artifacts/*.png
