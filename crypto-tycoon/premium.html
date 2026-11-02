@@ -6,9 +6,11 @@
 <meta name="theme-color" content="#071020"/>
 <title>币圈大富翁 3D｜Crypto Tycoon</title>
 <link rel="stylesheet" href="premium.css"/>
+<link rel="stylesheet" href="visual-v2.css"/>
 </head>
 <body>
-<canvas id="scene" aria-label="币圈大富翁三维棋盘"></canvas>
+<canvas id="scene" aria-hidden="true"></canvas>
+<canvas id="heroScene" aria-label="币圈大富翁高保真三维棋盘"></canvas>
 <div id="hud">
   <section id="leaderboard" class="glass" aria-label="玩家排行榜"></section>
   <section id="roundPanel" class="glass"></section>
@@ -35,6 +37,6 @@
 <div id="end" class="screen"><div class="endCard" id="endCard"></div></div>
 <div id="srStatus" class="sr-only" aria-live="polite"></div>
 <script type="module" src="premium.js"></script>
-<script type="module" src="premium-polish.js"></script>
+<script type="module" src="visual-v2.js"></script>
 </body>
 </html>
