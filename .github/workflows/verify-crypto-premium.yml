@@ -8,6 +8,7 @@ on:
       - 'crypto-tycoon/visual-v2.css'
       - 'crypto-tycoon/visual-v2.js'
       - 'crypto-tycoon/visual-v2-tune.js'
+      - 'crypto-tycoon/visual-v2-tune2.js'
       - 'crypto-tycoon/engine-throttle.js'
       - 'tests/crypto-premium-e2e.js'
       - '.github/workflows/verify-crypto-premium.yml'
