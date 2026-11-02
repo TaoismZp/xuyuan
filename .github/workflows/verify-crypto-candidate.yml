@@ -20,6 +20,8 @@ on:
       - 'crypto-tycoon/candidate-v6-augment.js'
       - 'crypto-tycoon/candidate-v7.html'
       - 'crypto-tycoon/candidate-v7-augment.js'
+      - 'crypto-tycoon/candidate-v7-bootstrap.js'
+      - 'crypto-tycoon/candidate-v7-audit.js'
       - 'tests/crypto-candidate-visual.js'
       - '.github/workflows/verify-crypto-candidate.yml'
   workflow_dispatch:
