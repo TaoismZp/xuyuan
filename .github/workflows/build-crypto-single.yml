@@ -1,0 +1,40 @@
+name: Build CHAIN TYCOON Single File
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'crypto-tycoon/index.html'
+      - 'crypto-tycoon/styles.css'
+      - 'crypto-tycoon/data.js'
+      - 'crypto-tycoon/game.js'
+      - 'crypto-tycoon/fix.js'
+      - '.github/workflows/build-crypto-single.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Build one-file delivery artifact
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          base=Path('crypto-tycoon')
+          css=(base/'styles.css').read_text()
+          data=(base/'data.js').read_text()
+          game=(base/'game.js').read_text()
+          fix=(base/'fix.js').read_text()
+          html=f'''<!doctype html>
+          <html lang="zh-CN"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/><meta name="theme-color" content="#090b10"/><title>CHAIN TYCOON｜链上大亨</title><style>{css}</style></head><body><div id="app"></div><script>{data}</script><script>{game}</script><script>{fix}</script></body></html>'''
+          (base/'play.html').write_text(html)
+          PY
+      - name: Commit built artifact
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add crypto-tycoon/play.html
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'Build CHAIN TYCOON single-file delivery artifact'
+          git push
