@@ -1,0 +1,26 @@
+name: Verify Crypto Tycoon Public Smoke
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'crypto-tycoon/premium-inline.html'
+      - 'tests/crypto-public-smoke.js'
+      - '.github/workflows/verify-crypto-public-smoke.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  public-smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install Playwright Chromium
+        run: |
+          npm init -y
+          npm install --save-dev playwright
+          npx playwright install --with-deps chromium
+      - name: Verify real public play entry
+        run: TARGET_URL="https://html-preview.github.io/?url=https://github.com/TaoismZp/xuyuan/blob/${{ github.sha }}/crypto-tycoon/premium-inline.html&test=1" node tests/crypto-public-smoke.js
