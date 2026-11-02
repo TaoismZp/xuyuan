@@ -29,7 +29,7 @@ jobs:
       - name: Verify local build
         run: TARGET_URL=http://127.0.0.1:4173 SHOT_PREFIX=local node tests/e2e.js
       - name: Verify public delivery surface
-        run: TARGET_URL=https://raw.githack.com/TaoismZp/xuyuan/${{ github.sha }}/index.html SHOT_PREFIX=public node tests/e2e.js
+        run: TARGET_URL="https://html-preview.github.io/?url=https://github.com/TaoismZp/xuyuan/blob/${{ github.sha }}/index.html" SHOT_PREFIX=public node tests/e2e.js
       - name: Upload visual QA evidence
         if: always()
         uses: actions/upload-artifact@v4
