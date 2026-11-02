@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1"/>
 <meta name="theme-color" content="#071020"/>
 <title>币圈大富翁 3D｜Crypto Tycoon</title>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/TaoismZp/xuyuan@e3828f36200565cb4541dc8801cd8deeb07db110/crypto-tycoon/premium.css"/>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/TaoismZp/xuyuan@e3828f36200565cb4541dc8801cd8deeb07db110/crypto-tycoon/visual-v3.css"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/TaoismZp/xuyuan@545b0020fc59fda1d914b21dbd9fd352f0534dec/crypto-tycoon/premium.css"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/TaoismZp/xuyuan@545b0020fc59fda1d914b21dbd9fd352f0534dec/crypto-tycoon/visual-v3.css"/>
 </head>
 <body>
 <div id="keyArtLayer" aria-hidden="true"></div>
@@ -28,13 +28,19 @@
 <div id="srStatus" class="sr-only" aria-live="polite"></div>
 <script>
 (async()=>{
-  const base='https://cdn.jsdelivr.net/gh/TaoismZp/xuyuan@e3828f36200565cb4541dc8801cd8deeb07db110/crypto-tycoon/';
+  window.__cryptoBoot={stage:'start',error:null};
+  const base='https://cdn.jsdelivr.net/gh/TaoismZp/xuyuan@545b0020fc59fda1d914b21dbd9fd352f0534dec/crypto-tycoon/';
   try {
+    window.__cryptoBoot.stage='engine';
     await import(base+'premium.js');
+    window.__cryptoBoot.stage='visual';
     await import(base+'visual-v3-fixed.js');
+    window.__cryptoBoot.stage='ready';
   } catch (error) {
+    window.__cryptoBoot.stage='failed';
+    window.__cryptoBoot.error=String(error && (error.stack||error.message||error));
     console.error('Crypto Tycoon boot failed', error);
-    document.body.dataset.bootError=String(error && (error.stack||error.message||error));
+    document.body.dataset.bootError=window.__cryptoBoot.error;
   }
 })();
 </script>
