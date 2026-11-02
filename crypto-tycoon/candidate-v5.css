@@ -1,0 +1,23 @@
+@import url('./candidate-v2.css');
+
+:root{color-scheme:dark}
+body{background:#081327}
+.vignette{background:radial-gradient(circle at 50% 42%,transparent 0 48%,rgba(1,5,18,.12) 68%,rgba(1,4,14,.48) 100%)}
+
+.leaderboard{left:16px;top:16px;width:300px;gap:7px;filter:drop-shadow(0 18px 28px rgba(0,0,0,.28))}
+.hud-title{width:max-content;padding:7px 16px;border:1px solid rgba(255,211,105,.72);border-radius:18px;background:linear-gradient(180deg,rgba(24,42,83,.96),rgba(10,22,50,.96));color:#ffe89b;box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 0 20px rgba(255,185,45,.14);letter-spacing:.12em}
+.player{min-height:54px;border-color:rgba(111,206,255,.38);background:linear-gradient(100deg,rgba(22,39,78,.95),rgba(11,23,53,.91));box-shadow:inset 0 1px 0 rgba(255,255,255,.055),0 8px 22px rgba(0,0,0,.22)}
+.player.me{border-color:rgba(255,208,93,.82);background:linear-gradient(100deg,rgba(64,49,21,.92),rgba(15,29,61,.94));box-shadow:0 0 24px rgba(255,190,44,.13),inset 0 1px 0 rgba(255,245,205,.1)}
+.player b{font-weight:950}.player strong{color:#ffe36f;text-shadow:0 0 12px rgba(255,196,46,.24)}
+
+.round-card{right:18px;top:16px;width:248px;border-color:rgba(126,216,255,.5);background:linear-gradient(180deg,rgba(17,33,72,.97),rgba(8,18,42,.96));box-shadow:0 12px 34px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.06)}
+.round-card small{color:#85eaff;letter-spacing:.12em}.round-card b{color:#fff7d2}.round-card p{background:linear-gradient(90deg,rgba(27,92,76,.68),rgba(10,35,48,.65));border:1px solid rgba(89,241,170,.15)}
+
+.actions{right:20px;top:53%;gap:10px}.actions button{min-width:94px;height:48px;border-color:rgba(255,208,98,.58);background:linear-gradient(180deg,rgba(24,43,83,.96),rgba(9,20,48,.96));box-shadow:0 8px 24px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.08)}
+.actions button span{color:#ffd86b}.actions button small{letter-spacing:.08em}
+
+.ticker{bottom:18px;min-height:48px;padding:0 24px;border-color:rgba(91,211,255,.34);background:linear-gradient(180deg,rgba(14,29,63,.92),rgba(7,16,38,.94));box-shadow:0 12px 32px rgba(0,0,0,.3)}
+.roll{right:26px;bottom:22px;width:184px;height:106px;border:2px solid #fff0bc;background:radial-gradient(circle at 42% 24%,#fff8d8 0,#ffe078 30%,#f6b83d 63%,#d88710 100%);box-shadow:0 0 0 7px rgba(255,190,42,.12),0 9px 0 #905714,0 0 34px rgba(255,191,51,.34),0 22px 45px rgba(0,0,0,.38);color:#3d2606}.roll b{font-weight:1000;letter-spacing:.04em}.roll small{color:#6b430c}.mini-die{filter:drop-shadow(0 2px 1px rgba(255,255,255,.45))}
+
+@media(max-width:1250px){.leaderboard{width:246px}.round-card{width:204px}.actions button{min-width:72px}.roll{width:150px;height:90px}.ticker{max-width:480px}}
+@media(max-width:800px){.leaderboard{left:8px;top:8px;width:196px}.hud-title{padding:5px 10px;font-size:9px}.player{min-height:39px}.round-card{right:8px;top:8px;width:150px}.actions{right:9px;bottom:104px;top:auto;flex-direction:row}.actions button{min-width:48px;width:48px;height:40px;padding:0}.actions button small{font-size:7px}.ticker{left:8px;right:118px;bottom:9px;width:auto;transform:none;min-height:46px;padding:0 10px;font-size:9px}.roll{right:9px;bottom:9px;width:102px;height:72px}}
