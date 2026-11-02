@@ -6,25 +6,27 @@ const width = +(process.env.VIEW_W || 1366), height = +(process.env.VIEW_H || 90
 (async()=>{
   const browser=await chromium.launch({headless:true,args:['--use-angle=swiftshader','--enable-webgl']});
   const page=await browser.newPage({viewport:{width,height},deviceScaleFactor:1});
+  page.setDefaultTimeout(30000);
   const errors=[];
   page.on('pageerror',e=>errors.push('page: '+String(e)));
   page.on('console',m=>{if(m.type()==='error')errors.push('console: '+m.text())});
   fs.mkdirSync('artifacts',{recursive:true});
+  const snap=path=>page.screenshot({path,fullPage:false,timeout:90000,animations:'disabled'});
   await page.goto(target,{waitUntil:'networkidle',timeout:60000});
   await page.waitForFunction(()=>!!window.__chainTycoon3d,{timeout:30000});
-  await page.screenshot({path:`artifacts/${shot}-intro.png`,fullPage:true});
+  await snap(`artifacts/${shot}-intro.png`);
   await page.getByRole('button',{name:'进入牌桌'}).click();
   await page.waitForFunction(()=>JSON.parse(window.render_game_to_text()).players?.length===4);
   let state=JSON.parse(await page.evaluate(()=>window.render_game_to_text()));
   if(state.tiles!==24) throw new Error(`expected 24 tiles, got ${state.tiles}`);
   if(state.players.length!==4) throw new Error('expected four players');
-  await page.waitForTimeout(800);
-  await page.screenshot({path:`artifacts/${shot}-board.png`,fullPage:true});
+  await page.waitForTimeout(900);
+  await snap(`artifacts/${shot}-board.png`);
   for(let turn=0;turn<3;turn++){
     await page.waitForFunction(()=>{const b=document.querySelector('#roll');const s=JSON.parse(window.render_game_to_text());return s.gameover||!!(b&&!b.disabled)},{timeout:20000});
     state=JSON.parse(await page.evaluate(()=>window.render_game_to_text())); if(state.gameover) break;
     await page.locator('#roll').click();
-    for(let guard=0;guard<50;guard++){
+    for(let guard=0;guard<60;guard++){
       const modal=page.locator('#modal.show');
       if(await modal.count()){
         const primary=modal.locator('button.primaryBtn');
@@ -38,10 +40,10 @@ const width = +(process.env.VIEW_W || 1366), height = +(process.env.VIEW_H || 90
   }
   state=JSON.parse(await page.evaluate(()=>window.render_game_to_text()));
   if(state.round<2&&!state.gameover) throw new Error('gameplay did not advance');
-  await page.screenshot({path:`artifacts/${shot}-active.png`,fullPage:true});
+  await snap(`artifacts/${shot}-active.png`);
   if(!state.gameover) await page.evaluate(()=>window.__chainTycoon3d.finish());
   await page.locator('#end.show').waitFor({state:'visible',timeout:5000});
-  await page.screenshot({path:`artifacts/${shot}-end.png`,fullPage:true});
+  await snap(`artifacts/${shot}-end.png`);
   const overflow=await page.evaluate(()=>Math.max(0,document.documentElement.scrollWidth-document.documentElement.clientWidth));
   if(overflow>2) throw new Error(`horizontal overflow ${overflow}`);
   const boardShot=fs.statSync(`artifacts/${shot}-board.png`).size;
