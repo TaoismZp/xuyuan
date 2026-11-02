@@ -6,31 +6,44 @@ fs.mkdirSync('artifacts', { recursive: true });
 
 async function capture(browser, viewport, name) {
   const context = await browser.newContext({ viewport, deviceScaleFactor: 1, reducedMotion:'reduce' });
-  // Supervision must inspect the same scene, not benchmark animation throughput.
-  // Limit requestAnimationFrame only inside the CI browser so software WebGL cannot starve screenshot capture.
+  // Keep the inspected scene intact but reduce CI animation pressure under software WebGL.
   await context.addInitScript(() => {
     const nativeRAF = window.requestAnimationFrame.bind(window);
     let last = 0;
     window.requestAnimationFrame = cb => nativeRAF(ts => {
-      const delay = Math.max(0, 125 - (ts - last));
+      const delay = Math.max(0, 150 - (ts - last));
       setTimeout(() => { last = performance.now(); cb(last); }, delay);
     });
   });
+
   const page = await context.newPage();
   const errors=[];
   page.on('pageerror', e => errors.push(String(e)));
   page.on('console', m => { if(m.type()==='error') errors.push(m.text()); });
+
   await page.goto(target, { waitUntil:'networkidle', timeout:60000 });
   await page.waitForFunction(v => document.documentElement.dataset.sliceReady === '1' && !!window.__cryptoSliceReady && (!v || window.__cryptoSliceReady.version === v), expectedVersion, { timeout:45000 });
-  await page.waitForTimeout(700);
-  await page.screenshot({ path:`artifacts/${name}.png`, fullPage:false, animations:'disabled', timeout:20000 });
+  await page.waitForTimeout(900);
+
+  // Playwright's page.screenshot can block while software WebGL keeps presenting frames.
+  // CDP captures the composed viewport surface directly and has proven stable for this project.
+  const cdp = await context.newCDPSession(page);
+  const shot = await cdp.send('Page.captureScreenshot', {
+    format:'png',
+    fromSurface:true,
+    captureBeyondViewport:false
+  });
+  fs.writeFileSync(`artifacts/${name}.png`, Buffer.from(shot.data,'base64'));
+
   const state = await page.evaluate(() => ({
     ready: window.__cryptoSliceReady,
     title: document.title,
     viewport: { w: innerWidth, h: innerHeight },
     referenceImports: [...document.scripts].map(s=>s.src).filter(src=>/keyart|visual-v3/i.test(src)),
-    referenceCss: getComputedStyle(document.body).backgroundImage
+    referenceCss: getComputedStyle(document.body).backgroundImage,
+    sliceVersion: document.documentElement.dataset.sliceVersion
   }));
+
   if(expectedVersion && state.ready.version !== expectedVersion) throw new Error(`wrong candidate version: ${state.ready.version} !== ${expectedVersion}`);
   if(state.referenceImports.length) throw new Error('reference substitution detected: '+JSON.stringify(state.referenceImports));
   if(!state.ready || state.ready.referencePixelsUsed !== false) throw new Error('candidate did not assert referencePixelsUsed=false');
@@ -46,5 +59,5 @@ async function capture(browser, viewport, name) {
   await capture(browser,{width:1672,height:941},'candidate-desktop');
   await capture(browser,{width:1194,height:834},'candidate-ipad');
   await browser.close();
-  console.log('PASS candidate true-3D capture',target,expectedVersion||'any-version');
+  console.log('PASS candidate exact-build true-3D evidence',target,expectedVersion||'any-version');
 })().catch(e=>{console.error(e);process.exit(1)});
