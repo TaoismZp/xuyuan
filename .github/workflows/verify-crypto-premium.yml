@@ -1,0 +1,40 @@
+name: Verify Crypto Tycoon Premium 3D
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'crypto-tycoon/premium.*'
+      - 'tests/crypto-premium-e2e.js'
+      - '.github/workflows/verify-crypto-premium.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  premium-3d:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install Playwright
+        run: |
+          npm init -y
+          npm install --save-dev playwright
+          npx playwright install --with-deps chromium
+      - name: Start static server
+        run: |
+          python3 -m http.server 4173 > /tmp/crypto-premium-http.log 2>&1 &
+          sleep 2
+      - name: Verify desktop gameplay and render
+        run: TARGET_URL='http://127.0.0.1:4173/crypto-tycoon/premium.html?test=1' SHOT_PREFIX=crypto-premium-desktop VIEW_W=1366 VIEW_H=900 node tests/crypto-premium-e2e.js
+      - name: Verify iPhone gameplay and render
+        run: TARGET_URL='http://127.0.0.1:4173/crypto-tycoon/premium.html?test=1' SHOT_PREFIX=crypto-premium-mobile VIEW_W=390 VIEW_H=844 node tests/crypto-premium-e2e.js
+      - name: Verify public delivery surface
+        run: TARGET_URL="https://raw.githack.com/TaoismZp/xuyuan/${{ github.sha }}/crypto-tycoon/premium.html?test=1" SHOT_PREFIX=crypto-premium-public VIEW_W=1366 VIEW_H=900 node tests/crypto-premium-e2e.js
+      - name: Upload visual QA evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: crypto-premium-visual-qa
+          path: artifacts/*.png
