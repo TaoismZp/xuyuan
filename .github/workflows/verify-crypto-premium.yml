@@ -7,6 +7,7 @@ on:
       - 'crypto-tycoon/premium-inline.html'
       - 'crypto-tycoon/visual-v3.css'
       - 'crypto-tycoon/visual-v3.js'
+      - 'crypto-tycoon/visual-v3-fixed.js'
       - 'crypto-tycoon/keyart-data.js'
       - 'tests/crypto-premium-e2e.js'
       - '.github/workflows/verify-crypto-premium.yml'
