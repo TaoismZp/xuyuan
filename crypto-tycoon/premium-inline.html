@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1"/>
 <meta name="theme-color" content="#071020"/>
 <title>币圈大富翁 3D｜Crypto Tycoon</title>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/TaoismZp/xuyuan@cf04e6ff03fb333766e475d8b7ab7652cd5a1b36/crypto-tycoon/premium.css"/>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/TaoismZp/xuyuan@cf04e6ff03fb333766e475d8b7ab7652cd5a1b36/crypto-tycoon/visual-v2.css"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/TaoismZp/xuyuan@6abbc2bd49469af9a2f94cef289886d6e1bb94f1/crypto-tycoon/premium.css"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/TaoismZp/xuyuan@6abbc2bd49469af9a2f94cef289886d6e1bb94f1/crypto-tycoon/visual-v2.css"/>
 </head>
 <body>
 <canvas id="scene" aria-hidden="true"></canvas>
@@ -25,11 +25,12 @@
 <div id="srStatus" class="sr-only" aria-live="polite"></div>
 <script>
 (async()=>{
-  const base='https://cdn.jsdelivr.net/gh/TaoismZp/xuyuan@cf04e6ff03fb333766e475d8b7ab7652cd5a1b36/crypto-tycoon/';
+  const base='https://cdn.jsdelivr.net/gh/TaoismZp/xuyuan@6abbc2bd49469af9a2f94cef289886d6e1bb94f1/crypto-tycoon/';
   try {
     await import(base+'premium.js');
     await import(base+'visual-v2.js');
     await import(base+'visual-v2-tune.js');
+    await import(base+'visual-v2-tune2.js');
     await import(base+'engine-throttle.js');
   } catch (error) {
     console.error('Crypto Tycoon boot failed', error);
