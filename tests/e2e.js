@@ -32,7 +32,7 @@ const shot = process.env.SHOT_PREFIX || 'local';
   const code=(await page.locator('.code').textContent()||'').trim();
   if(!/^[RG][FM][SI][HT]$/.test(code)) throw new Error(`Invalid FIN·TYPE: ${code}`);
   if(await page.locator('.result-name').count()!==1) throw new Error('Result name missing');
-  if(await page.getByRole('button',{name:'复制结果卡文案'}).count()!==1) throw new Error('Share CTA missing');
+  if(await page.getByRole('button',{name:'分享我的 FIN·TYPE'}).count()!==1) throw new Error('Share CTA missing');
   const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth);
   if(overflow>2) throw new Error(`Horizontal overflow: ${overflow}px`);
   await page.screenshot({path:`artifacts/${shot}-result.png`, fullPage:true});
