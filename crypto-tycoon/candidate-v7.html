@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#081327" />
+  <link rel="icon" href="data:," />
+  <title>币圈大富翁 3D · Vertical Slice v7</title>
+  <link rel="stylesheet" href="./candidate-v5.css" />
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"
+    }
+  }
+  </script>
+</head>
+<body>
+  <canvas id="game3d" aria-label="币圈大富翁 3D 实时场景"></canvas><div class="vignette"></div>
+  <section class="leaderboard" aria-label="玩家排行榜">
+    <div class="hud-title">财富排行榜 · PORTFOLIO RANK</div>
+    <div class="player me" data-rank="1"><span class="portrait astro">A</span><span class="identity"><b>币圈玩家A</b><small>现金 ¥120,000</small></span><strong>¥168,400</strong></div>
+    <div class="player" data-rank="2"><span class="portrait dog">D</span><span class="identity"><b>狗狗大佬</b><small>现金 ¥104,800</small></span><strong>¥154,900</strong></div>
+    <div class="player" data-rank="3"><span class="portrait nft">N</span><span class="identity"><b>NFT收藏家</b><small>现金 ¥98,200</small></span><strong>¥147,600</strong></div>
+    <div class="player" data-rank="4"><span class="portrait bull">B</span><span class="identity"><b>牛市冲锋</b><small>现金 ¥92,300</small></span><strong>¥139,100</strong></div>
+  </section>
+  <section class="round-card"><small>市场周期 · MARKET CYCLE</small><div><b>第 06 回合</b><span>/ 12</span></div><p><i></i> 牛市 · +18%</p><em>目标 · 活下来并让资产复利</em></section>
+  <section class="actions" aria-label="操作"><button aria-label="资产"><span>◆</span><small>资产</small></button><button aria-label="卡牌"><span>♠</span><small>卡牌</small></button><button aria-label="规则"><span>?</span><small>规则</small></button></section>
+  <section class="ticker"><span class="live-dot"></span><b>BTC +7.2%</b><span>ETF 资金流 ↑ · 风险偏好上升 · GAS -12%</span></section>
+  <button class="roll" aria-label="掷骰子"><span class="mini-die">⚄</span><span><b>掷骰子</b><small>ROLL</small></span></button>
+  <script type="module" src="./candidate-v7-augment.js"></script>
+</body>
+</html>
