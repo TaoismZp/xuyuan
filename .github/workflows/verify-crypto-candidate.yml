@@ -8,8 +8,9 @@ on:
       - 'crypto-tycoon/candidate-v2.css'
       - 'crypto-tycoon/candidate-v2-augment.js'
       - 'crypto-tycoon/candidate-v3-augment.js'
-      - 'crypto-tycoon/candidate-v4.html'
       - 'crypto-tycoon/candidate-v4-augment.js'
+      - 'crypto-tycoon/candidate-v5.html'
+      - 'crypto-tycoon/candidate-v5-augment.js'
       - 'tests/crypto-candidate-visual.js'
       - '.github/workflows/verify-crypto-candidate.yml'
   workflow_dispatch:
@@ -34,21 +35,21 @@ jobs:
           python3 -m http.server 8080 >/tmp/crypto-candidate-http.log 2>&1 &
           echo $! > /tmp/crypto-candidate-http.pid
           for i in {1..30}; do
-            curl -fsS http://127.0.0.1:8080/crypto-tycoon/candidate-v4.html >/dev/null && exit 0
+            curl -fsS http://127.0.0.1:8080/crypto-tycoon/candidate-v5.html >/dev/null && exit 0
             sleep 1
           done
           cat /tmp/crypto-candidate-http.log
           exit 1
       - name: Capture same-commit vertical slice
         env:
-          TARGET_URL: http://127.0.0.1:8080/crypto-tycoon/candidate-v4.html?test=1
-          EXPECTED_VERSION: candidate-v4
+          TARGET_URL: http://127.0.0.1:8080/crypto-tycoon/candidate-v5.html?test=1
+          EXPECTED_VERSION: candidate-v5
           PW_CHANNEL: chrome
         run: node tests/crypto-candidate-visual.js
       - name: Upload supervisor evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: crypto-candidate-supervisor-evidence-v4
+          name: crypto-candidate-supervisor-evidence-v5
           path: artifacts/*
           if-no-files-found: warn
