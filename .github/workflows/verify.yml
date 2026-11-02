@@ -15,6 +15,8 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
+      - name: Verify 16-type reachability
+        run: node tests/types.js
       - name: Install Playwright
         run: |
           npm init -y
@@ -24,5 +26,5 @@ jobs:
         run: |
           python3 -m http.server 4173 > /tmp/fintype-http.log 2>&1 &
           sleep 2
-      - name: Run browser regression
+      - name: Run browser + semantic regression
         run: node tests/e2e.js
