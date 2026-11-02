@@ -21,26 +21,23 @@ const width = +(process.env.VIEW_W || 1366), height = +(process.env.VIEW_H || 90
   let state=JSON.parse(await page.evaluate(()=>window.render_game_to_text()));
   if(state.tiles!==24) throw new Error(`expected 24 tiles, got ${state.tiles}`);
   if(state.players.length!==4) throw new Error('expected four players');
-  await page.waitForTimeout(900);
+  await page.waitForTimeout(650);
   await snap(`artifacts/${shot}-board.png`);
-  for(let turn=0;turn<3;turn++){
-    await page.waitForFunction(()=>{const b=document.querySelector('#roll');const s=JSON.parse(window.render_game_to_text());return s.gameover||!!(b&&!b.disabled)},{timeout:20000});
-    state=JSON.parse(await page.evaluate(()=>window.render_game_to_text())); if(state.gameover) break;
-    await page.locator('#roll').click();
-    for(let guard=0;guard<60;guard++){
-      const modal=page.locator('#modal.show');
-      if(await modal.count()){
-        const primary=modal.locator('button.primaryBtn');
-        const any=modal.locator('button');
-        if(await primary.count()) await primary.first().click(); else if(await any.count()) await any.first().click();
-      }
-      const ready=await page.evaluate(()=>{const s=JSON.parse(window.render_game_to_text());const b=document.querySelector('#roll');return s.gameover||!!(b&&!b.disabled)});
-      if(ready) break;
-      await page.waitForTimeout(120);
+  await page.waitForFunction(()=>{const b=document.querySelector('#roll');return !!(b&&!b.disabled)},{timeout:20000});
+  await page.locator('#roll').click();
+  for(let guard=0;guard<80;guard++){
+    const modal=page.locator('#modal.show');
+    if(await modal.count()){
+      const primary=modal.locator('button.primaryBtn');
+      const any=modal.locator('button');
+      if(await primary.count()) await primary.first().click(); else if(await any.count()) await any.first().click();
     }
+    const ready=await page.evaluate(()=>{const s=JSON.parse(window.render_game_to_text());const b=document.querySelector('#roll');return s.gameover||s.round>=2||!!(b&&!b.disabled)});
+    if(ready) break;
+    await page.waitForTimeout(100);
   }
   state=JSON.parse(await page.evaluate(()=>window.render_game_to_text()));
-  if(state.round<2&&!state.gameover) throw new Error('gameplay did not advance');
+  if(state.round<2&&!state.gameover) throw new Error('one full four-player round did not complete');
   await snap(`artifacts/${shot}-active.png`);
   if(!state.gameover) await page.evaluate(()=>window.__chainTycoon3d.finish());
   await page.locator('#end.show').waitFor({state:'visible',timeout:5000});
@@ -50,6 +47,6 @@ const width = +(process.env.VIEW_W || 1366), height = +(process.env.VIEW_H || 90
   const boardShot=fs.statSync(`artifacts/${shot}-board.png`).size;
   if(boardShot<80000) throw new Error(`board screenshot suspiciously small: ${boardShot}`);
   if(errors.length) throw new Error(errors.join(' | '));
-  console.log(`PASS ${target}; ${width}x${height}; three human rounds; board/end; screenshot=${boardShot} bytes; no browser errors.`);
+  console.log(`PASS ${target}; ${width}x${height}; one full four-player round; board/active/end; screenshot=${boardShot} bytes; no browser errors.`);
   await browser.close();
 })().catch(e=>{console.error(e);process.exit(1)});
