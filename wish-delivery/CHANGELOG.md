@@ -2,6 +2,18 @@
 
 > 说明：v1.0–v7.0 为根据实际项目事故与迭代过程整理出的历史脉络；从 v7.1 起，每次实质迭代都必须在 GitHub 产生不可变版本文件。
 
+## v7.5 — Binding Chain & Exact Identity
+**触发事故**：建房式交付已经有“效果图→施工图→施工→监理→验收”，但仓库同时出现不同版本协议/施工图，且历史上发生过 CI 测试的是新构建、用户公网却仍是旧构建，以及截图/证据来自不同 commit 的情况。
+
+**根因**：虽然每一阶段都有 Gate，但缺少一条把效果图、唯一有效施工图、候选构建、监理证据与最终公网构建锁成同一对象的身份链。
+
+**新增硬规则**：
+- 新增 Binding Chain Gate：Vision Fixture、Controlling Blueprint、Candidate、Evidence、Final Delivery 必须有可追溯唯一身份；
+- 旧施工图给新候选背书无效；不同 commit 的截图给当前候选背书无效；localhost/CI 与公网 build identity 不一致无效；
+- 任何 PASS 只对其绑定对象有效，不跨版本继承；
+- Final 验收必须同时验证 Delivery Surface 的 build identity；
+- v7.4 的四件套、Reference Non-Substitution、Independent Supervision、No-PASS-Substitution、Delivery-after-Acceptance 全部继续生效。
+
 ## v7.4 — Construction-Style Delivery
 **触发事故**：币圈大富翁在“功能真实、3D 真实、公网真实”之后，仍与参考效果图存在巨大感知差距；随后为了追求相似度，又出现把效果图本身作为背景层、再叠真实 3D 棋子和骰子的 Fake Convergence。与此同时，多次 CI / 部署 PASS 被错误地当成最终用户交付 PASS。
 
@@ -137,3 +149,5 @@
 - Builder-as-Inspector
 - Build-Without-Blueprint
 - Progress-Without-Convergence
+- Evidence-from-Different-Commit
+- Old-Blueprint-PASS-on-New-Candidate
