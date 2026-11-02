@@ -1,8 +1,8 @@
 # 许愿式交付｜Wish Delivery
 
-当前版本：**v7.1**
+当前版本：**v7.2**
 
-当前规范：[`versions/v7.1.md`](./versions/v7.1.md)
+当前规范：[`versions/v7.2.md`](./versions/v7.2.md)
 
 历史变更：[`CHANGELOG.md`](./CHANGELOG.md)
 
@@ -22,3 +22,5 @@
 **Intent → Silent Execution → Finished Reality**
 
 用户负责提出成熟目标与必要边界；系统负责研究、能力采购、Skill 选型、构建、失败恢复、返工、真实表面验证、质量回归与最终成品交付。除必须授权、核心价值冲突或穷尽替代路径仍无法继续外，默认不向用户泄漏施工过程，也不把“继续/重试”当作流程按钮。
+
+v7.2 新增：当用户同时否定两个或以上一级质量维度时，必须触发 **Compound Quality Reset**，禁止局部修补；内容、玩法、视觉、结果、交付各自拥有独立否决权，并在完整生产前先做代表性小样 head-to-head benchmark。
