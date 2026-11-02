@@ -1,4 +1,4 @@
-# Crypto Tycoon — Reference Fixture v2
+# Crypto Tycoon — Vision Fixture v3
 
 ## Canonical Effect Image
 The approved 16:9 concept image from the 2026-11-02 session is the **effect drawing / Vision Fixture** for the rebuild.
@@ -7,8 +7,12 @@ The approved 16:9 concept image from the 2026-11-02 session is the **effect draw
 - locked SHA-256: `5b0c5d5d4f8f9afbd2af5e8dddbd77e749975006873262efadd02125ac68a039`
 - visual intent: polished commercial casual-game screenshot, not a webpage/dashboard
 - role: **judge only; never runtime scenery**
+- governing protocol: `wish-delivery/versions/v7.4.md`
 
-The existing `keyart-chunk-*.js` files are deprecated evidence copies from the failed v3 experiment. They may be used only for visual comparison tooling. They are forbidden from the production runtime and must not be imported by the accepted rebuild.
+The existing `keyart-chunk-*.js` files are deprecated evidence copies from the failed reference-composite experiment. They may be used only for visual comparison tooling. They are forbidden from the production runtime and must not be imported by the accepted rebuild.
+
+## First-Impression Contract
+The first glance must read as: **a premium collectible-toy crypto board game world**, not a web dashboard, not a developer scene, and not a board with decorative neon added afterward.
 
 ## Must-match qualities
 1. **World, not tilted UI** — a volumetric board with real spatial depth and authored landmarks.
@@ -28,13 +32,16 @@ The existing `keyart-chunk-*.js` files are deprecated evidence copies from the f
 - gameplay content may exceed the effect image;
 - camera may shift slightly on iPad to preserve board readability.
 
-## Forbidden shortcuts
-Under `WISH_DELIVERY_V7.md` v7.5 Reference Non-Substitution Rule, the accepted build may NOT:
+## Reference Non-Substitution / Forbidden shortcuts
+The accepted build may NOT:
 - use the effect image or its reduced copy as a background/backplate;
+- import `keyart-chunk-*.js` in production runtime;
 - use screenshots of the old game as UI or scenery;
 - use 2D renders to impersonate real-time hero geometry;
 - hide missing geometry behind blur, darkness, bloom, fog or HUD panels;
 - count semantic presence ("there is a bull") as perceptual match.
+
+Any runtime dependency on reference pixels is an automatic **Construction Integrity FAIL**.
 
 ## Comparative Quality Gate
 Before Final, capture the **actual active-play state** on the real public surface at desktop 1672×941 and iPad landscape. Compare desktop beside the locked effect image at equal displayed size and score:
@@ -51,6 +58,7 @@ Before Final, capture the **actual active-play state** on the real public surfac
 
 Automatic FAIL if:
 - the pair reads as “concept art vs ordinary webpage / dev scene”;
-- a hero asset still reads first as box/sphere/cone assembly;
-- the game depends on the Reference Fixture pixels to look finished;
-- active play looks materially worse than intro/key art.
+- a hero asset still reads first as a box/sphere/cone assembly;
+- the game depends on Reference Fixture pixels to look finished;
+- active play looks materially worse than the effect drawing;
+- the accepted candidate and public Delivery Surface are not the same build.
