@@ -5,17 +5,25 @@ const expectedVersion = process.env.EXPECTED_VERSION || null;
 fs.mkdirSync('artifacts', { recursive: true });
 
 async function capture(browser, viewport, name) {
-  const context = await browser.newContext({ viewport, deviceScaleFactor: 1 });
+  const context = await browser.newContext({ viewport, deviceScaleFactor: 1, reducedMotion:'reduce' });
+  // Supervision must inspect the same scene, not benchmark animation throughput.
+  // Limit requestAnimationFrame only inside the CI browser so software WebGL cannot starve screenshot capture.
+  await context.addInitScript(() => {
+    const nativeRAF = window.requestAnimationFrame.bind(window);
+    let last = 0;
+    window.requestAnimationFrame = cb => nativeRAF(ts => {
+      const delay = Math.max(0, 125 - (ts - last));
+      setTimeout(() => { last = performance.now(); cb(last); }, delay);
+    });
+  });
   const page = await context.newPage();
   const errors=[];
   page.on('pageerror', e => errors.push(String(e)));
   page.on('console', m => { if(m.type()==='error') errors.push(m.text()); });
   await page.goto(target, { waitUntil:'networkidle', timeout:60000 });
   await page.waitForFunction(v => document.documentElement.dataset.sliceReady === '1' && !!window.__cryptoSliceReady && (!v || window.__cryptoSliceReady.version === v), expectedVersion, { timeout:45000 });
-  await page.waitForTimeout(1400);
-  const cdp = await context.newCDPSession(page);
-  const shot = await cdp.send('Page.captureScreenshot', { format:'png', fromSurface:true, captureBeyondViewport:false });
-  fs.writeFileSync(`artifacts/${name}.png`, Buffer.from(shot.data,'base64'));
+  await page.waitForTimeout(700);
+  await page.screenshot({ path:`artifacts/${name}.png`, fullPage:false, animations:'disabled', timeout:20000 });
   const state = await page.evaluate(() => ({
     ready: window.__cryptoSliceReady,
     title: document.title,
