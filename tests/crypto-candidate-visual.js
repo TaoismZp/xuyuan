@@ -1,6 +1,7 @@
 const { chromium } = require('playwright');
 const fs = require('fs');
 const target = process.env.TARGET_URL || 'https://taoismzp.github.io/xuyuan/crypto-tycoon/candidate-v1.html?test=1';
+const expectedVersion = process.env.EXPECTED_VERSION || null;
 fs.mkdirSync('artifacts', { recursive: true });
 
 async function capture(browser, viewport, name) {
@@ -10,7 +11,7 @@ async function capture(browser, viewport, name) {
   page.on('pageerror', e => errors.push(String(e)));
   page.on('console', m => { if(m.type()==='error') errors.push(m.text()); });
   await page.goto(target, { waitUntil:'networkidle', timeout:60000 });
-  await page.waitForFunction(() => document.documentElement.dataset.sliceReady === '1' && !!window.__cryptoSliceReady, { timeout:35000 });
+  await page.waitForFunction(v => document.documentElement.dataset.sliceReady === '1' && !!window.__cryptoSliceReady && (!v || window.__cryptoSliceReady.version === v), expectedVersion, { timeout:45000 });
   await page.waitForTimeout(1400);
   const cdp = await context.newCDPSession(page);
   const shot = await cdp.send('Page.captureScreenshot', { format:'png', fromSurface:true, captureBeyondViewport:false });
@@ -22,6 +23,7 @@ async function capture(browser, viewport, name) {
     referenceImports: [...document.scripts].map(s=>s.src).filter(src=>/keyart|visual-v3/i.test(src)),
     referenceCss: getComputedStyle(document.body).backgroundImage
   }));
+  if(expectedVersion && state.ready.version !== expectedVersion) throw new Error(`wrong candidate version: ${state.ready.version} !== ${expectedVersion}`);
   if(state.referenceImports.length) throw new Error('reference substitution detected: '+JSON.stringify(state.referenceImports));
   if(!state.ready || state.ready.referencePixelsUsed !== false) throw new Error('candidate did not assert referencePixelsUsed=false');
   if(errors.length) throw new Error('browser errors: '+errors.join(' | '));
@@ -36,5 +38,5 @@ async function capture(browser, viewport, name) {
   await capture(browser,{width:1672,height:941},'candidate-desktop');
   await capture(browser,{width:1194,height:834},'candidate-ipad');
   await browser.close();
-  console.log('PASS candidate true-3D capture',target);
+  console.log('PASS candidate true-3D capture',target,expectedVersion||'any-version');
 })().catch(e=>{console.error(e);process.exit(1)});
