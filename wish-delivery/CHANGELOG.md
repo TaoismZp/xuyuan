@@ -2,6 +2,18 @@
 
 > 说明：v1.0–v7.0 为根据实际项目事故与迭代过程整理出的历史脉络；从 v7.1 起，每次实质迭代都必须在 GitHub 产生不可变版本文件。
 
+## v7.3 — Reference Reality & Skill Proof
+**触发事故**：币圈大富翁已经可运行、可玩并做了所谓“3D 版”，但与先生成的目标效果图相比仍是“天壤之别”；同时复盘发现 Skill 只被写进记录，没有形成真实搜索、读取、筛选、实测、采用和影响施工的证据链。
+
+**新增硬规则**：
+- 高主观质量任务优先产生可感知的目标 Artifact；一旦被认可或实际作为目标使用，升级为不可丢失的 Reference Fixture；
+- 新增 Reference-to-Architecture Gate：技术路线必须足以承载目标表面，CSS 倾斜不能冒充真实 3D；
+- 新增 Skill Proof Gate：必须记录候选搜索、实际读取、采用/淘汰理由、代表性实测及 Skill 对实现造成的真实改变；
+- 固定能力采购链：Capability Gap → Candidate Search → Static Review → Representative Spike → Head-to-Head → Minimum Stack Lock；
+- Final 前强制做同设备/同状态的实机截图与 Reference Fixture 并排比较；缩小后仍像“两个时代的产品”，Comparative Quality 自动 FAIL；
+- emoji、基础几何体、纯 glow/fog、CSS perspective、通用 dashboard 只允许作为原型占位，不得在高保真目标下冒充最终成品；
+- 旧币圈大富翁 3D 版永久记录为 Functional 部分 PASS、Visual FAIL、Comparative FAIL、Evaluator FAIL 的回归样本。
+
 ## v7.2 — Compound Quality Reset
 **触发事故**：FIN·TYPE 已经能真实打开、完整运行、自动回归通过，但用户同时否定“美工”和“题目”两个一级质量维度。
 
@@ -98,3 +110,6 @@
 - Retry-as-Workflow
 - Delivery-Success-as-Product-Success
 - Multi-Dimension-Quality-Failure
+- Reference-Without-Contract
+- Skill-Record-Without-Skill-Use
+- CSS-Perspective-as-3D
