@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: crypto-tycoon-3d
+    runtime: static
+    buildCommand: echo "Static build ready"
+    staticPublishPath: ./crypto-tycoon
+    headers:
+      - path: /*
+        name: Cache-Control
+        value: no-cache
