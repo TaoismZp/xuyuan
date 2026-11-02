@@ -1,8 +1,8 @@
 # 许愿式交付｜Wish Delivery
 
-当前版本：**v7.2**
+当前版本：**v7.3**
 
-当前规范：[`versions/v7.2.md`](./versions/v7.2.md)
+当前规范：[`versions/v7.3.md`](./versions/v7.3.md)
 
 历史变更：[`CHANGELOG.md`](./CHANGELOG.md)
 
@@ -19,8 +19,8 @@
 
 ## 当前定义
 
-**Intent → Silent Execution → Finished Reality**
+**Intent → Reference Fixture → Capability Proof → Silent Execution → Finished Reality**
 
-用户负责提出成熟目标与必要边界；系统负责研究、能力采购、Skill 选型、构建、失败恢复、返工、真实表面验证、质量回归与最终成品交付。除必须授权、核心价值冲突或穷尽替代路径仍无法继续外，默认不向用户泄漏施工过程，也不把“继续/重试”当作流程按钮。
+用户负责提出成熟目标与必要边界；系统负责把模糊质量要求编译成可感知的目标 Artifact，主动搜索并实证 Skill/方法能力，选择足以承载目标表面的技术路线，然后完成构建、失败恢复、返工、同表面验证、质量回归与最终交付。
 
-v7.2 新增：当用户同时否定两个或以上一级质量维度时，必须触发 **Compound Quality Reset**，禁止局部修补；内容、玩法、视觉、结果、交付各自拥有独立否决权，并在完整生产前先做代表性小样 head-to-head benchmark。
+v7.3 新增：高主观质量任务优先形成并锁定 **Reference Fixture**；技术架构必须证明足以逼近该参考；Skill 不再允许“写进记录即算使用”，必须留下搜索、读取、筛选、实测和实际影响实现的证据；Final 前必须做同视角实机对比，明显像“两个时代的产品”则 Comparative Quality 自动 FAIL。
