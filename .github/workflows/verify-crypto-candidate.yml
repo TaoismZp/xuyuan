@@ -27,8 +27,18 @@ jobs:
           npm init -y
           npm install --save-dev playwright
           npx playwright install --with-deps chromium
-      - name: Capture real public candidate
-        run: TARGET_URL="https://taoismzp.github.io/xuyuan/crypto-tycoon/candidate-v1.html?test=1" node tests/crypto-candidate-visual.js
+      - name: Start candidate server
+        run: |
+          python3 -m http.server 8080 >/tmp/crypto-candidate-http.log 2>&1 &
+          echo $! > /tmp/crypto-candidate-http.pid
+          for i in {1..30}; do
+            curl -fsS http://127.0.0.1:8080/crypto-tycoon/candidate-v1.html >/dev/null && exit 0
+            sleep 1
+          done
+          cat /tmp/crypto-candidate-http.log
+          exit 1
+      - name: Capture same-commit vertical slice
+        run: TARGET_URL="http://127.0.0.1:8080/crypto-tycoon/candidate-v1.html?test=1" node tests/crypto-candidate-visual.js
       - name: Upload supervisor evidence
         if: always()
         uses: actions/upload-artifact@v4
