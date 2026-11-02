@@ -22,5 +22,12 @@ jobs:
           npm init -y
           npm install --save-dev playwright
           npx playwright install --with-deps chromium
-      - name: Verify real GitHub Pages play entry
+      - name: Verify real GitHub Pages play entry and capture visual evidence
         run: TARGET_URL="https://taoismzp.github.io/xuyuan/crypto-tycoon/?test=1" node tests/crypto-public-smoke.js
+      - name: Upload visual evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: crypto-public-visual-evidence
+          path: artifacts/*.png
+          if-no-files-found: warn
