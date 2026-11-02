@@ -2,12 +2,43 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
-<meta name="theme-color" content="#090b10"/>
-<title>CHAIN TYCOON｜链上大亨</title>
-<link rel="stylesheet" href="styles.css"/>
-</head><body><div id="app"></div>
-<script src="data.js"></script>
-<script src="game.js"></script>
-<script src="fix.js"></script>
-</body></html>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1"/>
+<meta name="theme-color" content="#071020"/>
+<title>币圈大富翁 3D｜Crypto Tycoon</title>
+<link rel="stylesheet" href="premium.css"/>
+<link rel="stylesheet" href="visual-v3.css"/>
+</head>
+<body>
+<div id="keyArtLayer" aria-hidden="true"></div>
+<div id="keyArtShade" aria-hidden="true"></div>
+<canvas id="scene" aria-hidden="true"></canvas>
+<canvas id="heroScene" aria-hidden="true"></canvas>
+<canvas id="overlayScene" aria-label="币圈大富翁动态三维棋子与骰子"></canvas>
+<div id="hud">
+  <section id="leaderboard" class="glass" aria-label="玩家排行榜"></section>
+  <section id="roundPanel" class="glass"></section>
+  <div id="brand"><span class="crown">♛</span><strong>币圈大富翁</strong><small>CRYPTO TYCOON</small></div>
+  <nav id="sideActions" aria-label="游戏菜单"><button id="portfolioBtn" type="button">资产</button><button id="rulesBtn" type="button">规则</button><button id="restartBtn" type="button">重开</button></nav>
+  <section id="ticker" class="glass" aria-live="polite"></section>
+  <button id="roll" class="roll" type="button" disabled><span class="diceIcon">⚄</span><span>掷骰子</span></button>
+</div>
+<div id="intro" class="screen show"><div class="introCard"><div class="eyebrow">A 3D CRYPTO BOARD GAME</div><h1>币圈大富翁</h1><p>穿过牛熊、空投、减半、DeFi、NFT、巨鲸与清算。可以买资产、升级仓位、收链上过路费，也可能一轮爆仓。</p><div class="introMeta"><span>4 名玩家</span><span>24 格棋盘</span><span>12 轮</span><span>3 个策略 Bot</span></div><button id="start" type="button">进入牌桌</button><small>纯娱乐模拟，不构成投资建议。</small></div></div>
+<div id="modal" class="screen" role="dialog" aria-modal="true"><div class="modalCard" id="modalCard"></div></div>
+<div id="end" class="screen"><div class="endCard" id="endCard"></div></div>
+<div id="srStatus" class="sr-only" aria-live="polite"></div>
+<script type="module">
+window.__cryptoBoot={stage:'start',error:null};
+try{
+  window.__cryptoBoot.stage='engine';
+  await import('./premium.js');
+  window.__cryptoBoot.stage='visual';
+  await import('./visual-v3-fixed.js');
+  window.__cryptoBoot.stage='ready';
+}catch(error){
+  window.__cryptoBoot.stage='failed';
+  window.__cryptoBoot.error=String(error&&(error.stack||error.message||error));
+  console.error('Crypto Tycoon boot failed',error);
+}
+</script>
+</body>
+</html>
