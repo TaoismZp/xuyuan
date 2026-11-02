@@ -1,5 +1,8 @@
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.180.0/+esm';
-import { KEY_ART } from './keyart-data.js';
+import k0 from './keyart-chunk-0.js';
+import k1 from './keyart-chunk-1.js';
+import k2 from './keyart-chunk-2.js';
+import k3 from './keyart-chunk-3.js';
 
 const TEST=new URLSearchParams(location.search).get('test')==='1';
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
@@ -11,21 +14,18 @@ const bg=document.querySelector('#keyArtLayer');
 const canvas=document.querySelector('#overlayScene');
 if(!bg||!canvas) throw new Error('visual v3 surface missing');
 
-// Decode the embedded key art to a Blob URL. This avoids browser URL-parser limits/errors
-// that can occur when a large data: URI is assigned directly to img.src/CSS background-image.
-const comma=KEY_ART.indexOf(',');
-if(comma<0) throw new Error('key art data URI malformed');
-const mime=(KEY_ART.match(/^data:([^;,]+)/)||[])[1]||'image/webp';
-const b64=KEY_ART.slice(comma+1).replace(/\s+/g,'');
+const b64=(k0+k1+k2+k3).replace(/\s+/g,'');
+if(b64.length!==90124) throw new Error(`key art chunk length mismatch: ${b64.length} !== 90124`);
+if(!/^[A-Za-z0-9+/]+={0,2}$/.test(b64)) throw new Error('key art chunks contain invalid base64 characters');
 let raw;
 try{raw=atob(b64)}catch(e){throw new Error('key art base64 decode failed: '+e.message)}
 const bytes=new Uint8Array(raw.length);
 for(let i=0;i<raw.length;i++) bytes[i]=raw.charCodeAt(i);
-const blobUrl=URL.createObjectURL(new Blob([bytes],{type:mime}));
+const blobUrl=URL.createObjectURL(new Blob([bytes],{type:'image/webp'}));
 const img=new Image();
 img.src=blobUrl;
 await img.decode();
-if(!img.naturalWidth||!img.naturalHeight) throw new Error('key art image decode returned empty dimensions');
+if(img.naturalWidth!==640||img.naturalHeight!==360) throw new Error(`key art dimensions mismatch: ${img.naturalWidth}x${img.naturalHeight}`);
 bg.style.backgroundImage=`url(${JSON.stringify(blobUrl)})`;
 
 if(game.renderer&&!game.renderer.__v3Disabled){
@@ -116,6 +116,6 @@ requestAnimationFrame(loop);
 
 document.documentElement.dataset.visualPipeline='v3';
 window.__cryptoVisualV3={
-  version:'v3.0-reference-composite',scene,renderer,keyArt:{loaded:true,width:img.naturalWidth,height:img.naturalHeight,blobUrl},
-  diagnostics:()=>({geometries:renderer.info.memory.geometries,textures:renderer.info.memory.textures,calls:renderer.info.render.calls,triangles:renderer.info.render.triangles,dpr:renderer.getPixelRatio(),tokens:tokens.length,keyArtLoaded:!!img.naturalWidth,pipeline:document.documentElement.dataset.visualPipeline})
+  version:'v3.0-reference-composite',scene,renderer,keyArt:{loaded:true,width:img.naturalWidth,height:img.naturalHeight,blobUrl,base64Length:b64.length},
+  diagnostics:()=>({geometries:renderer.info.memory.geometries,textures:renderer.info.memory.textures,calls:renderer.info.render.calls,triangles:renderer.info.render.triangles,dpr:renderer.getPixelRatio(),tokens:tokens.length,keyArtLoaded:!!img.naturalWidth,keyArtBase64Length:b64.length,pipeline:document.documentElement.dataset.visualPipeline})
 };
