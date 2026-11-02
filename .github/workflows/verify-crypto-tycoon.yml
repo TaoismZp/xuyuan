@@ -1,0 +1,37 @@
+name: Verify Crypto Tycoon
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'crypto-tycoon/**'
+      - '.github/workflows/verify-crypto-tycoon.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install Playwright
+        run: |
+          npm init -y
+          npm install --save-dev playwright
+          npx playwright install --with-deps chromium
+      - name: Start static server
+        run: |
+          python3 -m http.server 4173 > /tmp/crypto-tycoon-http.log 2>&1 &
+          sleep 2
+      - name: Verify local game
+        run: TARGET_URL=http://127.0.0.1:4173/crypto-tycoon/index.html?test=1 SHOT_PREFIX=local node crypto-tycoon/tests/e2e.js
+      - name: Verify public delivery surface
+        run: TARGET_URL="https://html-preview.github.io/?url=https://github.com/TaoismZp/xuyuan/blob/${{ github.sha }}/crypto-tycoon/index.html&test=1" SHOT_PREFIX=public node crypto-tycoon/tests/e2e.js
+      - name: Upload visual QA evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: crypto-tycoon-visual-qa
+          path: artifacts/*.png
