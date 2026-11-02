@@ -1,4 +1,5 @@
 name: Supervise Crypto Tycoon Candidate
+# v7.5 construction-supervision trigger; controlling blueprint: crypto-tycoon/BUILD_BLUEPRINT_V3.md
 
 on:
   push:
