@@ -4,7 +4,7 @@
 
 ## 直接试玩
 
-- 推荐入口：https://html-preview.github.io/?url=https://github.com/TaoismZp/xuyuan/blob/main/crypto-tycoon/index.html
+- 推荐入口：https://html-preview.github.io/?url=https://github.com/TaoismZp/xuyuan/blob/main/crypto-tycoon/play.html
 
 ## 核心玩法
 
