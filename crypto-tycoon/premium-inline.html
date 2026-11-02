@@ -21,14 +21,16 @@
 <div id="modal" class="screen" role="dialog" aria-modal="true"><div class="modalCard" id="modalCard"></div></div>
 <div id="end" class="screen"><div class="endCard" id="endCard"></div></div>
 <div id="srStatus" class="sr-only" aria-live="polite"></div>
-<script type="module">
-try {
-  await import('https://cdn.jsdelivr.net/gh/TaoismZp/xuyuan@522c68832ca243de1d94c6001dac7c132a893576/crypto-tycoon/premium.js');
-  await import('https://cdn.jsdelivr.net/gh/TaoismZp/xuyuan@522c68832ca243de1d94c6001dac7c132a893576/crypto-tycoon/premium-polish.js');
-} catch (error) {
-  console.error('Crypto Tycoon boot failed', error);
-  document.body.dataset.bootError=String(error && (error.stack||error.message||error));
-}
+<script>
+(async()=>{
+  try {
+    await import('https://cdn.jsdelivr.net/gh/TaoismZp/xuyuan@522c68832ca243de1d94c6001dac7c132a893576/crypto-tycoon/premium.js');
+    await import('https://cdn.jsdelivr.net/gh/TaoismZp/xuyuan@522c68832ca243de1d94c6001dac7c132a893576/crypto-tycoon/premium-polish.js');
+  } catch (error) {
+    console.error('Crypto Tycoon boot failed', error);
+    document.body.dataset.bootError=String(error && (error.stack||error.message||error));
+  }
+})();
 </script>
 </body>
 </html>
