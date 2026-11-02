@@ -15,9 +15,13 @@ const width = +(process.env.VIEW_W || 1366), height = +(process.env.VIEW_H || 90
   const snap=async path=>{const {data}=await cdp.send('Page.captureScreenshot',{format:'png',fromSurface:true,captureBeyondViewport:false});fs.writeFileSync(path,Buffer.from(data,'base64'));};
   await page.goto(target,{waitUntil:'networkidle',timeout:60000});
   await page.waitForFunction(()=>!!window.__chainTycoon3d,{timeout:30000});
-  await page.waitForFunction(()=>!!window.__cryptoVisualV2&&window.__cryptoVisualTune?.version==='v2.1-reference-composition'&&window.__cryptoVisualTune2?.version==='v2.2-art-direction'&&document.documentElement.dataset.visualPipeline==='v2',{timeout:30000});
-  const visualDiag=await page.evaluate(()=>window.__cryptoVisualV2.diagnostics());
-  if(!visualDiag||visualDiag.geometries<50) throw new Error(`visual v2 did not load enough authored geometry: ${JSON.stringify(visualDiag)}`);
+  await page.waitForFunction(()=>!!window.__cryptoVisualV3&&window.__cryptoVisualV3.version==='v3.0-reference-composite'&&document.documentElement.dataset.visualPipeline==='v3',{timeout:30000});
+  const visualDiag=await page.evaluate(()=>window.__cryptoVisualV3.diagnostics());
+  if(!visualDiag?.keyArtLoaded) throw new Error(`key-art reference did not load: ${JSON.stringify(visualDiag)}`);
+  if(visualDiag.tokens!==4) throw new Error(`expected four live 3D token overlays: ${JSON.stringify(visualDiag)}`);
+  const surface=await page.evaluate(()=>({bg:getComputedStyle(document.querySelector('#keyArtLayer')).backgroundImage,overlay:getComputedStyle(document.querySelector('#overlayScene')).display}));
+  if(!surface.bg.includes('data:image/webp')) throw new Error('reference art is not the active composition layer');
+  if(surface.overlay==='none') throw new Error('3D overlay canvas is hidden');
   await snap(`artifacts/${shot}-intro.png`);
   await page.getByRole('button',{name:'进入牌桌'}).click();
   await page.waitForFunction(()=>JSON.parse(window.render_game_to_text()).players?.length===4);
@@ -48,8 +52,8 @@ const width = +(process.env.VIEW_W || 1366), height = +(process.env.VIEW_H || 90
   const overflow=await page.evaluate(()=>Math.max(0,document.documentElement.scrollWidth-document.documentElement.clientWidth));
   if(overflow>2) throw new Error(`horizontal overflow ${overflow}`);
   const boardShot=fs.statSync(`artifacts/${shot}-board.png`).size;
-  if(boardShot<120000) throw new Error(`board screenshot suspiciously small: ${boardShot}`);
+  if(boardShot<150000) throw new Error(`board screenshot suspiciously small: ${boardShot}`);
   if(errors.length) throw new Error(errors.join(' | '));
-  console.log(`PASS ${target}; ${width}x${height}; visual=v2.2; one full four-player round; board/active/end; screenshot=${boardShot} bytes; no browser errors.`);
+  console.log(`PASS ${target}; ${width}x${height}; visual=v3.0-reference-composite; one full four-player round; key-art composition + live 3D token/dice overlay; board/active/end; screenshot=${boardShot} bytes; no browser errors.`);
   await browser.close();
 })().catch(e=>{console.error(e);process.exit(1)});
