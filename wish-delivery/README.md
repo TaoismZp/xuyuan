@@ -1,8 +1,8 @@
 # 许愿式交付｜Wish Delivery
 
-当前版本：**v7.4**
+当前版本：**v7.5**
 
-当前规范：[`versions/v7.4.md`](./versions/v7.4.md)
+当前规范：[`versions/v7.5.md`](./versions/v7.5.md)
 
 历史变更：[`CHANGELOG.md`](./CHANGELOG.md)
 
@@ -25,4 +25,4 @@
 
 用户负责提出成熟目标与必要边界；系统负责把模糊质量要求编译成可感知的目标 Artifact，主动搜索并实证 Skill/方法能力，选择足以承载目标表面的技术路线，然后完成构建、失败恢复、返工、同表面验证、质量回归与最终交付。
 
-v7.4 正式把“修房子”变成生产制度：复杂项目必须真实存在 **Vision Fixture、Build Blueprint、Supervision Report、Acceptance Report** 四件套；效果图只能当裁判，不能直接混进成品；没有施工图不得大规模施工；施工者不能成为唯一验收者；CI、部署、功能、局部视觉任一单项 PASS 都不能替代总体验收。
+v7.5 在 v7.4“建房式交付”上增加 **Binding Chain Gate**：效果图、唯一有效施工图、候选构建、监理证据和最终公网交付必须绑定到可追溯的同一身份链。旧施工图不能替新候选验收；不同 commit 的截图不能给当前构建背书；CI 测的新构建也不能替代公网仍在提供的旧构建。四件套继续强制存在，Reference 只能当裁判，不能混入成品制造 Fake Convergence。
