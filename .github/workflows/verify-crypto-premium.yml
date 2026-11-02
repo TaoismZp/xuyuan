@@ -5,11 +5,9 @@ on:
     paths:
       - 'crypto-tycoon/premium.*'
       - 'crypto-tycoon/premium-inline.html'
-      - 'crypto-tycoon/visual-v2.css'
-      - 'crypto-tycoon/visual-v2.js'
-      - 'crypto-tycoon/visual-v2-tune.js'
-      - 'crypto-tycoon/visual-v2-tune2.js'
-      - 'crypto-tycoon/engine-throttle.js'
+      - 'crypto-tycoon/visual-v3.css'
+      - 'crypto-tycoon/visual-v3.js'
+      - 'crypto-tycoon/keyart-data.js'
       - 'tests/crypto-premium-e2e.js'
       - '.github/workflows/verify-crypto-premium.yml'
   workflow_dispatch:
@@ -32,11 +30,11 @@ jobs:
         run: |
           python3 -m http.server 4173 > /tmp/crypto-premium-http.log 2>&1 &
           sleep 2
-      - name: Verify desktop gameplay and exact visual build
+      - name: Verify desktop gameplay and reference-composite build
         run: TARGET_URL='http://127.0.0.1:4173/crypto-tycoon/premium.html?test=1' SHOT_PREFIX=crypto-premium-desktop VIEW_W=1366 VIEW_H=900 node tests/crypto-premium-e2e.js
-      - name: Verify iPhone gameplay and exact visual build
+      - name: Verify iPhone gameplay and reference-composite build
         run: TARGET_URL='http://127.0.0.1:4173/crypto-tycoon/premium.html?test=1' SHOT_PREFIX=crypto-premium-mobile VIEW_W=390 VIEW_H=844 node tests/crypto-premium-e2e.js
-      - name: Verify public delivery surface uses exact visual build
+      - name: Verify public delivery surface uses exact v3 build
         run: TARGET_URL="https://html-preview.github.io/?url=https://github.com/TaoismZp/xuyuan/blob/${{ github.sha }}/crypto-tycoon/premium-inline.html&test=1" SHOT_PREFIX=crypto-premium-public VIEW_W=1366 VIEW_H=900 node tests/crypto-premium-e2e.js
       - name: Upload visual QA evidence
         if: always()
