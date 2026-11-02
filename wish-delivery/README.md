@@ -1,10 +1,12 @@
 # 许愿式交付｜Wish Delivery
 
-当前版本：**v7.3**
+当前版本：**v7.4**
 
-当前规范：[`versions/v7.3.md`](./versions/v7.3.md)
+当前规范：[`versions/v7.4.md`](./versions/v7.4.md)
 
 历史变更：[`CHANGELOG.md`](./CHANGELOG.md)
+
+项目模板：[`templates/`](./templates/)
 
 ## 版本管理规则
 
@@ -19,8 +21,8 @@
 
 ## 当前定义
 
-**Intent → Reference Fixture → Capability Proof → Silent Execution → Finished Reality**
+**成熟愿望 → 效果图 → 施工图 → 按图施工 → 独立监理 → 验收 → 交付**
 
 用户负责提出成熟目标与必要边界；系统负责把模糊质量要求编译成可感知的目标 Artifact，主动搜索并实证 Skill/方法能力，选择足以承载目标表面的技术路线，然后完成构建、失败恢复、返工、同表面验证、质量回归与最终交付。
 
-v7.3 新增：高主观质量任务优先形成并锁定 **Reference Fixture**；技术架构必须证明足以逼近该参考；Skill 不再允许“写进记录即算使用”，必须留下搜索、读取、筛选、实测和实际影响实现的证据；Final 前必须做同视角实机对比，明显像“两个时代的产品”则 Comparative Quality 自动 FAIL。
+v7.4 正式把“修房子”变成生产制度：复杂项目必须真实存在 **Vision Fixture、Build Blueprint、Supervision Report、Acceptance Report** 四件套；效果图只能当裁判，不能直接混进成品；没有施工图不得大规模施工；施工者不能成为唯一验收者；CI、部署、功能、局部视觉任一单项 PASS 都不能替代总体验收。
