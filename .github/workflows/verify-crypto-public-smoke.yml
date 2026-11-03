@@ -1,14 +1,18 @@
 name: Verify Crypto Tycoon Public Smoke
+
 on:
   push:
     branches: [main]
     paths:
       - 'crypto-tycoon/**'
       - 'tests/crypto-public-smoke.js'
+      - 'tests/crypto-webkit-smoke.js'
       - '.github/workflows/verify-crypto-public-smoke.yml'
   workflow_dispatch:
+
 permissions:
   contents: read
+
 jobs:
   public-smoke:
     runs-on: ubuntu-latest
@@ -17,17 +21,50 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Install Playwright Chromium
+      - name: Install Playwright Chromium and WebKit
         run: |
           npm init -y
           npm install --save-dev playwright
-          npx playwright install --with-deps chromium
-      - name: Verify real GitHub Pages play entry and capture visual evidence
-        run: TARGET_URL="https://taoismzp.github.io/xuyuan/crypto-tycoon/?test=1" node tests/crypto-public-smoke.js
-      - name: Upload visual evidence
+          npx playwright install --with-deps chromium webkit
+      - name: Wait for exact GitHub Pages deployment and compare public bytes
+        env:
+          PUBLIC_BASE: https://taoismzp.github.io/xuyuan/crypto-tycoon
+        run: |
+          set -euo pipefail
+          matched=0
+          for i in {1..90}; do
+            if curl -fsS "$PUBLIC_BASE/?delivery=$GITHUB_SHA" -o /tmp/public-index.html && cmp -s crypto-tycoon/index.html /tmp/public-index.html; then
+              matched=1
+              break
+            fi
+            sleep 2
+          done
+          if [ "$matched" -ne 1 ]; then
+            echo "Public index never converged to this commit"
+            diff -u crypto-tycoon/index.html /tmp/public-index.html || true
+            exit 1
+          fi
+          curl -fsS "$PUBLIC_BASE/candidate-v11-game.js?delivery=$GITHUB_SHA" -o /tmp/public-game.js
+          curl -fsS "$PUBLIC_BASE/candidate-v11.css?delivery=$GITHUB_SHA" -o /tmp/public-style.css
+          cmp crypto-tycoon/candidate-v11-game.js /tmp/public-game.js
+          cmp crypto-tycoon/candidate-v11.css /tmp/public-style.css
+          echo "PUBLIC_INDEX_SHA=$(sha256sum /tmp/public-index.html | cut -d' ' -f1)"
+          echo "PUBLIC_GAME_SHA=$(sha256sum /tmp/public-game.js | cut -d' ' -f1)"
+          echo "PUBLIC_STYLE_SHA=$(sha256sum /tmp/public-style.css | cut -d' ' -f1)"
+      - name: Verify real public v11 desktop and iPhone touch loop
+        env:
+          TARGET_URL: https://taoismzp.github.io/xuyuan/crypto-tycoon/?test=1&delivery=${{ github.sha }}
+          EXPECTED_VERSION: candidate-v11
+        run: node tests/crypto-public-smoke.js
+      - name: Verify real public v11 WebKit Safari loop
+        env:
+          TARGET_URL: https://taoismzp.github.io/xuyuan/crypto-tycoon/
+          EXPECTED_VERSION: candidate-v11
+        run: node tests/crypto-webkit-smoke.js
+      - name: Upload public delivery evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: crypto-public-visual-evidence
-          path: artifacts/*.png
+          name: crypto-public-v11-acceptance
+          path: artifacts/*.json
           if-no-files-found: warn
