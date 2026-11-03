@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
 
 await import('./candidate-v8-augment.js');
 const scene=window.__ctCapturedScene,root=window.__ctCapturedRoot;
@@ -42,11 +43,11 @@ const warmCream=new THREE.MeshPhysicalMaterial({color:0xf2d49c,metalness:.03,rou
 let faceReadsUpgraded=0;
 const astro=findToken(17);
 if(astro){
-  const visor=new THREE.Mesh(new THREE.RoundedBoxGeometry(.52,.18,.09,3,.055),darkVisor);visor.position.set(0,1.43,.39);visor.castShadow=true;astro.add(visor);faceReadsUpgraded++;
+  const visor=new THREE.Mesh(new RoundedBoxGeometry(.52,.18,.09,3,.055),darkVisor);visor.position.set(0,1.43,.39);visor.castShadow=true;astro.add(visor);faceReadsUpgraded++;
 }
 const dog=findToken(10);
 if(dog){
-  const muzzle=new THREE.Mesh(new THREE.RoundedBoxGeometry(.44,.25,.15,3,.085),warmCream);muzzle.position.set(0,1.23,.39);muzzle.castShadow=true;dog.add(muzzle);
+  const muzzle=new THREE.Mesh(new RoundedBoxGeometry(.44,.25,.15,3,.085),warmCream);muzzle.position.set(0,1.23,.39);muzzle.castShadow=true;dog.add(muzzle);
   for(const sx of [-1,1]){const eye=new THREE.Mesh(new THREE.SphereGeometry(.045,12,8),darkVisor);eye.position.set(sx*.11,1.36,.47);dog.add(eye)}
   faceReadsUpgraded++;
 }
