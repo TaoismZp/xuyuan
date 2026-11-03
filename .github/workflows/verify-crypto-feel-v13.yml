@@ -1,0 +1,46 @@
+name: Verify Crypto Tycoon Game Feel v13
+
+on:
+  push:
+    paths:
+      - 'crypto-tycoon/candidate-v13.html'
+      - 'crypto-tycoon/candidate-v13-experience.js'
+      - 'crypto-tycoon/candidate-v13-experience.css'
+      - 'crypto-tycoon/audio/v13/**'
+      - 'crypto-tycoon/BUILD_BLUEPRINT_V7.md'
+      - 'crypto-tycoon/AUDIO_DIRECTION_V13.md'
+      - 'tests/crypto-feel-v13.js'
+      - '.github/workflows/verify-crypto-feel-v13.yml'
+  workflow_dispatch:
+
+jobs:
+  hero-feel-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install Playwright Chromium
+        run: |
+          npm init -y
+          npm install --save-dev playwright
+          npx playwright install --with-deps chromium
+      - name: Start static server
+        run: |
+          python3 -m http.server 8080 >/tmp/crypto-v13-http.log 2>&1 &
+          for i in {1..30}; do curl -fsS http://127.0.0.1:8080/crypto-tycoon/candidate-v13.html >/dev/null && exit 0; sleep 1; done
+          cat /tmp/crypto-v13-http.log
+          exit 1
+      - name: Verify strict hero interaction
+        env:
+          TARGET_URL: http://127.0.0.1:8080/crypto-tycoon/candidate-v13.html?test=1
+        run: node tests/crypto-feel-v13.js
+      - name: Upload v13 evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: crypto-feel-v13-evidence
+          path: artifacts/*.json
+          if-no-files-found: warn
