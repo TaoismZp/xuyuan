@@ -1,16 +1,16 @@
 # Crypto Tycoon — Durable Project State
 
 status: ACTIVE
-updated_at: 2026-11-03T03:12:00Z
+updated_at: 2026-11-03T03:25:00Z
 protocol: wish-delivery/versions/v7.6.md
-current_gate: Mobile / Performance
-candidate: candidate-v11 (Full Gameplay Integration accepted)
-candidate_checkpoint: 42c515014576cdf2f5395313d6096b1ac79cf5e7
+current_gate: Exact-Build Public Delivery Surface
+candidate: candidate-v11 (Mobile / Performance accepted)
+candidate_checkpoint: fa63ff673641b8947f118df359564366e6ea3c0d
 controlling_blueprint: crypto-tycoon/BUILD_BLUEPRINT_V5.md
-last_good_checkpoint: Stage-3 Full Gameplay Integration accepted on desktop+iPad in GitHub Actions run 41570530539. Artifact 13200269452 (crypto-stage3-full-game-v11), digest sha256:924932a68a722397dd45689fab3c7cb2a0cd3c0b7130af4f4be904448440aeea. Both surfaces completed two full four-player rounds and remained playable at round 3. Human bought SOL on tile 5 then Meme on tile 7, cash ended at ¥101,000, ownership persisted across bot turns, portfolio UI reflected both holdings, restart reset positions/cash/owners, and end-state/replay rendered four-player ranking correctly with no interaction errors or horizontal overflow.
-open_blocker: none at Stage-3.
-next_executable_action: run the candidate-v11 full game through the Mobile / Performance gate: iPhone-class viewport and touch layout, WebKit/Safari-compatible functional smoke, no horizontal overflow, no clipped critical controls, stable restart/decision UI, and an explicit render/performance budget on the production rendering path. Fix only concrete mobile/performance failures; do not redesign accepted Stage-1 visuals or Stage-3 gameplay unless required. After PASS, advance to exact-build public Delivery Surface deployment and verification.
-user_blocker: none
+last_good_checkpoint: Mobile / Performance accepted in GitHub Actions run 41571669131. Chrome iPhone production/touch artifact 13201593033, digest sha256:869bf9c4d6e5092aa85231b57df3407790694ad70325dfa66012f26c85a9fc53; WebKit/Safari artifact 13201527786, digest sha256:c08346ce68a7cab37e251e15cedfe11830f446496adfcdc34d1f62a8c878e72f. Production iPhone viewport 393×852 at device DPR 2 rendered with capped internal ratio ≈1.65, 882 visible meshes, 229,242 triangles, 40 visible lights, zero horizontal overflow, four 44×44 action controls, and 48px decision controls. Real touch input completed the SOL-buy loop into round 2. WebKit iPhone smoke also completed the same loop without browser or interaction errors.
+open_blocker: none at Mobile / Performance.
+next_executable_action: publish the exact accepted candidate-v11 build to a stable public delivery surface, make it the user-facing Crypto Tycoon entry, verify that the public URL resolves the same candidate identity and runs on desktop+iPhone/iPad-class surfaces, then write the final Acceptance Report. GitHub Pages is preferred if repository Pages is now available; otherwise use an already-authorized stable deployment connector. Do not substitute html-preview, localhost, source files, screenshots, or a stale public loader.
+user_blocker: none unless every stable host requires a new user authorization.
 
 ## Resume Rule
 If this project is reopened while status is ACTIVE / INTERRUPTED / BLOCKED_TECH, do not stop at a status report. Validate `last_good_checkpoint`, then execute `next_executable_action` in the same active turn unless a real user authorization/blocker exists.
