@@ -137,7 +137,7 @@ jobs:
           if [ "$HTTP_OUTCOME" = success ] && [ "$SURFACE_OUTCOME" = success ]; then RESULT=PASS; else RESULT=FAIL; fi
           VISION=$(sha256sum personal-site-v1/VISION_FIXTURE.md | cut -d' ' -f1)
           BLUEPRINT=$(sha256sum personal-site-v1/BACKEND_BUILD_BLUEPRINT.md | cut -d' ' -f1)
-          PUBLISHED_COUNT=$(node -e 'const fs=require("node:fs");const d="personal-site-v1/content/posts";console.log(fs.readdirSync(d).filter(f=>f.endsWith(".md")&&/^status:\\s*"?published"?\\s*$/m.test(fs.readFileSync(d+"/"+f,"utf8"))).length)')
+          PUBLISHED_COUNT=$(node -e 'const fs=require("node:fs");const d="personal-site-v1/content/posts";console.log(fs.readdirSync(d).filter(f=>f.endsWith(".md")).filter(f=>fs.readFileSync(d+"/"+f,"utf8").split("\n").some(l=>l.trim()==="status: published")).length)')
           {
             echo '# Acceptance Report — Personal Site v1'
             echo
