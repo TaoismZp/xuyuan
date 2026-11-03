@@ -1,15 +1,15 @@
 # Crypto Tycoon — Durable Project State
 
 status: ACTIVE
-updated_at: 2026-11-03T02:10:00Z
+updated_at: 2026-11-03T02:22:00Z
 protocol: wish-delivery/versions/v7.6.md
-current_gate: Stage-1 Visual Vertical Slice / Independent Supervision
-candidate: candidate-v8
-candidate_checkpoint: 75df04640dd45bb5a331471d486e362c797764a6
+current_gate: Stage-2 Minimal Interactive Slice
+candidate: candidate-v9 (Stage-1 accepted); next candidate candidate-v10
+candidate_checkpoint: 7653246073b6645c164ef5bacdedf3724cdc3460
 controlling_blueprint: crypto-tycoon/BUILD_BLUEPRINT_V5.md
-last_good_checkpoint: candidate-v7 exact-build desktop+iPad CDP evidence captured in run 41563650448 and independently reviewed; SUPERVISION_REPORT_V7.md records Stage-1 FAIL; v8 construction addressing only A1–A4 is committed and workflow now targets candidate-v8
-open_blocker: v8 exact-build desktop+iPad evidence has not yet been captured and visually supervised
-next_executable_action: inspect the supervision run triggered by commit 75df04640dd45bb5a331471d486e362c797764a6; download v8 evidence artifact when available; compare desktop+iPad against Reference Fixture and BUILD_BLUEPRINT_V5 thresholds; write SUPERVISION_REPORT_V8.md; if FAIL, remediate only highest-weight remaining defects, if PASS proceed to Stage-2 minimal interaction
+last_good_checkpoint: Stage-1 Visual Vertical Slice accepted in SUPERVISION_REPORT_V9.md; exact-build desktop+iPad evidence from run 41565133323, artifact 13198509369, digest sha256:cb129e919dca7e64c4f56da8b4580e7dccf7a91e74f6d249a1d4d78b35141d73
+open_blocker: Stage-2 interaction has not yet been built and independently accepted
+next_executable_action: build candidate-v10 on top of candidate-v9 with a real minimal interaction loop: roll input + dice animation/state + human token movement on the same 24-tile loop + one buy/pass decision mutating serializable state + one bot turn + one market-regime transition + HUD synchronization; create a dedicated exact-build Stage-2 test and post-interaction CDP visual evidence; write Stage-2 acceptance report only if both functional and visual regression gates pass
 user_blocker: none
 
 ## Resume Rule
