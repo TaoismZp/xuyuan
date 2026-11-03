@@ -266,7 +266,6 @@ def build(include_drafts: bool) -> None:
 
     manifest = {
         "schema": 1,
-        "generated_at": datetime.now(timezone.utc).replace(microsecond=0).isoformat(),
         "entries": [
             {
                 "title": entry["title"],
