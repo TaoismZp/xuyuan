@@ -1,0 +1,107 @@
+name: Verify personal site v1 public surface
+on:
+  workflow_run:
+    workflows: ["Deploy playable artifacts to GitHub Pages"]
+    types: [completed]
+permissions:
+  contents: read
+jobs:
+  verify-public:
+    if: >-
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.head_branch == 'main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+      - name: Bind verification to deploy identity
+        run: |
+          test "$(git rev-parse HEAD)" = "${{ github.event.workflow_run.head_sha }}"
+          echo "delivery_identity=${{ github.event.workflow_run.head_sha }}"
+      - name: Public HTTP verification
+        run: |
+          base="https://taoismzp.github.io/xuyuan/personal-site-v1"
+          for path in "/" "/essays/" "/essays/sample/" "/projects/" "/about/" "/assets/site.css" "/assets/site.js"; do
+            curl --fail --silent --show-error --retry 5 --retry-delay 3 "$base$path" >/tmp/public-check
+            test -s /tmp/public-check
+          done
+          curl --fail --silent "$base/" | grep -q "我把钱放进"
+          curl --fail --silent "$base/essays/sample/" | grep -q "前端 Fixture"
+      - name: Install WebKit and CJK font
+        run: |
+          npm init -y >/dev/null 2>&1
+          npm i playwright@1.56.1
+          npx playwright install --with-deps webkit
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq fonts-noto-cjk
+          fc-cache -f
+      - name: Same-surface iPhone iPad desktop verification
+        run: |
+          mkdir -p personal-site-v1-public-evidence
+          node <<'NODE'
+          const { webkit } = require('playwright');
+          const base = 'https://taoismzp.github.io/xuyuan/personal-site-v1';
+          const assert = (value, message) => { if (!value) throw new Error(message); };
+          (async () => {
+            const browser = await webkit.launch({headless:true});
+            const surfaces = [
+              ['iphone',390,844,true],
+              ['ipad',1024,1366,true],
+              ['desktop',1440,1100,false]
+            ];
+            const pages = [
+              ['home','/'],
+              ['essays','/essays/'],
+              ['article','/essays/sample/'],
+              ['projects','/projects/'],
+              ['about','/about/']
+            ];
+            for (const [surface,w,h,mobile] of surfaces) {
+              for (const [name,path] of pages) {
+                const p = await browser.newPage({viewport:{width:w,height:h},isMobile:mobile,hasTouch:mobile,deviceScaleFactor:surface==='iphone'?2:1});
+                await p.goto(base + path,{waitUntil:'networkidle'});
+                const result = await p.evaluate(() => ({
+                  overflow: document.documentElement.scrollWidth > document.documentElement.clientWidth,
+                  h1: document.querySelector('h1')?.textContent?.trim() || '',
+                  tiny: [...document.querySelectorAll('nav a,button')].filter(el => {const r=el.getBoundingClientRect();return r.width>0&&(r.width<44||r.height<44)}).length,
+                  skip: !!document.querySelector('.skip-link')
+                }));
+                assert(!result.overflow,`${surface}/${name}: horizontal overflow`);
+                assert(result.h1.length>0,`${surface}/${name}: missing h1`);
+                assert(result.tiny===0,`${surface}/${name}: target below 44px`);
+                assert(result.skip,`${surface}/${name}: missing skip link`);
+                if(name==='article'){
+                  const size=await p.locator('.article-body').evaluate(el=>parseFloat(getComputedStyle(el).fontSize));
+                  assert(size>=18,`${surface}/article: body below 18px`);
+                }
+                await p.screenshot({path:`personal-site-v1-public-evidence/${surface}-${name}.png`,fullPage:true});
+                await p.close();
+              }
+            }
+            const archive=await browser.newPage({viewport:{width:390,height:844},isMobile:true,hasTouch:true});
+            await archive.goto(base+'/essays/',{waitUntil:'networkidle'});
+            await archive.getByRole('button',{name:'交易'}).click();
+            assert(new URL(archive.url()).searchParams.get('tag')==='trade','public archive filter URL state failed');
+            await archive.reload({waitUntil:'networkidle'});
+            assert(await archive.getByRole('button',{name:'交易'}).getAttribute('aria-pressed')==='true','public archive filter restore failed');
+            await archive.close();
+
+            const article=await browser.newPage({viewport:{width:390,height:844},isMobile:true,hasTouch:true});
+            await article.goto(base+'/essays/sample/',{waitUntil:'networkidle'});
+            await article.evaluate(()=>{window.scrollTo(0,document.documentElement.scrollHeight);window.dispatchEvent(new Event('scroll'))});
+            await article.waitForFunction(()=>Number(document.querySelector('[data-reading-progress]')?.dataset.progress||'0')>90,null,{timeout:2000});
+            await article.close();
+            await browser.close();
+          })();
+          NODE
+      - uses: actions/upload-artifact@v5
+        if: always()
+        with:
+          name: personal-site-v1-public-evidence-${{ github.run_id }}
+          path: personal-site-v1-public-evidence/*.png
+          if-no-files-found: warn
+          retention-days: 7
