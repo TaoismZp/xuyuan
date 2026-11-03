@@ -19,22 +19,48 @@ jobs:
           cache-dependency-path: personal-site-v1/requirements-content.txt
       - name: Install pinned compiler
         run: pip install -r personal-site-v1/requirements-content.txt
-      - name: Validate production draft exclusion
+      - name: Validate production draft exclusion and reproducibility
         run: |
           python3 personal-site-v1/scripts/build_content.py
           ! grep -R "后台验收样稿" personal-site-v1/index.html personal-site-v1/essays/index.html personal-site-v1/feed.xml personal-site-v1/sitemap.xml
           test ! -d personal-site-v1/essays/backend-verification-draft
           grep -q '"entries": \[\]' personal-site-v1/content-manifest.json
-      - name: Render representative publication in isolated copy
+          sha256sum personal-site-v1/index.html personal-site-v1/essays/index.html personal-site-v1/feed.xml personal-site-v1/sitemap.xml personal-site-v1/content-manifest.json > /tmp/build-1.sha
+          python3 personal-site-v1/scripts/build_content.py
+          sha256sum personal-site-v1/index.html personal-site-v1/essays/index.html personal-site-v1/feed.xml personal-site-v1/sitemap.xml personal-site-v1/content-manifest.json > /tmp/build-2.sha
+          diff -u /tmp/build-1.sha /tmp/build-2.sha
+      - name: Exercise publish edit unpublish and stale cleanup in isolated copy
         run: |
           rm -rf /tmp/personal-site-v1
           cp -R personal-site-v1 /tmp/personal-site-v1
+
+          # Synthetic publish of the committed draft fixture.
           PERSONAL_SITE_ROOT=/tmp/personal-site-v1 python3 personal-site-v1/scripts/build_content.py --include-drafts
           test -f /tmp/personal-site-v1/essays/backend-verification-draft/index.html
           grep -q "后台验收样稿" /tmp/personal-site-v1/index.html
           grep -q "后台验收样稿" /tmp/personal-site-v1/essays/index.html
+          grep -q "后台验收样稿" /tmp/personal-site-v1/feed.xml
+          grep -q "backend-verification-draft" /tmp/personal-site-v1/sitemap.xml
           grep -q "<h2>验收点</h2>" /tmp/personal-site-v1/essays/backend-verification-draft/index.html
           grep -q "<blockquote>" /tmp/personal-site-v1/essays/backend-verification-draft/index.html
+
+          # Synthetic edit: source changes must regenerate every public surface.
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('/tmp/personal-site-v1/content/essays/backend-verification-draft.md')
+          text = p.read_text(encoding='utf-8').replace('title: 后台验收样稿', 'title: 后台验收样稿·已编辑')
+          p.write_text(text, encoding='utf-8')
+          PY
+          PERSONAL_SITE_ROOT=/tmp/personal-site-v1 python3 personal-site-v1/scripts/build_content.py --include-drafts
+          grep -q "后台验收样稿·已编辑" /tmp/personal-site-v1/index.html
+          grep -q "后台验收样稿·已编辑" /tmp/personal-site-v1/essays/index.html
+          grep -q "后台验收样稿·已编辑" /tmp/personal-site-v1/essays/backend-verification-draft/index.html
+          grep -q "后台验收样稿·已编辑" /tmp/personal-site-v1/feed.xml
+
+          # Synthetic unpublish: normal production build must remove all public traces and stale article directory.
+          PERSONAL_SITE_ROOT=/tmp/personal-site-v1 python3 personal-site-v1/scripts/build_content.py
+          test ! -d /tmp/personal-site-v1/essays/backend-verification-draft
+          ! grep -R "后台验收样稿" /tmp/personal-site-v1/index.html /tmp/personal-site-v1/essays/index.html /tmp/personal-site-v1/feed.xml /tmp/personal-site-v1/sitemap.xml /tmp/personal-site-v1/content-manifest.json
       - uses: actions/setup-node@v6
         with:
           node-version: 22
@@ -48,6 +74,9 @@ jobs:
           fc-cache -f
       - name: Verify simulated published article on accepted frontend shell
         run: |
+          rm -rf /tmp/personal-site-v1
+          cp -R personal-site-v1 /tmp/personal-site-v1
+          PERSONAL_SITE_ROOT=/tmp/personal-site-v1 python3 personal-site-v1/scripts/build_content.py --include-drafts
           mkdir -p personal-site-v1/backend-evidence
           cd /tmp && python3 -m http.server 4174 >/tmp/backend-preview.log 2>&1 &
           sleep 2
