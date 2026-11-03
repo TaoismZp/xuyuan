@@ -1,0 +1,82 @@
+name: Verify Crypto Tycoon Stage 3
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'wish-delivery/versions/v7.6.md'
+      - 'crypto-tycoon/BUILD_BLUEPRINT_V5.md'
+      - 'crypto-tycoon/candidate-v1.js'
+      - 'crypto-tycoon/candidate-v2-augment.js'
+      - 'crypto-tycoon/candidate-v3-augment.js'
+      - 'crypto-tycoon/candidate-v4-augment.js'
+      - 'crypto-tycoon/candidate-v5-augment.js'
+      - 'crypto-tycoon/candidate-v6-augment.js'
+      - 'crypto-tycoon/candidate-v7-augment.js'
+      - 'crypto-tycoon/candidate-v8-augment.js'
+      - 'crypto-tycoon/candidate-v9-augment.js'
+      - 'crypto-tycoon/candidate-v5.css'
+      - 'crypto-tycoon/candidate-v8.css'
+      - 'crypto-tycoon/candidate-v10.css'
+      - 'crypto-tycoon/candidate-v11.css'
+      - 'crypto-tycoon/candidate-v11.html'
+      - 'crypto-tycoon/candidate-v11-game.js'
+      - 'tests/crypto-stage3-e2e.js'
+      - '.github/workflows/verify-crypto-stage3.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  stage3-full-game:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Verify protocol and Stage-1/2 prerequisites
+        run: |
+          test -f wish-delivery/versions/v7.6.md
+          test -f crypto-tycoon/BUILD_BLUEPRINT_V5.md
+          test -f crypto-tycoon/SUPERVISION_REPORT_V9.md
+          test -f crypto-tycoon/candidate-v11.html
+          test -f crypto-tycoon/candidate-v11-game.js
+          grep -q 'wish-delivery/versions/v7.6.md' crypto-tycoon/BUILD_BLUEPRINT_V5.md
+          echo "PROTOCOL_SHA=$(git hash-object wish-delivery/versions/v7.6.md)"
+          echo "BLUEPRINT_SHA=$(git hash-object crypto-tycoon/BUILD_BLUEPRINT_V5.md)"
+          echo "STAGE1_REPORT_SHA=$(git hash-object crypto-tycoon/SUPERVISION_REPORT_V9.md)"
+          echo "CANDIDATE_COMMIT=$GITHUB_SHA"
+      - name: Install CJK fonts
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y fonts-noto-cjk >/dev/null
+          fc-cache -f
+      - name: Install Playwright client
+        run: |
+          npm init -y
+          npm install --save-dev playwright
+      - name: Start candidate server
+        run: |
+          python3 -m http.server 8080 >/tmp/crypto-stage3-http.log 2>&1 &
+          echo $! > /tmp/crypto-stage3-http.pid
+          for i in {1..30}; do
+            curl -fsS http://127.0.0.1:8080/crypto-tycoon/candidate-v11.html >/dev/null && exit 0
+            sleep 1
+          done
+          cat /tmp/crypto-stage3-http.log
+          exit 1
+      - name: Execute repeated full-game loop
+        env:
+          TARGET_URL: http://127.0.0.1:8080/crypto-tycoon/candidate-v11.html?test=1
+          EXPECTED_VERSION: candidate-v11
+          PW_CHANNEL: chrome
+        run: node tests/crypto-stage3-e2e.js
+      - name: Upload Stage-3 evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: crypto-stage3-full-game-v11
+          path: artifacts/*
+          if-no-files-found: warn
