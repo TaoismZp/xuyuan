@@ -12,11 +12,14 @@ jobs:
       - uses: actions/setup-node@v6
         with:
           node-version: 22
-      - name: Install lightweight visual verifier
+      - name: Install visual verifier and CJK font
         run: |
           npm init -y >/dev/null 2>&1
           npm i playwright@1.56.1
           npx playwright install chromium
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq fonts-noto-cjk
+          fc-cache -f
       - name: Serve fixture
         run: |
           python3 -m http.server 4173 >/tmp/personal-site-v1.log 2>&1 &
@@ -32,9 +35,10 @@ jobs:
             for (const [name,w,h,mobile] of [['desktop',1440,1100,false],['mobile',390,844,true]]) {
               const p = await browser.newPage({viewport:{width:w,height:h},isMobile:mobile,hasTouch:mobile,deviceScaleFactor:mobile?2:1});
               await p.goto('http://127.0.0.1:4173/personal-site-v1/vision/fixture.html',{waitUntil:'networkidle'});
-              const metrics = await p.evaluate(() => ({overflow:document.documentElement.scrollWidth>document.documentElement.clientWidth,title:document.title}));
+              const metrics = await p.evaluate(() => ({overflow:document.documentElement.scrollWidth>document.documentElement.clientWidth,title:document.title,h1:document.querySelector('h1')?.innerText||''}));
               if(metrics.overflow) throw new Error(name+': horizontal overflow');
               if(!metrics.title.includes('Vision Fixture')) throw new Error(name+': wrong fixture identity');
+              if(!metrics.h1.includes('市场')) throw new Error(name+': Chinese text did not render into DOM');
               await p.screenshot({path:`personal-site-v1/vision/evidence/${name}.png`,fullPage:true});
               await p.close();
             }
