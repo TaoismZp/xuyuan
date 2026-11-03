@@ -2,7 +2,7 @@ name: Publish longform article
 
 on:
   issues:
-    types: [opened, edited, labeled]
+    types: [opened, edited, reopened]
 
 permissions:
   contents: write
@@ -17,7 +17,7 @@ jobs:
     if: >-
       github.event.issue.state == 'open' &&
       github.event.issue.user.login == 'TaoismZp' &&
-      contains(github.event.issue.labels.*.name, 'publish-longform')
+      startsWith(github.event.issue.title, '[长文]')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -33,17 +33,13 @@ jobs:
       - name: Verify generated site
         run: python3 longform-v2/tests/verify_static.py
       - name: Commit publication
-        id: commit
         run: |
           git config user.name "longform-publisher[bot]"
           git config user.email "longform-publisher[bot]@users.noreply.github.com"
           git add longform-v2
-          if git diff --cached --quiet; then
-            echo "changed=false" >> "$GITHUB_OUTPUT"
-          else
+          if ! git diff --cached --quiet; then
             git commit -m "Publish longform #${{ github.event.issue.number }}"
             git push origin main
-            echo "changed=true" >> "$GITHUB_OUTPUT"
           fi
       - name: Confirm publication request
         env:
