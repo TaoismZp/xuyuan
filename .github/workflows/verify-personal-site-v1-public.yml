@@ -109,7 +109,17 @@ jobs:
                   assert(result.article.fontSize >= (surface==='iphone'?18:16),`${surface}/${name}: article typography too small`);
                   assert(result.article.lastParagraph.length > 0,`${surface}/${name}: article ending missing`);
                   await p.screenshot({path:`personal-site-v1-public-evidence/${surface}-${name}.png`,fullPage:false});
-                  await p.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
+                  const bottom = await p.evaluate(async () => {
+                    document.documentElement.style.scrollBehavior = 'auto';
+                    document.body.style.scrollBehavior = 'auto';
+                    window.scrollTo(0, document.documentElement.scrollHeight);
+                    await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+                    return {
+                      y: window.scrollY,
+                      maximum: Math.max(0, document.documentElement.scrollHeight - window.innerHeight)
+                    };
+                  });
+                  assert(bottom.maximum > 1200 && bottom.y >= bottom.maximum - 16, `${surface}/${name}: failed to reach the actual article ending`);
                   await p.screenshot({path:`personal-site-v1-public-evidence/${surface}-${name}-end.png`,fullPage:false});
                 } else {
                   await p.screenshot({path:`personal-site-v1-public-evidence/${surface}-${name}.png`,fullPage:true});
