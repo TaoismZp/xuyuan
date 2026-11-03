@@ -41,7 +41,9 @@ async function capture(browser,viewport,name){
   // Native DOM click reaches the same production click handler without Playwright's actionability/stability wait.
   await page.evaluate(()=>document.querySelector('.roll')?.click());
   mark('roll-click-dispatched',{surface:name});
-  await page.waitForFunction(()=>window.__cryptoStage2?.state?.phase==='decision'||!!window.__cryptoInteractionError,null,{timeout:5000});
+  // requestAnimationFrame is intentionally frozen above, so post-freeze state supervision must not use
+  // Playwright's default rAF polling. Poll on a fixed timer instead or the monitor blinds itself.
+  await page.waitForFunction(()=>window.__cryptoStage2?.state?.phase==='decision'||!!window.__cryptoInteractionError,null,{timeout:5000,polling:50});
   const rollError=await page.evaluate(()=>window.__cryptoInteractionError||null);
   assert(!rollError,'roll interaction error: '+rollError);
   const decision=await page.evaluate(()=>window.__cryptoStage2.getState());
@@ -53,7 +55,7 @@ async function capture(browser,viewport,name){
 
   await page.evaluate(()=>document.querySelector('.stage2-decision .buy')?.click());
   mark('buy-click-dispatched',{surface:name});
-  await page.waitForFunction(()=>window.__cryptoStage2?.state?.stage2Complete===true||!!window.__cryptoInteractionError,null,{timeout:5000});
+  await page.waitForFunction(()=>window.__cryptoStage2?.state?.stage2Complete===true||!!window.__cryptoInteractionError,null,{timeout:5000,polling:50});
   const decisionError=await page.evaluate(()=>window.__cryptoInteractionError||null);
   assert(!decisionError,'decision interaction error: '+decisionError);
   await page.waitForTimeout(80);
