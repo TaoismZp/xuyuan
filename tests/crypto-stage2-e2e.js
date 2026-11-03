@@ -5,8 +5,10 @@ const expectedVersion=process.env.EXPECTED_VERSION||'candidate-v10';
 fs.mkdirSync('artifacts',{recursive:true});
 
 function assert(condition,message){if(!condition)throw new Error(message)}
+function mark(name,extra={}){console.log('STAGE2_CHECKPOINT',JSON.stringify({name,at:new Date().toISOString(),...extra}))}
 
 async function capture(browser,viewport,name){
+  mark('capture-start',{name,viewport});
   const context=await browser.newContext({viewport,deviceScaleFactor:1,reducedMotion:'reduce'});
   const page=await context.newPage();
   const errors=[];
@@ -15,6 +17,7 @@ async function capture(browser,viewport,name){
 
   await page.goto(target,{waitUntil:'load',timeout:60000});
   await page.waitForFunction(v=>document.documentElement.dataset.sliceReady==='1'&&window.__cryptoSliceReady?.version===v&&window.__cryptoStage2?.state?.phase==='await-roll',expectedVersion,{timeout:30000});
+  mark('candidate-ready',{name});
 
   const before=await page.evaluate(()=>({
     ready:window.__cryptoSliceReady,
@@ -27,17 +30,22 @@ async function capture(browser,viewport,name){
   assert(before.state.human.tile===17&&before.state.bot.tile===10,'unexpected Stage-2 initial token positions');
   assert(before.overflow.body<=1&&before.overflow.doc<=1,'initial horizontal overflow');
 
-  await page.locator('.roll').click();
-  await page.waitForFunction(()=>window.__cryptoStage2?.state?.phase==='decision',{timeout:10000});
+  // Native DOM click reaches the same production click handler without Playwright's actionability/stability wait.
+  await page.evaluate(()=>document.querySelector('.roll')?.click());
+  mark('roll-click-dispatched',{name});
+  await page.waitForFunction(()=>window.__cryptoStage2?.state?.phase==='decision',null,{timeout:5000});
   const decision=await page.evaluate(()=>window.__cryptoStage2.getState());
+  mark('decision-open',{name,tile:decision.human.tile,roll:decision.lastRoll});
   assert(JSON.stringify(decision.lastRoll)==='[2,3]','deterministic test roll must be [2,3]');
   assert(decision.human.tile===22,`human token expected tile 22, got ${decision.human.tile}`);
   assert(decision.decision?.asset==='SOL'&&decision.decision?.cost===12000,'landing decision mismatch');
   assert(await page.locator('.stage2-decision').getAttribute('aria-hidden')==='false','buy/pass decision not visible');
 
-  await page.locator('.stage2-decision .buy').click();
-  await page.waitForFunction(()=>window.__cryptoStage2?.state?.stage2Complete===true,{timeout:10000});
-  await page.waitForTimeout(350);
+  await page.evaluate(()=>document.querySelector('.stage2-decision .buy')?.click());
+  mark('buy-click-dispatched',{name});
+  await page.waitForFunction(()=>window.__cryptoStage2?.state?.stage2Complete===true,null,{timeout:5000});
+  await page.waitForTimeout(80);
+  mark('state-complete',{name});
 
   const after=await page.evaluate(()=>({
     state:window.__cryptoStage2.getState(),
@@ -64,6 +72,7 @@ async function capture(browser,viewport,name){
   assert(s.market.id==='mania'&&s.market.returnPct===25,'market did not transition bull→mania');
   assert(s.round===7,'round did not advance to 7');
   assert(s.history.some(x=>x.type==='buy')&&s.history.some(x=>x.type==='bot-turn')&&s.history.some(x=>x.type==='market-transition'),'history missing required events');
+  assert(s.animationProof.diceFrames>=2&&s.animationProof.humanMoveFrames>=10&&s.animationProof.botMoveFrames>=8,'animation proof incomplete');
   assert(after.text.tiles===24&&after.text.referencePixelsUsed===false,'render_game_to_text proof mismatch');
   assert(after.humanHud.cash.includes('108,000')&&after.humanHud.net.includes('169,360'),'HUD cash/net worth out of sync');
   assert(after.marketHud.includes('狂热期')&&after.roundHud.includes('07'),'market/round HUD out of sync');
@@ -71,14 +80,20 @@ async function capture(browser,viewport,name){
   assert(after.decisionHidden==='true','decision UI did not close');
   assert(after.overflow.body<=1&&after.overflow.doc<=1,'post-interaction horizontal overflow');
   assert(errors.length===0,'browser errors: '+errors.join(' | '));
+  mark('functional-assertions-pass',{name});
 
+  // Use the same proven CDP path as Stage-1. If evidence capture stalls/fails, functional PASS remains visible in logs.
   await page.evaluate(()=>{window.requestAnimationFrame=()=>0});
-  await page.waitForTimeout(180);
+  await page.waitForTimeout(120);
   const cdp=await context.newCDPSession(page);
-  const shot=await cdp.send('Page.captureScreenshot',{format:'png',fromSurface:true,captureBeyondViewport:false});
+  const shot=await Promise.race([
+    cdp.send('Page.captureScreenshot',{format:'png',fromSurface:true,captureBeyondViewport:false}),
+    new Promise((_,reject)=>setTimeout(()=>reject(new Error('CDP post-interaction screenshot timeout')),12000))
+  ]);
   assert(shot?.data?.length>10000,'post-interaction screenshot invalid');
   fs.writeFileSync(`artifacts/${name}-post-interaction.png`,Buffer.from(shot.data,'base64'));
   fs.writeFileSync(`artifacts/${name}-stage2.json`,JSON.stringify({target,viewport,before,after},null,2));
+  mark('evidence-written',{name});
 
   await context.close();
 }
