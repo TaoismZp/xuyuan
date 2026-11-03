@@ -12,11 +12,11 @@ jobs:
       - uses: actions/setup-node@v6
         with:
           node-version: 22
-      - name: Install Playwright
+      - name: Install lightweight visual verifier
         run: |
           npm init -y >/dev/null 2>&1
           npm i playwright@1.56.1
-          npx playwright install --with-deps webkit
+          npx playwright install chromium
       - name: Serve fixture
         run: |
           python3 -m http.server 4173 >/tmp/personal-site-v1.log 2>&1 &
@@ -26,24 +26,15 @@ jobs:
         run: |
           mkdir -p personal-site-v1/vision/evidence
           node <<'NODE'
-          const { webkit } = require('playwright');
+          const { chromium } = require('playwright');
           (async () => {
-            const browser = await webkit.launch({headless:true});
-            const sizes = [
-              ['desktop', 1440, 1100, false],
-              ['mobile', 390, 844, true]
-            ];
-            for (const [name,w,h,mobile] of sizes) {
+            const browser = await chromium.launch({headless:true});
+            for (const [name,w,h,mobile] of [['desktop',1440,1100,false],['mobile',390,844,true]]) {
               const p = await browser.newPage({viewport:{width:w,height:h},isMobile:mobile,hasTouch:mobile,deviceScaleFactor:mobile?2:1});
               await p.goto('http://127.0.0.1:4173/personal-site-v1/vision/fixture.html',{waitUntil:'networkidle'});
-              const metrics = await p.evaluate(() => ({
-                overflow: document.documentElement.scrollWidth > document.documentElement.clientWidth,
-                h1: getComputedStyle(document.querySelector('h1')).fontSize,
-                body: getComputedStyle(document.body).fontSize,
-                title: document.title
-              }));
-              if (metrics.overflow) throw new Error(name + ': horizontal overflow');
-              if (!metrics.title.includes('Vision Fixture')) throw new Error(name + ': wrong fixture identity');
+              const metrics = await p.evaluate(() => ({overflow:document.documentElement.scrollWidth>document.documentElement.clientWidth,title:document.title}));
+              if(metrics.overflow) throw new Error(name+': horizontal overflow');
+              if(!metrics.title.includes('Vision Fixture')) throw new Error(name+': wrong fixture identity');
               await p.screenshot({path:`personal-site-v1/vision/evidence/${name}.png`,fullPage:true});
               await p.close();
             }
