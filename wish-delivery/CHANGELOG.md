@@ -2,6 +2,19 @@
 
 > 说明：v1.0–v7.0 为根据实际项目事故与迭代过程整理出的历史脉络；从 v7.1 起，每次实质迭代都必须在 GitHub 产生不可变版本文件。
 
+## v7.6 — Execution Continuity & Liveness Watchdog
+**触发事故**：币圈大富翁 v7 在监理取证阶段连续调整后，聊天回合结束；项目有可靠 Git checkpoint，但下一次用户回来时系统先做了状态汇报，没有自动从 checkpoint 继续，形成“看起来像终止”。与此同时，监理为了避免碰产品代码不断叠加 prototype hook、第二 renderer、截图 fallback，监理工具自身开始比被监理对象更复杂。
+
+**根因**：v7.5 只规定“超时后可恢复”，没有规定长任务必须保存显式 Task State，也没有规定用户回到同一项目后必须先恢复 `next_executable_action`。此外，Independent Supervision 只有独立性约束，没有“监理必须比产品简单”的复杂度约束。
+
+**新增硬规则**：
+- Durable Task State：长任务必须记录 status、last_good_checkpoint、current_gate、open_blocker、next_executable_action、candidate_identity；
+- No Silent Termination：聊天结束、请求超时、单工具/单 CI 失败只能产生 INTERRUPTED / BLOCKED，不能隐式终止；
+- Resume-on-Next-Turn：用户下一次回到同一项目时，先读取 checkpoint 并直接执行下一动作，而不是只汇报状态或要求用户再次说“继续”；
+- Liveness Failure：ACTIVE/INTERRUPTED 却没有 next action、技术失败后没有替代路径、用户回来后只汇报不恢复，都视为流程 BUG；
+- Monitor Must Be Simpler Than Product：监理工具若成为主要工程瓶颈，必须 Stop-Work 并缩短证据链；
+- 明确现实边界：没有活跃会话/自动化任务时不能假装后台持续执行；连续性靠 Durable Checkpoint + Resume-on-Next-Turn，而不是伪后台。
+
 ## v7.5 — Binding Chain & Exact Identity
 **触发事故**：建房式交付已经有“效果图→施工图→施工→监理→验收”，但仓库同时出现不同版本协议/施工图，且历史上发生过 CI 测试的是新构建、用户公网却仍是旧构建，以及截图/证据来自不同 commit 的情况。
 
@@ -151,3 +164,6 @@
 - Progress-Without-Convergence
 - Evidence-from-Different-Commit
 - Old-Blueprint-PASS-on-New-Candidate
+- Chat-End-as-Termination
+- Status-Report-Without-Resume
+- Inspector-More-Complex-Than-Product
