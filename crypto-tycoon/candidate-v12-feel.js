@@ -2,7 +2,8 @@ import * as THREE from 'three';
 
 const TEST=new URLSearchParams(location.search).get('test')==='1';
 const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
-const waitFor=(fn,timeout=10000)=>new Promise((resolve,reject)=>{const t=performance.now();(function loop(){const v=fn();if(v)return resolve(v);if(performance.now()-t>timeout)return reject(new Error('v12 feel dependency timeout'));setTimeout(loop,30)})()});
+const DEPENDENCY_TIMEOUT=TEST?60000:15000;
+const waitFor=(fn,timeout=DEPENDENCY_TIMEOUT)=>new Promise((resolve,reject)=>{const t=performance.now();(function loop(){const v=fn();if(v)return resolve(v);if(performance.now()-t>timeout)return reject(new Error('v12 feel dependency timeout'));setTimeout(loop,30)})()});
 
 const game=await waitFor(()=>window.__cryptoFullGame);
 const root=await waitFor(()=>window.__ctCapturedRoot);
