@@ -1,7 +1,7 @@
 name: Verify personal site v1 backend integration
 on:
   push:
-    branches: [personal-site-v1-frontend]
+    branches: [personal-site-v1-frontend, personal-site-v1-public-hardening]
     paths:
       - 'personal-site-v1/**'
       - '.github/workflows/personal-site-v1-backend-build.yml'
@@ -62,6 +62,13 @@ jobs:
           ! grep -R '不应公开的草稿' personal-site-v1/index.html personal-site-v1/essays/index.html personal-site-v1/essays/ci-published/index.html
           grep -q 'auth_methods: \[token\]' personal-site-v1/admin/config.yml
           ! grep -R -E 'github_pat_[A-Za-z0-9_]+|ghp_[A-Za-z0-9]+' personal-site-v1/admin personal-site-v1/content
+      - name: Verify public deployment excludes unpublished Markdown
+        run: |
+          node personal-site-v1/scripts/assemble-pages.mjs "$RUNNER_TEMP/pages-publish"
+          node personal-site-v1/scripts/verify-pages-artifact.mjs "$RUNNER_TEMP/pages-publish"
+          test -f "$RUNNER_TEMP/pages-publish/personal-site-v1/essays/ci-published/index.html"
+          grep -q '等待：交易中最稀缺的能力' "$RUNNER_TEMP/pages-publish/personal-site-v1/essays/ci-published/index.html"
+          ! grep -R '不应公开的草稿' "$RUNNER_TEMP/pages-publish/personal-site-v1"
       - name: Install browser verifier and CJK fonts
         run: |
           npm i playwright@1.56.1 --no-save

@@ -39,10 +39,14 @@ jobs:
         uses: actions/configure-pages@v5
         with:
           enablement: true
+      - name: Assemble only public files
+        run: node personal-site-v1/scripts/assemble-pages.mjs "$RUNNER_TEMP/pages-publish"
+      - name: Verify public artifact isolation
+        run: node personal-site-v1/scripts/verify-pages-artifact.mjs "$RUNNER_TEMP/pages-publish"
       - name: Upload static site
         uses: actions/upload-pages-artifact@v3
         with:
-          path: '.'
+          path: ${{ runner.temp }}/pages-publish
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4

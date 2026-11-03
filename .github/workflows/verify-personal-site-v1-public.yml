@@ -37,6 +37,10 @@ jobs:
           curl --fail --silent --retry 8 --retry-delay 4 "$base/essays/" | grep -q "还没有公开长文"
           ! curl --fail --silent --retry 8 --retry-delay 4 "$base/" | grep -q "前端 Fixture"
           curl --fail --silent --retry 8 --retry-delay 4 "$base/admin/config.yml" | grep -q "repo: TaoismZp/xuyuan"
+          for source in "/scripts/build.mjs" "/package.json" "/PROJECT_STATE.md" "/BACKEND_BUILD_BLUEPRINT.md"; do
+            status=$(curl --silent --location --output /dev/null --write-out '%{http_code}' "$base$source")
+            test "$status" = "404" || { echo "Source unexpectedly public on Pages: $source ($status)"; exit 1; }
+          done
       - name: Install WebKit and CJK font
         run: |
           npm init -y >/dev/null 2>&1

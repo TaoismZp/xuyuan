@@ -1,7 +1,7 @@
 name: Independent supervision — personal site v1
 on:
   push:
-    branches: [personal-site-v1-frontend]
+    branches: [personal-site-v1-frontend, personal-site-v1-public-hardening]
     paths:
       - 'personal-site-v1/**'
       - '.github/workflows/personal-site-v1-supervision.yml'
@@ -79,6 +79,12 @@ jobs:
           echo '[CHECK] Build one supervision-only published article'
           node personal-site-v1/scripts/build.mjs
           echo '[PASS] Build one supervision-only published article'
+          echo '[CHECK] Deployment artifact does not ship source content'
+          node personal-site-v1/scripts/assemble-pages.mjs "$RUNNER_TEMP/pages-publish"
+          node personal-site-v1/scripts/verify-pages-artifact.mjs "$RUNNER_TEMP/pages-publish"
+          test -f "$RUNNER_TEMP/pages-publish/personal-site-v1/essays/supervision-published/index.html"
+          test ! -e "$RUNNER_TEMP/pages-publish/personal-site-v1/content"
+          echo '[PASS] Public artifact excludes raw manuscripts and builder'
 
           require_text 'Accepted hero class preserved' personal-site-v1/index.html 'class="hero-title"'
           require_text 'Accepted hero line preserved' personal-site-v1/index.html 'class="hero-line"'
