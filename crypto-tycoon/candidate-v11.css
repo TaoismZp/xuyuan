@@ -10,6 +10,7 @@
 .stage2-decision .metric b{overflow-wrap:anywhere}
 .stage2-decision .choices.one{grid-template-columns:1fr}
 .stage2-decision .choices button[hidden]{display:none}
+.stage2-decision .choices button{min-height:44px}
 
 .game-toast{position:fixed;z-index:11;left:50%;top:18px;transform:translateX(-50%) translateY(-10px);padding:9px 15px;border:1px solid rgba(111,222,255,.32);border-radius:999px;background:rgba(7,17,41,.9);box-shadow:0 12px 30px rgba(0,0,0,.28);backdrop-filter:blur(12px);font-size:10px;font-weight:900;letter-spacing:.05em;color:#dff8ff;opacity:0;pointer-events:none;transition:.2s ease;max-width:min(620px,70vw);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .game-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
@@ -33,5 +34,6 @@
 @media(max-width:800px){
   .actions{right:8px;bottom:90px;gap:7px}
   .actions button{width:44px;min-width:44px;height:44px;min-height:44px}
+  .stage2-decision .choices button{height:48px;min-height:48px;padding:0 14px}
   .end-actions{grid-template-columns:1fr}
 }
