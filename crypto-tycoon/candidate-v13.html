@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#081327" />
+  <link rel="icon" href="data:," />
+  <title>币圈大富翁 3D · Hero Interaction v13</title>
+  <link rel="stylesheet" href="./candidate-v11.css" />
+  <link rel="stylesheet" href="./candidate-v13-experience.css" />
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"
+    }
+  }
+  </script>
+</head>
+<body>
+  <canvas id="game3d" aria-label="币圈大富翁 3D 实时场景"></canvas><div class="vignette"></div>
+
+  <section class="leaderboard" aria-label="玩家排行榜">
+    <div class="hud-title">财富排行榜 · PORTFOLIO RANK</div>
+    <div class="player me" data-player="0"><span class="portrait astro">A</span><span class="identity"><b>币圈玩家A</b><small>现金 ¥120,000</small></span><strong>¥120,000</strong></div>
+    <div class="player" data-player="1"><span class="portrait dog">D</span><span class="identity"><b>狗狗大佬</b><small>现金 ¥105,000</small></span><strong>¥105,000</strong></div>
+    <div class="player" data-player="2"><span class="portrait nft">N</span><span class="identity"><b>NFT收藏家</b><small>现金 ¥98,000</small></span><strong>¥98,000</strong></div>
+    <div class="player" data-player="3"><span class="portrait bull">B</span><span class="identity"><b>牛市冲锋</b><small>现金 ¥92,000</small></span><strong>¥92,000</strong></div>
+  </section>
+
+  <section class="round-card" aria-label="市场状态">
+    <small>市场周期 · MARKET CYCLE</small>
+    <div><b>第 01 回合</b><span>/ 12</span></div>
+    <p><i></i> 震荡市 · +0%</p>
+    <em>目标 · 活下来并让资产复利</em>
+  </section>
+
+  <section class="actions" aria-label="操作">
+    <button type="button" data-action="portfolio" aria-label="资产"><span>◆</span><small>资产</small></button>
+    <button type="button" data-action="history" aria-label="记录"><span>≡</span><small>记录</small></button>
+    <button type="button" data-action="rules" aria-label="规则"><span>?</span><small>规则</small></button>
+    <button type="button" data-action="restart" aria-label="重开"><span>↻</span><small>重开</small></button>
+  </section>
+
+  <section class="ticker"><span class="live-dot"></span><b>开盘</b><span>每一次下注都先问：还能不能留在牌桌上？</span></section>
+  <button class="roll" type="button" aria-label="掷骰子"><span class="mini-die">⚄</span><span><b>掷骰子</b><small>ROLL</small></span></button>
+
+  <section class="stage2-decision" aria-label="游戏决策" aria-hidden="true">
+    <div class="eyebrow">DECISION</div>
+    <h2>等待决策</h2>
+    <p></p>
+    <div class="numbers"></div>
+    <div class="choices"><button class="buy" type="button">确认</button><button class="pass" type="button">跳过</button></div>
+  </section>
+  <div class="game-toast" role="status" aria-live="polite"></div>
+
+  <section class="end-panel" aria-hidden="true">
+    <div class="end-card">
+      <div class="eyebrow">FINAL RANKING</div>
+      <h2>本局结算</h2>
+      <div class="rank-list"></div>
+      <div class="end-actions"><button class="again" type="button">再开一局</button><button class="board" type="button">看看棋盘</button></div>
+    </div>
+  </section>
+
+  <script type="module" src="./candidate-v11-game.js"></script>
+  <script type="module" src="./candidate-v13-experience.js"></script>
+</body>
+</html>
