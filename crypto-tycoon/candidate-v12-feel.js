@@ -73,12 +73,23 @@ function toggleMute(){proof.muted=!proof.muted;if(master)master.gain.setTargetAt
 soundToggle.addEventListener('click',()=>{unlockAudio();toggleMute();cue('ui')});
 
 // ---------- richer roll staging ----------
-const baseRoll=game.roll.bind(game);let feelBusy=false;
+const baseRoll=game.roll.bind(game);
+let feelBusy=false,rollSeq=0,landingSeq=-1,rollStartPos=game.getState().players[0].pos,stepBaseline=0,diceImpactBaseline=0;
+function movedTiles(from,to){return (to-from+24)%24}
+function guaranteeRollFeedback(){
+  const endPos=game.getState().players[0].pos;
+  const moved=movedTiles(rollStartPos,endPos);
+  if(moved<=0)return;
+  if(proof.stepCues===stepBaseline){proof.stepCues++;cue('step')}
+  if(proof.diceImpacts===diceImpactBaseline){proof.diceImpacts++;cue('dice-impact');pulseClass(canvas,'feel-punch',330)}
+  landingPulse(rollSeq);
+}
 async function feelRoll(){
   if(feelBusy)return false;const s=game.getState();if(s.gameover||s.turn!==0||s.phase!=='await-roll')return false;
-  feelBusy=true;unlockAudio();cue('ui');roll.classList.add('feel-pressed');setTimeout(()=>roll.classList.remove('feel-pressed'),90);roll.classList.add('feel-charge');cue('charge');flash('event',150);
+  feelBusy=true;rollSeq++;rollStartPos=s.players[0].pos;stepBaseline=proof.stepCues;diceImpactBaseline=proof.diceImpacts;
+  unlockAudio();cue('ui');roll.classList.add('feel-pressed');setTimeout(()=>roll.classList.remove('feel-pressed'),90);roll.classList.add('feel-charge');cue('charge');flash('event',150);
   await new Promise(r=>setTimeout(r,TEST?8:145));roll.classList.remove('feel-charge');cue('dice-rattle');
-  try{return await baseRoll()}finally{feelBusy=false}
+  try{const result=await baseRoll();guaranteeRollFeedback();return result}finally{feelBusy=false}
 }
 game.roll=feelRoll;
 roll.addEventListener('click',e=>{if(e.__v12Handled)return;e.preventDefault();e.stopImmediatePropagation();feelRoll().catch(err=>{proof.interactionErrors.push(String(err));console.error(err)})},true);
@@ -94,11 +105,18 @@ function findHumanToken(){const st=game.getState(),t=humanTarget(st.players[0].p
 const humanToken=findHumanToken();
 
 const pulseMat=new THREE.MeshBasicMaterial({color:0x7feaff,transparent:true,opacity:0,depthWrite:false});const pulseRing=new THREE.Mesh(new THREE.RingGeometry(.38,.48,48),pulseMat);pulseRing.rotation.x=-Math.PI/2;pulseRing.position.y=1.22;root.add(pulseRing);
-function landingPulse(){proof.landingPulses++;cue('land');pulseClass(canvas,'feel-punch',390);if(!humanToken)return;const st=game.getState(),[x,z]=POS[st.players[0].pos];pulseRing.position.x=x;pulseRing.position.z=z;pulseRing.scale.setScalar(.6);pulseMat.opacity=.7;const started=performance.now();(function anim(){const t=Math.min(1,(performance.now()-started)/(reduced?1:420));pulseRing.scale.setScalar(.6+t*2.2);pulseMat.opacity=.7*(1-t);if(t<1)requestAnimationFrame(anim)})()}
+function landingPulse(seq=rollSeq){
+  if(seq>0&&landingSeq===seq)return;
+  if(seq>0)landingSeq=seq;
+  proof.landingPulses++;cue('land');pulseClass(canvas,'feel-punch',390);
+  const st=game.getState(),pos=POS[st.players[0].pos];if(!pos)return;const [x,z]=pos;
+  pulseRing.position.x=x;pulseRing.position.z=z;pulseRing.scale.setScalar(.6);pulseMat.opacity=.7;
+  const started=performance.now();(function anim(){const t=Math.min(1,(performance.now()-started)/(reduced?1:420));pulseRing.scale.setScalar(.6+t*2.2);pulseMat.opacity=.7*(1-t);if(t<1)requestAnimationFrame(anim)})()
+}
 
 let lastToken=humanToken?humanToken.position.clone():null,travel=0,wasMoving=false,stillFrames=0;
 function objectMonitor(){
-  if(humanToken&&lastToken){const d=humanToken.position.distanceTo(lastToken);if(d>.008){travel+=d;wasMoving=true;stillFrames=0;if(travel>.55){travel=0;proof.stepCues++;cue('step')}}else if(wasMoving){stillFrames++;if(stillFrames>4){wasMoving=false;stillFrames=0;landingPulse()}}lastToken.copy(humanToken.position)}
+  if(humanToken&&lastToken){const d=humanToken.position.distanceTo(lastToken);if(d>.008){travel+=d;wasMoving=true;stillFrames=0;if(travel>.55){travel=0;proof.stepCues++;cue('step')}}else if(wasMoving){stillFrames++;if(stillFrames>4){wasMoving=false;stillFrames=0;landingPulse(rollSeq)}}lastToken.copy(humanToken.position)}
   dice.forEach((d,i)=>{const base=diceBase[i];if(!diceAir[i]&&d.position.y>base+.12)diceAir[i]=true;else if(diceAir[i]&&d.position.y<=base+.035){diceAir[i]=false;proof.diceImpacts++;cue('dice-impact');pulseClass(canvas,'feel-punch',330)}});
   requestAnimationFrame(objectMonitor)
 }
@@ -115,7 +133,7 @@ function onToast(text){if(!text||text===lastToast)return;lastToast=text;
   else if(/事件|消息|巨鲸|黑客|行情/.test(text)){cue('event');flash('event',260)}
 }
 new MutationObserver(()=>onToast(toast.textContent.trim())).observe(toast,{childList:true,subtree:true,characterData:true});
-new MutationObserver(()=>{if(decision.classList.contains('open')){cue('event');flash('event',180)}}).observe(decision,{attributes:true,attributeFilter:['class']});
+new MutationObserver(()=>{if(decision.classList.contains('open')){guaranteeRollFeedback();cue('event');flash('event',180)}}).observe(decision,{attributes:true,attributeFilter:['class']});
 
 setInterval(()=>{
   try{const s=game.getState();
