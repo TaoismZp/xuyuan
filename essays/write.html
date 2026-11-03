@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#f4f0e8" />
+  <meta name="robots" content="noindex" />
+  <title>发文 · 长文</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="grain" aria-hidden="true"></div>
+  <header class="site-header shell compact-header">
+    <a class="brand" href="./"><span class="brand-mark">文</span><span class="brand-copy"><strong>发文</strong><small>TaoismZp</small></span></a>
+    <nav class="nav"><a href="./">返回首页</a><button class="theme-toggle" id="themeToggle" type="button" aria-label="切换深色模式">◐</button></nav>
+  </header>
+
+  <main class="writer shell">
+    <section class="writer-intro">
+      <p class="eyebrow">AUTHOR MODE</p>
+      <h1>写完，直接发布。</h1>
+      <p>这个页面负责写作与预览；真正发布时会进入你的 GitHub 发文表单。提交后，自动化会把文章加入本站并重新部署。</p>
+    </section>
+
+    <section class="writer-grid">
+      <form class="composer" id="composer" onsubmit="return false">
+        <label>标题<input id="draftTitle" type="text" placeholder="这篇文章讲什么？" /></label>
+        <label>摘要<textarea id="draftDeck" rows="3" placeholder="用一两句话把读者带进来。"></textarea></label>
+        <label>标签<input id="draftTags" type="text" placeholder="交易, AI, 随笔" /></label>
+        <label>正文（Markdown）<textarea id="draftBody" class="body-input" rows="22" placeholder="# 从这里开始\n\n写你的正文……"></textarea></label>
+        <div class="composer-actions">
+          <button class="primary-action" id="copyDraft" type="button">复制发布稿</button>
+          <a class="secondary-action" id="publishLink" href="https://github.com/TaoismZp/xuyuan/issues/new?template=publish-longform.yml" target="_blank" rel="noopener">去 GitHub 发布 ↗</a>
+        </div>
+        <p class="writer-hint" id="copyHint">只有仓库所有者提交的发文 Issue 才会触发自动发布。</p>
+      </form>
+
+      <aside class="preview-pane">
+        <p class="preview-label">实时预览</p>
+        <h2 id="previewTitle">你的标题会出现在这里</h2>
+        <p class="article-deck" id="previewDeck">摘要会出现在这里。</p>
+        <div class="article-meta"><span>预览</span><span>·</span><span id="previewReadTime">1 分钟阅读</span></div>
+        <div class="article-divider"></div>
+        <div class="prose" id="previewBody"><p>正文会随着你输入即时排版。</p></div>
+      </aside>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

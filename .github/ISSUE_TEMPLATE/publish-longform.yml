@@ -1,0 +1,41 @@
+name: 发布一篇长文
+description: 仓库所有者提交后，文章会自动加入「长文」网站。
+title: "[发文] "
+labels: ["publish-longform"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        这是本站的发文入口。只有仓库所有者提交的 Issue 才会触发自动发布。
+  - type: input
+    id: title
+    attributes:
+      label: 文章标题
+      placeholder: 输入标题
+    validations:
+      required: true
+  - type: textarea
+    id: deck
+    attributes:
+      label: 摘要
+      description: 首页上显示的一两句话。
+    validations:
+      required: true
+  - type: input
+    id: tags
+    attributes:
+      label: 标签
+      description: 用逗号分隔，例如：交易, AI, 随笔
+  - type: input
+    id: slug
+    attributes:
+      label: 自定义链接（可选）
+      description: 只使用英文、数字和短横线；留空则自动使用 post-编号。
+      placeholder: why-waiting-matters
+  - type: textarea
+    id: body
+    attributes:
+      label: 正文 Markdown
+      description: 支持标题、引用、列表、粗体、链接、代码块等常用 Markdown。
+    validations:
+      required: true

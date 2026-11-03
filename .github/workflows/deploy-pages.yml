@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - 'crypto-tycoon/**'
+      - 'essays/**'
       - '.github/workflows/deploy-pages.yml'
   workflow_dispatch:
 

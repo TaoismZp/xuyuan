@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#f4f0e8" />
+  <meta name="description" content="长文 · TaoismZp" id="metaDescription" />
+  <title>文章 · 长文</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="reading-page">
+  <div class="reading-progress" id="readingProgress" aria-hidden="true"></div>
+  <div class="grain" aria-hidden="true"></div>
+  <header class="site-header shell compact-header">
+    <a class="brand" href="./" aria-label="返回首页">
+      <span class="brand-mark">文</span>
+      <span class="brand-copy"><strong>长文</strong><small>TaoismZp</small></span>
+    </a>
+    <nav class="nav" aria-label="文章操作">
+      <button id="shareButton" class="nav-button" type="button">分享</button>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="切换深色模式">◐</button>
+    </nav>
+  </header>
+
+  <main class="article-shell">
+    <article id="article" class="article" hidden>
+      <header class="article-header">
+        <a class="back-link" href="./">← 全部文章</a>
+        <div class="article-tags" id="articleTags"></div>
+        <h1 id="articleTitle"></h1>
+        <p class="article-deck" id="articleDeck"></p>
+        <div class="article-meta">
+          <span id="articleDate"></span><span>·</span><span id="articleReadTime"></span>
+        </div>
+      </header>
+      <div class="article-divider"></div>
+      <div class="prose" id="articleBody"></div>
+      <footer class="article-end">
+        <div class="end-mark">完</div>
+        <p>如果它值得记住，就让它离信息流远一点。</p>
+        <a href="./">继续读其他文章 →</a>
+      </footer>
+    </article>
+    <section class="article-error" id="articleError" hidden>
+      <p class="eyebrow">404 / NOT FOUND</p>
+      <h1>这篇文章不在这里。</h1>
+      <a href="./">返回全部文章</a>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
