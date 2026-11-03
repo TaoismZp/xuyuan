@@ -1,0 +1,19 @@
+backend:
+  name: test-repo
+
+media_folder: personal-site-v1/media
+public_folder: /personal-site-v1/media
+
+collections:
+  - name: posts
+    label: 长文
+    label_singular: 长文
+    folder: personal-site-v1/content/posts
+    create: true
+    slug: '{{year}}-{{month}}-{{day}}-{{slug}}'
+    fields:
+      - { label: 标题, name: title, widget: string }
+      - { label: 摘要, name: summary, widget: text }
+      - { label: 标签, name: tags, widget: list }
+      - { label: 发布日期, name: date, widget: datetime }
+      - { label: 正文, name: body, widget: markdown }
