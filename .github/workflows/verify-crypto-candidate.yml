@@ -7,7 +7,6 @@ on:
     paths:
       - 'wish-delivery/versions/v7.6.md'
       - 'crypto-tycoon/BUILD_BLUEPRINT_V5.md'
-      - 'crypto-tycoon/PROJECT_STATE.md'
       - 'crypto-tycoon/candidate-v1.js'
       - 'crypto-tycoon/candidate-v2.css'
       - 'crypto-tycoon/candidate-v2-augment.js'
