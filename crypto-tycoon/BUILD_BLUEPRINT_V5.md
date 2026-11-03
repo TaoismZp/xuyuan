@@ -61,6 +61,7 @@ Permanent lessons already bound to this drawing:
 - CSS-perspective and reference-composite routes rejected;
 - v4 true Three.js candidate functional but below target;
 - v6 improved materially but failed center hierarchy, skyline authorship and collectible-character gates;
+- v7 crossed from dev-scene into a coherent commercial 3D prototype but still failed center hierarchy, collectible-character quality, authored skyline quality, readability and desirability thresholds;
 - reference pixels may never substitute for authored 3D.
 
 ---
@@ -93,35 +94,47 @@ Hard FAIL if any of the following holds:
 
 ---
 
-## 6. Current Stage-1 Construction Order — v7 Family
-v7 addresses the open defects from `SUPERVISION_REPORT_V6.md`:
+## 6. Current Stage-1 Construction Order — v8
+v8 is restricted to the A-class defects in `SUPERVISION_REPORT_V7.md`.
 
-### A. Center hierarchy
-Remove conflicting monuments; use an open crest; keep globe/dice readable; `币圈大富翁` dominates brand read.
+### A1. Center hierarchy
+- Remove competing legacy center signs/crests from the hero depth band.
+- Rear-mount the Chinese title as an architectural landmark rather than placing it over the dice.
+- Preserve negative space and readable physical stage/dice silhouette.
 
-### B. Environment authorship
-Suppress repeated skyline wall; create near/mid/far depth; emphasize exchange/BTC/ETH/market-terminal hero structures.
+### A2. Character collectible quality
+- Strengthen silhouette differentiation for astronaut, Doge, NFT/robot and bull pieces.
+- Improve visor/face treatment, head-body proportion, signature accessories, pedestal language and material separation.
+- At least three pieces should be recognizable from silhouette alone.
 
-### C. Character collectible quality
-Improve silhouettes and signature accessories/material separation; no emoji/flat screenshots.
+### A3. Environment authorship
+- Further trim repeated shelf-tower skyline mass.
+- Add unmistakable hero structures with distinct profiles rather than additional generic boxes.
+- Preserve clear foreground / midground / background spacing.
 
-### D. Lighting balance
-Reduce hot foreground point lights; use broad fill; no bloom camouflage.
+### A4. Readability / light balance
+- Lower center point-light dominance so dice pips, stage edge and Chinese title do not merge into a single hot region.
+- Prevent `掷骰子` wrapping on iPad.
+- Keep tile and market-state information readable without enlarging generic HUD panels.
 
-### E. Tile storytelling
-Keep physical 24-tile loop; Chinese titles/consequences remain legible at locked camera.
-
-No full-game expansion until independent supervision explicitly PASSes Stage 1.
+**No gameplay expansion until v8 independent supervision explicitly PASSes Stage 1.**
 
 ---
 
-## 7. Monitor Simplicity Rule (v5 new)
+## 7. Monitor Simplicity Rule
 The monitor must be simpler than the product.
 
-Allowed Stage-1 evidence chain:
-**candidate scene → independent fixed supervision camera → low-resolution WebGL render target → readPixels → PNG artifact**.
+### Proven Stage-1 evidence chain
+**candidate reaches exact version marker → allow final live frame to render → freeze future animation → Chrome DevTools Protocol `Page.captureScreenshot` from the actual viewport → PNG artifact + metadata.**
 
-Do not stack prototype hooks, second EffectComposer pipelines, browser full-page capture fallbacks, or other monitor machinery unless a simpler path is proven impossible. Monitor failure is `BLOCKED_TECH`, not product failure.
+This is the repository's proven stable path for software-WebGL capture. Do not replace it with:
+- Three.js prototype monkey-patching;
+- a second renderer/composer/world;
+- synchronous `readRenderTargetPixels`/raw `gl.readPixels` evidence paths;
+- `canvas.toDataURL()` if SwiftShader stalls;
+- full-page Playwright screenshot fallbacks.
+
+Monitor failure is `BLOCKED_TECH`, not product failure. Evidence-capture PASS only proves the evidence exists; it does not imply Visual PASS.
 
 ---
 
