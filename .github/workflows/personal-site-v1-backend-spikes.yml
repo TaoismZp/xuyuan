@@ -73,9 +73,10 @@ jobs:
                   await p.getByLabel('发布日期').fill('2026-11-03T23:00');
                   await p.locator('[contenteditable="true"]').first().fill(article);
                   await p.screenshot({path:`personal-site-v1/backend-spikes/evidence/${candidate}-filled-mobile.png`,fullPage:true});
-                  const publish=p.getByText('Publish',{exact:true}).first();
-                  await publish.click();
-                  await p.waitForTimeout(3500);
+                  await p.getByText('Publish',{exact:true}).first().click();
+                  await p.waitForTimeout(400);
+                  await p.getByText('Publish now',{exact:true}).click();
+                  await p.waitForTimeout(3200);
                   await p.goto(`${base}#/collections/posts`,{waitUntil:'domcontentloaded'});
                   await p.waitForTimeout(1800);
                 }
