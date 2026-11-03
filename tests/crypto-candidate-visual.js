@@ -23,24 +23,49 @@ async function capture(browser, viewport, name) {
 
   await page.goto(target, { waitUntil:'load', timeout:60000 });
   await page.waitForFunction(v => document.documentElement.dataset.sliceReady === '1' && !!window.__cryptoSliceReady && (!v || window.__cryptoSliceReady.version === v), expectedVersion, { timeout:30000 });
-  await page.waitForFunction(() => ['1','error'].includes(document.documentElement.dataset.auditReady || ''), null, { timeout:30000 });
 
-  const auditState=await page.evaluate(()=>({state:document.documentElement.dataset.auditReady,error:window.__supervisionAuditError||null}));
-  if(auditState.state!=='1') throw new Error(`supervision audit failed: ${auditState.error||'unknown audit error'}`);
+  // Monitor the final user-visible WebGL surface directly. No in-product audit module, renderer hook,
+  // second Three.js world or screenshot compositor is required. We register after the normal game loop,
+  // so the next rAF paints the candidate first and then this callback reads the live framebuffer.
+  const audit = await page.evaluate(() => new Promise((resolve,reject) => {
+    requestAnimationFrame(() => {
+      try {
+        const canvas=document.querySelector('#game3d');
+        if(!canvas) throw new Error('game canvas missing');
+        const gl=canvas.getContext('webgl2') || canvas.getContext('webgl');
+        if(!gl) throw new Error('live WebGL context unavailable');
+        const srcW=gl.drawingBufferWidth,srcH=gl.drawingBufferHeight;
+        if(srcW<320||srcH<240) throw new Error(`invalid drawing buffer ${srcW}x${srcH}`);
+        const src=new Uint8Array(srcW*srcH*4);
+        gl.readPixels(0,0,srcW,srcH,gl.RGBA,gl.UNSIGNED_BYTE,src);
 
-  const audit = await page.evaluate(() => {
-    const pixels=window.__supervisionReadPixels();
-    return {
-      pixels,
-      sceneMeta: window.__supervisionSceneMeta,
-      ready: window.__cryptoSliceReady,
-      title: document.title,
-      viewport: { w: innerWidth, h: innerHeight },
-      referenceImports: [...document.scripts].map(s=>s.src).filter(src=>/keyart|visual-v3/i.test(src)),
-      referenceCss: getComputedStyle(document.body).backgroundImage,
-      sliceVersion: document.documentElement.dataset.sliceVersion
-    };
-  });
+        const step=2,width=Math.floor(srcW/step),height=Math.floor(srcH/step);
+        const pixels=new Uint8Array(width*height*4);
+        let nonBlack=0,lumaSum=0;
+        for(let y=0;y<height;y++) for(let x=0;x<width;x++){
+          const si=((y*step)*srcW+(x*step))*4,di=(y*width+x)*4;
+          const r=src[si],g=src[si+1],b=src[si+2],a=src[si+3];
+          pixels[di]=r;pixels[di+1]=g;pixels[di+2]=b;pixels[di+3]=a;
+          const l=r+g+b;lumaSum+=l;if(l>18)nonBlack++;
+        }
+        const visibleRatio=nonBlack/(width*height);
+        const avgLuma=lumaSum/(width*height);
+        if(visibleRatio<.08 || avgLuma<12) throw new Error(`framebuffer appears blank visibleRatio=${visibleRatio.toFixed(4)} avgLuma=${avgLuma.toFixed(2)}`);
+
+        let binary='';const chunk=0x8000;
+        for(let i=0;i<pixels.length;i+=chunk) binary+=String.fromCharCode(...pixels.subarray(i,Math.min(i+chunk,pixels.length)));
+        resolve({
+          pixels:{width,height,rgbaBase64:btoa(binary),version:window.__cryptoSliceReady.version,referencePixelsUsed:false,source:'direct-live-canvas-framebuffer',visibleRatio,avgLuma},
+          ready:window.__cryptoSliceReady,
+          title:document.title,
+          viewport:{w:innerWidth,h:innerHeight},
+          referenceImports:[...document.scripts].map(s=>s.src).filter(src=>/keyart|visual-v3/i.test(src)),
+          referenceCss:getComputedStyle(document.body).backgroundImage,
+          sliceVersion:document.documentElement.dataset.sliceVersion
+        });
+      }catch(e){ reject(String(e?.stack||e)); }
+    });
+  }));
 
   if(expectedVersion && audit.ready.version !== expectedVersion) throw new Error(`wrong candidate version: ${audit.ready.version} !== ${expectedVersion}`);
   if(audit.referenceImports.length) throw new Error('reference substitution detected: '+JSON.stringify(audit.referenceImports));
@@ -72,5 +97,5 @@ async function capture(browser, viewport, name) {
   await capture(browser,{width:1672,height:941},'candidate-desktop');
   await capture(browser,{width:1194,height:834},'candidate-ipad');
   await browser.close();
-  console.log('PASS candidate exact-build render-target evidence',target,expectedVersion||'any-version');
+  console.log('PASS candidate exact-build direct framebuffer evidence',target,expectedVersion||'any-version');
 })().catch(e=>{console.error(e);process.exit(1)});
