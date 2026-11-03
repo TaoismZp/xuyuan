@@ -16,3 +16,10 @@
 - verification: deployment and same-surface public acceptance must be checked against the resulting publication commit, not assumed here
 
 本登记不改变原始文稿；发布版是派生文件，Git 提交历史保留变动。
+
+## 第一轮公网证据
+
+- 首次发文提交：`3ef03ed3455c22b7bafcf51d3a5a7ca440198e39`
+- 首次真实内容部署：GitHub Actions `41678947550`，结论 PASS。
+- 首次公网验收：GitHub Actions `41679087653`，结论 PASS；站点 HTTP 实测发现 1 篇已发布长文；WebKit 在三种尺寸验证了首页、文章列表和网站其他主页面。
+- 补强验收：为文章详情页加入 iPhone / iPad / Desktop WebKit 直接打开、排版、正文完整性、首尾截图检查，并修正过时的“空站”验收报告语句。此轮验收必须重新绑定到新的 Delivery SHA，以独立运行记录为准。
