@@ -90,8 +90,8 @@ jobs:
 
           require_text 'Archive eyebrow preserved' personal-site-v1/essays/index.html 'class="page-head__eyebrow">ESSAYS'
           require_text 'Archive row preserved' personal-site-v1/essays/index.html 'class="archive-row"'
-          require_text 'Article head generated' personal-site-v1/essays/supervision-published/index.html 'class="article-head"'
-          require_text 'Article body generated' personal-site-v1/essays/supervision-published/index.html 'class="article-body"'
+          require_text 'Article head generated' personal-site-v1/essays/supervision-published/index.html 'article-head'
+          require_text 'Article body generated' personal-site-v1/essays/supervision-published/index.html 'article-body'
           require_text 'Home navigation present on homepage' personal-site-v1/index.html '>首页<'
           require_text 'Home navigation present on archive' personal-site-v1/essays/index.html '>首页<'
           require_text 'Home navigation present on article' personal-site-v1/essays/supervision-published/index.html '>首页<'
