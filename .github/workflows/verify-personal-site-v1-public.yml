@@ -55,7 +55,17 @@ jobs:
           mkdir -p personal-site-v1-public-evidence
           node <<'NODE'
           const { webkit } = require('playwright');
+          const fs = require('node:fs');
           const base = 'https://taoismzp.github.io/xuyuan/personal-site-v1';
+          const postsDir = 'personal-site-v1/content/posts';
+          const publishedSlugs = fs.readdirSync(postsDir)
+            .filter(file => file.endsWith('.md'))
+            .filter(file => /^status:\s*"?published"?\s*$/m.test(fs.readFileSync(postsDir + '/' + file, 'utf8')))
+            .map(file => {
+              const frontmatter = fs.readFileSync(postsDir + '/' + file, 'utf8').split('---')[1] || '';
+              const slug = frontmatter.match(/^slug:\s*["']?([^\s"']+)/m)?.[1] || file.slice(0, -3);
+              return slug;
+            });
           const assert = (value, message) => { if (!value) throw new Error(message); };
           (async () => {
             const browser = await webkit.launch({headless:true});
@@ -68,7 +78,8 @@ jobs:
               ['home','/'],
               ['essays','/essays/'],
               ['projects','/projects/'],
-              ['about','/about/']
+              ['about','/about/'],
+              ...publishedSlugs.map(slug => ['article-'+slug,'/essays/'+encodeURIComponent(slug)+'/'])
             ];
             for (const [surface,w,h,mobile] of surfaces) {
               for (const [name,path] of pages) {
@@ -79,14 +90,30 @@ jobs:
                   h1: document.querySelector('h1')?.textContent?.trim() || '',
                   tiny: [...document.querySelectorAll('nav a,button')].filter(el => {const r=el.getBoundingClientRect();return r.width>0&&(r.width<44||r.height<44)}).length,
                   skip: !!document.querySelector('.skip-link'),
-                  hero: document.querySelector('.hero-title') ? parseFloat(getComputedStyle(document.querySelector('.hero-title')).fontSize) : null
+                  hero: document.querySelector('.hero-title') ? parseFloat(getComputedStyle(document.querySelector('.hero-title')).fontSize) : null,
+                  article: document.querySelector('.article-body') ? {
+                    paragraphs: document.querySelectorAll('.article-body p').length,
+                    characters: document.querySelector('.article-body').textContent.length,
+                    fontSize: parseFloat(getComputedStyle(document.querySelector('.article-body')).fontSize),
+                    lastParagraph: document.querySelector('.article-body p:last-of-type')?.textContent.trim() || ''
+                  } : null
                 }));
                 assert(!result.overflow,`${surface}/${name}: horizontal overflow`);
                 assert(result.h1.length>0,`${surface}/${name}: missing h1`);
                 assert(result.tiny===0,`${surface}/${name}: target below 44px`);
                 assert(result.skip,`${surface}/${name}: missing skip link`);
                 if(name==='home') assert(result.hero >= (surface==='desktop'?100:50),`${surface}/home: hero hierarchy regressed`);
-                await p.screenshot({path:`personal-site-v1-public-evidence/${surface}-${name}.png`,fullPage:true});
+                if(name.startsWith('article-')) {
+                  assert(result.article && result.article.paragraphs >= 10,`${surface}/${name}: generated article body missing`);
+                  assert(result.article.characters >= 1000,`${surface}/${name}: article content is unexpectedly short`);
+                  assert(result.article.fontSize >= (surface==='iphone'?18:16),`${surface}/${name}: article typography too small`);
+                  assert(result.article.lastParagraph.length > 0,`${surface}/${name}: article ending missing`);
+                  await p.screenshot({path:`personal-site-v1-public-evidence/${surface}-${name}.png`,fullPage:false});
+                  await p.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
+                  await p.screenshot({path:`personal-site-v1-public-evidence/${surface}-${name}-end.png`,fullPage:false});
+                } else {
+                  await p.screenshot({path:`personal-site-v1-public-evidence/${surface}-${name}.png`,fullPage:true});
+                }
                 await p.close();
               }
             }
@@ -110,6 +137,7 @@ jobs:
           if [ "$HTTP_OUTCOME" = success ] && [ "$SURFACE_OUTCOME" = success ]; then RESULT=PASS; else RESULT=FAIL; fi
           VISION=$(sha256sum personal-site-v1/VISION_FIXTURE.md | cut -d' ' -f1)
           BLUEPRINT=$(sha256sum personal-site-v1/BACKEND_BUILD_BLUEPRINT.md | cut -d' ' -f1)
+          PUBLISHED_COUNT=$(node -e 'const fs=require("node:fs");const d="personal-site-v1/content/posts";console.log(fs.readdirSync(d).filter(f=>f.endsWith(".md")&&/^status:\\s*"?published"?\\s*$/m.test(fs.readFileSync(d+"/"+f,"utf8"))).length)')
           {
             echo '# Acceptance Report — Personal Site v1'
             echo
@@ -125,11 +153,11 @@ jobs:
             echo "- Public HTTP / Delivery Reality: ${HTTP_OUTCOME}"
             echo "- iPhone + iPad + desktop WebKit / Experience Reality: ${SURFACE_OUTCOME}"
             echo '- Functional article-generation loop: verified pre-promotion by backend integration CI on this candidate lineage using ephemeral published + draft fixtures.'
-            echo '- Public article surface: intentionally absent at launch because no user-authored article has been published yet; no synthetic article is presented as the user’s work.'
-            echo '- Admin authentication: public token-login entry is verified; an authenticated write using the user’s private GitHub token is intentionally not performed by CI.'
+            echo "- Public article surface: ${PUBLISHED_COUNT} source-of-truth published Markdown post(s), verified against public HTTP; available article pages opened and captured with iPhone/iPad/desktop WebKit."
+            echo '- Admin authentication: token-login entry verified; private-token authenticated write not performed by CI. The first real post was published via the connected GitHub account.'
             echo
             if [ "$RESULT" = PASS ]; then
-              echo 'PASS: the deployed empty-state site and public CMS entry match this delivery identity. The user may publish the first real article after signing in with their own GitHub token.'
+              echo "PASS: the deployed published-article site and public CMS entry match this delivery identity (${PUBLISHED_COUNT} real article(s))."
             else
               echo 'FAIL: delivery or same-surface experience did not pass; do not claim final handoff.'
             fi
