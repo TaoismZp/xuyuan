@@ -23,27 +23,40 @@ jobs:
         id: inspect
         run: |
           set -euo pipefail
-          test -f personal-site-v1/VISION_FIXTURE.md
-          test -f personal-site-v1/BUILD_BLUEPRINT.md
-          test -f personal-site-v1/BACKEND_CAPABILITY_PROOF.md
-          test -f personal-site-v1/BACKEND_BUILD_BLUEPRINT.md
-          test -f personal-site-v1/admin/index.html
-          test -f personal-site-v1/admin/config.yml
-          test -f personal-site-v1/scripts/build.mjs
+          check() { echo "[CHECK] $1"; shift; "$@"; echo "[PASS] $1" >/dev/null 2>&1 || true; }
+          require_text() { local label="$1" file="$2" pattern="$3"; echo "[CHECK] $label"; grep -q -- "$pattern" "$file" || { echo "[FAIL] $label"; exit 1; }; echo "[PASS] $label"; }
+          forbid_text() { local label="$1" file="$2" pattern="$3"; echo "[CHECK] $label"; if grep -q -E -- "$pattern" "$file"; then echo "[FAIL] $label"; exit 1; fi; echo "[PASS] $label"; }
+          require_file() { local label="$1" file="$2"; echo "[CHECK] $label"; test -f "$file" || { echo "[FAIL] $label"; exit 1; }; echo "[PASS] $label"; }
+          forbid_dir() { local label="$1" dir="$2"; echo "[CHECK] $label"; test ! -d "$dir" || { echo "[FAIL] $label"; exit 1; }; echo "[PASS] $label"; }
 
-          grep -q '@sveltia/cms@0.258.0' personal-site-v1/admin/index.html
-          grep -q 'name: github' personal-site-v1/admin/config.yml
-          grep -q 'repo: TaoismZp/xuyuan' personal-site-v1/admin/config.yml
-          grep -q 'branch: main' personal-site-v1/admin/config.yml
-          grep -q 'root_dir: personal-site-v1' personal-site-v1/admin/config.yml
-          grep -q 'auth_methods: \[token\]' personal-site-v1/admin/config.yml
-          ! grep -R -E 'github_pat_[A-Za-z0-9_]+|ghp_[A-Za-z0-9]+' personal-site-v1 .github/workflows/personal-site-v1-*.yml
+          require_file 'Vision fixture exists' personal-site-v1/VISION_FIXTURE.md
+          require_file 'Frontend blueprint exists' personal-site-v1/BUILD_BLUEPRINT.md
+          require_file 'Backend capability proof exists' personal-site-v1/BACKEND_CAPABILITY_PROOF.md
+          require_file 'Backend build blueprint exists' personal-site-v1/BACKEND_BUILD_BLUEPRINT.md
+          require_file 'Production admin entry exists' personal-site-v1/admin/index.html
+          require_file 'Production admin config exists' personal-site-v1/admin/config.yml
+          require_file 'Deterministic builder exists' personal-site-v1/scripts/build.mjs
 
+          require_text 'Sveltia version is pinned' personal-site-v1/admin/index.html '@sveltia/cms@0.258.0'
+          require_text 'GitHub backend selected' personal-site-v1/admin/config.yml 'name: github'
+          require_text 'Repository bound' personal-site-v1/admin/config.yml 'repo: TaoismZp/xuyuan'
+          require_text 'Production branch bound' personal-site-v1/admin/config.yml 'branch: main'
+          require_text 'Monorepo root bound' personal-site-v1/admin/config.yml 'root_dir: personal-site-v1'
+          require_text 'Token-only auth declared' personal-site-v1/admin/config.yml 'auth_methods: \[token\]'
+
+          echo '[CHECK] No committed GitHub credential patterns'
+          if grep -R -E 'github_pat_[A-Za-z0-9_]+|ghp_[A-Za-z0-9]+' personal-site-v1 .github/workflows/personal-site-v1-*.yml; then
+            echo '[FAIL] Credential-like token pattern found'; exit 1
+          fi
+          echo '[PASS] No committed GitHub credential patterns'
+
+          echo '[CHECK] Runtime dependency set is minimal'
           node <<'NODE'
           const p=require('./personal-site-v1/package.json');
           const deps=Object.keys(p.dependencies||{}).sort();
           const expected=['gray-matter','markdown-it'];
           if(JSON.stringify(deps)!==JSON.stringify(expected)) throw new Error(`unexpected runtime dependencies: ${deps}`);
+          console.log('[PASS] Runtime dependency set is minimal');
           NODE
 
           mkdir -p personal-site-v1/content/posts
@@ -62,64 +75,83 @@ jobs:
 
           第二段。
           POST
+
+          echo '[CHECK] Build one supervision-only published article'
           node personal-site-v1/scripts/build.mjs
+          echo '[PASS] Build one supervision-only published article'
 
-          grep -q 'class="hero-title"' personal-site-v1/index.html
-          grep -q 'class="hero-line"' personal-site-v1/index.html
-          grep -q 'class="section-heading"' personal-site-v1/index.html
-          grep -q 'class="essay-index"' personal-site-v1/index.html
-          grep -q 'class="essay-line"' personal-site-v1/index.html
-          grep -q 'class="project-minimal"' personal-site-v1/index.html
-          ! grep -q 'minimal-hero\|essay-row\|minimal-projects\|section-kicker' personal-site-v1/index.html
+          require_text 'Accepted hero class preserved' personal-site-v1/index.html 'class="hero-title"'
+          require_text 'Accepted hero line preserved' personal-site-v1/index.html 'class="hero-line"'
+          require_text 'Accepted section heading preserved' personal-site-v1/index.html 'class="section-heading"'
+          require_text 'Accepted essay index preserved' personal-site-v1/index.html 'class="essay-index"'
+          require_text 'Accepted essay line preserved' personal-site-v1/index.html 'class="essay-line"'
+          require_text 'Accepted project layout preserved' personal-site-v1/index.html 'class="project-minimal"'
+          forbid_text 'Deprecated generator classes absent' personal-site-v1/index.html 'minimal-hero|essay-row|minimal-projects|section-kicker'
 
-          grep -q 'class="page-head__eyebrow">ESSAYS' personal-site-v1/essays/index.html
-          grep -q 'class="archive-row"' personal-site-v1/essays/index.html
-          grep -q 'class="article-head"' personal-site-v1/essays/supervision-published/index.html
-          grep -q 'class="article-body"' personal-site-v1/essays/supervision-published/index.html
-          grep -q '>首页<' personal-site-v1/index.html
-          grep -q '>首页<' personal-site-v1/essays/index.html
-          grep -q '>首页<' personal-site-v1/essays/supervision-published/index.html
-          ! grep -R -E '前端 Fixture|阅读样稿|不冒充正式发布' personal-site-v1/index.html personal-site-v1/essays/index.html personal-site-v1/essays/supervision-published/index.html
-          test ! -d personal-site-v1/essays/sample
+          require_text 'Archive eyebrow preserved' personal-site-v1/essays/index.html 'class="page-head__eyebrow">ESSAYS'
+          require_text 'Archive row preserved' personal-site-v1/essays/index.html 'class="archive-row"'
+          require_text 'Article head generated' personal-site-v1/essays/supervision-published/index.html 'class="article-head"'
+          require_text 'Article body generated' personal-site-v1/essays/supervision-published/index.html 'class="article-body"'
+          require_text 'Home navigation present on homepage' personal-site-v1/index.html '>首页<'
+          require_text 'Home navigation present on archive' personal-site-v1/essays/index.html '>首页<'
+          require_text 'Home navigation present on article' personal-site-v1/essays/supervision-published/index.html '>首页<'
+
+          echo '[CHECK] No frontend fixture/sample wording leaks after build'
+          if grep -R -E '前端 Fixture|阅读样稿|不冒充正式发布' personal-site-v1/index.html personal-site-v1/essays/index.html personal-site-v1/essays/supervision-published/index.html; then
+            echo '[FAIL] Fixture/sample wording leaked'; exit 1
+          fi
+          echo '[PASS] No frontend fixture/sample wording leaks after build'
+          forbid_dir 'Old sample article removed after real build' personal-site-v1/essays/sample
 
           rm -f personal-site-v1/content/posts/supervision-published.md
+          echo '[CHECK] Empty production build is truthful'
           ALLOW_EMPTY_BUILD=1 node personal-site-v1/scripts/build.mjs
-          grep -q '还没有公开长文' personal-site-v1/essays/index.html
-          ! grep -R '监理样稿：等待' personal-site-v1/index.html personal-site-v1/essays/index.html
-          test ! -d personal-site-v1/essays/sample
+          require_text 'Empty archive says no public essays' personal-site-v1/essays/index.html '还没有公开长文'
+          echo '[CHECK] Supervision fixture removed from public output'
+          if grep -R '监理样稿：等待' personal-site-v1/index.html personal-site-v1/essays/index.html; then
+            echo '[FAIL] Supervision fixture remained after empty build'; exit 1
+          fi
+          echo '[PASS] Supervision fixture removed from public output'
+          forbid_dir 'Old sample article absent after empty build' personal-site-v1/essays/sample
       - name: Generate bound supervision report
         if: always()
+        env:
+          INSPECTION_OUTCOME: ${{ steps.inspect.outcome }}
         run: |
-          if [ "${{ steps.inspect.outcome }}" = "success" ]; then RESULT=PASS; else RESULT=FAIL; fi
+          if [ "$INSPECTION_OUTCOME" = "success" ]; then RESULT=PASS; else RESULT=FAIL; fi
           VISION=$(sha256sum personal-site-v1/VISION_FIXTURE.md | cut -d' ' -f1)
           BLUEPRINT=$(sha256sum personal-site-v1/BACKEND_BUILD_BLUEPRINT.md | cut -d' ' -f1)
-          cat > SUPERVISION_REPORT.md <<EOF
-          # Independent Supervision Report — Personal Site v1
-
-          - Result: **${RESULT}**
-          - Candidate Identity: `${GITHUB_SHA}`
-          - Vision Fixture Identity (sha256): `${VISION}`
-          - Backend Blueprint Identity (sha256): `${BLUEPRINT}`
-          - Evidence Identity: GitHub Actions run `${GITHUB_RUN_ID}`
-          - Inspector surface: read-only source + clean-room generated output
-
-          ## Inspected
-
-          - Four-pack prerequisites present before handoff.
-          - Sveltia production admin is pinned and bound to GitHub/main/personal-site-v1.
-          - Token login is configured without any committed credential.
-          - Runtime dependency set remains deliberately minimal.
-          - Published content maps into the exact accepted frontend class vocabulary.
-          - Deprecated/wrong generator class vocabulary is absent.
-          - Generated archive/article navigation remains intact.
-          - Frontend fixture/sample language does not leak after a real build.
-          - Empty production builds remove the sample article and render a truthful empty archive.
-          - Draft/public filtering remains the responsibility of the builder and is separately exercised by backend integration CI.
-
-          ## Stop-work decision
-
-          ${RESULT}: ${RESULT:+candidate may proceed only if the separate browser/experience evidence for this same commit also passes.}
-          EOF
+          {
+            echo '# Independent Supervision Report — Personal Site v1'
+            echo
+            echo "- Result: **${RESULT}**"
+            echo "- Candidate Identity: ${GITHUB_SHA}"
+            echo "- Vision Fixture Identity (sha256): ${VISION}"
+            echo "- Backend Blueprint Identity (sha256): ${BLUEPRINT}"
+            echo "- Evidence Identity: GitHub Actions run ${GITHUB_RUN_ID}"
+            echo '- Inspector surface: read-only source + clean-room generated output'
+            echo
+            echo '## Inspected'
+            echo
+            echo '- Four-pack prerequisites present before handoff.'
+            echo '- Sveltia production admin is pinned and bound to GitHub/main/personal-site-v1.'
+            echo '- Token login is configured without any committed credential.'
+            echo '- Runtime dependency set remains deliberately minimal.'
+            echo '- Published content maps into the accepted frontend class vocabulary.'
+            echo '- Deprecated/wrong generator class vocabulary is absent.'
+            echo '- Generated archive/article navigation remains intact.'
+            echo '- Frontend fixture/sample language does not leak after a real build.'
+            echo '- Empty production builds remove the sample article and render a truthful empty archive.'
+            echo '- Draft/public filtering is separately exercised by backend integration CI.'
+            echo
+            echo '## Stop-work decision'
+            echo
+            if [ "$RESULT" = 'PASS' ]; then
+              echo 'PASS: candidate may proceed only if separate browser/experience evidence for this same commit also passes.'
+            else
+              echo 'FAIL: stop work and repair before acceptance or deployment.'
+            fi
+          } > SUPERVISION_REPORT.md
       - uses: actions/upload-artifact@v5
         if: always()
         with:
