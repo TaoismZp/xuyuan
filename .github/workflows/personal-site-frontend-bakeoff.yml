@@ -1,0 +1,56 @@
+name: Personal site frontend bakeoff
+on:
+  push:
+    branches: [personal-site-frontend-bakeoff]
+permissions:
+  contents: read
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+      - name: Install Playwright
+        run: |
+          npm init -y >/dev/null 2>&1
+          npm i playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Serve spike pages
+        run: |
+          python3 -m http.server 4173 >/tmp/personal-site-bakeoff.log 2>&1 &
+          echo $! > /tmp/server.pid
+          sleep 2
+          curl --fail http://127.0.0.1:4173/personal-site-lab/index.html >/dev/null
+      - name: Capture same-content candidates
+        run: |
+          mkdir -p personal-site-lab/evidence
+          node <<'NODE'
+          const { chromium } = require('playwright');
+          (async () => {
+            const browser = await chromium.launch({headless:true});
+            const candidates = ['baseline','anthropic','impeccable','uiux'];
+            for (const name of candidates) {
+              const desktop = await browser.newPage({ viewport: { width: 1440, height: 1100 }, deviceScaleFactor: 1 });
+              await desktop.goto(`http://127.0.0.1:4173/personal-site-lab/${name}.html`, {waitUntil:'networkidle'});
+              await desktop.screenshot({path:`personal-site-lab/evidence/${name}-desktop.png`, fullPage:true});
+              const dOverflow = await desktop.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth);
+              if (dOverflow) throw new Error(`${name}: desktop horizontal overflow`);
+              await desktop.close();
+
+              const mobile = await browser.newPage({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, deviceScaleFactor: 2 });
+              await mobile.goto(`http://127.0.0.1:4173/personal-site-lab/${name}.html`, {waitUntil:'networkidle'});
+              await mobile.screenshot({path:`personal-site-lab/evidence/${name}-mobile.png`, fullPage:true});
+              const mOverflow = await mobile.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth);
+              if (mOverflow) throw new Error(`${name}: mobile horizontal overflow`);
+              await mobile.close();
+            }
+            await browser.close();
+          })();
+          NODE
+      - uses: actions/upload-artifact@v5
+        with:
+          name: personal-site-frontend-bakeoff-${{ github.run_id }}
+          path: personal-site-lab/evidence/*.png
+          retention-days: 7
