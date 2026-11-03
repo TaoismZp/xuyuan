@@ -24,48 +24,78 @@ jobs:
         run: |
           python3 -m http.server 4180 >/tmp/cms-spikes.log 2>&1 &
           sleep 2
-      - name: Inspect candidate new-entry editors
+      - name: Create and save the same Chinese long-form entry
         run: |
           mkdir -p personal-site-v1/backend-spikes/evidence
           node <<'NODE'
           const { chromium } = require('playwright');
           const fs = require('fs');
-          (async()=>{
-            const browser=await chromium.launch({headless:true});
-            const results=[];
-            for(const candidate of ['sveltia','decap']){
-              const p=await browser.newPage({viewport:{width:390,height:844},isMobile:true,hasTouch:true,deviceScaleFactor:2});
-              const base=`http://127.0.0.1:4180/personal-site-v1/backend-spikes/${candidate}/`;
+          const title='等待：交易中最稀缺的能力';
+          const summary='一篇用于比较后台移动端发布闭环的中文长文样稿。';
+          const article='交易的大部分时间并不发生在买入和卖出。\n\n真正困难的部分，是在没有动作的时候仍然保持判断。\n\n等待不是空白，而是交易系统的一部分。';
+          const results=[];
+          const browser=await chromium.launch({headless:true});
+
+          for(const candidate of ['sveltia','decap']){
+            const p=await browser.newPage({viewport:{width:390,height:844},isMobile:true,hasTouch:true,deviceScaleFactor:2});
+            const base=`http://127.0.0.1:4180/personal-site-v1/backend-spikes/${candidate}/`;
+            const started=Date.now();
+            let saved=false, error=null;
+            try {
               await p.goto(base,{waitUntil:'domcontentloaded'});
-              await p.waitForTimeout(7000);
+              await p.waitForTimeout(6500);
               if(candidate==='sveltia'){
                 const b=p.getByRole('button',{name:/Work with Test Repository/i});
-                if(await b.count()) { await b.click(); await p.waitForTimeout(2500); }
+                if(await b.count()) { await b.click(); await p.waitForTimeout(2200); }
               }
               await p.goto(`${base}#/collections/posts/new`,{waitUntil:'domcontentloaded'});
-              await p.waitForTimeout(3500);
-              const controls=await p.evaluate(()=>[...document.querySelectorAll('input,textarea,[contenteditable="true"],button,select')].map((el,i)=>({
-                i, tag:el.tagName, type:el.getAttribute('type'), name:el.getAttribute('name'), id:el.id,
-                aria:el.getAttribute('aria-label'), placeholder:el.getAttribute('placeholder'),
-                text:(el.innerText||el.value||'').slice(0,120), contenteditable:el.getAttribute('contenteditable')
-              })).slice(0,120));
-              const labels=await p.locator('label').allTextContents();
-              const body=(await p.locator('body').innerText()).trim();
-              results.push({candidate,body:body.slice(0,4000),labels,controls,url:p.url(),overflow:await p.evaluate(()=>document.documentElement.scrollWidth>document.documentElement.clientWidth)});
-              await p.screenshot({path:`personal-site-v1/backend-spikes/evidence/${candidate}-new-entry-mobile.png`,fullPage:true});
-              await p.close();
-            }
-            fs.writeFileSync('personal-site-v1/backend-spikes/evidence/editor-results.json',JSON.stringify(results,null,2));
-            await browser.close();
-          })();
+              await p.waitForTimeout(2800);
+
+              if(candidate==='sveltia'){
+                const texts=p.locator('input[type="text"]');
+                await texts.nth(0).fill(title);
+                await p.locator('textarea').first().fill(summary);
+                await p.locator('input[aria-label="Item Value"]').fill('交易');
+                await p.locator('input[type="date"]').fill('2026-11-03');
+                await p.locator('[contenteditable="true"]').first().fill(article);
+                await p.screenshot({path:`personal-site-v1/backend-spikes/evidence/${candidate}-filled-mobile.png`,fullPage:true});
+                await p.getByRole('button',{name:'Save',exact:true}).click();
+                await p.waitForTimeout(3000);
+                await p.goto(`${base}#/collections/posts`,{waitUntil:'domcontentloaded'});
+                await p.waitForTimeout(1800);
+              } else {
+                await p.getByLabel('标题').fill(title);
+                await p.getByLabel('摘要').fill(summary);
+                const tag=p.getByLabel('标签');
+                await tag.fill('交易');
+                await tag.press('Enter').catch(()=>{});
+                await p.getByLabel('发布日期').fill('2026-11-03T23:00');
+                await p.locator('[contenteditable="true"]').first().fill(article);
+                await p.screenshot({path:`personal-site-v1/backend-spikes/evidence/${candidate}-filled-mobile.png`,fullPage:true});
+                const publish=p.getByText('Publish',{exact:true}).first();
+                await publish.click();
+                await p.waitForTimeout(3500);
+                await p.goto(`${base}#/collections/posts`,{waitUntil:'domcontentloaded'});
+                await p.waitForTimeout(1800);
+              }
+              saved=(await p.locator('body').innerText()).includes(title);
+            } catch(e) { error=String(e?.stack||e); }
+            const overflow=await p.evaluate(()=>document.documentElement.scrollWidth>document.documentElement.clientWidth).catch(()=>null);
+            const body=await p.locator('body').innerText().catch(()=> '');
+            await p.screenshot({path:`personal-site-v1/backend-spikes/evidence/${candidate}-after-save-mobile.png`,fullPage:true}).catch(()=>{});
+            results.push({candidate,saved,error,elapsed_ms:Date.now()-started,overflow,finalBody:body.slice(0,3000),finalUrl:p.url()});
+            await p.close();
+          }
+
+          await browser.close();
+          fs.writeFileSync('personal-site-v1/backend-spikes/evidence/head-to-head.json',JSON.stringify(results,null,2));
           NODE
-      - name: Assert editor routes opened
+      - name: Assert representative publishing task
         run: |
           node <<'NODE'
-          const r=require('./personal-site-v1/backend-spikes/evidence/editor-results.json');
+          const r=require('./personal-site-v1/backend-spikes/evidence/head-to-head.json');
           for(const x of r){
-            if(!/标题|Title/i.test(x.body)) throw new Error(`${x.candidate}: title field not visible`);
-            if(!/正文|Body/i.test(x.body)) throw new Error(`${x.candidate}: body field not visible`);
+            if(!x.saved) throw new Error(`${x.candidate}: did not persist the representative entry in test-repo UI; ${x.error||''}`);
           }
           NODE
       - uses: actions/upload-artifact@v5
