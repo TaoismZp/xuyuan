@@ -1,0 +1,150 @@
+name: Verify personal site v1 public surface
+on:
+  workflow_run:
+    workflows: ["Deploy playable artifacts to GitHub Pages"]
+    types: [completed]
+permissions:
+  contents: read
+jobs:
+  verify-public:
+    if: >-
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.head_branch == 'main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+      - name: Bind verification to delivery identity
+        run: |
+          test "$(git rev-parse HEAD)" = "${{ github.event.workflow_run.head_sha }}"
+          echo "delivery_identity=${{ github.event.workflow_run.head_sha }}"
+      - name: Public HTTP verification
+        id: http
+        continue-on-error: true
+        run: |
+          set -euo pipefail
+          base="https://taoismzp.github.io/xuyuan/personal-site-v1"
+          for path in "/" "/essays/" "/projects/" "/about/" "/admin/" "/admin/config.yml" "/assets/site.css" "/assets/site.js" "/assets/content.css"; do
+            curl --fail --silent --show-error --retry 8 --retry-delay 4 "$base$path" >/tmp/public-check
+            test -s /tmp/public-check
+          done
+          curl --fail --silent --retry 8 --retry-delay 4 "$base/" | grep -q "长期交易"
+          curl --fail --silent --retry 8 --retry-delay 4 "$base/" | grep -q "第一篇公开长文，会从这里开始"
+          curl --fail --silent --retry 8 --retry-delay 4 "$base/essays/" | grep -q "还没有公开长文"
+          ! curl --fail --silent --retry 8 --retry-delay 4 "$base/" | grep -q "前端 Fixture"
+          curl --fail --silent --retry 8 --retry-delay 4 "$base/admin/config.yml" | grep -q "repo: TaoismZp/xuyuan"
+      - name: Install WebKit and CJK font
+        run: |
+          npm init -y >/dev/null 2>&1
+          npm i playwright@1.56.1
+          npx playwright install --with-deps webkit
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq fonts-noto-cjk
+          fc-cache -f
+      - name: Same-surface iPhone iPad desktop verification
+        id: surface
+        continue-on-error: true
+        run: |
+          mkdir -p personal-site-v1-public-evidence
+          node <<'NODE'
+          const { webkit } = require('playwright');
+          const base = 'https://taoismzp.github.io/xuyuan/personal-site-v1';
+          const assert = (value, message) => { if (!value) throw new Error(message); };
+          (async () => {
+            const browser = await webkit.launch({headless:true});
+            const surfaces = [
+              ['iphone',390,844,true],
+              ['ipad',1024,1366,true],
+              ['desktop',1440,1100,false]
+            ];
+            const pages = [
+              ['home','/'],
+              ['essays','/essays/'],
+              ['projects','/projects/'],
+              ['about','/about/']
+            ];
+            for (const [surface,w,h,mobile] of surfaces) {
+              for (const [name,path] of pages) {
+                const p = await browser.newPage({viewport:{width:w,height:h},isMobile:mobile,hasTouch:mobile,deviceScaleFactor:surface==='iphone'?2:1});
+                await p.goto(base + path,{waitUntil:'networkidle'});
+                const result = await p.evaluate(() => ({
+                  overflow: document.documentElement.scrollWidth > document.documentElement.clientWidth,
+                  h1: document.querySelector('h1')?.textContent?.trim() || '',
+                  tiny: [...document.querySelectorAll('nav a,button')].filter(el => {const r=el.getBoundingClientRect();return r.width>0&&(r.width<44||r.height<44)}).length,
+                  skip: !!document.querySelector('.skip-link'),
+                  hero: document.querySelector('.hero-title') ? parseFloat(getComputedStyle(document.querySelector('.hero-title')).fontSize) : null
+                }));
+                assert(!result.overflow,`${surface}/${name}: horizontal overflow`);
+                assert(result.h1.length>0,`${surface}/${name}: missing h1`);
+                assert(result.tiny===0,`${surface}/${name}: target below 44px`);
+                assert(result.skip,`${surface}/${name}: missing skip link`);
+                if(name==='home') assert(result.hero >= (surface==='desktop'?100:50),`${surface}/home: hero hierarchy regressed`);
+                await p.screenshot({path:`personal-site-v1-public-evidence/${surface}-${name}.png`,fullPage:true});
+                await p.close();
+              }
+            }
+
+            const admin=await browser.newPage({viewport:{width:390,height:844},isMobile:true,hasTouch:true,deviceScaleFactor:2});
+            await admin.goto(base+'/admin/',{waitUntil:'domcontentloaded'});
+            await admin.waitForTimeout(7000);
+            assert(!(await admin.evaluate(()=>document.documentElement.scrollWidth>document.documentElement.clientWidth)),'iphone/admin: horizontal overflow');
+            assert(await admin.getByRole('button',{name:/Sign In Using Access Token/i}).count()===1,'iphone/admin: token sign-in missing');
+            await admin.screenshot({path:'personal-site-v1-public-evidence/iphone-admin.png',fullPage:true});
+            await admin.close();
+            await browser.close();
+          })().catch(error=>{console.error(error);process.exit(1)});
+          NODE
+      - name: Generate bound Acceptance Report
+        if: always()
+        env:
+          HTTP_OUTCOME: ${{ steps.http.outcome }}
+          SURFACE_OUTCOME: ${{ steps.surface.outcome }}
+        run: |
+          if [ "$HTTP_OUTCOME" = success ] && [ "$SURFACE_OUTCOME" = success ]; then RESULT=PASS; else RESULT=FAIL; fi
+          VISION=$(sha256sum personal-site-v1/VISION_FIXTURE.md | cut -d' ' -f1)
+          BLUEPRINT=$(sha256sum personal-site-v1/BACKEND_BUILD_BLUEPRINT.md | cut -d' ' -f1)
+          {
+            echo '# Acceptance Report — Personal Site v1'
+            echo
+            echo "- Result: **${RESULT}**"
+            echo "- Candidate Identity: ${GITHUB_SHA}"
+            echo "- Delivery Identity: ${{ github.event.workflow_run.head_sha }}"
+            echo "- Vision Fixture Identity (sha256): ${VISION}"
+            echo "- Backend Blueprint Identity (sha256): ${BLUEPRINT}"
+            echo "- Evidence Identity: GitHub Actions run ${GITHUB_RUN_ID}"
+            echo '- Delivery Surface: https://taoismzp.github.io/xuyuan/personal-site-v1/'
+            echo
+            echo '## Gates'
+            echo "- Public HTTP / Delivery Reality: ${HTTP_OUTCOME}"
+            echo "- iPhone + iPad + desktop WebKit / Experience Reality: ${SURFACE_OUTCOME}"
+            echo '- Functional article-generation loop: verified pre-promotion by backend integration CI on this candidate lineage using ephemeral published + draft fixtures.'
+            echo '- Public article surface: intentionally absent at launch because no user-authored article has been published yet; no synthetic article is presented as the user’s work.'
+            echo '- Admin authentication: public token-login entry is verified; an authenticated write using the user’s private GitHub token is intentionally not performed by CI.'
+            echo
+            if [ "$RESULT" = PASS ]; then
+              echo 'PASS: the deployed empty-state site and public CMS entry match this delivery identity. The user may publish the first real article after signing in with their own GitHub token.'
+            else
+              echo 'FAIL: delivery or same-surface experience did not pass; do not claim final handoff.'
+            fi
+          } > ACCEPTANCE_REPORT.md
+      - uses: actions/upload-artifact@v5
+        if: always()
+        with:
+          name: personal-site-v1-acceptance-${{ github.run_id }}
+          path: |
+            ACCEPTANCE_REPORT.md
+            personal-site-v1-public-evidence/*.png
+          if-no-files-found: warn
+          retention-days: 90
+      - name: Acceptance gate
+        if: always()
+        env:
+          HTTP_OUTCOME: ${{ steps.http.outcome }}
+          SURFACE_OUTCOME: ${{ steps.surface.outcome }}
+        run: |
+          test "$HTTP_OUTCOME" = success
+          test "$SURFACE_OUTCOME" = success
