@@ -1,16 +1,31 @@
-const oldButton=document.querySelector('.v13-sound');
-if(oldButton&&window.__cryptoV13){
+const waitForV13=()=>new Promise((resolve,reject)=>{
+  const started=performance.now();
+  (function poll(){
+    if(window.__cryptoV13&&document.querySelector('.v13-sound'))return resolve(window.__cryptoV13);
+    if(performance.now()-started>60000)return reject(new Error('v13 controls dependency timeout'));
+    setTimeout(poll,30);
+  })();
+});
+
+try{
+  const api=await waitForV13();
+  const oldButton=document.querySelector('.v13-sound');
   const button=oldButton.cloneNode(true);
   oldButton.replaceWith(button);
+
   button.addEventListener('click',()=>{
-    const current=window.__cryptoV13.getProof().muted;
-    window.__cryptoV13.setMuted(!current);
+    const next=!api.getProof().muted;
+    api.setMuted(next);
   });
-  // If the user mutes before the first roll, the hero-roll gesture creates the AudioContext.
-  // Re-apply the already-selected mute state after that synchronous creation point.
+
+  // A pre-roll mute decision must survive AudioContext creation on the trusted roll gesture.
   document.querySelector('.roll')?.addEventListener('click',()=>{
-    if(window.__cryptoV13.getProof().muted){
-      queueMicrotask(()=>window.__cryptoV13.setMuted(true));
-    }
+    const selected=api.getProof().muted;
+    if(selected)queueMicrotask(()=>api.setMuted(true));
   },true);
+
+  window.__cryptoV13ControlsReady=true;
+}catch(error){
+  console.error(error);
+  window.__cryptoV13ControlsReady=false;
 }
