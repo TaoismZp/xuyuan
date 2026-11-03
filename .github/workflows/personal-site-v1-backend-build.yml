@@ -1,0 +1,116 @@
+name: Verify personal site v1 backend integration
+on:
+  push:
+    branches: [personal-site-v1-frontend]
+    paths:
+      - 'personal-site-v1/admin/**'
+      - 'personal-site-v1/content/**'
+      - 'personal-site-v1/scripts/**'
+      - 'personal-site-v1/package.json'
+      - 'personal-site-v1/assets/content.css'
+      - '.github/workflows/personal-site-v1-backend-build.yml'
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+      - name: Install static builder dependencies
+        run: npm install --prefix personal-site-v1 --no-audit --no-fund
+      - name: Create ephemeral content fixtures
+        run: |
+          mkdir -p personal-site-v1/content/posts
+          cat > personal-site-v1/content/posts/ci-published.md <<'POST'
+          ---
+          title: "等待：交易中最稀缺的能力"
+          summary: "一篇用于验证后台到前台生成闭环的中文长文样稿。"
+          date: "2026-11-03T23:00:00+08:00"
+          tags: ["交易", "纪律"]
+          status: published
+          featured: true
+          ---
+
+          交易的大部分时间并不发生在买入和卖出。
+
+          ## 等待不是空白
+
+          真正困难的部分，是在没有动作的时候仍然保持判断。
+
+          > 等待本身，就是交易系统的一部分。
+          POST
+          cat > personal-site-v1/content/posts/ci-draft.md <<'POST'
+          ---
+          title: "不应公开的草稿"
+          summary: "这篇只用于验证草稿不会进入前台。"
+          date: "2026-11-03T22:00:00+08:00"
+          tags: ["测试"]
+          status: draft
+          ---
+
+          这段内容不能出现在公开页面。
+          POST
+      - name: Build public pages from Markdown
+        run: node personal-site-v1/scripts/build.mjs
+      - name: Construction integrity checks
+        run: |
+          test -f personal-site-v1/essays/ci-published/index.html
+          grep -q '等待：交易中最稀缺的能力' personal-site-v1/index.html
+          grep -q '等待：交易中最稀缺的能力' personal-site-v1/essays/index.html
+          grep -q '等待不是空白' personal-site-v1/essays/ci-published/index.html
+          ! grep -R '不应公开的草稿' personal-site-v1/index.html personal-site-v1/essays/index.html personal-site-v1/essays/ci-published/index.html
+          grep -q 'auth_methods: \[token\]' personal-site-v1/admin/config.yml
+          ! grep -R -E 'github_pat_[A-Za-z0-9_]+|ghp_[A-Za-z0-9]+' personal-site-v1/admin personal-site-v1/content
+      - name: Install browser verifier and CJK fonts
+        run: |
+          npm i playwright@1.56.1 --no-save
+          npx playwright install chromium
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq fonts-noto-cjk
+          fc-cache -f
+      - name: Serve built candidate
+        run: |
+          python3 -m http.server 4175 >/tmp/personal-site-backend.log 2>&1 &
+          sleep 2
+      - name: Verify generated public surface and admin entry
+        run: |
+          mkdir -p personal-site-v1/backend-evidence
+          node <<'NODE'
+          const { chromium } = require('playwright');
+          const assert=(v,m)=>{if(!v)throw new Error(m)};
+          (async()=>{
+            const browser=await chromium.launch({headless:true});
+            for(const [surface,w,h,mobile] of [['desktop',1440,1000,false],['mobile',390,844,true]]){
+              for(const [name,path] of [['home','personal-site-v1/'],['archive','personal-site-v1/essays/'],['article','personal-site-v1/essays/ci-published/']]){
+                const p=await browser.newPage({viewport:{width:w,height:h},isMobile:mobile,hasTouch:mobile,deviceScaleFactor:mobile?2:1});
+                await p.goto(`http://127.0.0.1:4175/${path}`,{waitUntil:'networkidle'});
+                const data=await p.evaluate(()=>({overflow:document.documentElement.scrollWidth>document.documentElement.clientWidth,h1:document.querySelector('h1')?.innerText||'',text:document.body.innerText}));
+                assert(!data.overflow,`${name}/${surface}: horizontal overflow`);
+                assert(data.text.includes('等待：交易中最稀缺的能力'),`${name}/${surface}: generated post missing`);
+                assert(!data.text.includes('不应公开的草稿'),`${name}/${surface}: draft leaked`);
+                if(name==='article'&&mobile){const size=await p.locator('.article-body').evaluate(el=>parseFloat(getComputedStyle(el).fontSize));assert(size>=18,'mobile article text below 18px')}
+                await p.screenshot({path:`personal-site-v1/backend-evidence/${name}-${surface}.png`,fullPage:true});
+                await p.close();
+              }
+            }
+            const admin=await browser.newPage({viewport:{width:390,height:844},isMobile:true,hasTouch:true,deviceScaleFactor:2});
+            await admin.goto('http://127.0.0.1:4175/personal-site-v1/admin/',{waitUntil:'domcontentloaded'});
+            await admin.waitForTimeout(5000);
+            const adminText=(await admin.locator('body').innerText()).trim();
+            assert(adminText.length>10,'production admin is blank');
+            const overflow=await admin.evaluate(()=>document.documentElement.scrollWidth>document.documentElement.clientWidth);
+            assert(!overflow,'production admin entry overflows mobile viewport');
+            await admin.screenshot({path:'personal-site-v1/backend-evidence/admin-mobile.png',fullPage:true});
+            await admin.close();
+            await browser.close();
+          })().catch(e=>{console.error(e);process.exit(1)});
+          NODE
+      - uses: actions/upload-artifact@v5
+        if: always()
+        with:
+          name: personal-site-v1-backend-evidence-${{ github.run_id }}
+          path: personal-site-v1/backend-evidence/*.png
+          retention-days: 7

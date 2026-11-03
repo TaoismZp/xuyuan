@@ -7,6 +7,7 @@ on:
       - 'crypto-tycoon/**'
       - 'essays/**'
       - 'longform-v2/**'
+      - 'personal-site-v1/**'
       - '.github/workflows/deploy-pages.yml'
   workflow_dispatch:
 
@@ -27,6 +28,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+      - name: Build personal site from canonical content
+        run: |
+          npm install --prefix personal-site-v1 --no-audit --no-fund
+          ALLOW_EMPTY_BUILD=1 node personal-site-v1/scripts/build.mjs
       - name: Configure Pages
         uses: actions/configure-pages@v5
         with:
