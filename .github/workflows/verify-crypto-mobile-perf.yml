@@ -1,0 +1,115 @@
+name: Verify Crypto Tycoon Mobile Performance
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'wish-delivery/versions/v7.6.md'
+      - 'crypto-tycoon/BUILD_BLUEPRINT_V5.md'
+      - 'crypto-tycoon/candidate-v1.js'
+      - 'crypto-tycoon/candidate-v2-augment.js'
+      - 'crypto-tycoon/candidate-v3-augment.js'
+      - 'crypto-tycoon/candidate-v4-augment.js'
+      - 'crypto-tycoon/candidate-v5-augment.js'
+      - 'crypto-tycoon/candidate-v6-augment.js'
+      - 'crypto-tycoon/candidate-v7-augment.js'
+      - 'crypto-tycoon/candidate-v8-augment.js'
+      - 'crypto-tycoon/candidate-v9-augment.js'
+      - 'crypto-tycoon/candidate-v5.css'
+      - 'crypto-tycoon/candidate-v8.css'
+      - 'crypto-tycoon/candidate-v10.css'
+      - 'crypto-tycoon/candidate-v11.css'
+      - 'crypto-tycoon/candidate-v11.html'
+      - 'crypto-tycoon/candidate-v11-game.js'
+      - 'tests/crypto-mobile-perf.js'
+      - 'tests/crypto-webkit-smoke.js'
+      - '.github/workflows/verify-crypto-mobile-perf.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  iphone-production-budget:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Verify accepted candidate identity
+        run: |
+          test -f crypto-tycoon/candidate-v11.html
+          test -f crypto-tycoon/candidate-v11-game.js
+          test -f crypto-tycoon/PROJECT_STATE.md
+          echo "CANDIDATE_COMMIT=$GITHUB_SHA"
+      - name: Install CJK fonts
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y fonts-noto-cjk >/dev/null
+          fc-cache -f
+      - name: Install Playwright client
+        run: |
+          npm init -y
+          npm install --save-dev playwright
+      - name: Start candidate server
+        run: |
+          python3 -m http.server 8080 >/tmp/crypto-mobile-http.log 2>&1 &
+          echo $! > /tmp/crypto-mobile-http.pid
+          for i in {1..30}; do
+            curl -fsS http://127.0.0.1:8080/crypto-tycoon/candidate-v11.html >/dev/null && exit 0
+            sleep 1
+          done
+          cat /tmp/crypto-mobile-http.log
+          exit 1
+      - name: Verify iPhone layout touch and production render budget
+        env:
+          TARGET_URL: http://127.0.0.1:8080/crypto-tycoon/candidate-v11.html
+          EXPECTED_VERSION: candidate-v11
+          PW_CHANNEL: chrome
+        run: node tests/crypto-mobile-perf.js
+      - name: Upload iPhone performance evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: crypto-mobile-production-budget-v11
+          path: artifacts/*
+          if-no-files-found: warn
+
+  webkit-safari-smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install CJK fonts and Playwright WebKit
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y fonts-noto-cjk >/dev/null
+          fc-cache -f
+          npm init -y
+          npm install --save-dev playwright
+          npx playwright install --with-deps webkit
+      - name: Start candidate server
+        run: |
+          python3 -m http.server 8080 >/tmp/crypto-webkit-http.log 2>&1 &
+          echo $! > /tmp/crypto-webkit-http.pid
+          for i in {1..30}; do
+            curl -fsS http://127.0.0.1:8080/crypto-tycoon/candidate-v11.html >/dev/null && exit 0
+            sleep 1
+          done
+          cat /tmp/crypto-webkit-http.log
+          exit 1
+      - name: Verify WebKit iPhone Safari-compatible loop
+        env:
+          TARGET_URL: http://127.0.0.1:8080/crypto-tycoon/candidate-v11.html
+          EXPECTED_VERSION: candidate-v11
+        run: node tests/crypto-webkit-smoke.js
+      - name: Upload WebKit evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: crypto-webkit-safari-v11
+          path: artifacts/*
+          if-no-files-found: warn
