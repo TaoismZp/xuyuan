@@ -1,0 +1,32 @@
+name: Verify longform public site
+
+on:
+  workflow_run:
+    workflows: ["Deploy playable artifacts to GitHub Pages"]
+    types: [completed]
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    if: github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify public longform surface
+        run: |
+          set -euo pipefail
+          base="https://taoismzp.github.io/xuyuan/essays"
+          ok=0
+          for i in $(seq 1 12); do
+            if curl -fsSL --max-time 20 "$base/" | grep -q "把值得留下来的东西"; then
+              ok=1
+              break
+            fi
+            sleep 5
+          done
+          test "$ok" = "1"
+          curl -fsSL --max-time 20 "$base/posts/index.json" | grep -q "a-place-for-longform"
+          curl -fsSL --max-time 20 "$base/article.html?slug=a-place-for-longform" | grep -q "articleTitle"
+          curl -fsSL --max-time 20 "$base/posts/a-place-for-longform.md" | grep -q "长文不是字数更多"
+          curl -fsSL --max-time 20 "$base/write.html" | grep -q "写完，直接发布"

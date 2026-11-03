@@ -7,6 +7,7 @@ on:
       - 'crypto-tycoon/**'
       - 'essays/**'
       - '.github/workflows/deploy-pages.yml'
+      - '.github/workflows/verify-longform-public.yml'
   workflow_dispatch:
 
 permissions:

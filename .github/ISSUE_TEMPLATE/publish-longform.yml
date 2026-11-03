@@ -1,7 +1,6 @@
 name: 发布一篇长文
 description: 仓库所有者提交后，文章会自动加入「长文」网站。
 title: "[发文] "
-labels: ["publish-longform"]
 body:
   - type: markdown
     attributes:
