@@ -1,7 +1,7 @@
 const { chromium } = require('playwright');
 const { PNG } = require('pngjs');
 const fs = require('fs');
-const target = process.env.TARGET_URL || 'https://taoismzp.github.io/xuyuan/crypto-tycoon/candidate-v1.html?test=1';
+const target = process.env.TARGET_URL || 'http://127.0.0.1:8080/crypto-tycoon/candidate-v7.html?test=1';
 const expectedVersion = process.env.EXPECTED_VERSION || null;
 fs.mkdirSync('artifacts', { recursive: true });
 
@@ -10,34 +10,23 @@ function writeRgbaPng(path,width,height,rgba){
   if(src.length!==width*height*4) throw new Error(`RGBA size mismatch ${src.length} !== ${width*height*4}`);
   const png=new PNG({width,height});
   const row=width*4;
-  // WebGL readPixels is bottom-up; PNG is top-down.
   for(let y=0;y<height;y++) src.copy(png.data,y*row,(height-1-y)*row,(height-y)*row);
   fs.writeFileSync(path,PNG.sync.write(png));
 }
 
 async function capture(browser, viewport, name) {
   const context = await browser.newContext({ viewport, deviceScaleFactor: 1, reducedMotion:'reduce' });
-  await context.addInitScript(() => {
-    const nativeRAF = window.requestAnimationFrame.bind(window);
-    let last = 0;
-    window.requestAnimationFrame = cb => nativeRAF(ts => {
-      const delay = Math.max(0, 150 - (ts - last));
-      setTimeout(() => { last = performance.now(); cb(last); }, delay);
-    });
-  });
-
   const page = await context.newPage();
   const errors=[];
   page.on('pageerror', e => errors.push(String(e)));
   page.on('console', m => { if(m.type()==='error') errors.push(m.text()); });
 
-  await page.goto(target, { waitUntil:'networkidle', timeout:60000 });
-  await page.waitForFunction(v => document.documentElement.dataset.sliceReady === '1' && !!window.__cryptoSliceReady && (!v || window.__cryptoSliceReady.version === v), expectedVersion, { timeout:45000 });
-  await page.waitForFunction(() => document.documentElement.dataset.auditReady === '1' && typeof window.__supervisionReadPixels === 'function', null, { timeout:45000 });
+  await page.goto(target, { waitUntil:'load', timeout:60000 });
+  await page.waitForFunction(v => document.documentElement.dataset.sliceReady === '1' && !!window.__cryptoSliceReady && (!v || window.__cryptoSliceReady.version === v), expectedVersion, { timeout:30000 });
+  await page.waitForFunction(() => ['1','error'].includes(document.documentElement.dataset.auditReady || ''), null, { timeout:30000 });
 
-  // Freeze animation before evidence rendering; the audit function renders one deterministic final frame itself.
-  await page.evaluate(() => { window.requestAnimationFrame = () => 0; });
-  await page.waitForTimeout(200);
+  const auditState=await page.evaluate(()=>({state:document.documentElement.dataset.auditReady,error:window.__supervisionAuditError||null}));
+  if(auditState.state!=='1') throw new Error(`supervision audit failed: ${auditState.error||'unknown audit error'}`);
 
   const audit = await page.evaluate(() => {
     const pixels=window.__supervisionReadPixels();
@@ -62,7 +51,6 @@ async function capture(browser, viewport, name) {
   delete audit.pixels.rgbaBase64;
   fs.writeFileSync(`artifacts/${name}.json`, JSON.stringify(audit,null,2));
 
-  // Capture HUD independently after hiding WebGL. Failure here does not erase the authoritative scene evidence.
   await page.evaluate(() => {
     const c=document.querySelector('#game3d'); if(c) c.style.visibility='hidden';
     document.documentElement.style.background='transparent';
