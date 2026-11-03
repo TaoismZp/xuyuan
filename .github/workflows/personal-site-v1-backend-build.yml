@@ -3,12 +3,10 @@ on:
   push:
     branches: [personal-site-v1-frontend]
     paths:
-      - 'personal-site-v1/admin/**'
-      - 'personal-site-v1/content/**'
-      - 'personal-site-v1/scripts/**'
-      - 'personal-site-v1/package.json'
-      - 'personal-site-v1/assets/content.css'
+      - 'personal-site-v1/**'
       - '.github/workflows/personal-site-v1-backend-build.yml'
+      - '.github/workflows/personal-site-v1-supervision.yml'
+      - '.github/workflows/deploy-pages.yml'
 permissions:
   contents: read
 jobs:
@@ -28,7 +26,7 @@ jobs:
           ---
           title: "等待：交易中最稀缺的能力"
           summary: "一篇用于验证后台到前台生成闭环的中文长文样稿。"
-          date: "2026-11-03T23:00:00+08:00"
+          date: "2026-11-03"
           tags: ["交易", "纪律"]
           status: published
           featured: true
@@ -46,7 +44,7 @@ jobs:
           ---
           title: "不应公开的草稿"
           summary: "这篇只用于验证草稿不会进入前台。"
-          date: "2026-11-03T22:00:00+08:00"
+          date: "2026-11-03"
           tags: ["测试"]
           status: draft
           ---
