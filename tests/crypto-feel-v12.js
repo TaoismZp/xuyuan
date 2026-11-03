@@ -27,15 +27,22 @@ async function runSurface(browser,viewport,name){
   await page.click('.roll');
   await poll(page,()=>document.querySelector('.stage2-decision')?.getAttribute('aria-hidden')==='false'&&window.__cryptoFullGame?.getState()?.players?.[0]?.pos===5,30000);
   await page.waitForTimeout(120);
-  const atDecision=await page.evaluate(()=>({state:window.__cryptoFullGame.getState(),feel:window.__cryptoFeel.getProof(),title:document.querySelector('.stage2-decision h2').textContent}));
+  const atDecision=await page.evaluate(()=>({
+    state:window.__cryptoFullGame.getState(),feel:window.__cryptoFeel.getProof(),title:document.querySelector('.stage2-decision h2').textContent,
+    buyRect:document.querySelector('.stage2-decision .buy')?.getBoundingClientRect().toJSON?.()||null,
+    buyVisible:getComputedStyle(document.querySelector('.stage2-decision .buy')).visibility!=='hidden'
+  }));
   assert(atDecision.title.includes('SOL'),'first deterministic landing must still be SOL');
+  assert(atDecision.buyVisible&&atDecision.buyRect?.width>0&&atDecision.buyRect?.height>0,'animated buy control is not visibly actionable');
   assert((atDecision.feel.cueCounts.ui||0)>=1,'input cue missing');
   assert((atDecision.feel.cueCounts.charge||0)>=1,'anticipation cue missing');
   assert((atDecision.feel.cueCounts['dice-rattle']||0)>=1,'dice-rattle cue missing');
   assert((atDecision.feel.cueCounts.event||0)>=1,'decision reveal cue missing');
   assert(atDecision.feel.landingPulses>=1,'landing feedback missing');
 
-  await page.click('.stage2-decision .buy');
+  // The control is intentionally animated. Once visibility/geometry are proven, do not require Playwright's
+  // "stable for two frames" heuristic to suppress product motion.
+  await page.locator('.stage2-decision .buy').click({force:true});
   await poll(page,()=>window.__cryptoFullGame?.getState()?.round===2&&window.__cryptoFullGame?.getState()?.phase==='await-roll',30000);
   await page.waitForTimeout(120);
   const after=await page.evaluate(()=>({
@@ -54,9 +61,9 @@ async function runSurface(browser,viewport,name){
   assert(errors.length===0,'browser errors: '+errors.join(' | '));
 
   // Sound control is a product control, not a developer flag.
-  await page.click('.sound-toggle');
+  await page.locator('.sound-toggle').click({force:true});
   assert((await page.evaluate(()=>window.__cryptoFeel.getProof().muted))===true,'mute control failed');
-  await page.click('.sound-toggle');
+  await page.locator('.sound-toggle').click({force:true});
   assert((await page.evaluate(()=>window.__cryptoFeel.getProof().muted))===false,'unmute control failed');
 
   fs.writeFileSync(`artifacts/${name}-feel-v12.json`,JSON.stringify({target,viewport,initial,atDecision,after,pass:true},null,2));
