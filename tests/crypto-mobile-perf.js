@@ -39,10 +39,10 @@ async function productionBudget(browser){
       complexity:{meshes,hiddenMeshes,lights,triangles,materials},
       layout:{roll:R(document.querySelector('.roll')),round:R(document.querySelector('.round-card')),leaderboard:R(document.querySelector('.leaderboard')),ticker:R(document.querySelector('.ticker')),actions},
       overflow:{body:document.body.scrollWidth-innerWidth,doc:document.documentElement.scrollWidth-innerWidth},
-      referencePixelsUsed:window.__cryptoSliceReady.referencePixelsUsed,
-      browserErrors:errors
+      referencePixelsUsed:window.__cryptoSliceReady.referencePixelsUsed
     };
   });
+  audit.browserErrors=[...errors];
   // Persist the raw audit before any budget assertion so a failed gate still has diagnostic evidence.
   fs.writeFileSync('artifacts/mobile-production-budget.json',JSON.stringify(audit,null,2));
   assert(audit.referencePixelsUsed===false,'reference pixel substitution proof missing');
