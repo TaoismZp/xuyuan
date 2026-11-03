@@ -1,0 +1,19 @@
+name: Personal site backend capability bakeoff
+on:
+  push:
+    branches: [personal-site-v1-backend-bakeoff]
+permissions:
+  contents: read
+jobs:
+  representative-spike:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Verify common content contract and candidate compatibility
+        run: python3 personal-site-v1/backend-lab/scripts/spike_verify.py
+      - name: Preserve spike output
+        uses: actions/upload-artifact@v5
+        with:
+          name: personal-site-backend-bakeoff-${{ github.run_id }}
+          path: personal-site-v1/backend-lab/spike-output/content-manifest.json
+          retention-days: 7
