@@ -1,0 +1,57 @@
+name: Personal site v1 vision fixture
+on:
+  push:
+    branches: [personal-site-v1-frontend]
+permissions:
+  contents: read
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+      - name: Install Playwright
+        run: |
+          npm init -y >/dev/null 2>&1
+          npm i playwright@1.56.1
+          npx playwright install --with-deps webkit
+      - name: Serve fixture
+        run: |
+          python3 -m http.server 4173 >/tmp/personal-site-v1.log 2>&1 &
+          sleep 2
+          curl --fail http://127.0.0.1:4173/personal-site-v1/vision/fixture.html >/dev/null
+      - name: Verify and capture fixture
+        run: |
+          mkdir -p personal-site-v1/vision/evidence
+          node <<'NODE'
+          const { webkit } = require('playwright');
+          (async () => {
+            const browser = await webkit.launch({headless:true});
+            const sizes = [
+              ['desktop', 1440, 1100, false],
+              ['mobile', 390, 844, true]
+            ];
+            for (const [name,w,h,mobile] of sizes) {
+              const p = await browser.newPage({viewport:{width:w,height:h},isMobile:mobile,hasTouch:mobile,deviceScaleFactor:mobile?2:1});
+              await p.goto('http://127.0.0.1:4173/personal-site-v1/vision/fixture.html',{waitUntil:'networkidle'});
+              const metrics = await p.evaluate(() => ({
+                overflow: document.documentElement.scrollWidth > document.documentElement.clientWidth,
+                h1: getComputedStyle(document.querySelector('h1')).fontSize,
+                body: getComputedStyle(document.body).fontSize,
+                title: document.title
+              }));
+              if (metrics.overflow) throw new Error(name + ': horizontal overflow');
+              if (!metrics.title.includes('Vision Fixture')) throw new Error(name + ': wrong fixture identity');
+              await p.screenshot({path:`personal-site-v1/vision/evidence/${name}.png`,fullPage:true});
+              await p.close();
+            }
+            await browser.close();
+          })();
+          NODE
+      - uses: actions/upload-artifact@v5
+        with:
+          name: personal-site-v1-vision-${{ github.run_id }}
+          path: personal-site-v1/vision/evidence/*.png
+          retention-days: 7
