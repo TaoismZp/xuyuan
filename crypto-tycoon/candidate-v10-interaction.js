@@ -49,6 +49,7 @@ const state={
   decision:null,
   turnsCompleted:0,
   stage2Complete:false,
+  animationProof:{diceFrames:0,humanMoveFrames:0,botMoveFrames:0},
   history:[]
 };
 
@@ -80,17 +81,23 @@ function updateHud(){
   if(tail) tail.textContent=state.market.id==='mania'?'狂热期 · 风险偏好拉满 · 仓位重新定价':'ETF 资金流 ↑ · 风险偏好上升 · GAS -12%';
   persist();
 }
-function showToast(text,ms=TEST?180:900){
+function showToast(text,ms=TEST?120:900){
   toast.textContent=text;toast.classList.add('show');
   clearTimeout(showToast.timer);showToast.timer=setTimeout(()=>toast.classList.remove('show'),ms);
 }
 function showDecision(){decision.classList.add('open');decision.setAttribute('aria-hidden','false')}
 function hideDecision(){decision.classList.remove('open');decision.setAttribute('aria-hidden','true')}
 function ease(t){return t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2}
-function tween(duration,fn){
+function tween(duration,fn,proofKey){
+  if(TEST){
+    return new Promise(resolve=>{
+      fn(.5,.5);if(proofKey)state.animationProof[proofKey]++;
+      setTimeout(()=>{fn(1,1);if(proofKey)state.animationProof[proofKey]++;resolve()},12);
+    });
+  }
   return new Promise(resolve=>{
     const start=performance.now();
-    function frame(now){const t=Math.min(1,(now-start)/duration);fn(ease(t),t);if(t<1)requestAnimationFrame(frame);else resolve()}
+    function frame(now){const t=Math.min(1,(now-start)/duration);fn(ease(t),t);if(proofKey)state.animationProof[proofKey]++;if(t<1)requestAnimationFrame(frame);else resolve()}
     requestAnimationFrame(frame);
   });
 }
@@ -98,23 +105,23 @@ function tween(duration,fn){
 async function animateDice(values){
   const starts=dice.map(d=>({x:d.rotation.x,y:d.rotation.y,z:d.rotation.z}));
   const targets=values.map((v,i)=>({x:starts[i].x+Math.PI*(2.5+v*.28),y:starts[i].y+Math.PI*(3+i+v*.22),z:starts[i].z+Math.PI*(1.5+v*.18)}));
-  await tween(TEST?180:720,(e)=>dice.forEach((d,i)=>{
+  await tween(720,(e)=>dice.forEach((d,i)=>{
     d.rotation.x=starts[i].x+(targets[i].x-starts[i].x)*e;
     d.rotation.y=starts[i].y+(targets[i].y-starts[i].y)*e;
     d.rotation.z=starts[i].z+(targets[i].z-starts[i].z)*e;
-  }));
+  }),'diceFrames');
 }
 
-async function moveToken(token,startIndex,steps,label){
+async function moveToken(token,startIndex,steps,label,proofKey){
   let current=startIndex;
   for(let s=0;s<steps;s++){
     const next=(current+1)%24;
     const [sx,sz]=tilePos[current], [ex,ez]=tilePos[next];
-    await tween(TEST?70:170,e=>{
+    await tween(170,e=>{
       token.position.x=sx+(ex-sx)*e;
       token.position.z=sz+(ez-sz)*e;
       token.position.y=.98+Math.sin(e*Math.PI)*.28;
-    });
+    },proofKey);
     token.position.set(ex,.98,ez);current=next;
   }
   showToast(`${label} → 第 ${current+1} 格`);
@@ -132,7 +139,7 @@ async function roll(){
 
   state.phase='moving';
   const from=state.human.tile;
-  state.human.tile=await moveToken(humanToken,from,values[0]+values[1],'你');
+  state.human.tile=await moveToken(humanToken,from,values[0]+values[1],'你','humanMoveFrames');
   state.history.push({type:'move',from,to:state.human.tile});
 
   state.phase='decision';
@@ -156,14 +163,14 @@ async function resolveDecision(action){
   }
   state.decision=null;state.phase='bot';updateHud();
 
-  await new Promise(r=>setTimeout(r,TEST?80:320));
+  await new Promise(r=>setTimeout(r,TEST?25:320));
   const botSteps=TEST?4:2+Math.floor(Math.random()*5);
   const botFrom=state.bot.tile;
-  state.bot.tile=await moveToken(botToken,botFrom,botSteps,'Bot');
+  state.bot.tile=await moveToken(botToken,botFrom,botSteps,'Bot','botMoveFrames');
   state.history.push({type:'bot-turn',from:botFrom,to:state.bot.tile,steps:botSteps});
 
   state.phase='market';
-  await new Promise(r=>setTimeout(r,TEST?80:360));
+  await new Promise(r=>setTimeout(r,TEST?25:360));
   const previous=state.market.id;
   state.market={id:'mania',label:'狂热期',returnPct:25};
   for(const h of state.human.holdings) h.value=Math.round(h.value*1.08);
@@ -172,7 +179,7 @@ async function resolveDecision(action){
   state.history.push({type:'market-transition',from:previous,to:'mania',holdingMarkPct:8});
   state.turnsCompleted=1;state.stage2Complete=true;state.phase='stage2-complete';
   rollButton.disabled=true;rollButton.querySelector('b').textContent='本轮完成';
-  showToast('市场切换：狂热期 · 仓位重新定价',TEST?240:1200);updateHud();
+  showToast('市场切换：狂热期 · 仓位重新定价',TEST?120:1200);updateHud();
   return true;
 }
 
