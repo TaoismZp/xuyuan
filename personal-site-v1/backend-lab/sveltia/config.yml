@@ -1,0 +1,27 @@
+backend:
+  name: github
+  repo: TaoismZp/xuyuan
+  branch: main
+
+media_folder: personal-site-v1/content/media
+public_folder: /xuyuan/personal-site-v1/content/media
+
+collections:
+  - name: essays
+    label: 长文
+    label_singular: 长文
+    folder: personal-site-v1/content/essays
+    create: true
+    extension: md
+    format: frontmatter
+    slug: '{{fields.slug}}'
+    identifier_field: title
+    summary: '{{title}} · {{date}}'
+    fields:
+      - { label: 标题, name: title, widget: string, required: true }
+      - { label: 副标题, name: dek, widget: text, required: false }
+      - { label: Slug, name: slug, widget: string, required: true }
+      - { label: 日期, name: date, widget: datetime, date_format: 'YYYY-MM-DD', time_format: false, required: true }
+      - { label: 标签, name: tags, widget: list, required: false }
+      - { label: 草稿, name: draft, widget: boolean, default: true }
+      - { label: 正文, name: body, widget: markdown, required: true }
