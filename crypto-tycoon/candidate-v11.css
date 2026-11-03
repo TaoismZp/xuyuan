@@ -1,0 +1,37 @@
+@import url('./candidate-v10.css');
+
+/* Stage 3: the v9 visual world stays primary; gameplay surfaces remain compact and subordinate. */
+.actions{z-index:7}
+.actions button[data-action="restart"] span{font-size:18px}
+.actions button[disabled]{opacity:.45;cursor:not-allowed}
+
+.stage2-decision{z-index:12}
+.stage2-decision .numbers:empty{display:none}
+.stage2-decision .metric b{overflow-wrap:anywhere}
+.stage2-decision .choices.one{grid-template-columns:1fr}
+.stage2-decision .choices button[hidden]{display:none}
+
+.game-toast{position:fixed;z-index:11;left:50%;top:18px;transform:translateX(-50%) translateY(-10px);padding:9px 15px;border:1px solid rgba(111,222,255,.32);border-radius:999px;background:rgba(7,17,41,.9);box-shadow:0 12px 30px rgba(0,0,0,.28);backdrop-filter:blur(12px);font-size:10px;font-weight:900;letter-spacing:.05em;color:#dff8ff;opacity:0;pointer-events:none;transition:.2s ease;max-width:min(620px,70vw);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.game-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+.end-panel{position:fixed;inset:0;z-index:14;display:grid;place-items:center;padding:24px;background:rgba(2,7,18,.72);backdrop-filter:blur(14px);opacity:0;pointer-events:none;transition:.2s ease}
+.end-panel.open{opacity:1;pointer-events:auto}
+.end-card{width:min(560px,calc(100vw - 32px));padding:22px;border:1px solid rgba(255,216,112,.7);border-radius:26px;background:linear-gradient(155deg,rgba(18,36,78,.98),rgba(6,14,34,.99));box-shadow:0 30px 90px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.08);color:#f7f4e8}
+.end-card .eyebrow{font-size:9px;font-weight:950;letter-spacing:.2em;color:#77eaff}
+.end-card h2{margin:8px 0 14px;color:#ffe489;font-size:28px}
+.rank-list{display:grid;gap:8px}.rank-item{display:grid;grid-template-columns:34px 1fr auto;gap:10px;align-items:center;padding:10px 12px;border:1px solid rgba(108,206,255,.18);border-radius:14px;background:rgba(7,17,41,.58)}.rank-item>strong{color:#ffe58b}.rank-item small{display:block;color:#8fa8c7;font-size:9px;margin-top:2px}.rank-item .value{font-weight:950;color:#fff3bf}
+.end-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}.end-actions button{height:44px;border-radius:14px;border:1px solid rgba(255,216,112,.45);font:900 13px system-ui,-apple-system,"PingFang SC",sans-serif}.end-actions .again{color:#3a2305;background:linear-gradient(180deg,#ffe891,#eeb13b)}.end-actions .board{color:#d5e6fb;background:linear-gradient(180deg,#213a6d,#101d40)}
+
+.player.dead{opacity:.42;filter:grayscale(.45)}
+.player .identity small{white-space:nowrap}
+
+@media(max-width:900px){
+  .game-toast{top:10px;max-width:56vw}
+  .end-card{padding:16px}.end-card h2{font-size:22px}.rank-item{grid-template-columns:28px 1fr auto;padding:8px 9px}.rank-item .value{font-size:11px}
+}
+
+@media(max-width:800px){
+  .actions{right:8px;bottom:90px;gap:7px}
+  .actions button{width:44px;min-width:44px;height:38px}
+  .end-actions{grid-template-columns:1fr}
+}
