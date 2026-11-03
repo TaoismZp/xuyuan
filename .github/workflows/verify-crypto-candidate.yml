@@ -1,12 +1,13 @@
 name: Supervise Crypto Tycoon Candidate
-# v7.5 construction supervision; controlling blueprint: crypto-tycoon/BUILD_BLUEPRINT_V4.md
+# v7.6 construction supervision; controlling blueprint: crypto-tycoon/BUILD_BLUEPRINT_V5.md
 
 on:
   push:
     branches: [main]
     paths:
-      - 'wish-delivery/versions/v7.5.md'
-      - 'crypto-tycoon/BUILD_BLUEPRINT_V4.md'
+      - 'wish-delivery/versions/v7.6.md'
+      - 'crypto-tycoon/BUILD_BLUEPRINT_V5.md'
+      - 'crypto-tycoon/PROJECT_STATE.md'
       - 'crypto-tycoon/candidate-v1.js'
       - 'crypto-tycoon/candidate-v2.css'
       - 'crypto-tycoon/candidate-v2-augment.js'
@@ -39,11 +40,13 @@ jobs:
           node-version: 22
       - name: Verify controlling blueprint and protocol identity
         run: |
-          test -f wish-delivery/versions/v7.5.md
-          test -f crypto-tycoon/BUILD_BLUEPRINT_V4.md
-          grep -q 'wish-delivery/versions/v7.5.md' crypto-tycoon/BUILD_BLUEPRINT_V4.md
-          echo "PROTOCOL_SHA=$(git hash-object wish-delivery/versions/v7.5.md)"
-          echo "BLUEPRINT_SHA=$(git hash-object crypto-tycoon/BUILD_BLUEPRINT_V4.md)"
+          test -f wish-delivery/versions/v7.6.md
+          test -f crypto-tycoon/BUILD_BLUEPRINT_V5.md
+          test -f crypto-tycoon/PROJECT_STATE.md
+          grep -q 'wish-delivery/versions/v7.6.md' crypto-tycoon/BUILD_BLUEPRINT_V5.md
+          echo "PROTOCOL_SHA=$(git hash-object wish-delivery/versions/v7.6.md)"
+          echo "BLUEPRINT_SHA=$(git hash-object crypto-tycoon/BUILD_BLUEPRINT_V5.md)"
+          echo "STATE_SHA=$(git hash-object crypto-tycoon/PROJECT_STATE.md)"
           echo "CANDIDATE_COMMIT=$GITHUB_SHA"
       - name: Install CJK supervision fonts
         run: |
