@@ -1,8 +1,6 @@
 import * as THREE from 'three';
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
 
-// Deterministic construction order: install the read-only renderer probe before the v1→v6 scene graph is evaluated.
-await import('./candidate-v7-bootstrap.js');
 await import('./candidate-v6-augment.js');
 const scene=window.__ctCapturedScene, root=window.__ctCapturedRoot;
 if(!scene||!root) throw new Error('v7 scene missing');
@@ -41,7 +39,6 @@ function signTexture(title,sub,accent='#ffe078'){
  const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;t.anisotropy=8;return t;
 }
 
-// 1) Stop-work correction: hide the two opaque center monuments that competed with the market stage.
 let hiddenCenterGroups=0;
 for(const o of root.children){
  if(!o.isGroup) continue;
@@ -49,7 +46,6 @@ for(const o of root.children){
  if(size.x>5.1 && size.y>1.25 && center.y>3.1 && center.z>0.35 && center.z<3.2){o.visible=false;hiddenCenterGroups++}
 }
 
-// 2) Replace the wall-like plaque with an open logo crest: transparent text + physical crown/laurel only.
 const crest=new THREE.Group();root.add(crest);
 const logo=texPlane(7.15,2.25,logoTexture());logo.position.set(0,3.62,2.02);crest.add(logo);
 const crownRing=new THREE.Mesh(new THREE.TorusGeometry(.72,.105,10,48),gold);crownRing.rotation.x=Math.PI/2;crownRing.scale.y=.58;crownRing.position.set(0,4.83,1.97);crest.add(crownRing);
@@ -57,7 +53,6 @@ for(let i=-2;i<=2;i++){const s=cone(.15,i===0?.86:(Math.abs(i)===1?.7:.54),goldL
 for(const side of [-1,1]) for(let i=0;i<8;i++){const leaf=cone(.095,.42,goldLite,5);leaf.rotation.z=side*(.94-i*.065);leaf.position.set(side*(3.42+i*.12),2.83+i*.15,1.94);crest.add(leaf)}
 const crestGlow=new THREE.PointLight(0xffc55e,4.4,8,2);crestGlow.position.set(0,4.0,4.0);root.add(crestGlow);
 
-// 3) Suppress repetitive skyline mass instead of piling more boxes behind it.
 const skyline=root.children.find(o=>o.isGroup && o.children.filter(c=>c.isGroup).length>=15);
 let skylineHidden=0;
 if(skyline){skyline.children.forEach((b,i)=>{if(i%3===1 || i%5===2){b.visible=false;skylineHidden++}})}
@@ -86,11 +81,9 @@ const ex=signatureTower('exchange');ex.position.set(-7.9,-.68,-8.25);ex.scale.se
 const btc=signatureTower('btc');btc.position.set(8.8,-.68,-6.85);btc.rotation.y=-.18;root.add(btc);
 const eth=signatureTower('eth');eth.position.set(6.5,-.68,-9.3);root.add(eth);
 
-// 4) Add one close finance terminal to establish a designed midground rather than a flat wall.
 const terminalFrame=rb(4.45,2.35,.22,gold,.14,4);terminalFrame.position.set(-5.8,4.9,-8.75);terminalFrame.rotation.y=.14;root.add(terminalFrame);
 const terminal=texPlane(4.12,2.04,signTexture('BTC 87,420','▲ +7.2% · ETF FLOW +12%','#78efac'));terminal.position.set(-5.8,4.9,-8.61);terminal.rotation.y=.14;root.add(terminal);
 
-// 5) Upgrade the four existing tokens with differentiated collectible accessories rather than generic glow.
 function perimeterPositions(){const a=[],xs=[-5.4,-3.6,-1.8,0,1.8,3.6,5.4],zs=[-3.6,-1.8,0,1.8,3.6];xs.forEach(x=>a.push([x,-5.4]));zs.forEach(z=>a.push([5.4,z]));[...xs].reverse().forEach(x=>a.push([x,5.4]));[...zs].reverse().forEach(z=>a.push([-5.4,z]));return a}
 const pos=perimeterPositions(), tokenIndices=[17,10,13,20];let upgradedTokens=0;
 for(let i=0;i<tokenIndices.length;i++){
@@ -105,7 +98,6 @@ for(let i=0;i<tokenIndices.length;i++){
  upgradedTokens++;
 }
 
-// 6) Fix value balance: remove hot local spots, then add controlled broad fill.
 scene.traverse(o=>{if(o.isPointLight && o.position.y<3.6 && o.intensity>4)o.intensity*=.52});
 scene.add(new THREE.HemisphereLight(0xd9ebff,0x33233d,.18));
 const broadKey=new THREE.DirectionalLight(0xffe5b5,.48);broadKey.position.set(-3,11,8);scene.add(broadKey);
