@@ -1,0 +1,54 @@
+name: Taste personal site directions
+
+on:
+  push:
+    branches: [personal-site-v1-frontend]
+    paths:
+      - '.github/workflows/taste-personal-site-directions.yml'
+  workflow_dispatch:
+
+jobs:
+  draw:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Clone Taste Skill
+        run: git clone --depth 1 https://github.com/Leonxlnx/taste-skill.git /tmp/taste-skill
+      - name: Draw three directions
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p taste-output
+          DRAW=/tmp/taste-skill/skills/taste-skill/scripts/draw.mjs
+          BRIEF='A minimalist personal website for a long-term secondary-market trader, writer and researcher. Longform essays are the primary content. Topics include markets, trading, probability, risk, AI and decision-making. The site should feel restrained, intelligent, trader-native and slightly futuristic, but not like a trading dashboard, SaaS landing page, cyberpunk interface or generic blog. It must remain calm and highly readable.'
+          node "$DRAW" \
+            --sector personal-portfolio \
+            --brief "$BRIEF" \
+            --sections list,work,about,footer \
+            --tone quiet \
+            --options 3 \
+            --seed 20261103 | tee taste-output/options.md
+
+          grep '^## `' taste-output/options.md | sed -E 's/^## `([^`]+)`.*/\1/' > taste-output/ids.txt
+          i=0
+          while IFS= read -r id; do
+            i=$((i+1))
+            out="taste-output/option-$i"
+            mkdir -p "$out"
+            node "$DRAW" \
+              --sector personal-portfolio \
+              --brief "$BRIEF" \
+              --sections list,work,about,footer \
+              --tone quiet \
+              --direction "$id" \
+              --seed 20261103 \
+              --out "$out" | tee "$out/direction-sheet.md"
+          done < taste-output/ids.txt
+
+          printf '# Taste Skill run\n\nSource: Leonxlnx/taste-skill\nSector: personal-portfolio\nTone: quiet\nBrief: %s\n\n' "$BRIEF" > taste-output/RUN.md
+          cat taste-output/options.md >> taste-output/RUN.md
+      - uses: actions/upload-artifact@v5
+        with:
+          name: taste-personal-site-directions
+          path: taste-output
+          if-no-files-found: error
