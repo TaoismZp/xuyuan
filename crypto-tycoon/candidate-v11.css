@@ -32,6 +32,6 @@
 
 @media(max-width:800px){
   .actions{right:8px;bottom:90px;gap:7px}
-  .actions button{width:44px;min-width:44px;height:38px}
+  .actions button{width:44px;min-width:44px;height:44px;min-height:44px}
   .end-actions{grid-template-columns:1fr}
 }
