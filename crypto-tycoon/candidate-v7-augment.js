@@ -1,6 +1,8 @@
 import * as THREE from 'three';
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
 
+// Deterministic construction order: install the read-only renderer probe before the v1→v6 scene graph is evaluated.
+await import('./candidate-v7-bootstrap.js');
 await import('./candidate-v6-augment.js');
 const scene=window.__ctCapturedScene, root=window.__ctCapturedRoot;
 if(!scene||!root) throw new Error('v7 scene missing');
@@ -109,6 +111,6 @@ scene.add(new THREE.HemisphereLight(0xd9ebff,0x33233d,.18));
 const broadKey=new THREE.DirectionalLight(0xffe5b5,.48);broadKey.position.set(-3,11,8);scene.add(broadKey);
 const cityFill=new THREE.PointLight(0x6eeaff,2.4,18,2);cityFill.position.set(0,6,-6);scene.add(cityFill);
 
-window.__cryptoSliceReady={...window.__cryptoSliceReady,version:'candidate-v7',referencePixelsUsed:false,constructionProtocol:'wish-delivery-v7.4',hiddenCenterGroups,skylineHidden,signatureHeroStructures:3,upgradedTokens,openCenterCrest:true};
+window.__cryptoSliceReady={...window.__cryptoSliceReady,version:'candidate-v7',referencePixelsUsed:false,constructionProtocol:'wish-delivery-v7.6',hiddenCenterGroups,skylineHidden,signatureHeroStructures:3,upgradedTokens,openCenterCrest:true};
 document.documentElement.dataset.sliceVersion='v7';
 document.documentElement.dataset.sliceReady='1';
