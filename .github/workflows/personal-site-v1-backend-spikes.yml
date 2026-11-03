@@ -1,0 +1,61 @@
+name: Compare personal site CMS candidates
+on:
+  push:
+    branches: [personal-site-v1-frontend]
+    paths:
+      - 'personal-site-v1/backend-spikes/**'
+      - '.github/workflows/personal-site-v1-backend-spikes.yml'
+permissions:
+  contents: read
+jobs:
+  compare:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+      - name: Install browser
+        run: |
+          npm init -y >/dev/null 2>&1
+          npm i playwright@1.56.1
+          npx playwright install chromium
+      - name: Serve spike pages
+        run: |
+          python3 -m http.server 4180 >/tmp/cms-spikes.log 2>&1 &
+          sleep 2
+      - name: Run same-task browser spike
+        run: |
+          mkdir -p personal-site-v1/backend-spikes/evidence
+          node <<'NODE'
+          const { chromium } = require('playwright');
+          const fs = require('fs');
+          const assert = (v,m)=>{if(!v)throw new Error(m)};
+          (async()=>{
+            const browser=await chromium.launch({headless:true});
+            const results=[];
+            for(const candidate of ['sveltia','decap']){
+              const p=await browser.newPage({viewport:{width:390,height:844},isMobile:true,hasTouch:true,deviceScaleFactor:2});
+              await p.goto(`http://127.0.0.1:4180/personal-site-v1/backend-spikes/${candidate}/`,{waitUntil:'domcontentloaded'});
+              await p.waitForTimeout(6000);
+              const body=(await p.locator('body').innerText()).trim();
+              assert(body.length>20,`${candidate}: blank CMS`);
+              const hasPosts=/post|文章|posts/i.test(body);
+              const hasAuthError=/configuration error|failed to load|not found/i.test(body);
+              assert(hasPosts,`${candidate}: Posts collection not visible`);
+              assert(!hasAuthError,`${candidate}: configuration/load error visible`);
+              const overflow=await p.evaluate(()=>document.documentElement.scrollWidth>document.documentElement.clientWidth);
+              results.push({candidate,bodySample:body.slice(0,500),overflow});
+              await p.screenshot({path:`personal-site-v1/backend-spikes/evidence/${candidate}-mobile.png`,fullPage:true});
+              await p.close();
+            }
+            fs.writeFileSync('personal-site-v1/backend-spikes/evidence/results.json',JSON.stringify(results,null,2));
+            await browser.close();
+          })();
+          NODE
+      - uses: actions/upload-artifact@v5
+        if: always()
+        with:
+          name: personal-site-v1-backend-spikes-${{ github.run_id }}
+          path: personal-site-v1/backend-spikes/evidence/*
+          retention-days: 7
