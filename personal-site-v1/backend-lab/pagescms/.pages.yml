@@ -1,0 +1,22 @@
+media:
+  input: personal-site-v1/content/media
+  output: /xuyuan/personal-site-v1/content/media
+
+content:
+  - name: essays
+    label: 长文
+    type: collection
+    path: personal-site-v1/content/essays
+    filename: "{primary}.md"
+    view:
+      primary: title
+      sort: date
+      order: desc
+    fields:
+      - { name: title, label: 标题, type: string, required: true }
+      - { name: dek, label: 副标题, type: text }
+      - { name: slug, label: Slug, type: string, required: true }
+      - { name: date, label: 日期, type: date, required: true }
+      - { name: tags, label: 标签, type: string, list: true }
+      - { name: draft, label: 草稿, type: boolean, default: true }
+      - { name: body, label: 正文, type: rich-text, required: true }
