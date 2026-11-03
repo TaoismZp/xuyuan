@@ -32,7 +32,7 @@ collections:
     fields:
       - { label: 标题, name: title, widget: string }
       - { label: 摘要, name: summary, widget: text, hint: '用于首页、文章列表和搜索描述。' }
-      - { label: 发布日期, name: date, widget: datetime, default: '{{now}}' }
+      - { label: 发布日期, name: date, widget: datetime, type: date, default: '{{now}}' }
       - { label: 标签, name: tags, widget: list, required: false }
       - label: 状态
         name: status
