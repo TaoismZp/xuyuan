@@ -1,0 +1,21 @@
+@import url('./candidate-v8.css');
+
+.roll[disabled]{filter:saturate(.65) brightness(.78);cursor:wait}
+
+.stage2-decision{position:fixed;z-index:9;left:50%;top:50%;transform:translate(-50%,-50%) scale(.96);width:min(390px,calc(100vw - 32px));padding:20px 20px 18px;border:1px solid rgba(255,216,112,.7);border-radius:24px;background:linear-gradient(155deg,rgba(18,36,78,.97),rgba(6,14,34,.98));box-shadow:0 28px 80px rgba(0,0,0,.56),inset 0 1px 0 rgba(255,255,255,.09),0 0 40px rgba(255,185,45,.12);backdrop-filter:blur(18px);opacity:0;pointer-events:none;transition:opacity .18s ease,transform .18s ease;color:#f8f4e8}
+.stage2-decision.open{opacity:1;pointer-events:auto;transform:translate(-50%,-50%) scale(1)}
+.stage2-decision .eyebrow{font-size:9px;font-weight:950;letter-spacing:.2em;color:#77eaff;text-transform:uppercase}
+.stage2-decision h2{margin:8px 0 5px;font-size:24px;color:#ffe489;letter-spacing:-.02em}
+.stage2-decision p{margin:0;color:#a9bdd8;font-size:12px;line-height:1.6}
+.stage2-decision .numbers{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:14px 0}
+.stage2-decision .metric{padding:10px 12px;border:1px solid rgba(111,207,255,.2);border-radius:14px;background:rgba(7,17,41,.72)}
+.stage2-decision .metric small{display:block;color:#7f98bb;font-size:8px;letter-spacing:.1em}.stage2-decision .metric b{display:block;margin-top:3px;font-size:15px;color:#fff3bf}
+.stage2-decision .choices{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.stage2-decision button{height:44px;border-radius:14px;border:1px solid rgba(255,216,112,.45);font:900 13px system-ui,-apple-system,"PingFang SC",sans-serif;letter-spacing:.04em}
+.stage2-decision .buy{color:#3a2305;background:linear-gradient(180deg,#ffe891,#eeb13b);box-shadow:0 6px 20px rgba(255,184,45,.2)}
+.stage2-decision .pass{color:#d5e6fb;background:linear-gradient(180deg,#213a6d,#101d40)}
+
+.stage2-toast{position:fixed;z-index:8;left:50%;top:18px;transform:translateX(-50%) translateY(-10px);padding:9px 15px;border:1px solid rgba(111,222,255,.32);border-radius:999px;background:rgba(7,17,41,.88);box-shadow:0 12px 30px rgba(0,0,0,.28);backdrop-filter:blur(12px);font-size:10px;font-weight:900;letter-spacing:.05em;color:#dff8ff;opacity:0;pointer-events:none;transition:.2s ease}
+.stage2-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+@media(max-width:900px){.stage2-decision{width:min(340px,calc(100vw - 24px));padding:16px}.stage2-decision h2{font-size:20px}.stage2-decision p{font-size:10px}.stage2-toast{top:10px;max-width:48vw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}}
