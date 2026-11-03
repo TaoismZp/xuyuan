@@ -1,0 +1,85 @@
+name: Verify personal site v1 backend integration
+
+on:
+  push:
+    branches: [personal-site-v1-backend]
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+          cache: pip
+          cache-dependency-path: personal-site-v1/requirements-content.txt
+      - name: Install pinned compiler
+        run: pip install -r personal-site-v1/requirements-content.txt
+      - name: Validate production draft exclusion
+        run: |
+          python3 personal-site-v1/scripts/build_content.py
+          ! grep -R "后台验收样稿" personal-site-v1/index.html personal-site-v1/essays/index.html personal-site-v1/feed.xml personal-site-v1/sitemap.xml
+          test ! -d personal-site-v1/essays/backend-verification-draft
+          grep -q '"entries": \[\]' personal-site-v1/content-manifest.json
+      - name: Render representative publication in isolated copy
+        run: |
+          rm -rf /tmp/personal-site-v1
+          cp -R personal-site-v1 /tmp/personal-site-v1
+          PERSONAL_SITE_ROOT=/tmp/personal-site-v1 python3 personal-site-v1/scripts/build_content.py --include-drafts
+          test -f /tmp/personal-site-v1/essays/backend-verification-draft/index.html
+          grep -q "后台验收样稿" /tmp/personal-site-v1/index.html
+          grep -q "后台验收样稿" /tmp/personal-site-v1/essays/index.html
+          grep -q "<h2>验收点</h2>" /tmp/personal-site-v1/essays/backend-verification-draft/index.html
+          grep -q "<blockquote>" /tmp/personal-site-v1/essays/backend-verification-draft/index.html
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+      - name: Install browser verifier and CJK font
+        run: |
+          npm init -y >/dev/null 2>&1
+          npm i playwright@1.56.1
+          npx playwright install chromium
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq fonts-noto-cjk
+          fc-cache -f
+      - name: Verify simulated published article on accepted frontend shell
+        run: |
+          mkdir -p personal-site-v1/backend-evidence
+          cd /tmp && python3 -m http.server 4174 >/tmp/backend-preview.log 2>&1 &
+          sleep 2
+          cd "$GITHUB_WORKSPACE"
+          node <<'NODE'
+          const { chromium } = require('playwright');
+          const assert = (v,m) => { if(!v) throw new Error(m) };
+          (async()=>{
+            const browser=await chromium.launch({headless:true});
+            for (const [surface,w,h,mobile] of [['desktop',1440,1100,false],['mobile',390,844,true]]) {
+              const p=await browser.newPage({viewport:{width:w,height:h},isMobile:mobile,hasTouch:mobile,deviceScaleFactor:mobile?2:1});
+              await p.goto('http://127.0.0.1:4174/personal-site-v1/essays/backend-verification-draft/',{waitUntil:'networkidle'});
+              const r=await p.evaluate(()=>({overflow:document.documentElement.scrollWidth>document.documentElement.clientWidth,title:document.querySelector('h1')?.textContent||'',body:parseFloat(getComputedStyle(document.querySelector('.article-body')).fontSize)}));
+              assert(!r.overflow, surface+': overflow');
+              assert(r.title.includes('后台验收样稿'), surface+': wrong generated title');
+              assert(r.body>=18, surface+': article text too small');
+              await p.screenshot({path:`personal-site-v1/backend-evidence/${surface}-generated-article.png`,fullPage:true});
+              await p.close();
+            }
+            await browser.close();
+          })();
+          NODE
+      - name: Check Pages CMS production contract
+        run: |
+          grep -q "path: personal-site-v1/content/essays" .pages.yml
+          grep -q 'filename: "{fields.slug}.md"' .pages.yml
+          grep -q "type: rich-text" .pages.yml
+          grep -q "未发布到网站" .pages.yml
+      - uses: actions/upload-artifact@v5
+        if: always()
+        with:
+          name: personal-site-v1-backend-evidence-${{ github.run_id }}
+          path: personal-site-v1/backend-evidence/*.png
+          if-no-files-found: warn
+          retention-days: 7

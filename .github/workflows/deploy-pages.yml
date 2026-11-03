@@ -7,7 +7,13 @@ on:
       - 'crypto-tycoon/**'
       - 'essays/**'
       - 'longform-v2/**'
-      - 'personal-site-v1/**'
+      - 'personal-site-v1/index.html'
+      - 'personal-site-v1/essays/**'
+      - 'personal-site-v1/projects/**'
+      - 'personal-site-v1/about/**'
+      - 'personal-site-v1/assets/**'
+      - 'personal-site-v1/feed.xml'
+      - 'personal-site-v1/sitemap.xml'
       - '.github/workflows/deploy-pages.yml'
   workflow_dispatch:
 
@@ -28,6 +34,24 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
+      - name: Prepare public-only Pages artifact
+        run: |
+          mkdir pages-stage
+          rsync -a \
+            --exclude '.git/' \
+            --exclude '.github/' \
+            --exclude '.pages.yml' \
+            --exclude 'pages-stage/' \
+            --exclude 'personal-site-v1/content/' \
+            --exclude 'personal-site-v1/scripts/' \
+            --exclude 'personal-site-v1/templates/' \
+            --exclude 'personal-site-v1/vision/' \
+            --exclude 'personal-site-v1/*REPORT.md' \
+            --exclude 'personal-site-v1/PROJECT_STATE.md' \
+            --exclude 'personal-site-v1/requirements-content.txt' \
+            ./ pages-stage/
+          test ! -e pages-stage/personal-site-v1/content
+          test ! -e pages-stage/.pages.yml
       - name: Configure Pages
         uses: actions/configure-pages@v5
         with:
@@ -35,7 +59,7 @@ jobs:
       - name: Upload static site
         uses: actions/upload-pages-artifact@v3
         with:
-          path: '.'
+          path: 'pages-stage'
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4

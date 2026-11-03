@@ -1,0 +1,47 @@
+media:
+  input: personal-site-v1/content/media
+  output: /xuyuan/personal-site-v1/media
+
+content:
+  - name: essays
+    label: 长文
+    type: collection
+    path: personal-site-v1/content/essays
+    filename: "{fields.slug}.md"
+    view:
+      primary: title
+      sort: date
+      order: desc
+    fields:
+      - name: title
+        label: 标题
+        type: string
+        required: true
+      - name: dek
+        label: 副标题
+        type: text
+        required: false
+      - name: slug
+        label: Slug（网址）
+        type: string
+        required: true
+        pattern: "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+        description: 只用小写英文、数字和短横线，例如 market-recovery
+      - name: date
+        label: 日期
+        type: date
+        required: true
+      - name: tags
+        label: 标签
+        type: string
+        list: true
+        required: false
+      - name: draft
+        label: 未发布到网站
+        type: boolean
+        default: true
+        description: 注意：当前内容仓库是公开仓库，此开关只控制网站展示，不代表 GitHub 源文件私密。
+      - name: body
+        label: 正文
+        type: rich-text
+        required: true

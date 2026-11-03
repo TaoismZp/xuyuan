@@ -12,7 +12,7 @@
       });
 
       rows.forEach((row) => {
-        const tags = (row.dataset.tags || '').split(' ').filter(Boolean);
+        const tags = (row.dataset.tags || '').split('|').filter(Boolean);
         row.hidden = value !== 'all' && !tags.includes(value);
       });
 
