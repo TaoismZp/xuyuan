@@ -5,6 +5,7 @@ on:
     paths:
       - 'crypto-tycoon/candidate-v13.html'
       - 'crypto-tycoon/candidate-v13-experience.js'
+      - 'crypto-tycoon/candidate-v13-controls.js'
       - 'crypto-tycoon/candidate-v13-experience.css'
       - 'crypto-tycoon/audio/v13/**'
       - 'crypto-tycoon/BUILD_BLUEPRINT_V7.md'
