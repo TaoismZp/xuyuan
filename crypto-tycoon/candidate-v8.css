@@ -1,0 +1,17 @@
+@import url('./candidate-v5.css');
+
+/* v8 keeps HUD subordinate to the board and prevents Chinese action labels wrapping on tablet. */
+.roll b{white-space:nowrap}
+
+@media(max-width:1250px){
+  .roll{width:166px;height:92px;grid-template-columns:45px 1fr;padding:0 10px}
+  .roll b{font-size:18px}
+  .mini-die{font-size:34px}
+  .ticker{max-width:520px}
+}
+
+@media(max-width:900px){
+  .roll{width:110px;height:70px;grid-template-columns:34px 1fr;padding:0 7px}
+  .roll b{font-size:13px;white-space:nowrap}
+  .ticker{padding-right:122px}
+}
