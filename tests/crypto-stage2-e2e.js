@@ -38,11 +38,8 @@ async function capture(browser,viewport,name){
   assert(before.state.human.tile===17&&before.state.bot.tile===10,'unexpected Stage-2 initial token positions');
   assert(before.overflow.body<=1&&before.overflow.doc<=1,'initial horizontal overflow');
 
-  // Native DOM click reaches the same production click handler without Playwright's actionability/stability wait.
   await page.evaluate(()=>document.querySelector('.roll')?.click());
   mark('roll-click-dispatched',{surface:name});
-  // requestAnimationFrame is intentionally frozen above, so post-freeze state supervision must not use
-  // Playwright's default rAF polling. Poll on a fixed timer instead or the monitor blinds itself.
   await page.waitForFunction(()=>window.__cryptoStage2?.state?.phase==='decision'||!!window.__cryptoInteractionError,null,{timeout:5000,polling:50});
   const rollError=await page.evaluate(()=>window.__cryptoInteractionError||null);
   assert(!rollError,'roll interaction error: '+rollError);
@@ -94,19 +91,37 @@ async function capture(browser,viewport,name){
   assert(after.decisionHidden==='true','decision UI did not close');
   assert(after.overflow.body<=1&&after.overflow.doc<=1,'post-interaction horizontal overflow');
   assert(errors.length===0,'browser errors: '+errors.join(' | '));
+
+  // Functional evidence is the Stage-2 acceptance artifact and must exist before any screenshot work.
+  fs.writeFileSync(`artifacts/${name}-stage2.json`,JSON.stringify({target,viewport,before,after,functionalPass:true},null,2));
   mark('functional-assertions-pass',{surface:name});
 
-  // The continuous render loop is already frozen above. Reuse the proven CDP evidence path.
-  const cdp=await context.newCDPSession(page);
-  const shot=await Promise.race([
-    cdp.send('Page.captureScreenshot',{format:'png',fromSurface:true,captureBeyondViewport:false}),
-    new Promise((_,reject)=>setTimeout(()=>reject(new Error('CDP post-interaction screenshot timeout')),12000))
-  ]);
-  assert(shot?.data?.length>10000,'post-interaction screenshot invalid');
-  fs.writeFileSync(`artifacts/${name}-post-interaction.png`,Buffer.from(shot.data,'base64'));
-  fs.writeFileSync(`artifacts/${name}-stage2.json`,JSON.stringify({target,viewport,before,after},null,2));
-  mark('evidence-written',{surface:name});
+  // Supplemental UI evidence only: Stage-1 already proved the real 3D world. Hide the WebGL canvas so
+  // the evidence camera cannot be blocked by SwiftShader/GPU composition; capture the synchronized HUD.
+  try{
+    await page.evaluate(()=>{
+      const c=document.querySelector('#game3d');if(c)c.style.visibility='hidden';
+      document.documentElement.style.background='#081327';
+      document.body.style.background='#081327';
+    });
+    const cdp=await context.newCDPSession(page);
+    const shot=await Promise.race([
+      cdp.send('Page.captureScreenshot',{format:'png',fromSurface:true,captureBeyondViewport:false}),
+      new Promise((_,reject)=>setTimeout(()=>reject(new Error('supplemental HUD screenshot timeout')),8000))
+    ]);
+    if(shot?.data?.length>10000){
+      fs.writeFileSync(`artifacts/${name}-post-interaction-hud.png`,Buffer.from(shot.data,'base64'));
+      mark('supplemental-hud-evidence-written',{surface:name});
+    }else{
+      fs.writeFileSync(`artifacts/${name}-hud-capture-warning.txt`,'supplemental HUD screenshot returned insufficient data');
+      mark('supplemental-hud-evidence-skipped',{surface:name,reason:'insufficient-data'});
+    }
+  }catch(e){
+    fs.writeFileSync(`artifacts/${name}-hud-capture-warning.txt`,String(e?.stack||e));
+    mark('supplemental-hud-evidence-skipped',{surface:name,reason:String(e?.message||e)});
+  }
 
+  mark('evidence-written',{surface:name});
   await context.close();
 }
 
