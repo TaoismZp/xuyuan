@@ -2,10 +2,38 @@
 <html>
   <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="robots" content="noindex" />
     <title>Decap CMS Spike</title>
+    <script>window.CMS_MANUAL_INIT = true;</script>
   </head>
   <body>
-    <script src="https://cdn.jsdelivr.net/npm/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/decap-cms@3.16.3/dist/decap-cms.js"></script>
+    <script>
+      CMS.init({
+        config: {
+          backend: { name: 'test-repo', login: false },
+          media_folder: 'personal-site-v1/media',
+          public_folder: '/personal-site-v1/media',
+          collections: [
+            {
+              name: 'posts',
+              label: '长文',
+              label_singular: '长文',
+              folder: 'personal-site-v1/content/posts',
+              create: true,
+              slug: '{{year}}-{{month}}-{{day}}-{{slug}}',
+              fields: [
+                { label: '标题', name: 'title', widget: 'string' },
+                { label: '摘要', name: 'summary', widget: 'text' },
+                { label: '标签', name: 'tags', widget: 'list' },
+                { label: '发布日期', name: 'date', widget: 'datetime' },
+                { label: '正文', name: 'body', widget: 'markdown' }
+              ]
+            }
+          ]
+        }
+      });
+    </script>
   </body>
 </html>
