@@ -1,0 +1,67 @@
+@import url('./candidate-v11.css');
+
+:root{
+  --feel-gold:#ffd66c;
+  --feel-cyan:#63e6ff;
+  --feel-green:#63f0a1;
+  --feel-red:#ff6679;
+}
+
+/* v12 Feel Vertical Slice — visual feedback layer */
+.audio-toggle,.motion-toggle{
+  position:fixed;z-index:42;top:18px;width:44px;height:44px;border-radius:14px;
+  border:1px solid rgba(255,255,255,.2);background:rgba(5,13,31,.72);backdrop-filter:blur(16px);
+  color:white;font:800 18px/1 system-ui,-apple-system,sans-serif;box-shadow:0 8px 28px rgba(0,0,0,.25);
+}
+.audio-toggle{right:18px}.motion-toggle{right:70px}
+.audio-toggle:active,.motion-toggle:active{transform:scale(.92)}
+
+.roll{transform-origin:50% 80%;transition:filter .16s ease,box-shadow .16s ease}
+.roll.feel-press{animation:v12Press .18s cubic-bezier(.2,.9,.3,1)}
+.roll.feel-charge{animation:v12Charge .17s ease-out}
+@keyframes v12Press{0%{transform:scale(1)}40%{transform:scale(.9) translateY(2px)}100%{transform:scale(1)}}
+@keyframes v12Charge{0%{filter:brightness(1)}55%{filter:brightness(1.6);box-shadow:0 0 0 8px rgba(255,214,108,.14),0 0 32px rgba(255,214,108,.5)}100%{filter:brightness(1)}}
+
+#game3d.feel-pullback{animation:v12Pullback .18s cubic-bezier(.2,.8,.2,1)}
+#game3d.feel-impact{animation:v12Impact .28s cubic-bezier(.2,.9,.2,1)}
+#game3d.feel-reward{animation:v12Reward .46s ease-out}
+#game3d.feel-loss{animation:v12Loss .38s ease-out}
+@keyframes v12Pullback{0%{transform:scale(1)}60%{transform:scale(.985)}100%{transform:scale(1)}}
+@keyframes v12Impact{0%{transform:translate3d(0,0,0) scale(1)}24%{transform:translate3d(0,3px,0) scale(1.008)}48%{transform:translate3d(0,-1px,0) scale(.998)}100%{transform:translate3d(0,0,0) scale(1)}}
+@keyframes v12Reward{0%{filter:brightness(1) saturate(1)}35%{filter:brightness(1.16) saturate(1.25)}100%{filter:brightness(1) saturate(1)}}
+@keyframes v12Loss{0%{filter:none}30%{filter:sepia(.25) saturate(1.5) hue-rotate(320deg) brightness(.85)}100%{filter:none}}
+
+.feel-overlay{position:fixed;inset:0;z-index:18;pointer-events:none;overflow:hidden}
+.feel-ring{position:absolute;left:50%;top:56%;width:90px;height:90px;margin:-45px;border:3px solid var(--feel-cyan);border-radius:50%;opacity:0;box-shadow:0 0 26px rgba(99,230,255,.8)}
+.feel-ring.fire{animation:v12Ring .48s ease-out}
+@keyframes v12Ring{0%{opacity:0;transform:scale(.3)}25%{opacity:.85}100%{opacity:0;transform:scale(2.35)}}
+
+.feel-float{position:absolute;left:50%;top:42%;transform:translate(-50%,0);font:900 clamp(22px,4vw,48px)/1 system-ui,-apple-system,'PingFang SC',sans-serif;letter-spacing:.02em;opacity:0;text-shadow:0 4px 24px rgba(0,0,0,.6)}
+.feel-float.show{animation:v12Float .72s cubic-bezier(.15,.8,.2,1)}
+.feel-float.good{color:var(--feel-green)}.feel-float.bad{color:var(--feel-red)}.feel-float.neutral{color:var(--feel-gold)}
+@keyframes v12Float{0%{opacity:0;transform:translate(-50%,16px) scale(.82)}20%{opacity:1;transform:translate(-50%,0) scale(1.08)}72%{opacity:1}100%{opacity:0;transform:translate(-50%,-32px) scale(.98)}}
+
+.feel-vignette{position:absolute;inset:0;opacity:0;background:radial-gradient(circle at center,transparent 38%,rgba(0,0,0,.54));}
+.feel-vignette.good{background:radial-gradient(circle at center,rgba(72,255,157,.08),rgba(0,25,18,.5))}
+.feel-vignette.bad{background:radial-gradient(circle at center,rgba(255,63,91,.08),rgba(35,0,10,.52))}
+.feel-vignette.flash{animation:v12Vig .42s ease-out}
+@keyframes v12Vig{0%{opacity:0}28%{opacity:.7}100%{opacity:0}}
+
+.player strong.bump,.identity small.bump{animation:v12Number .42s ease-out}
+@keyframes v12Number{0%{transform:scale(1)}35%{transform:scale(1.18);filter:brightness(1.55)}100%{transform:scale(1);filter:none}}
+
+.stage2-decision.feel-enter{animation:v12Decision .26s cubic-bezier(.2,.9,.25,1)}
+@keyframes v12Decision{0%{opacity:0;transform:translate(-50%,calc(-50% + 18px)) scale(.94)}100%{opacity:1;transform:translate(-50%,-50%) scale(1)}}
+
+@media (prefers-reduced-motion:reduce){
+  #game3d,.roll,.feel-ring,.feel-float,.feel-vignette,.stage2-decision,.player strong,.identity small{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
+}
+
+html[data-v12-reduced='1'] #game3d,
+html[data-v12-reduced='1'] .roll,
+html[data-v12-reduced='1'] .feel-ring,
+html[data-v12-reduced='1'] .feel-float,
+html[data-v12-reduced='1'] .feel-vignette,
+html[data-v12-reduced='1'] .stage2-decision,
+html[data-v12-reduced='1'] .player strong,
+html[data-v12-reduced='1'] .identity small{animation-duration:.001ms!important;transition-duration:.001ms!important}
