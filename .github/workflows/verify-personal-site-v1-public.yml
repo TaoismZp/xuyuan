@@ -33,8 +33,7 @@ jobs:
             test -s /tmp/public-check
           done
           curl --fail --silent --retry 8 --retry-delay 4 "$base/" | grep -q "长期交易"
-          curl --fail --silent --retry 8 --retry-delay 4 "$base/" | grep -q "第一篇公开长文，会从这里开始"
-          curl --fail --silent --retry 8 --retry-delay 4 "$base/essays/" | grep -q "还没有公开长文"
+          node personal-site-v1/scripts/verify-public-content.mjs "$base/"
           ! curl --fail --silent --retry 8 --retry-delay 4 "$base/" | grep -q "前端 Fixture"
           curl --fail --silent --retry 8 --retry-delay 4 "$base/admin/config.yml" | grep -q "repo: TaoismZp/xuyuan"
           for source in "/scripts/build.mjs" "/package.json" "/PROJECT_STATE.md" "/BACKEND_BUILD_BLUEPRINT.md"; do

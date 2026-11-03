@@ -76,12 +76,14 @@ jobs:
           sudo apt-get update -qq
           sudo apt-get install -y -qq fonts-noto-cjk
           fc-cache -f
-      - name: Serve built candidate
+      - name: Serve actual packaged delivery surface
         run: |
+          cd "$RUNNER_TEMP/pages-publish"
           python3 -m http.server 4175 >/tmp/personal-site-backend.log 2>&1 &
           sleep 2
       - name: Verify generated public surface and admin entry
         run: |
+          node personal-site-v1/scripts/verify-public-content.mjs http://127.0.0.1:4175/personal-site-v1/
           mkdir -p personal-site-v1/backend-evidence
           node <<'NODE'
           const { chromium } = require('playwright');
