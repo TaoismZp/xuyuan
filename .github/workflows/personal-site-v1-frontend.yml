@@ -45,55 +45,41 @@ jobs:
           const assert = (value, message) => { if (!value) throw new Error(message); };
           (async () => {
             const browser = await chromium.launch({headless:true});
-            const pages = [
-              ['home','personal-site-v1/'],
-              ['essays','personal-site-v1/essays/'],
-              ['article','personal-site-v1/essays/sample/'],
-              ['projects','personal-site-v1/projects/'],
-              ['about','personal-site-v1/about/']
-            ];
+            const pages = [['home','personal-site-v1/'],['essays','personal-site-v1/essays/'],['article','personal-site-v1/essays/sample/'],['projects','personal-site-v1/projects/'],['about','personal-site-v1/about/']];
             for (const [name,path] of pages) {
               for (const [surface,w,h,mobile] of [['desktop',1440,1100,false],['mobile',390,844,true]]) {
                 const p = await browser.newPage({viewport:{width:w,height:h},isMobile:mobile,hasTouch:mobile,deviceScaleFactor:mobile?2:1});
                 await p.goto(`http://127.0.0.1:4173/${path}`,{waitUntil:'networkidle'});
-                const basic = await p.evaluate(() => ({
-                  overflow: document.documentElement.scrollWidth > document.documentElement.clientWidth,
-                  h1: document.querySelector('h1')?.textContent?.trim() || '',
-                  landmarks: {header:!!document.querySelector('header'),main:!!document.querySelector('main'),footer:!!document.querySelector('footer')},
-                  focusableTiny: [...document.querySelectorAll('nav a,button')].filter(el => { const r=el.getBoundingClientRect(); return r.width>0 && (r.height<44 || r.width<44); }).length
-                }));
-                assert(!basic.overflow, `${name}/${surface}: horizontal overflow`);
-                assert(basic.h1.length > 0, `${name}/${surface}: missing h1`);
-                assert(basic.landmarks.header && basic.landmarks.main && basic.landmarks.footer, `${name}/${surface}: missing landmarks`);
-                assert(basic.focusableTiny === 0, `${name}/${surface}: touch/focus target below 44px`);
-                if (name === 'article' && mobile) {
-                  const bodySize = await p.locator('.article-body').evaluate(el => parseFloat(getComputedStyle(el).fontSize));
-                  assert(bodySize >= 18, 'article mobile text below 18px');
-                }
+                const basic = await p.evaluate(() => ({overflow:document.documentElement.scrollWidth>document.documentElement.clientWidth,h1:document.querySelector('h1')?.textContent?.trim()||'',landmarks:{header:!!document.querySelector('header'),main:!!document.querySelector('main'),footer:!!document.querySelector('footer')},focusableTiny:[...document.querySelectorAll('nav a,button')].filter(el=>{const r=el.getBoundingClientRect();return r.width>0&&(r.height<44||r.width<44)}).length}));
+                assert(!basic.overflow,`${name}/${surface}: horizontal overflow`);
+                assert(basic.h1.length>0,`${name}/${surface}: missing h1`);
+                assert(basic.landmarks.header&&basic.landmarks.main&&basic.landmarks.footer,`${name}/${surface}: missing landmarks`);
+                assert(basic.focusableTiny===0,`${name}/${surface}: touch/focus target below 44px`);
+                if(name==='article'&&mobile){const bodySize=await p.locator('.article-body').evaluate(el=>parseFloat(getComputedStyle(el).fontSize));assert(bodySize>=18,'article mobile text below 18px')}
                 await p.screenshot({path:`personal-site-v1/evidence/${name}-${surface}.png`,fullPage:true});
                 await p.close();
               }
             }
-
-            const archive = await browser.newPage({viewport:{width:390,height:844},isMobile:true,hasTouch:true});
+            const archive=await browser.newPage({viewport:{width:390,height:844},isMobile:true,hasTouch:true});
             await archive.goto('http://127.0.0.1:4173/personal-site-v1/essays/',{waitUntil:'networkidle'});
             await archive.getByRole('button',{name:'交易'}).click();
-            const visibleRows = await archive.locator('[data-tags]:visible').count();
-            assert(visibleRows >= 2 && visibleRows < 4, 'archive filter did not change visible rows');
+            const visibleRows=await archive.locator('[data-tags]:visible').count();
+            assert(visibleRows>=2&&visibleRows<4,'archive filter did not change visible rows');
             await archive.close();
-
-            const article = await browser.newPage({viewport:{width:390,height:844},isMobile:true,hasTouch:true});
+            const article=await browser.newPage({viewport:{width:390,height:844},isMobile:true,hasTouch:true});
             await article.goto('http://127.0.0.1:4173/personal-site-v1/essays/sample/',{waitUntil:'networkidle'});
-            await article.evaluate(() => scrollTo(0, document.body.scrollHeight));
-            await article.waitForTimeout(100);
-            const progress = await article.locator('[data-reading-progress]').evaluate(el => parseFloat(el.style.width));
-            assert(progress > 90, 'reading progress enhancement did not update');
+            const scrollable=await article.evaluate(()=>document.documentElement.scrollHeight-window.innerHeight);
+            assert(scrollable>500,'article is not meaningfully scrollable');
+            await article.evaluate(()=>{window.scrollTo(0,document.documentElement.scrollHeight);window.dispatchEvent(new Event('scroll'))});
+            await article.waitForFunction(()=>parseFloat(document.querySelector('[data-reading-progress]')?.style.width||'0')>90,null,{timeout:1500});
             await article.close();
             await browser.close();
           })();
           NODE
       - uses: actions/upload-artifact@v5
+        if: always()
         with:
           name: personal-site-v1-frontend-evidence-${{ github.run_id }}
           path: personal-site-v1/evidence/*.png
+          if-no-files-found: warn
           retention-days: 7
