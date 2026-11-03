@@ -24,7 +24,7 @@ jobs:
         run: |
           python3 -m http.server 4180 >/tmp/cms-spikes.log 2>&1 &
           sleep 2
-      - name: Inspect candidate content-library states
+      - name: Inspect candidate new-entry editors
         run: |
           mkdir -p personal-site-v1/backend-spikes/evidence
           node <<'NODE'
@@ -35,44 +35,37 @@ jobs:
             const results=[];
             for(const candidate of ['sveltia','decap']){
               const p=await browser.newPage({viewport:{width:390,height:844},isMobile:true,hasTouch:true,deviceScaleFactor:2});
-              const consoleMessages=[];
-              const pageErrors=[];
-              p.on('console',m=>consoleMessages.push(`${m.type()}: ${m.text()}`));
-              p.on('pageerror',e=>pageErrors.push(String(e)));
-              await p.goto(`http://127.0.0.1:4180/personal-site-v1/backend-spikes/${candidate}/`,{waitUntil:'domcontentloaded'});
+              const base=`http://127.0.0.1:4180/personal-site-v1/backend-spikes/${candidate}/`;
+              await p.goto(base,{waitUntil:'domcontentloaded'});
               await p.waitForTimeout(7000);
-              const entryBody=(await p.locator('body').innerText()).trim();
-              await p.screenshot({path:`personal-site-v1/backend-spikes/evidence/${candidate}-entry-mobile.png`,fullPage:true});
               if(candidate==='sveltia'){
-                const testButton=p.getByRole('button',{name:/Work with Test Repository/i});
-                if(await testButton.count()) { await testButton.click(); await p.waitForTimeout(3500); }
+                const b=p.getByRole('button',{name:/Work with Test Repository/i});
+                if(await b.count()) { await b.click(); await p.waitForTimeout(2500); }
               }
-              const libraryBody=(await p.locator('body').innerText()).trim();
-              const overflow=await p.evaluate(()=>document.documentElement.scrollWidth>document.documentElement.clientWidth);
-              results.push({
-                candidate,
-                entryBody:entryBody.slice(0,1000),
-                libraryBody:libraryBody.slice(0,2600),
-                overflow,
-                buttons:await p.getByRole('button').allTextContents(),
-                links:await p.getByRole('link').allTextContents(),
-                consoleMessages:consoleMessages.slice(-30),
-                pageErrors:pageErrors.slice(-20)
-              });
-              await p.screenshot({path:`personal-site-v1/backend-spikes/evidence/${candidate}-library-mobile.png`,fullPage:true});
+              await p.goto(`${base}#/collections/posts/new`,{waitUntil:'domcontentloaded'});
+              await p.waitForTimeout(3500);
+              const controls=await p.evaluate(()=>[...document.querySelectorAll('input,textarea,[contenteditable="true"],button,select')].map((el,i)=>({
+                i, tag:el.tagName, type:el.getAttribute('type'), name:el.getAttribute('name'), id:el.id,
+                aria:el.getAttribute('aria-label'), placeholder:el.getAttribute('placeholder'),
+                text:(el.innerText||el.value||'').slice(0,120), contenteditable:el.getAttribute('contenteditable')
+              })).slice(0,120));
+              const labels=await p.locator('label').allTextContents();
+              const body=(await p.locator('body').innerText()).trim();
+              results.push({candidate,body:body.slice(0,4000),labels,controls,url:p.url(),overflow:await p.evaluate(()=>document.documentElement.scrollWidth>document.documentElement.clientWidth)});
+              await p.screenshot({path:`personal-site-v1/backend-spikes/evidence/${candidate}-new-entry-mobile.png`,fullPage:true});
               await p.close();
             }
-            fs.writeFileSync('personal-site-v1/backend-spikes/evidence/results.json',JSON.stringify(results,null,2));
+            fs.writeFileSync('personal-site-v1/backend-spikes/evidence/editor-results.json',JSON.stringify(results,null,2));
             await browser.close();
           })();
           NODE
-      - name: Assert both candidates reached usable UI
+      - name: Assert editor routes opened
         run: |
           node <<'NODE'
-          const r=require('./personal-site-v1/backend-spikes/evidence/results.json');
+          const r=require('./personal-site-v1/backend-spikes/evidence/editor-results.json');
           for(const x of r){
-            if(x.libraryBody.length<20) throw new Error(`${x.candidate}: blank after initialization`);
-            if(!/长文|posts/i.test(x.libraryBody)) throw new Error(`${x.candidate}: collection not visible after initialization`);
+            if(!/标题|Title/i.test(x.body)) throw new Error(`${x.candidate}: title field not visible`);
+            if(!/正文|Body/i.test(x.body)) throw new Error(`${x.candidate}: body field not visible`);
           }
           NODE
       - uses: actions/upload-artifact@v5
