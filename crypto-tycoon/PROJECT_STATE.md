@@ -1,15 +1,15 @@
 # Crypto Tycoon — Durable Project State
 
 status: ACTIVE
-updated_at: 2026-11-03T03:04:00Z
+updated_at: 2026-11-03T03:12:00Z
 protocol: wish-delivery/versions/v7.6.md
-current_gate: Full Gameplay Integration
-candidate: candidate-v10 (Stage-2 accepted)
-candidate_checkpoint: 1c94c189e7dc64a54ba851e92d6ed97e3e3ef235
+current_gate: Mobile / Performance
+candidate: candidate-v11 (Full Gameplay Integration accepted)
+candidate_checkpoint: 42c515014576cdf2f5395313d6096b1ac79cf5e7
 controlling_blueprint: crypto-tycoon/BUILD_BLUEPRINT_V5.md
-last_good_checkpoint: Stage-2 Minimal Interactive Slice accepted on desktop+iPad in GitHub Actions run 41569642128. Artifact 13200697515 (crypto-stage2-acceptance-v10), digest sha256:a898dbf469de381b27665949495370c5918ae823f5bdcbfb29168e897bb18a5d. Both surfaces completed the deterministic loop: roll [2,3], human tile 17→22, buy SOL for ¥12,000, bot tile 10→14, market bull→mania, round 6→7, SOL mark +8%, human cash ¥108,000, net worth ¥169,360, no interaction error and no horizontal overflow.
-open_blocker: none at Stage-2. Supplemental post-interaction HUD screenshots can still stall in SwiftShader; this is a supervision-camera limitation, not a functional failure. Functional JSON evidence is authoritative for Stage-2, while Stage-1 remains authoritative for real 3D visual evidence.
-next_executable_action: integrate the accepted Stage-2 loop into the fuller playable game rather than expanding demo-only logic. Preserve the accepted v9 visual world and v10 interaction semantics while adding repeated turns, owned-asset persistence, bot turns beyond one deterministic turn, market/event progression, buy/pass outcomes, round/end-state rules, restart/replay, and state/HUD synchronization. Then run desktop+iPad exact-build functional acceptance before mobile/performance and public Delivery Surface gates.
+last_good_checkpoint: Stage-3 Full Gameplay Integration accepted on desktop+iPad in GitHub Actions run 41570530539. Artifact 13200269452 (crypto-stage3-full-game-v11), digest sha256:924932a68a722397dd45689fab3c7cb2a0cd3c0b7130af4f4be904448440aeea. Both surfaces completed two full four-player rounds and remained playable at round 3. Human bought SOL on tile 5 then Meme on tile 7, cash ended at ¥101,000, ownership persisted across bot turns, portfolio UI reflected both holdings, restart reset positions/cash/owners, and end-state/replay rendered four-player ranking correctly with no interaction errors or horizontal overflow.
+open_blocker: none at Stage-3.
+next_executable_action: run the candidate-v11 full game through the Mobile / Performance gate: iPhone-class viewport and touch layout, WebKit/Safari-compatible functional smoke, no horizontal overflow, no clipped critical controls, stable restart/decision UI, and an explicit render/performance budget on the production rendering path. Fix only concrete mobile/performance failures; do not redesign accepted Stage-1 visuals or Stage-3 gameplay unless required. After PASS, advance to exact-build public Delivery Surface deployment and verification.
 user_blocker: none
 
 ## Resume Rule
@@ -22,4 +22,4 @@ Queued / in_progress / deployment-started / workflow-triggered are never termina
 A monitor must not invalidate a product merely because its own screenshot/probe mechanism fails. Functional, visual, delivery, performance, and evidence-capture failures are classified separately. Evidence tooling should be simpler than the product and must not become the production bottleneck.
 
 ## Do Not Final
-No public handover until Stage-1 visual supervision PASS → Stage-2 interaction PASS → full gameplay integration → mobile/performance PASS → exact-build public Delivery Surface PASS → Acceptance Report.
+No public handover until Stage-1 visual supervision PASS → Stage-2 interaction PASS → full gameplay integration PASS → mobile/performance PASS → exact-build public Delivery Surface PASS → Acceptance Report.
