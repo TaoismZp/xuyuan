@@ -1,0 +1,28 @@
+name: Verify longform v2 candidate
+
+on:
+  push:
+    branches: [main, longform-rebuild]
+    paths:
+      - 'longform-v2/**'
+      - '.github/ISSUE_TEMPLATE/publish-longform.yml'
+      - '.github/workflows/publish-longform.yml'
+      - '.github/workflows/verify-longform-v2.yml'
+  pull_request:
+    paths:
+      - 'longform-v2/**'
+      - '.github/ISSUE_TEMPLATE/publish-longform.yml'
+      - '.github/workflows/publish-longform.yml'
+      - '.github/workflows/verify-longform-v2.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Static + publishing loop verification
+        run: python3 longform-v2/tests/verify_static.py

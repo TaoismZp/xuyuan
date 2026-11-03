@@ -1,0 +1,31 @@
+name: Verify longform v2 public surface
+
+on:
+  workflow_run:
+    workflows: ["Deploy playable artifacts to GitHub Pages"]
+    types: [completed]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-public:
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Public HTTP verification
+        run: python3 longform-v2/tests/verify_public.py
+      - name: Install WebKit verifier
+        run: |
+          npm install --no-save playwright
+          npx playwright install --with-deps webkit
+      - name: iPhone/iPad/Desktop WebKit verification
+        run: node longform-v2/tests/verify_webkit.mjs
+      - name: Upload same-surface evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: longform-v2-surface-evidence-${{ github.run_id }}
+          path: longform-v2/evidence/*.png
+          retention-days: 7

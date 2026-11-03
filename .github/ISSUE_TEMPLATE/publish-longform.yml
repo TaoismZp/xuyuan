@@ -1,40 +1,45 @@
 name: 发布一篇长文
-description: 仓库所有者提交后，文章会自动加入「长文」网站。
-title: "[发文] "
+description: 用 GitHub 身份安全发布到 TaoismZp / 长文
+title: "[长文] "
+labels: ["publish-longform"]
 body:
   - type: markdown
     attributes:
       value: |
-        这是本站的发文入口。只有仓库所有者提交的 Issue 才会触发自动发布。
+        提交后，仓库会自动生成文章页、更新首页并重新部署。正文使用 Markdown。
   - type: input
-    id: title
-    attributes:
-      label: 文章标题
-      placeholder: 输入标题
-    validations:
-      required: true
-  - type: textarea
     id: deck
     attributes:
-      label: 摘要
-      description: 首页上显示的一两句话。
+      label: 副标题
+      description: 用一两句话告诉读者为什么值得读。
+      placeholder: 这篇文章真正想解决的问题是……
     validations:
       required: true
   - type: input
     id: tags
     attributes:
-      label: 标签
-      description: 用逗号分隔，例如：交易, AI, 随笔
-  - type: input
-    id: slug
-    attributes:
-      label: 自定义链接（可选）
-      description: 只使用英文、数字和短横线；留空则自动使用 post-编号。
-      placeholder: why-waiting-matters
+      label: 标签（逗号分隔）
+      placeholder: 交易，认知，长期主义
+    validations:
+      required: true
   - type: textarea
     id: body
     attributes:
-      label: 正文 Markdown
-      description: 支持标题、引用、列表、粗体、链接、代码块等常用 Markdown。
+      label: 正文
+      description: 支持二/三级标题、引用、列表、链接、代码与分隔线。
+      placeholder: |
+        从这里开始写正文。
+
+        ## 第一节
+
+        ……
+      render: markdown
     validations:
       required: true
+  - type: checkboxes
+    id: confirm
+    attributes:
+      label: 发布确认
+      options:
+        - label: 我确认这是要公开发布的正文。
+          required: true

@@ -6,8 +6,8 @@ on:
     paths:
       - 'crypto-tycoon/**'
       - 'essays/**'
+      - 'longform-v2/**'
       - '.github/workflows/deploy-pages.yml'
-      - '.github/workflows/verify-longform-public.yml'
   workflow_dispatch:
 
 permissions:
