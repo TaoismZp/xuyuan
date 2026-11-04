@@ -206,5 +206,7 @@ jobs:
         if: always()
         with:
           name: personal-site-v1-backend-evidence-${{ github.run_id }}
-          path: personal-site-v1/backend-evidence/*.png
+          path: |
+            personal-site-v1/backend-evidence/*.png
+            personal-site-v1/writer-evidence/*.png
           retention-days: 7
