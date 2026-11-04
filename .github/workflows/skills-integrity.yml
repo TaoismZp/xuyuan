@@ -1,0 +1,24 @@
+name: AI Skills portability integrity (not an AI behavior test)
+
+on:
+  push:
+    paths:
+      - ".agents/skills/**"
+      - ".claude/skills/**"
+      - ".github/skills/**"
+      - "scripts/check-agent-skills.mjs"
+      - ".github/workflows/skills-integrity.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  static-skill-integrity:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compare mirrors, frontmatter and 10-domain coverage
+        run: node scripts/check-agent-skills.mjs
+      - name: Explicitly distinguish static from model evaluation
+        run: echo "This workflow never invokes a model; it cannot establish runtime fidelity."
