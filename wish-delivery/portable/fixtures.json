@@ -1,0 +1,55 @@
+[
+  {
+    "id": "simple",
+    "must_include": [
+      "直接短答无需工程四件套"
+    ]
+  },
+  {
+    "id": "writing",
+    "must_include": [
+      "写作/书稿",
+      "完整可读正文"
+    ]
+  },
+  {
+    "id": "research",
+    "must_include": [
+      "研究是有来源和反例的可复查结论"
+    ]
+  },
+  {
+    "id": "software",
+    "must_include": [
+      "软件/网站为真实可用产品"
+    ]
+  },
+  {
+    "id": "revival",
+    "must_include": [
+      "断档重生",
+      "REVIVAL.md"
+    ]
+  },
+  {
+    "id": "authority",
+    "must_include": [
+      "CURRENT.json",
+      "PENDING_OWNER"
+    ]
+  },
+  {
+    "id": "privacy",
+    "must_include": [
+      "未公开",
+      "私人材料"
+    ]
+  },
+  {
+    "id": "limits",
+    "must_include": [
+      "手工读取",
+      "自动发现"
+    ]
+  }
+]
