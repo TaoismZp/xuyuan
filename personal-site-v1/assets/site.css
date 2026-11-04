@@ -92,3 +92,15 @@
 @media(prefers-reduced-motion:reduce){
   .feature-essay__headline h3{transition:none}
 }
+
+/* Repair: CJK chapter-like H1 has explicit BR between two authored phrases.
+   The former 7ch measure broke those phrases into orphan glyphs on iPhone. */
+@media(max-width:780px){
+  .page-head h1{
+    max-width:none;
+    font-size:clamp(40px,12vw,66px);
+    line-height:1.08;
+    letter-spacing:-.06em;
+    white-space:nowrap;
+  }
+}

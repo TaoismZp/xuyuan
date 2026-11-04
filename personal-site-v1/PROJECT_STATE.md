@@ -1,17 +1,15 @@
 # Durable Task State — Personal Site v1
 
-- status: HOME_EDITORIAL_V3_RELEASED
-- app_release_sha: `3cc289c4da9a51f99edf1445ee719b80b5249288`
-- same_sha_public_acceptance: GitHub Actions run `41818252467` — **PASS** on iPhone, iPad, desktop WebKit + public HTTP
-- independent_supervision: run `41817976473` — success; backend integration run `41817976780` — success
-- release_record: `HOME_EDITORIAL_V3.md`
-- accepted_vision: `VISION_FIXTURE_V2.md`, third minimalist user-approved direction — warm ivory, near-black ink, restrained olive, sparse typography.
-- home_v3: author identity line + one published `featured` article with original summary, tags, date, reading time and clear link + latest rows without duplication + public archive count; no fake articles.
-- first_published_essay: 《天才交易员为何注定陨落》, `content/posts/genius-trader.md`, https://taoismzp.github.io/xuyuan/personal-site-v1/essays/genius-trader/
-- original_source: `/作者第二大脑/01_成稿原文/天才交易员为何注定陨落_用户原稿_2026-10-22.md`; source_sha256 `312cf1ebad852621edd72078d7cce2f653da6e5072f12e0199787e823e5e23b4`; no original copy was edited during v3.
-- public_home: https://taoismzp.github.io/xuyuan/personal-site-v1/
-- future_content: `personal-site-v1/content/posts/*.md` is the canonical published content store; the build is deterministic and respects draft/published/archived, RSS and sitemap.
-- owner_auth_unverified: Sveltia login/edit/save with the owner's personal restricted GitHub token has not been performed; no secrets should be sent via ChatGPT.
-- privacy_warning: a draft in the PUBLIC GitHub repo is visible via repository source even if missing from Pages.
-- next_iteration_candidate: website-level authored archive navigation and richer multi-essay discovery after more real posts exist; do not invent posts merely to fill the index.
+- status: AUDIT_REMEDIATION_CANDIDATE / OWNER_AUTH_PENDING
+- last_good_checkpoint: `8aca78c69be6da6328c5ce9cd4f5ae02f82cf1c0` (pre-remediation public site)
+- candidate_ref: `personal-site-v1-audit-remediation-20261104` (resolve HEAD after checkout, no self-referential commit SHA)
+- current_gate: branch browser CI + automated supervision; next: same-SHA main promotion + public WebKit verification
+- next_executable_action: run candidate CI on all mobile breakpoints; inspect screenshots; promote only after PASS. Owner login/save remains a separate user-only task.
+- owner_auth_gate: **PENDING_OWNER**; instructions `OWNER_ACCEPTANCE.md`; no real owner Token submitted to assistant.
+- frontend_vision_identity: `VISION_FIXTURE_V2.md` — warm ivory, near-black, restrained olive, accepted third concept.
+- acceptance_blueprint_identity: `BUILD_BLUEPRINT_V2.md`; backend blueprint is a separate technical specification.
+- scope: correct iPhone/about/projects/archive two-line title wrapping; correct reference hashes; stop documentation-only commits retriggering Pages; clarify status as READER_SURFACE_ONLY; reconcile the active wish-delivery spec pointer without changing normative versions.
+- original_essay: `content/posts/genius-trader.md`; no edits authorized or made.
+- status_commit_rule: documentation may record the last actual deployed production SHA, which is not required to equal the latest repository SHA after documentation-only changes.
+- privacy: draft Markdown in public GitHub is readable through GitHub even when hidden from public Pages.
 - updated_at: 2026-11-04

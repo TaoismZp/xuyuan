@@ -1,7 +1,7 @@
 name: Independent supervision — personal site v1
 on:
   push:
-    branches: [personal-site-v1-frontend, personal-site-v1-public-hardening, personal-site-v1-distribution-metadata, personal-site-v1-reader-flow, personal-site-v1-reader-qa-hardening, personal-site-v1-home-editorial-v3]
+    branches: [personal-site-v1-frontend, personal-site-v1-public-hardening, personal-site-v1-distribution-metadata, personal-site-v1-reader-flow, personal-site-v1-reader-qa-hardening, personal-site-v1-home-editorial-v3, personal-site-v1-audit-remediation-20261104]
     paths:
       - 'personal-site-v1/**'
       - '.github/workflows/personal-site-v1-supervision.yml'
@@ -29,8 +29,8 @@ jobs:
           require_file() { local label="$1" file="$2"; echo "[CHECK] $label"; test -f "$file" || { echo "[FAIL] $label"; exit 1; }; echo "[PASS] $label"; }
           forbid_dir() { local label="$1" dir="$2"; echo "[CHECK] $label"; test ! -d "$dir" || { echo "[FAIL] $label"; exit 1; }; echo "[PASS] $label"; }
 
-          require_file 'Vision fixture exists' personal-site-v1/VISION_FIXTURE.md
-          require_file 'Frontend blueprint exists' personal-site-v1/BUILD_BLUEPRINT.md
+          require_file 'Accepted V2 vision fixture exists' personal-site-v1/VISION_FIXTURE_V2.md
+          require_file 'Accepted V2 frontend blueprint exists' personal-site-v1/BUILD_BLUEPRINT_V2.md
           require_file 'Backend capability proof exists' personal-site-v1/BACKEND_CAPABILITY_PROOF.md
           require_file 'Backend build blueprint exists' personal-site-v1/BACKEND_BUILD_BLUEPRINT.md
           require_file 'Production admin entry exists' personal-site-v1/admin/index.html
@@ -144,15 +144,17 @@ jobs:
           INSPECTION_OUTCOME: ${{ steps.inspect.outcome }}
         run: |
           if [ "$INSPECTION_OUTCOME" = "success" ]; then RESULT=PASS; else RESULT=FAIL; fi
-          VISION=$(sha256sum personal-site-v1/VISION_FIXTURE.md | cut -d' ' -f1)
-          BLUEPRINT=$(sha256sum personal-site-v1/BACKEND_BUILD_BLUEPRINT.md | cut -d' ' -f1)
+          VISION=$(sha256sum personal-site-v1/VISION_FIXTURE_V2.md | cut -d' ' -f1)
+          BLUEPRINT=$(sha256sum personal-site-v1/BUILD_BLUEPRINT_V2.md | cut -d' ' -f1)
+          BACKEND_BLUEPRINT=$(sha256sum personal-site-v1/BACKEND_BUILD_BLUEPRINT.md | cut -d' ' -f1)
           {
             echo '# Independent Supervision Report — Personal Site v1'
             echo
             echo "- Result: **${RESULT}**"
             echo "- Candidate Identity: ${GITHUB_SHA}"
-            echo "- Vision Fixture Identity (sha256): ${VISION}"
-            echo "- Backend Blueprint Identity (sha256): ${BLUEPRINT}"
+            echo "- Accepted Vision Fixture V2 Identity (sha256): ${VISION}"
+            echo "- Accepted Frontend Blueprint V2 Identity (sha256): ${BLUEPRINT}"
+            echo "- Backend Blueprint Identity (sha256): ${BACKEND_BLUEPRINT}"
             echo "- Evidence Identity: GitHub Actions run ${GITHUB_RUN_ID}"
             echo '- Inspector surface: read-only source + clean-room generated output'
             echo

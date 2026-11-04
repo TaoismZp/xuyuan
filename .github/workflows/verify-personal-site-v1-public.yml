@@ -175,6 +175,31 @@ jobs:
               }
             }
 
+
+            // Perceptual regression: our user-authored CJK heading uses exactly one <br>.
+            // Previous tests saw zero overflow yet allowed absurd isolated Han glyphs.
+            for (const width of [320,375,390,430]) {
+              for (const [name,path] of [['about','/about/'],['projects','/projects/'],['essays','/essays/']]) {
+                const page=await browser.newPage({viewport:{width,height:844},isMobile:true,hasTouch:true,deviceScaleFactor:2});
+                await page.goto(base + path,{waitUntil:'networkidle'});
+                const metric=await page.locator('.page-head h1').evaluate(el=>{
+                  const style=getComputedStyle(el);
+                  const lineHeight=parseFloat(style.lineHeight);
+                  return {
+                    lineRatio:el.getBoundingClientRect().height/lineHeight,
+                    explicitBreaks:el.querySelectorAll('br').length,
+                    overwide:el.scrollWidth>el.clientWidth,
+                    pageOverflow:document.documentElement.scrollWidth>document.documentElement.clientWidth
+                  };
+                });
+                assert(metric.explicitBreaks===1,`${width}/${name}: unexpected heading content`);
+                assert(metric.lineRatio>1.85&&metric.lineRatio<2.2,`${width}/${name}: CJK title broken into ${metric.lineRatio.toFixed(1)} lines; expected two authored lines`);
+                assert(!metric.overwide&&!metric.pageOverflow,`${width}/${name}: heading or page horizontal overflow`);
+                await page.screenshot({path:`personal-site-v1-public-evidence/width-${width}-${name}.png`,fullPage:true});
+                await page.close();
+              }
+            }
+
             const admin=await browser.newPage({viewport:{width:390,height:844},isMobile:true,hasTouch:true,deviceScaleFactor:2});
             await admin.goto(base+'/admin/',{waitUntil:'domcontentloaded'});
             await admin.waitForTimeout(7000);
@@ -192,8 +217,9 @@ jobs:
           SURFACE_OUTCOME: ${{ steps.surface.outcome }}
         run: |
           if [ "$HTTP_OUTCOME" = success ] && [ "$SURFACE_OUTCOME" = success ]; then RESULT=PASS; else RESULT=FAIL; fi
-          VISION=$(sha256sum personal-site-v1/VISION_FIXTURE.md | cut -d' ' -f1)
-          BLUEPRINT=$(sha256sum personal-site-v1/BACKEND_BUILD_BLUEPRINT.md | cut -d' ' -f1)
+          VISION=$(sha256sum personal-site-v1/VISION_FIXTURE_V2.md | cut -d' ' -f1)
+          BLUEPRINT=$(sha256sum personal-site-v1/BUILD_BLUEPRINT_V2.md | cut -d' ' -f1)
+          BACKEND_BLUEPRINT=$(sha256sum personal-site-v1/BACKEND_BUILD_BLUEPRINT.md | cut -d' ' -f1)
           PUBLISHED_COUNT=$(node -e 'const fs=require("node:fs");const d="personal-site-v1/content/posts";console.log(fs.readdirSync(d).filter(f=>f.endsWith(".md")).filter(f=>fs.readFileSync(d+"/"+f,"utf8").split("\n").some(l=>l.trim()==="status: published")).length)')
           {
             echo '# Acceptance Report — Personal Site v1'
@@ -201,8 +227,9 @@ jobs:
             echo "- Result: **${RESULT}**"
             echo "- Candidate Identity: ${GITHUB_SHA}"
             echo "- Delivery Identity: ${{ github.event.workflow_run.head_sha }}"
-            echo "- Vision Fixture Identity (sha256): ${VISION}"
-            echo "- Backend Blueprint Identity (sha256): ${BLUEPRINT}"
+            echo "- Accepted Vision Fixture V2 Identity (sha256): ${VISION}"
+            echo "- Accepted Frontend Blueprint V2 Identity (sha256): ${BLUEPRINT}"
+            echo "- Backend Blueprint Identity (sha256): ${BACKEND_BLUEPRINT}"
             echo "- Evidence Identity: GitHub Actions run ${GITHUB_RUN_ID}"
             echo '- Delivery Surface: https://taoismzp.github.io/xuyuan/personal-site-v1/'
             echo
@@ -211,10 +238,12 @@ jobs:
             echo "- iPhone + iPad + desktop WebKit / Experience Reality: ${SURFACE_OUTCOME}"
             echo '- Functional article-generation loop: verified pre-promotion by backend integration CI on this candidate lineage using ephemeral published + draft fixtures.'
             echo "- Public article surface: ${PUBLISHED_COUNT} source-of-truth published Markdown post(s), verified against public HTTP; available article pages opened and captured with iPhone/iPad/desktop WebKit."
-            echo '- Admin authentication: token-login entry verified; private-token authenticated write not performed by CI. The first real post was published via the connected GitHub account.'
+            echo '- CMS login entrance: verified as an unauthenticated public UI only.'
+            echo '- Owner-authenticated edit/save/publication: **PENDING_OWNER** (never performed by this workflow).'
+            echo '- Acceptance scope: **PUBLIC_READER_SURFACE_ONLY**. This PASS is not FULL_PERSONAL_PUBLISHING_LOOP.'
             echo
             if [ "$RESULT" = PASS ]; then
-              echo "PASS: the deployed published-article site and public CMS entry match this delivery identity (${PUBLISHED_COUNT} real article(s))."
+              echo "PASS: the PUBLIC READER SURFACE matches this delivery identity (${PUBLISHED_COUNT} real article(s)); owner CMS authoring remains PENDING_OWNER."
             else
               echo 'FAIL: delivery or same-surface experience did not pass; do not claim final handoff.'
             fi

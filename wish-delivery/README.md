@@ -4,6 +4,8 @@
 
 当前规范：[`versions/v7.6.md`](./versions/v7.6.md)
 
+**唯一执行指针**：[`CURRENT.json`](./CURRENT.json)。当前正式生效 **v7.6**；仓库中的 `versions/v7.7.md` 是**未晋级候选草案**，不是已生效规范。根目录 `WISH_DELIVERY_V7.md` 是旧版历史快照，不得用来覆盖当前指针。此次仅修正版本状态标识，**没有授权晋级到 v7.7/v7.8 或修改既有版本内容**。
+
 历史变更：[`CHANGELOG.md`](./CHANGELOG.md)
 
 项目模板：[`templates/`](./templates/)

@@ -1,7 +1,7 @@
 name: Verify personal site v1 backend integration
 on:
   push:
-    branches: [personal-site-v1-frontend, personal-site-v1-public-hardening, personal-site-v1-distribution-metadata, personal-site-v1-reader-flow, personal-site-v1-reader-qa-hardening, personal-site-v1-home-editorial-v3]
+    branches: [personal-site-v1-frontend, personal-site-v1-public-hardening, personal-site-v1-distribution-metadata, personal-site-v1-reader-flow, personal-site-v1-reader-qa-hardening, personal-site-v1-home-editorial-v3, personal-site-v1-audit-remediation-20261104]
     paths:
       - 'personal-site-v1/**'
       - '.github/workflows/personal-site-v1-backend-build.yml'
@@ -154,6 +154,27 @@ jobs:
                 }
                 await p.screenshot({path:`personal-site-v1/backend-evidence/${name}-${surface}.png`,fullPage:true});
                 await p.close();
+              }
+            }
+
+            for(const width of [320,375,390,430]){
+              for(const [name,path] of [['about','about/'],['projects','projects/'],['essays','essays/']]){
+                const page=await browser.newPage({viewport:{width,height:844},isMobile:true,hasTouch:true,deviceScaleFactor:2});
+                await page.goto('http://127.0.0.1:4175/personal-site-v1/'+path,{waitUntil:'networkidle'});
+                const data=await page.locator('.page-head h1').evaluate(el=>{
+                  const css=getComputedStyle(el);
+                  return {
+                    lines:el.getBoundingClientRect().height/parseFloat(css.lineHeight),
+                    manualBreaks:el.querySelectorAll('br').length,
+                    overwide:el.scrollWidth>el.clientWidth,
+                    pageOverflow:document.documentElement.scrollWidth>document.documentElement.clientWidth
+                  };
+                });
+                assert(data.manualBreaks===1,name+': heading lost intended break');
+                assert(data.lines>1.85&&data.lines<2.2,name+'/'+width+': broken CJK heading ('+data.lines.toFixed(1)+' lines)');
+                assert(!data.overwide&&!data.pageOverflow,name+'/'+width+': title horizontal overflow');
+                await page.screenshot({path:'personal-site-v1/backend-evidence/'+name+'-'+width+'.png',fullPage:true});
+                await page.close();
               }
             }
             const admin=await browser.newPage({viewport:{width:390,height:844},isMobile:true,hasTouch:true,deviceScaleFactor:2});

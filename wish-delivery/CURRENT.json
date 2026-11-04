@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "active_version": "v7.6",
+  "active_spec": "wish-delivery/versions/v7.6.md",
+  "candidate_versions": [
+    {
+      "version": "v7.7",
+      "spec": "wish-delivery/versions/v7.7.md",
+      "status": "DRAFT_NOT_ACTIVE"
+    }
+  ],
+  "legacy_aliases": [
+    {
+      "path": "WISH_DELIVERY_V7.md",
+      "status": "HISTORICAL_SNAPSHOT_NOT_CANONICAL"
+    }
+  ],
+  "rule": "Only a separately authorized, committed protocol promotion may change active_version."
+}

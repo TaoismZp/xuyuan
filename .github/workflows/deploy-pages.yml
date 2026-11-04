@@ -7,7 +7,18 @@ on:
       - 'crypto-tycoon/**'
       - 'essays/**'
       - 'longform-v2/**'
-      - 'personal-site-v1/**'
+      # Only production inputs trigger a site deployment.
+      # PROJECT_STATE.md, reports, vision notes and release bookkeeping do not.
+      - 'personal-site-v1/content/posts/**'
+      - 'personal-site-v1/assets/**'
+      - 'personal-site-v1/admin/**'
+      - 'personal-site-v1/scripts/**'
+      - 'personal-site-v1/media/**'
+      - 'personal-site-v1/about/**'
+      - 'personal-site-v1/projects/**'
+      - 'personal-site-v1/essays/**'
+      - 'personal-site-v1/index.html'
+      - 'personal-site-v1/package*.json'
       - '.github/workflows/deploy-pages.yml'
   workflow_dispatch:
 
