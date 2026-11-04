@@ -1,3 +1,11 @@
+import assert from 'node:assert/strict';
 import fs from 'node:fs';
-if (!fs.existsSync('wish-delivery/portable/OPERATOR_GUIDE.md')) process.exit(1);
-console.log('GUIDE_EXISTS');
+const read=p=>fs.readFileSync(p,'utf8');
+const guide=read('wish-delivery/portable/OPERATOR_GUIDE.md');
+const current=JSON.parse(read('wish-delivery/CURRENT.json'));
+assert.equal(current.active_version,'v7.6');
+const fixtures=JSON.parse(read('wish-delivery/portable/fixtures.json'));
+for(const t of fixtures)for(const word of t.must_include) assert(guide.includes(word),t.id+': '+word);
+const site=JSON.parse(read('personal-site-v1/recovery/state.json'));
+assert.equal(site.gates.ownerAuthenticatedGitHubCommit,'PENDING_OWNER');
+console.log(JSON.stringify({outcome:'PASS_SOURCE_BOUNDARY_ONLY',fixtures:fixtures.length,ownerGate:'PENDING_OWNER',externalAgentRuntime:'UNVERIFIED',freshChatRecovery:'PENDING'}));
