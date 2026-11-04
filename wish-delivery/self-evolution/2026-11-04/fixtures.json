@@ -134,5 +134,31 @@
       "samesurface_tested": false
     },
     "expected": "CANDIDATE"
+  },
+  {
+    "name": "已有网站不因缺历史基线被迫回到规划",
+    "input": {
+      "scope": "complex",
+      "job_defined": true,
+      "baseline_compared": false,
+      "artifact_exists": true,
+      "core_function_tested": true,
+      "samesurface_tested": true,
+      "owner_action_required": true,
+      "owner_action_verified": false
+    },
+    "expected": "READY_FOR_OWNER_ACTION"
+  },
+  {
+    "name": "已有完整文章但只验收过预览、未核读交付稿",
+    "input": {
+      "scope": "complex",
+      "job_defined": true,
+      "baseline_compared": true,
+      "artifact_exists": true,
+      "core_function_tested": true,
+      "samesurface_tested": false
+    },
+    "expected": "CANDIDATE"
   }
 ]
