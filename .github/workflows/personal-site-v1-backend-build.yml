@@ -1,7 +1,7 @@
 name: Verify personal site v1 backend integration
 on:
   push:
-    branches: [personal-site-v1-frontend, personal-site-v1-public-hardening, personal-site-v1-distribution-metadata, personal-site-v1-reader-flow, personal-site-v1-reader-qa-hardening, personal-site-v1-home-editorial-v3, personal-site-v1-audit-remediation-20261104]
+    branches: [personal-site-v1-frontend, personal-site-v1-public-hardening, personal-site-v1-distribution-metadata, personal-site-v1-reader-flow, personal-site-v1-reader-qa-hardening, personal-site-v1-home-editorial-v3, personal-site-v1-audit-remediation-20261104, personal-site-v1-tokenless-publish]
     paths:
       - 'personal-site-v1/**'
       - '.github/workflows/personal-site-v1-backend-build.yml'
@@ -56,6 +56,12 @@ jobs:
       - name: Construction integrity checks
         run: |
           test -f personal-site-v1/essays/ci-published/index.html
+          test -f personal-site-v1/write/index.html
+          test -f personal-site-v1/assets/markdown-it.min.js
+          test -f personal-site-v1/assets/markdown-it.LICENSE.txt
+          grep -q 'status: published' personal-site-v1/assets/write.js
+          ! grep -E 'localStorage|sessionStorage|fetch\(|XMLHttpRequest|navigator\.sendBeacon' personal-site-v1/assets/write.js
+
           grep -q '等待：交易中最稀缺的能力' personal-site-v1/index.html
           grep -q '等待：交易中最稀缺的能力' personal-site-v1/essays/index.html
           grep -q '等待不是空白' personal-site-v1/essays/ci-published/index.html
@@ -101,6 +107,8 @@ jobs:
           cd "$RUNNER_TEMP/pages-publish"
           python3 -m http.server 4175 >/tmp/personal-site-backend.log 2>&1 &
           sleep 2
+      - name: Verify Token-free local writing and GitHub handoff
+        run: node personal-site-v1/scripts/test-write-page.cjs
       - name: Verify generated public surface and admin entry
         run: |
           node personal-site-v1/scripts/verify-public-content.mjs http://127.0.0.1:4175/personal-site-v1/

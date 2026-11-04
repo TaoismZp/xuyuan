@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#f5f1e8">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="description" content="TaoismZp 本地长文整理与 GitHub 发布助手。">
+  <title>写作与发布 — TaoismZp</title>
+  <link rel="stylesheet" href="../assets/site.css">
+  <link rel="stylesheet" href="../assets/write.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到正文</a>
+  <header class="site-header">
+    <div class="shell site-header__inner">
+      <a class="site-brand" href="../" translate="no">TaoismZp</a>
+      <nav class="site-nav" aria-label="写作导航">
+        <a href="../">首页</a>
+        <a href="../essays/">长文</a>
+        <a href="../admin/">写作台</a>
+      </nav>
+    </div>
+  </header>
+  <main class="shell write-page" id="main">
+    <header class="write-intro">
+      <div class="page-head__eyebrow">PRIVATE PREPARATION / PUBLIC COMMIT</div>
+      <h1>写好再发，<em>不必先授权。</em></h1>
+      <p class="write-lead">把已经写好的文章粘贴进来，核对排版，然后复制 Markdown。用你现有的 GitHub 登录状态提交文件，网站就会按原来的发布链路更新。</p>
+      <p class="write-warning"><strong>私密边界：</strong>这页不会上传内容、也不会自动保存草稿。关闭或刷新前请先下载备份；<strong>一旦在公开 GitHub 仓库点击 Commit，文章及历史记录就对外可见。</strong></p>
+    </header>
+
+    <div class="write-layout">
+      <form id="writing-form" class="writing-form" novalidate>
+        <div class="write-section-header"><h2>01 / 整理文章</h2><span>所有输入仅留在当前浏览器页面</span></div>
+        <label class="write-field" for="write-title">文章标题
+          <input id="write-title" name="title" maxlength="160" placeholder="写下真正想发表的标题" required autocomplete="off">
+        </label>
+        <label class="write-field" for="write-summary">文章摘要
+          <textarea id="write-summary" name="summary" rows="3" maxlength="400" placeholder="用一两句话告诉读者，这篇文章究竟在讨论什么。" required></textarea>
+        </label>
+        <div class="write-field-pair">
+          <label class="write-field" for="write-date">发布日期
+            <input id="write-date" name="date" type="date" required>
+          </label>
+          <label class="write-field" for="write-tags">标签
+            <input id="write-tags" name="tags" placeholder="交易，概率，风险" autocomplete="off">
+          </label>
+        </div>
+        <label class="write-field" for="write-slug">文章路径（选填）
+          <input id="write-slug" name="slug" placeholder="默认按发布日期和标题自动生成" autocomplete="off">
+          <span class="write-hint">只允许中英文、数字、连字符或下划线。发布后尽量不要改文件名。</span>
+        </label>
+        <label class="write-field" for="write-body">正文 Markdown
+          <textarea id="write-body" name="body" rows="20" placeholder="在这里粘贴你的完整原稿。Markdown 标题用 ##，段落之间留空行。" required spellcheck="false"></textarea>
+        </label>
+        <div class="write-file-row">
+          <label for="write-import" class="write-import">导入本地 .md / .txt 文件
+            <input id="write-import" type="file" accept=".md,.markdown,.txt,text/plain,text/markdown">
+          </label>
+          <span class="write-hint">文件只在本机读取，不上传。</span>
+        </div>
+        <label class="write-check"><input id="write-featured" name="featured" type="checkbox"> <span>作为首页重点文章</span></label>
+      </form>
+
+      <section class="write-preview" aria-labelledby="write-preview-heading">
+        <div class="write-section-header"><h2 id="write-preview-heading">02 / 核对呈现</h2><button id="write-preview-button" type="button" class="write-text-button">刷新预览</button></div>
+        <div id="write-preview" class="write-preview-paper" aria-live="off">
+          <p class="write-placeholder">填写标题、摘要与正文后，点击「刷新预览」。这里使用和正式网站相同版本的 Markdown 渲染器。</p>
+        </div>
+      </section>
+    </div>
+
+    <section class="write-delivery" aria-labelledby="write-delivery-heading">
+      <div class="write-section-header"><h2 id="write-delivery-heading">03 / 由你确认并发布</h2><span>真正的发布发生在 GitHub Commit</span></div>
+      <p>这条路线<strong>不需要另外生成 GitHub Token</strong>，但需要你在 GitHub 网页中登录 TaoismZp，并且有仓库写入权限。</p>
+      <p id="write-filename" class="write-filename">文件名将在填写文章后生成。</p>
+      <div class="write-actions">
+        <button type="button" id="write-download">下载 .md 备份</button>
+        <button type="button" id="write-copy" class="write-primary">复制完整发布稿</button>
+        <a id="write-github" href="https://github.com/TaoismZp/xuyuan/tree/main/personal-site-v1/content/posts" target="_blank" rel="noopener noreferrer" aria-disabled="true">去 GitHub 新建文件 ↗</a>
+      </div>
+      <p id="write-status" class="write-status" role="status" aria-live="polite"></p>
+      <div id="write-fallback" class="write-fallback" hidden>
+        <label for="write-generated">浏览器不允许自动复制时，请手动选择以下完整 Markdown：</label>
+        <textarea id="write-generated" rows="9" readonly></textarea>
+      </div>
+      <ol class="write-steps">
+        <li>先点击「复制完整发布稿」，再打开 GitHub。文件名将尝试预填；如果没有预填，使用上方显示的文件名。</li>
+        <li>将内容粘贴到 GitHub 编辑区，选择 <strong>Commit changes</strong> 并提交到 <code>main</code>，才会公开发布。</li>
+        <li>GitHub Pages 自动构建后，打开 <a href="../essays/">长文列表</a> 检查文章。若要直接可视化编辑，也可使用 <a href="../admin/">Sveltia 写作台</a>（需要限定仓库的 Token）。</li>
+      </ol>
+      <p class="write-warning write-final-note">这是一条便于首次发文的备用通道，不会替代 Sveltia 后台。当前仍<strong>不能声称站长本人已经完成真实发布验收</strong>。</p>
+    </section>
+  </main>
+  <footer class="shell site-footer"><strong translate="no">TaoismZp</strong><span>原稿属于作者，提交由作者决定。</span></footer>
+  <script src="../assets/markdown-it.min.js" defer></script>
+  <script src="../assets/write.js" defer></script>
+</body>
+</html>

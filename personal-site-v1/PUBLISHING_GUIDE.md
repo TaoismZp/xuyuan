@@ -32,3 +32,15 @@
 - Sitemap： https://taoismzp.github.io/xuyuan/personal-site-v1/sitemap.xml
 
 只有 `status: published` 的文章进入这些索引；公开 GitHub 源文件的可见性仍由仓库决定。分享预览的实际效果依赖接收平台抓取与缓存策略，不保证每个平台立即显示一致。
+
+## 无需额外 Token 的轻量发文入口
+
+打开 **https://taoismzp.github.io/xuyuan/personal-site-v1/write/**
+
+- 把已准备公开的文章粘贴进去，填标题、摘要、日期和标签；或者导入本地 `.md/.txt`，在手机上预览正式 Markdown 排版。
+- 点击「下载 .md 备份」保留一份本地文件；点击「复制完整发布稿」将含 Frontmatter 的文章复制到剪贴板。
+- 点击「去 GitHub 新建文件」。这一步只将**文件名**放入 GitHub URL，**没有将文章正文放到查询参数**。使用已登录的 GitHub 账号粘贴全文，确认直接提交到 `main`，才会发生真正公开发布。
+- GitHub Pages 构建完成后到长文列表或文章完整地址验证。网页表单**没有接入 GitHub 的写入 API，不会悄悄发文**。
+- 在提交前，这个页面既不自动上传也不自动存储草稿；**刷新/关闭可能丢失表单内容**，请先下载备份。不要在公共电脑上编辑敏感资料，也不要把私密草稿提交到公开仓库。
+
+**限制**：这条路径比 Sveltia 多一次复制粘贴，主要服务于首次发文或不想单独创建 Token 的场景；GitHub 网页编辑体验由 GitHub 提供，且真实 GitHub 登录、Commit 和公网更新仍需站长亲自执行才能验收。

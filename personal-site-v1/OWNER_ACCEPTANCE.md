@@ -24,3 +24,18 @@ Public article reading, GitHub Markdown generation, GitHub Pages deployment and 
 - `PRIVATE_DRAFTS`: **NOT SUPPORTED** in the public repository.
 
 Scope boundary: without the owner's local authentication, no automated assistant or CI runner can truthfully mark the owner workflow PASS.
+
+## Alternative without an extra Token
+
+There is now a safe, local-only composition and handoff page:
+
+https://taoismzp.github.io/xuyuan/personal-site-v1/write/
+
+It prepares published Markdown from title, summary, date, tags and body with an on-device preview using the same pinned Markdown-it renderer, offers a local .md backup and copies full Markdown to the clipboard. It opens GitHub's native **new file** interface with only a filename in the URL. Existing GitHub web session authentication is still required to make the commit.
+
+This is a **manual, owner-controlled fallback**, not a claim that the Sveltia authenticated write path has been verified. Never commit secrets or unpublished private drafts in the public repo.
+
+- `LOCAL_COMPOSER_PREVIEW/COPY/DOWNLOAD`: automated browser evidence only.
+- `NATIVE_GITHUB_LOGIN_AND_COMMIT`: **PENDING_OWNER**.
+- `PUBLISHED_PAGES_AFTER_OWNER_COMMIT`: **PENDING_OWNER**.
+- `SVELTIA_TOKEN_LOGIN_AND_SAVE`: **PENDING_OWNER**, separate route.

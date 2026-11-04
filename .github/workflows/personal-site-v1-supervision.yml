@@ -1,7 +1,7 @@
 name: Independent supervision — personal site v1
 on:
   push:
-    branches: [personal-site-v1-frontend, personal-site-v1-public-hardening, personal-site-v1-distribution-metadata, personal-site-v1-reader-flow, personal-site-v1-reader-qa-hardening, personal-site-v1-home-editorial-v3, personal-site-v1-audit-remediation-20261104]
+    branches: [personal-site-v1-frontend, personal-site-v1-public-hardening, personal-site-v1-distribution-metadata, personal-site-v1-reader-flow, personal-site-v1-reader-qa-hardening, personal-site-v1-home-editorial-v3, personal-site-v1-audit-remediation-20261104, personal-site-v1-tokenless-publish]
     paths:
       - 'personal-site-v1/**'
       - '.github/workflows/personal-site-v1-supervision.yml'
@@ -36,6 +36,17 @@ jobs:
           require_file 'Production admin entry exists' personal-site-v1/admin/index.html
           require_file 'Production admin config exists' personal-site-v1/admin/config.yml
           require_file 'Deterministic builder exists' personal-site-v1/scripts/build.mjs
+          require_file 'Tokenless composer entry exists' personal-site-v1/write/index.html
+          require_file 'Tokenless composer code exists' personal-site-v1/assets/write.js
+          require_file 'Tokenless composer styles exist' personal-site-v1/assets/write.css
+          require_file 'Tokenless composer browser tests exist' personal-site-v1/scripts/test-write-page.cjs
+          require_text 'No automatic draft saving promise' personal-site-v1/write/index.html '不会自动保存草稿'
+          require_text 'Owner still makes real commit' personal-site-v1/write/index.html 'Commit changes'
+          require_text 'GitHub native new file route' personal-site-v1/assets/write.js 'new/main/personal-site-v1/content/posts'
+          if grep -E 'localStorage|sessionStorage|fetch\(|XMLHttpRequest|navigator\.sendBeacon' personal-site-v1/assets/write.js; then
+            echo '[FAIL] Local editor unexpectedly persists or uploads draft'; exit 1
+          fi
+
 
           require_text 'Sveltia version is pinned' personal-site-v1/admin/index.html '@sveltia/cms@0.258.0'
           require_text 'GitHub backend selected' personal-site-v1/admin/config.yml 'name: github'
@@ -83,6 +94,9 @@ jobs:
           node personal-site-v1/scripts/assemble-pages.mjs "$RUNNER_TEMP/pages-publish"
           node personal-site-v1/scripts/verify-pages-artifact.mjs "$RUNNER_TEMP/pages-publish"
           test -f "$RUNNER_TEMP/pages-publish/personal-site-v1/essays/supervision-published/index.html"
+          test -f "$RUNNER_TEMP/pages-publish/personal-site-v1/write/index.html"
+          test -f "$RUNNER_TEMP/pages-publish/personal-site-v1/assets/markdown-it.min.js"
+          test -f "$RUNNER_TEMP/pages-publish/personal-site-v1/assets/markdown-it.LICENSE.txt"
           test ! -e "$RUNNER_TEMP/pages-publish/personal-site-v1/content"
           grep -q 'supervision-published' "$RUNNER_TEMP/pages-publish/personal-site-v1/sitemap.xml"
           grep -q '监理样稿：等待' "$RUNNER_TEMP/pages-publish/personal-site-v1/feed.xml"
@@ -163,6 +177,8 @@ jobs:
             echo '- Four-pack prerequisites present before handoff.'
             echo '- Sveltia production admin is pinned and bound to GitHub/main/personal-site-v1.'
             echo '- Token login is configured without any committed credential.'
+            echo '- Local-only Markdown composer uses the same pinned browser renderer; owner confirms GitHub Commit.'
+            echo '- Automated checks cannot substitute owner-authenticated GitHub publication.'
             echo '- Runtime dependency set remains deliberately minimal.'
             echo '- Published content maps into the accepted frontend class vocabulary.'
             echo '- Deprecated/wrong generator class vocabulary is absent.'

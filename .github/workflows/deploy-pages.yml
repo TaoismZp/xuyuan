@@ -12,6 +12,7 @@ on:
       - 'personal-site-v1/content/posts/**'
       - 'personal-site-v1/assets/**'
       - 'personal-site-v1/admin/**'
+      - 'personal-site-v1/write/**'
       - 'personal-site-v1/scripts/**'
       - 'personal-site-v1/media/**'
       - 'personal-site-v1/about/**'

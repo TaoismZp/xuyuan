@@ -28,7 +28,7 @@ jobs:
         run: |
           set -euo pipefail
           base="https://taoismzp.github.io/xuyuan/personal-site-v1"
-          for path in "/" "/essays/" "/projects/" "/about/" "/admin/" "/admin/config.yml" "/assets/site.css" "/assets/site.js" "/assets/content.css"; do
+          for path in "/" "/essays/" "/projects/" "/about/" "/admin/" "/write/" "/admin/config.yml" "/assets/write.js" "/assets/write.css" "/assets/markdown-it.min.js" "/assets/markdown-it.LICENSE.txt" "/assets/site.css" "/assets/site.js" "/assets/content.css"; do
             curl --fail --silent --show-error --retry 8 --retry-delay 4 "$base$path" >/tmp/public-check
             test -s /tmp/public-check
           done
@@ -79,6 +79,7 @@ jobs:
               ['essays','/essays/'],
               ['projects','/projects/'],
               ['about','/about/'],
+              ['write','/write/'],
               ...publishedSlugs.map(slug => ['article-'+slug,'/essays/'+encodeURIComponent(slug)+'/'])
             ];
             for (const [surface,w,h,mobile] of surfaces) {
@@ -118,6 +119,22 @@ jobs:
                   } else {
                     assert(await p.locator('.feature-essay').count()===0,`${surface}/home: fake feature on empty site`);
                   }
+                }
+                if(name==='write'){
+                  assert(await p.locator('#writing-form').count()===1,`${surface}/write: local writing form missing`);
+                  assert(await p.evaluate(()=>typeof window.markdownit)==='function',`${surface}/write: same Markdown parser missing`);
+                  assert(!await p.evaluate(()=>Object.keys(localStorage).some(key=>key.includes('draft'))),`${surface}/write: unexpected local draft persistence`);
+                  await p.locator('#write-title').fill('一篇本地写作演练');
+                  await p.locator('#write-summary').fill('只是浏览器里的长文准备，不能自动提交 GitHub。');
+                  await p.locator('#write-date').fill('2026-11-04');
+                  await p.locator('#write-body').fill('第一段。\n\n## 第二层\n\n第二段。');
+                  await p.locator('#write-preview-button').click();
+                  assert((await p.locator('.write-preview-body h2').count())===1,`${surface}/write: preview headings missing`);
+                  const url=await p.locator('#write-github').getAttribute('href');
+                  assert(url.startsWith('https://github.com/TaoismZp/xuyuan/new/main/personal-site-v1/content/posts?filename='),`${surface}/write: native GitHub link missing`);
+                  assert(!url.includes('value=') && !url.includes('第二层'),`${surface}/write: unpublished body leaked to URL`);
+                  assert(!(await p.evaluate(()=>document.documentElement.scrollWidth>document.documentElement.clientWidth)),`${surface}/write: overflow after editing`);
+                  await p.screenshot({path:`personal-site-v1-public-evidence/${surface}-write-filled.png`,fullPage:false});
                 }
                 if(name.startsWith('article-')) {
                   assert(result.article && result.article.paragraphs >= 10,`${surface}/${name}: generated article body missing`);
@@ -245,7 +262,8 @@ jobs:
             echo "- Public article surface: ${PUBLISHED_COUNT} source-of-truth published Markdown post(s), verified against public HTTP; available article pages opened and captured with iPhone/iPad/desktop WebKit."
             echo '- CMS login entrance: verified as an unauthenticated public UI only.'
             echo '- Owner-authenticated edit/save/publication: **PENDING_OWNER** (never performed by this workflow).'
-            echo '- Acceptance scope: **PUBLIC_READER_SURFACE_ONLY**. This PASS is not FULL_PERSONAL_PUBLISHING_LOOP.'
+            echo '- Token-free composer: on-device Markdown preview/download/copy and filename-only GitHub handoff verified; no authenticated GitHub Commit was performed.'
+            echo '- Acceptance scope: **PUBLIC_READER_SURFACE_AND_LOCAL_COMPOSER_ONLY**. This PASS is not FULL_PERSONAL_PUBLISHING_LOOP.'
             echo
             if [ "$RESULT" = PASS ]; then
               echo "PASS: the PUBLIC READER SURFACE matches this delivery identity (${PUBLISHED_COUNT} real article(s)); owner CMS authoring remains PENDING_OWNER."

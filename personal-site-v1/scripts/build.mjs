@@ -8,6 +8,13 @@ const ROOT = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const POSTS_DIR = path.join(ROOT, 'content', 'posts');
 const ESSAYS_DIR = path.join(ROOT, 'essays');
 const md = new MarkdownIt({ html: false, linkify: true, typographer: false, breaks: false });
+// The token-free writing page previews with the same pinned markdown-it build
+// and HTML-disabled rendering rules as the static article generator.
+const browserMarkdownBundle = path.join(ROOT, 'node_modules', 'markdown-it', 'dist', 'markdown-it.min.js');
+if (!fs.existsSync(browserMarkdownBundle)) throw new Error('Pinned markdown-it browser bundle missing. Install site dependencies.');
+fs.copyFileSync(browserMarkdownBundle, path.join(ROOT, 'assets', 'markdown-it.min.js'));
+fs.copyFileSync(path.join(ROOT, 'node_modules', 'markdown-it', 'LICENSE'), path.join(ROOT, 'assets', 'markdown-it.LICENSE.txt'));
+
 const SITE_ROOT = 'https://taoismzp.github.io/xuyuan/personal-site-v1/';
 const articleUrl = (post) => SITE_ROOT + 'essays/' + encodeURIComponent(post.slug) + '/';
 
