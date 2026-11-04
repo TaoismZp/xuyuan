@@ -54,10 +54,15 @@ const base = process.env.WRITER_BASE || 'http://127.0.0.1:4175/personal-site-v1/
     assert(link.startsWith('https://github.com/TaoismZp/xuyuan/new/main/personal-site-v1/content/posts?filename='), name + ': GitHub create path wrong');
     assert(!link.includes('value=') && !link.includes(encodeURIComponent(inputBody)) && link.length < 500, name + ': private article leaked into URL');
     assert(link.includes('2026-11-04-'), name + ': file slug missing date');
+    assert(await page.locator('#write-github').getAttribute('aria-disabled') === 'true', name + ': link was enabled before copying');
+    const prematureNavigation = await page.evaluate(() => document.querySelector('#write-github').dispatchEvent(new MouseEvent('click', { bubbles:true, cancelable:true })));
+    assert(!prematureNavigation, name + ': GitHub navigation was not blocked before copying');
+    assert((await page.locator('#write-status').innerText()).includes('请先复制'), name + ': missing truthful handoff warning');
     assert(!await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth), name + ': editor overflow');
     await page.screenshot({ path: output + '/' + name + '-preview.png', fullPage: false });
 
     await page.locator('#write-copy').click();
+    assert(await page.locator('#write-github').getAttribute('aria-disabled') === 'false', name + ': link not enabled after copy');
     const clipboard = await page.evaluate(async () => navigator.clipboard.readText());
     assert(clipboard.startsWith('---\ntitle: "一个真正的交易问题"'), name + ': clipboard YAML title wrong');
     assert(clipboard.includes('status: published'), name + ': content not set to published');
@@ -78,6 +83,12 @@ const base = process.env.WRITER_BASE || 'http://127.0.0.1:4175/personal-site-v1/
       return [...range.getClientRects()].filter(r => r.width > 0 && r.height > 0).length;
     }));
     assert(nav.every(n => n === 1), name + ': header navigation wraps into orphan glyphs');
+
+    // A subsequent edit invalidates the previously copied Markdown.
+    await page.locator('#write-summary').fill('修改了摘要，因此需要重新复制。');
+    assert(await page.locator('#write-github').getAttribute('aria-disabled') === 'true', name + ': stale clipboard was treated as fresh');
+    const staleNavigation = await page.evaluate(() => document.querySelector('#write-github').dispatchEvent(new MouseEvent('click', { bubbles:true, cancelable:true })));
+    assert(!staleNavigation, name + ': stale content could navigate to GitHub');
 
     await page.reload({ waitUntil: 'networkidle' });
     assert((await page.locator('#write-title').inputValue()) === '', name + ': content unexpectedly auto-stored after reload');

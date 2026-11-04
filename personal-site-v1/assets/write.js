@@ -19,6 +19,8 @@
   const REPO_CREATE = 'https://github.com/TaoismZp/xuyuan/new/main/personal-site-v1/content/posts';
   const PUBLIC_BASE = 'https://taoismzp.github.io/xuyuan/personal-site-v1/essays/';
   let currentArtifact = null;
+  // A filename-only GitHub link must never be mistaken for transfer of article body.
+  let clipboardReady = false;
 
   const today = new Date();
   dateInput.value = [
@@ -100,6 +102,7 @@
 
   const markFresh = () => {
     currentArtifact = null;
+    clipboardReady = false;
     githubLink.setAttribute('aria-disabled', 'true');
     githubLink.setAttribute('href', REPO_CREATE);
     fallbackNode.hidden = true;
@@ -115,7 +118,7 @@
     currentArtifact = artifact;
     filenameNode.textContent = 'GitHub 文件名：' + artifact.filename + ' · 预计文章地址：' + artifact.publicUrl;
     githubLink.href = artifact.githubUrl;
-    githubLink.setAttribute('aria-disabled', 'false');
+    githubLink.setAttribute('aria-disabled', clipboardReady ? 'false' : 'true');
     return artifact;
   };
 
@@ -159,15 +162,28 @@
     try {
       if (!navigator.clipboard?.writeText) throw new Error('Clipboard API unavailable');
       await navigator.clipboard.writeText(artifact.markdown);
+      clipboardReady = true;
+      githubLink.setAttribute('aria-disabled', 'false');
       fallbackNode.hidden = true;
       say('完整 Markdown 已复制。现在可以打开 GitHub，并将内容粘贴到新文件编辑框。');
     } catch {
+      clipboardReady = false;
+      githubLink.setAttribute('aria-disabled', 'true');
       fallbackNode.hidden = false;
       generatedNode.value = artifact.markdown;
       generatedNode.focus();
       generatedNode.select();
       say('自动复制不可用：请手动复制下方完整 Markdown，再前往 GitHub。', true);
     }
+  });
+
+  // When automatic clipboard access is blocked, let the author explicitly
+  // confirm manual copying. This never reads the clipboard or uploads text.
+  $('write-manual-ready').addEventListener('click', () => {
+    if (!currentArtifact || fallbackNode.hidden) return;
+    clipboardReady = true;
+    githubLink.setAttribute('aria-disabled', 'false');
+    say('已确认手动复制。去 GitHub 后仍需粘贴完整正文，再亲自 Commit。');
   });
 
   $('write-download').addEventListener('click', () => {
@@ -189,6 +205,11 @@
     const artifact = prepare();
     if (!artifact) {
       event.preventDefault();
+      return;
+    }
+    if (!clipboardReady) {
+      event.preventDefault();
+      say('请先复制完整发布稿；GitHub 新建文件链接只预填文件名，绝不会自动带入文章正文。', true);
       return;
     }
     // Only the filename is placed in the URL. The unpublished article body
