@@ -30,6 +30,9 @@ for (const label of ['deployment','publicSameSurfaceVerification','independentSu
   const evidence = data.bindingChain[label];
   requireThat(Number.isSafeInteger(evidence.runId) && evidence.runId > 0,'Invalid run ID for ' + label);
   requireThat(evidence.conclusion === 'success','Unverified historical evidence: ' + label);
+  // This binds the manifest's stated evidence identity to the pinned public release.
+  // The independent GitHub Actions job must additionally verify the live run metadata.
+  requireThat(evidence.headSha === data.bindingChain.lastShippedCommit,'Evidence SHA mismatch: ' + label);
 }
 const projectState = read(data.canonicalStatus).toString('utf8');
 requireThat(projectState.includes(data.bindingChain.lastShippedCommit),'Manifest conflicts with PROJECT_STATE release identity');

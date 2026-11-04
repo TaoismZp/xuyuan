@@ -1,11 +1,11 @@
 # Durable Task State — Personal Site v1
 
 - status: PUBLIC_READER_AND_LOCAL_COMPOSER_ACCEPTED / OWNER_AUTH_PENDING
-- last_delivered_site_sha: `317c53ec032f6b37d65a82c7aab50a485c337046`
-- last_public_acceptance: GitHub Actions run `41827098391` — **PASS**, candidate SHA and delivery SHA identical, iPhone/iPad/desktop WebKit + public HTTP.
-- deploy_run: `41827027397` — SUCCESS.
-- independent_supervision: `41826675293` — SUCCESS.
-- representative_browser_ci: `41826675494` — SUCCESS (320/390/1024/1440px, Markdown preview, clipboard, .md export, local import and no external requests).
+- last_delivered_site_sha: `d8f7e41a631ff9de9914cbdb29e00a2042a66f07`
+- last_public_acceptance: GitHub Actions run `41839357165` — **PASS**, delivery SHA `d8f7e41a631ff9de9914cbdb29e00a2042a66f07` matched exact post-deployment iPhone/iPad/desktop WebKit + public HTTP.
+- deploy_run: `41839299091` — SUCCESS, delivered commit `d8f7e41a631ff9de9914cbdb29e00a2042a66f07`.
+- independent_supervision: `41839298835` — SUCCESS, independent backend/browser integration checks on delivered commit; separate from post-deployment WebKit.
+- representative_browser_ci: `41839298835` — SUCCESS (320/390/1024/1440px, clipboard handoff guard, stale-copy regression, Markdown preview/download/import and no external requests).
 - public_main_website: https://taoismzp.github.io/xuyuan/personal-site-v1/
 - new_local_writer: https://taoismzp.github.io/xuyuan/personal-site-v1/write/
 - existing_sveltia_admin: https://taoismzp.github.io/xuyuan/personal-site-v1/admin/
@@ -30,3 +30,17 @@
 - safety: do NOT upload ChatGPT history, private drafts or tokens to this public repository.
 - continuation_rule: every accepted site-development milestone must update both the machine checkpoint and this canonical status with evidence and one next action. The latest repository HEAD must never be confused with the last independently accepted Pages release.
 - remaining_blocker: real owner-authenticated article commit/publication remains PENDING_OWNER.
+
+## 2026-11-04 · value-gate cross-audit and verified writer handoff release
+
+- change_review: https://github.com/TaoismZp/xuyuan/pull/8 — merged; final production release `d8f7e41a631ff9de9914cbdb29e00a2042a66f07`.
+- process_revision: `wish-delivery/candidates/v7.6-value-adoption-gate.md` is **CANDIDATE / NOT ADOPTED**, not a replacement for v7.5.
+- code_scope: disabled GitHub handoff until Markdown copy has succeeded (or the author explicitly confirms manual copying); editing after copying re-locks the handoff. Manual Markdown download remains available. No local auto-save, no Token, no article modification, no visual redesign.
+- predeployment_integration: GitHub Actions `41839298835` PASS at exact release SHA; candidate PR/push runs `41838941461` / `41838933369` PASS at parent candidate SHA `5519e17efa2d75c740d37f8ec66057690c9a9eaf`.
+- deployment: GitHub Pages `41839299091` SUCCESS at `d8f7e41a631ff9de9914cbdb29e00a2042a66f07`.
+- public_http_and_webkit: GitHub Actions `41839357165` PASS at `d8f7e41a631ff9de9914cbdb29e00a2042a66f07`; this is independent post-deployment public browser verification, not real iPad owner sign-in.
+- evidence_rule: `recovery/check.mjs` now requires explicit `headSha` equality for every claimed PASS. `personal-site-v1-recovery.yml` separately queries GitHub Actions APIs to confirm each run ID actually concluded success on the delivered commit, rather than trusting the manifest's self-description.
+- caveat: the historical supervision run `41826675293` applied to the older release and is not reused for this commit.
+- owner_gate: **PENDING_OWNER** — no authentic author GitHub login/Commit/publication through the writer or CMS has been performed in this run.
+- unique_next_action: owner uses an already-intended public essay in `/write/`, copies/down-loads, submits a native GitHub commit with their own login, then we compare commit, deploy and public article on their device.
+- cross_chat_evidence: `personal-site-v1/reviews/2026-11-04-cross-audit.md`; the private global checkpoint exists in ChatGPT Library at `/跨对话恢复中心/SITE_AUDIT_CHECKPOINT_2026-11-04_v1.md`.

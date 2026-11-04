@@ -16,18 +16,21 @@
       "path": "personal-site-v1/BUILD_BLUEPRINT_V2.md",
       "blobSha": "226e0904cc58d578aed7973ef6290624e47140c1"
     },
-    "lastShippedCommit": "317c53ec032f6b37d65a82c7aab50a485c337046",
+    "lastShippedCommit": "d8f7e41a631ff9de9914cbdb29e00a2042a66f07",
     "deployment": {
-      "runId": 41827027397,
-      "conclusion": "success"
+      "runId": 41839299091,
+      "conclusion": "success",
+      "headSha": "d8f7e41a631ff9de9914cbdb29e00a2042a66f07"
     },
     "publicSameSurfaceVerification": {
-      "runId": 41827098391,
-      "conclusion": "success"
+      "runId": 41839357165,
+      "conclusion": "success",
+      "headSha": "d8f7e41a631ff9de9914cbdb29e00a2042a66f07"
     },
     "independentSupervision": {
-      "runId": 41826675293,
-      "conclusion": "success"
+      "runId": 41839298835,
+      "conclusion": "success",
+      "headSha": "d8f7e41a631ff9de9914cbdb29e00a2042a66f07"
     }
   },
   "delivery": {
@@ -47,5 +50,15 @@
   "currentPriority": "Verify a real owner-intended essay from author preparation to GitHub commit to public article; do not create fake content or mark authentication PASS from automated checks.",
   "checkpointPolicy": "After each independently accepted milestone update PROJECT_STATE.md and this state manifest; pin build+deploy+same-surface evidence to the exact release commit. Keep original content, version history, and private drafts safe.",
   "privacy": "Repository is public. Never commit private drafts, tokens, ChatGPT export archives, conversations, or account data.",
-  "recordedDate": "2026-11-04"
+  "recordedDate": "2026-11-04",
+  "acceptedRevision": {
+    "pr": 8,
+    "commit": "d8f7e41a631ff9de9914cbdb29e00a2042a66f07",
+    "scope": "Tokenless handoff guard + matching browser regression tests; original articles and locked visual design unchanged",
+    "processCandidate": "wish-delivery/candidates/v7.6-value-adoption-gate.md",
+    "processCandidateStatus": "NOT_ADOPTED",
+    "sourceCodeReview": "personal-site-v1/reviews/2026-11-04-cross-audit.md",
+    "evidenceScope": "Pre-deploy independent backend browser CI, GitHub Pages deploy, and post-deploy WebKit public surface acceptance all pinned to same release",
+    "ownerPublication": "PENDING_OWNER"
+  }
 }
