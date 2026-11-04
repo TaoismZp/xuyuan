@@ -1,0 +1,39 @@
+{
+  "schema": "wish-revival-state/v1",
+  "trigger": "断档重生",
+  "active_rulebook_pointer": "wish-delivery/CURRENT.json",
+  "active_rulebook_version_at_recording": "v7.6",
+  "candidate": "wish-delivery/candidates/v7.8-self-evolution-rc2-revival.md",
+  "candidate_status": "CANDIDATE_NOT_ACTIVE",
+  "implementation_merge_commit": "02546fefb4fe3935ee4c158d304c987c4ab6b549",
+  "code_review": "https://github.com/TaoismZp/xuyuan/pull/10",
+  "synthetic_test": {
+    "run_id": 41846971648,
+    "conclusion": "success",
+    "head_sha": "02546fefb4fe3935ee4c158d304c987c4ab6b549",
+    "route_cases": 16,
+    "continuation_cases": 12,
+    "scope": "SYNTHETIC_ROUTING_ONLY"
+  },
+  "private_recovery_library": {
+    "path": "/跨对话恢复中心/README.md",
+    "project_index": "/跨对话恢复中心/PROJECT_REGISTRY.json",
+    "thread_index": "/跨对话恢复中心/THREAD_REGISTRY.json",
+    "status": "READBACK_CHECKED_IN_THIS_RUN"
+  },
+  "account_custom_instructions": {
+    "status": "PENDING_USER_ACTIVATION",
+    "verified": false
+  },
+  "new_chat_cold_start": {
+    "status": "PENDING_REAL_TRIAL"
+  },
+  "limitations": [
+    "cannot repair an unresponsive old conversation",
+    "cannot reconstruct or continuously export missing raw chat transcript",
+    "bare trigger in a new chat with multiple projects may need one topic choice",
+    "no background execution without active session or scheduled task"
+  ],
+  "next_action": "After global custom instructions are enabled, open a fresh ChatGPT conversation and send only 断档重生; verify routing and at least one actual action using real external checkpoint, then archive findings.",
+  "recorded_date": "2026-11-04"
+}
