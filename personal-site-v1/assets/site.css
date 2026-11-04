@@ -104,3 +104,11 @@
     white-space:nowrap;
   }
 }
+
+/* Narrow phones need real two-character nav labels, never stacked glyphs. */
+@media(max-width:360px){
+  .site-header__inner{gap:.25rem}
+  .site-brand{font-size:15px;white-space:nowrap;flex:0 0 auto}
+  .site-nav{gap:0;flex:0 0 auto}
+  .site-nav a{min-width:44px;min-height:44px;padding:0 .15rem;font-size:13px;white-space:nowrap}
+}

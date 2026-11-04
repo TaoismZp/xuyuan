@@ -195,6 +195,11 @@ jobs:
                 assert(metric.explicitBreaks===1,`${width}/${name}: unexpected heading content`);
                 assert(metric.lineRatio>1.85&&metric.lineRatio<2.2,`${width}/${name}: CJK title broken into ${metric.lineRatio.toFixed(1)} lines; expected two authored lines`);
                 assert(!metric.overwide&&!metric.pageOverflow,`${width}/${name}: heading or page horizontal overflow`);
+                const navLines=await page.locator('.site-nav a').evaluateAll(els=>els.map(el=>{
+                  const range=document.createRange();range.selectNodeContents(el);
+                  return [...range.getClientRects()].filter(r=>r.width>0&&r.height>0).length;
+                }));
+                assert(navLines.length===4&&navLines.every(n=>n===1),`${width}/${name}: nav labels split into isolated CJK glyph lines`);
                 await page.screenshot({path:`personal-site-v1-public-evidence/width-${width}-${name}.png`,fullPage:true});
                 await page.close();
               }

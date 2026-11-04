@@ -173,6 +173,11 @@ jobs:
                 assert(data.manualBreaks===1,name+': heading lost intended break');
                 assert(data.lines>1.85&&data.lines<2.2,name+'/'+width+': broken CJK heading ('+data.lines.toFixed(1)+' lines)');
                 assert(!data.overwide&&!data.pageOverflow,name+'/'+width+': title horizontal overflow');
+                const navLines=await page.locator('.site-nav a').evaluateAll(els=>els.map(el=>{
+                  const range=document.createRange();range.selectNodeContents(el);
+                  return [...range.getClientRects()].filter(r=>r.width>0&&r.height>0).length;
+                }));
+                assert(navLines.length===4&&navLines.every(n=>n===1),name+'/'+width+': navigation Chinese labels broke onto multiple lines ('+navLines.join(',')+')');
                 await page.screenshot({path:'personal-site-v1/backend-evidence/'+name+'-'+width+'.png',fullPage:true});
                 await page.close();
               }
