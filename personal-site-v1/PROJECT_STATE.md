@@ -19,3 +19,14 @@
 - next_executable_action: owner may open `/write/`, paste an intended real public essay, preview/download/copy, then submit a GitHub-native file to main; verify GitHub commit -> Pages -> publicly readable article.
 - deployment_identity_rule: doc-only follow-up commits do not trigger a new Pages deploy; latest delivered SHA remains the recorded Pages delivery SHA rather than latest repo HEAD.
 - updated_at: 2026-11-04
+
+## Conversation-independent recovery (2026-11-04)
+
+- recovery_entry: `personal-site-v1/RECOVERY.md` — the single starting point for a fresh ChatGPT conversation; does not require the broken chat.
+- machine_checkpoint: `personal-site-v1/recovery/state.json` — explicitly binds the locked Vision and Blueprint blob SHAs, last public release commit, deploy/verification run IDs and unresolved gates.
+- recovery_validator: `node personal-site-v1/recovery/check.mjs` — checks source integrity without depending on chat memory.
+- automatic_guard: `.github/workflows/personal-site-v1-recovery.yml` — runs on relevant changes and checks online reader/writer/admin entrypoints separately.
+- initial_guard_evidence: GitHub Actions run `41834775760`, SUCCESS on commit `badff9d202695bb987f651b2afc133ccfe50dd8a`; this is a recovery/HTTP check, not a new Pages deployment or authenticated owner-publication PASS.
+- safety: do NOT upload ChatGPT history, private drafts or tokens to this public repository.
+- continuation_rule: every accepted site-development milestone must update both the machine checkpoint and this canonical status with evidence and one next action. The latest repository HEAD must never be confused with the last independently accepted Pages release.
+- remaining_blocker: real owner-authenticated article commit/publication remains PENDING_OWNER.
