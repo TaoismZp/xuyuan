@@ -43,3 +43,11 @@
 - **具体安装与使用**：[PORTABILITY.md](PORTABILITY.md)。
 - **首轮 8 题同会话测试原始输出**：[runs/2026-11-04-in-session-conformance.md](runs/2026-11-04-in-session-conformance.md)。该记录是 GPT-6 在同一会话内的自测，自评满足 8/8 rubric，**不是独立第三方 Agent 验收**。
 - 已公开三份镜像，未来每次改动需核对三个路径完全一致；第三方真实自动发现、模型行为和私人原版完整性仍 PENDING / UNVERIFIED。
+
+## 2026-11-04 原稿保真度核查（v1.1 更新）
+
+- **新增十大领域路由**：[DOMAIN_ROUTER.md](elite-thinking/references/DOMAIN_ROUTER.md)。原有 `MODEL_ROUTER.md` 仍作为常见问题快速入口；二者均不代表私有原稿逐项完整迁移。
+- **信息损失审计**：[FIDELITY_AUDIT_2026-11-04.md](FIDELITY_AUDIT_2026-11-04.md)。记录已验证的目录一致性、原始100工具资料的读取边界及尚未完成的原版对照。
+- **独立对照题目**：[STRESS_TESTS_V2.md](STRESS_TESTS_V2.md)。定义无 Skill / v1.0 / v1.1 三组盲测的输入、评分准则与致命失败条件；本轮没有实际第三方模型结果。
+- **持续静态验收**：[GitHub Actions](https://github.com/TaoismZp/xuyuan/actions/workflows/skills-integrity.yml)；2026-11-04 [首个 SUCCESS 记录](https://github.com/TaoismZp/xuyuan/actions/runs/41852234657)。它只验证文件一致性、元数据和领域分类，不测 AI 推理。
+- 现有 GitHub 执行版精英思维为 **v1.1.0**，苏格拉底仍为重建 **v1.0.0**；两者原稿完整保真和外部 Agent 自动加载行为**尚未通过独立验收**。
