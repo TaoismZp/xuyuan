@@ -27,7 +27,7 @@ jobs:
       - uses: actions/setup-node@v6
         with:
           node-version: '22'
-      - name: Verify current protocol and portable Skill mirrors
+      - name: Verify current protocol and manual operator guide
         run: node wish-delivery/portable/test-guide.mjs
       - name: Verify existing protocol and recovery regressions
         run: |
