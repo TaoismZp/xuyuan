@@ -102,7 +102,23 @@ jobs:
                 assert(result.h1.length>0,`${surface}/${name}: missing h1`);
                 assert(result.tiny===0,`${surface}/${name}: target below 44px`);
                 assert(result.skip,`${surface}/${name}: missing skip link`);
-                if(name==='home') assert(result.hero >= (surface==='desktop'?100:50),`${surface}/home: hero hierarchy regressed`);
+                if(name==='home') {
+                  assert(result.hero >= (surface==='desktop'?100:50),`${surface}/home: hero hierarchy regressed`);
+                  if(publishedSlugs.length) {
+                    const featured=p.locator('.feature-essay');
+                    assert(await featured.count()===1,`${surface}/home: expected one featured real essay`);
+                    const href=await featured.getAttribute('href');
+                    const slug=decodeURIComponent(href.replace(/^essays\//,'').replace(/\/$/,''));
+                    assert(publishedSlugs.includes(slug),`${surface}/home: feature points to unpublished slug`);
+                    assert((await featured.locator('.feature-essay__detail p').innerText()).length>=20,`${surface}/home: missing real summary`);
+                    assert(await p.locator('.essay-line[href="'+href+'"]').count()===0,`${surface}/home: featured entry duplicated`);
+                    assert(await p.locator('.essay-index__all[href="essays/"]').count()===1,`${surface}/home: archive navigation missing`);
+                    const rect=await featured.boundingBox();
+                    assert(rect && rect.width<=w,`${surface}/home: feature overflows viewport`);
+                  } else {
+                    assert(await p.locator('.feature-essay').count()===0,`${surface}/home: fake feature on empty site`);
+                  }
+                }
                 if(name.startsWith('article-')) {
                   assert(result.article && result.article.paragraphs >= 10,`${surface}/${name}: generated article body missing`);
                   assert(result.article.characters >= 1000,`${surface}/${name}: article content is unexpectedly short`);

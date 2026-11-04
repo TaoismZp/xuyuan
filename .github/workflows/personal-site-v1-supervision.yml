@@ -1,7 +1,7 @@
 name: Independent supervision — personal site v1
 on:
   push:
-    branches: [personal-site-v1-frontend, personal-site-v1-public-hardening, personal-site-v1-distribution-metadata, personal-site-v1-reader-flow, personal-site-v1-reader-qa-hardening]
+    branches: [personal-site-v1-frontend, personal-site-v1-public-hardening, personal-site-v1-distribution-metadata, personal-site-v1-reader-flow, personal-site-v1-reader-qa-hardening, personal-site-v1-home-editorial-v3]
     paths:
       - 'personal-site-v1/**'
       - '.github/workflows/personal-site-v1-supervision.yml'
@@ -92,6 +92,9 @@ jobs:
           require_text 'Accepted hero line preserved' personal-site-v1/index.html 'class="hero-line"'
           require_text 'Accepted section heading preserved' personal-site-v1/index.html 'class="section-heading"'
           require_text 'Accepted essay index preserved' personal-site-v1/index.html 'class="essay-index"'
+          require_text 'Featured essay is derived from published Markdown' personal-site-v1/index.html 'class="feature-essay"'
+          require_text 'Author identity line is retained' personal-site-v1/index.html '我把钱放进市场，也把判断写下来。'
+          require_text 'Archive discoverability link generated' personal-site-v1/index.html 'class="essay-index__all"'
           require_text 'Accepted essay line preserved' personal-site-v1/index.html 'class="essay-line"'
           require_text 'Accepted project layout preserved' personal-site-v1/index.html 'class="project-minimal"'
           forbid_text 'Deprecated generator classes absent' personal-site-v1/index.html 'minimal-hero|essay-row|minimal-projects|section-kicker'
@@ -162,6 +165,7 @@ jobs:
             echo '- Published content maps into the accepted frontend class vocabulary.'
             echo '- Deprecated/wrong generator class vocabulary is absent.'
             echo '- Generated archive/article navigation remains intact.'
+          echo '- Home features a single canonical published entry from content metadata; latest rows are not duplicated.'
           echo '- Markdown H2 headings receive deterministic anchors; desktop/mobile sections and article-end navigation are generated.'
             echo '- Frontend fixture/sample language does not leak after a real build.'
             echo '- Empty production builds remove the sample article and render a truthful empty archive.'

@@ -1,7 +1,7 @@
 name: Verify personal site v1 backend integration
 on:
   push:
-    branches: [personal-site-v1-frontend, personal-site-v1-public-hardening, personal-site-v1-distribution-metadata, personal-site-v1-reader-flow, personal-site-v1-reader-qa-hardening]
+    branches: [personal-site-v1-frontend, personal-site-v1-public-hardening, personal-site-v1-distribution-metadata, personal-site-v1-reader-flow, personal-site-v1-reader-qa-hardening, personal-site-v1-home-editorial-v3]
     paths:
       - 'personal-site-v1/**'
       - '.github/workflows/personal-site-v1-backend-build.yml'
@@ -59,6 +59,11 @@ jobs:
           grep -q '等待：交易中最稀缺的能力' personal-site-v1/index.html
           grep -q '等待：交易中最稀缺的能力' personal-site-v1/essays/index.html
           grep -q '等待不是空白' personal-site-v1/essays/ci-published/index.html
+          grep -q 'class="feature-essay"' personal-site-v1/index.html
+          grep -q '我把钱放进市场，也把判断写下来。' personal-site-v1/index.html
+          grep -q '从这里读起' personal-site-v1/index.html
+          grep -q '查看全部长文' personal-site-v1/index.html
+          test "$(grep -o 'class="feature-essay"' personal-site-v1/index.html | wc -l)" = 1
           grep -q 'id="section-01"' personal-site-v1/essays/ci-published/index.html
           grep -q 'href="#section-01"' personal-site-v1/essays/ci-published/index.html
           grep -q 'class="article-outline-mobile"' personal-site-v1/essays/ci-published/index.html
@@ -111,6 +116,17 @@ jobs:
                 await p.goto(`http://127.0.0.1:4175/${path}`,{waitUntil:'networkidle'});
                 const data=await p.evaluate(()=>({overflow:document.documentElement.scrollWidth>document.documentElement.clientWidth,h1:document.querySelector('h1')?.innerText||'',text:document.body.innerText}));
                 assert(!data.overflow,`${name}/${surface}: horizontal overflow`);
+                if(name==='home'){
+                  const feature=p.locator('.feature-essay');
+                  assert(await feature.count()===1,`${surface}: expected one real featured essay`);
+                  assert((await feature.locator('p').innerText()).length>=30,`${surface}: featured summary missing`);
+                  const href=await feature.getAttribute('href');
+                  assert(href.startsWith('essays/')&&href.endsWith('/'),`${surface}: featured URL invalid`);
+                  assert(await p.locator('.essay-line[href="'+href+'"]').count()===0,`${surface}: featured essay duplicated in latest rows`);
+                  assert(await p.locator('.essay-index__all[href="essays/"]').count()===1,`${surface}: archive link missing`);
+                  const rect=await feature.boundingBox();
+                  assert(rect && rect.width>=250 && rect.width<=w,`${surface}: featured entry layout invalid`);
+                }
                 assert(data.text.includes('等待：交易中最稀缺的能力'),`${name}/${surface}: generated post missing`);
                 assert(!data.text.includes('不应公开的草稿'),`${name}/${surface}: draft leaked`);
                 if(name==='article'){

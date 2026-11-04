@@ -106,12 +106,23 @@ function siteHeader(surface) {
 const footer = (depth = '', note = '长期交易，长期写作。') => `<footer class="shell site-footer"><strong translate="no">TaoismZp</strong><span>${escapeHtml(note)}</span></footer><script src="${depth}assets/site.js" defer></script>`;
 
 function homePage(posts) {
-  const latest = posts.slice(0, 3);
+  // A featured, published essay is the recommended entry point, not a fake article.
+  // When no post is marked featured, use the latest published one.
+  const primary = posts.find((post) => post.featured) || posts[0] || null;
+  const latest = posts.filter((post) => post.slug !== primary?.slug).slice(0, 3);
+  const primaryEssay = primary ? `<a class="feature-essay" href="essays/${encodeURIComponent(primary.slug)}/" aria-label="从这里读起：${escapeHtml(primary.title)}">
+    <div class="feature-essay__meta"><span>从这里读起</span><span>${escapeHtml(primary.tags.slice(0, 2).join(' / ') || '长文')} · 约 ${readingMinutes(primary.body)} 分钟</span></div>
+    <div class="feature-essay__body"><div class="feature-essay__headline"><h3>${escapeHtml(primary.title)}</h3><time datetime="${primary.date.iso}">${escapeHtml(primary.date.label)}</time></div><div class="feature-essay__detail"><p>${escapeHtml(primary.summary)}</p><span class="feature-essay__action">阅读这篇 <span aria-hidden="true">↗</span></span></div></div>
+  </a>` : '';
   const rows = latest.length
     ? latest.map((post) => `<a class="essay-line" href="essays/${encodeURIComponent(post.slug)}/"><span class="essay-line__title">${escapeHtml(post.title)}</span><time datetime="${post.date.iso}">${escapeHtml(post.date.label)}</time></a>`).join('')
-    : `<div class="essay-line"><span class="essay-line__title">第一篇公开长文，会从这里开始。</span><time>—</time></div>`;
+    : (!primary ? `<div class="essay-line"><span class="essay-line__title">第一篇公开长文，会从这里开始。</span><time>—</time></div>` : '');
+  const archiveLink = posts.length
+    ? `<a class="essay-index__all" href="essays/">查看全部长文 <span>${posts.length} 篇</span><span aria-hidden="true">↗</span></a>`
+    : '';
+  const index = `<div class="essay-index">${primaryEssay}${rows}</div>${archiveLink}`;
 
-  return `${head({ title: 'TaoismZp — 长期交易，长期写作', description: 'TaoismZp 的个人网站：长期交易，长期写作。' })}<body>${siteHeader('home')}<main class="shell" id="main"><section class="hero" aria-labelledby="home-title"><h1 class="hero-title" id="home-title"><span class="hero-line">长期交易，</span><em class="hero-line">长期写作。</em></h1><p class="hero-subtitle">关于市场、概率、风险与判断。</p></section><section class="section" aria-labelledby="recent-heading"><div class="section-heading"><h2 id="recent-heading">最新长文</h2><span class="section-note">完整推演，而不是观点碎片。</span></div><div class="essay-index">${rows}</div></section><section class="section" aria-labelledby="projects-heading"><div class="section-heading"><h2 id="projects-heading">长期项目</h2></div><div class="project-minimal"><a class="project-minimal__item" href="projects/#nofold"><h3 translate="no">NO FOLD</h3><p>德州扑克 × 二级市场：一套关于赔率、纪律、等待与长期在场的交易框架。</p></a><a class="project-minimal__item" href="projects/#ruozhe"><h3>弱者的活法</h3><p>在非对称的世界里，研究普通人如何先活着，再活好、活久、活大、活明白。</p></a></div></section></main>${footer('', '长期交易，长期写作。')}</body></html>`;
+  return `${head({ title: 'TaoismZp — 长期交易，长期写作', description: 'TaoismZp 的个人网站：长期交易，长期写作。' })}<body>${siteHeader('home')}<main class="shell" id="main"><section class="hero" aria-labelledby="home-title"><h1 class="hero-title" id="home-title"><span class="hero-line">长期交易，</span><em class="hero-line">长期写作。</em></h1><p class="hero-subtitle">我把钱放进市场，也把判断写下来。</p></section><section class="section" aria-labelledby="recent-heading"><div class="section-heading"><h2 id="recent-heading">最新长文</h2><span class="section-note">完整推演，而不是观点碎片。</span></div>${index}</section><section class="section" aria-labelledby="projects-heading"><div class="section-heading"><h2 id="projects-heading">长期项目</h2></div><div class="project-minimal"><a class="project-minimal__item" href="projects/#nofold"><h3 translate="no">NO FOLD</h3><p>德州扑克 × 二级市场：一套关于赔率、纪律、等待与长期在场的交易框架。</p></a><a class="project-minimal__item" href="projects/#ruozhe"><h3>弱者的活法</h3><p>在非对称的世界里，研究普通人如何先活着，再活好、活久、活大、活明白。</p></a></div></section></main>${footer('', '长期交易，长期写作。')}</body></html>`;
 }
 
 function archivePage(posts) {

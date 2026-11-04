@@ -61,3 +61,34 @@
   html{scroll-behavior:auto}
   .article-outline__link{transition:none}
 }
+
+
+/* Home editorial entry point: a featured essay, never a promotional card. */
+@layer components{
+  .feature-essay{display:block;padding:1.45rem 0 2.65rem;border-top:1px solid var(--line);outline-offset:5px}
+  .feature-essay__meta{display:flex;align-items:center;justify-content:space-between;gap:1rem;font-family:var(--sans);font-size:12px;color:var(--muted)}
+  .feature-essay__meta span:first-child{color:var(--accent-deep);font-weight:600;letter-spacing:.035em}
+  .feature-essay__body{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,.8fr);gap:clamp(2rem,5vw,6rem);align-items:end;padding-top:1.75rem}
+  .feature-essay__headline h3{max-width:15ch;font-size:clamp(36px,4.5vw,66px);font-weight:600;letter-spacing:-.055em;line-height:1.16;text-wrap:balance}
+  .feature-essay__headline time{display:block;margin-top:1.3rem;color:var(--muted);font-family:var(--sans);font-size:13px;font-variant-numeric:tabular-nums}
+  .feature-essay__detail p{font-size:clamp(17px,1.55vw,19px);line-height:1.85;color:var(--soft);max-width:29rem}
+  .feature-essay__action{display:inline-flex;gap:1.4rem;align-items:center;min-height:44px;margin-top:1.2rem;font-family:var(--sans);font-size:14px;color:var(--ink);border-bottom:1px solid var(--accent)}
+  .feature-essay:hover .feature-essay__headline h3{color:var(--accent-deep)}
+  .essay-index__all{display:inline-flex;align-items:center;min-height:44px;gap:1.1rem;margin-top:1.4rem;font-family:var(--sans);font-size:14px;color:var(--ink);border-bottom:1px solid var(--line)}
+  .essay-index__all span:first-child{color:var(--muted);font-size:12px}
+  .essay-index__all:hover{border-color:var(--accent);color:var(--accent-deep)}
+}
+@media(max-width:780px){
+  .feature-essay{padding:1.2rem 0 2rem}
+  .feature-essay__meta{font-size:11px;align-items:baseline;gap:.7rem}
+  .feature-essay__meta span:last-child{text-align:right}
+  .feature-essay__body{grid-template-columns:1fr;gap:1.2rem;padding-top:1.25rem}
+  .feature-essay__headline h3{font-size:clamp(36px,10.7vw,47px);max-width:none;line-height:1.21}
+  .feature-essay__headline time{margin-top:.75rem;font-size:12px}
+  .feature-essay__detail p{font-size:16px;line-height:1.75}
+  .feature-essay__action{margin-top:.8rem}
+  .essay-index__all{margin-top:1rem}
+}
+@media(prefers-reduced-motion:reduce){
+  .feature-essay__headline h3{transition:none}
+}
