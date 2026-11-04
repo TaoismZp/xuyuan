@@ -28,7 +28,7 @@ jobs:
         with:
           node-version: '22'
       - name: Verify current protocol and portable Skill mirrors
-        run: node wish-delivery/portable/test-skill.mjs
+        run: node wish-delivery/portable/test-guide.mjs
       - name: Verify existing protocol and recovery regressions
         run: |
           node wish-delivery/self-evolution/2026-11-04/test.mjs
