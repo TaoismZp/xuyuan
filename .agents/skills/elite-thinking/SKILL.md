@@ -2,9 +2,10 @@
 name: elite-thinking
 description: "Decision-oriented thinking skill for difficult analysis, strategy, prediction, prioritization, research and system design. Build a minimal problem map, select exactly one primary mental model and up to three supporting or adversarial models, derive a testable action and update rule. Avoid for simple facts, translations and mechanical tasks."
 metadata:
-  version: "1.0.0"
+  version: "1.1.0"
   language: "zh-CN"
   origin_status: "new-portable-adaptation"
+  coverage_status: "expanded-routing-not-original-full-text"
 ---
 
 # 精英思维 / Elite Thinking
@@ -34,7 +35,7 @@ metadata:
 ## Step 2 — Pick models, not buzzwords
 - **恰好 1 个主工具**：必须实质改变结论、机制解释或下一动作。如果删掉模型结果仍一样，模型未被真正使用。
 - **至多 3 个补充工具**：分别承担补充机制、反证、边界、行动设计，不准无目的堆砌。
-- 从问题类型路由，优先看同目录的 [模型路由表](references/MODEL_ROUTER.md)。该文件为便携精选集，不宣称涵盖原始一百个模型。
+- **先判领域，再选模型**：先看 [十大问题领域扩展路由](references/DOMAIN_ROUTER.md)，避免把个人成长、学习、商业、制度、复杂系统、价值与探索问题强行压进少数常用模型；随后优先看 [快捷模型路由表](references/MODEL_ROUTER.md)。两份都是便携入口，均不宣称覆盖原稿一百个工具的全部执行细节。对不熟悉的模型必须核验机制，不得凭术语捏造。
 - 至少尝试一次异质反证：比如优化指标用古德哈特，成功故事用选择偏差，平均收益用路径风险，产能问题用状态杠杆，继续搜集信息用 VOI。
 - 工具冲突时，查证是目标、尺度、可逆性、概率分布还是证据不同；不要平均观点。
 
@@ -78,6 +79,11 @@ Counterexample: 若真实发文已被独立成功复测、事故率仍高，新�
 - [ ] 指出最强反例、证据身份与可逆性/尾部边界。
 - [ ] 给出可执行动作、观察量与反转条件。
 - [ ] 不以术语密度、文档数量或 PASS 数代替真实效果。
+
+## Fidelity / coverage boundary
+- 本版本新增十大领域路由，修复模型选择阶段的部分领域盲点，但**尚未迁入**私有原稿逐模型的完整适用条件、Agent 程序、反例与边界，不能标为完整移植。
+- 需要原版精度的任务，须获得合法授权下的原始材料，并对照具体模型执行卡；当原稿不可读时标记 SOURCE_UNVERIFIED。
+- 跨模型运行效果尚未独立实测，不得从文件一致性推断高保真效果。
 
 ## Source boundary
 这是根据私人资料中的“精英思维”操作原则提炼的**新可移植实现**，非原始长篇教材全文、非对其所有条目的复制，也不代表原课程作者认可或背书。详见模型路由表与测试用例。
