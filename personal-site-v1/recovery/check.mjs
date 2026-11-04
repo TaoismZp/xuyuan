@@ -53,7 +53,7 @@ for (const file of [
 for(const label of ['publicReader','authorPreparation','optionalCMS'])
   requireThat(data.delivery[label]?.startsWith('https://taoismzp.github.io/xuyuan/personal-site-v1/'),'Wrong delivery surface: '+label);
 const realPost = read(data.authorContent).toString('utf8');
-requireThat(realPost.includes('天才交易员') && /status:\\s*published/.test(realPost),'Missing canonical published article; never replace with a CI fixture');
+requireThat(realPost.includes('天才交易员') && /status:\s*published/.test(realPost),'Missing canonical published article; never replace with a CI fixture');
 const output = {
   status:'RECOVERY_CHECKPOINT_CONSISTENT',
   project:data.project,
