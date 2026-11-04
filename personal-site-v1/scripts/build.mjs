@@ -124,9 +124,44 @@ function archivePage(posts) {
   return `${head({ title: '长文 — TaoismZp', description: 'TaoismZp 的长文归档。', depth: '../', canonical: SITE_ROOT + 'essays/' })}<body>${siteHeader('archive')}<main class="shell" id="main"><header class="page-head"><div class="page-head__eyebrow">ESSAYS</div><h1>把判断，<br>写到尽头。</h1><p class="page-head__desc">这里放完整推演。不是为了更新频率，而是把一个问题真正想清楚以后留下来。</p></header><section class="section" aria-labelledby="archive-heading"><div class="section-heading"><h2 id="archive-heading">全部长文</h2></div>${tags.length ? `<div class="filter-bar" aria-label="文章筛选">${filters}</div>` : ''}<div>${rows}</div></section></main>${footer('../', '长文不是日更，是归档。')}</body></html>`;
 }
 
-function articlePage(post) {
-  const rendered = md.render(post.body);
+function renderArticleWithSections(markdown) {
+  const env = {};
+  const tokens = md.parse(markdown, env);
+  const sections = [];
+  for (let i = 0; i < tokens.length - 1; i += 1) {
+    if (tokens[i].type !== 'heading_open' || tokens[i].tag !== 'h2') continue;
+    const title = tokens[i + 1].content.trim();
+    const id = 'section-' + String(sections.length + 1).padStart(2, '0');
+    tokens[i].attrSet('id', id);
+    sections.push({ id, title });
+  }
+  return { rendered: md.renderer.render(tokens, md.options, env), sections };
+}
+
+function outlineLinks(sections) {
+  return sections.map((section, index) =>
+    '<a class="article-outline__link" data-outline-link href="#' + section.id + '">' +
+    '<span class="article-outline__number">' + String(index + 1).padStart(2, '0') + '</span>' +
+    '<span>' + escapeHtml(section.title) + '</span></a>'
+  ).join('');
+}
+
+function articlePage(post, posts) {
+  const { rendered, sections } = renderArticleWithSections(post.body);
   const tags = post.tags.join(' / ') || '长文';
+  const links = outlineLinks(sections);
+  const desktopOutline = sections.length
+    ? '<nav class="article-outline-desktop" aria-label="文章章节"><span class="article-tools__label">本文目录</span>' + links + '</nav>'
+    : '';
+  const mobileOutline = sections.length
+    ? '<details class="article-outline-mobile"><summary>章节目录 <span>' + sections.length + ' 节</span></summary><nav aria-label="文章章节">' + links + '</nav></details>'
+    : '';
+  const nextPost = posts[posts.findIndex(item => item.slug === post.slug) + 1];
+  const nextLink = nextPost
+    ? '<a class="article-end__next" href="../' + encodeURIComponent(nextPost.slug) + '/">下一篇 · ' + escapeHtml(nextPost.title) + '</a>'
+    : '';
+  const articleEnd = '<nav class="article-end" aria-label="读完后"><span class="article-end__label">读到这里</span>' +
+    '<a href="../">返回全部长文</a>' + nextLink + '</nav>';
   const safeJson = (value) => JSON.stringify(value).replaceAll('<', '\\u003c');
   const structuredData = {
     '@context': 'https://schema.org',
@@ -148,7 +183,7 @@ function articlePage(post) {
     publishedAt: post.date.iso,
     tags: post.tags
   }).replace('</head>', '<link rel="stylesheet" href="../../assets/content.css"><script type="application/ld+json">' + safeJson(structuredData) + '</script></head>');
-  return `${documentHead}<body><a class="skip-link" href="#main">跳到正文</a><div class="article-progress" data-reading-progress aria-hidden="true"></div><header class="site-header"><div class="shell site-header__inner"><a class="site-brand" href="../../" translate="no">TaoismZp</a><nav class="site-nav" aria-label="主导航"><a href="../../">首页</a><a href="../" aria-current="page">长文</a><a href="../../projects/">项目</a><a href="../../about/">关于</a></nav></div></header><main id="main"><header class="shell article-head"><a class="article-head__back" href="../">← 返回长文</a><div class="article-head__meta">${escapeHtml(tags)} · ${escapeHtml(post.date.label)} · 约 ${readingMinutes(post.body)} 分钟</div><h1>${escapeHtml(post.title)}</h1><p class="article-head__dek">${escapeHtml(post.summary)}</p></header><div class="shell article-layout"><aside class="article-tools" aria-label="文章工具"><span>阅读模式</span><button type="button" data-share>分享这篇</button><span class="sr-only" data-share-status aria-live="polite"></span></aside><article class="article-body">${rendered}</article></div></main>${footer('../../', '读完一个判断，再决定信不信。')}</body></html>`;
+  return `${documentHead}<body><a class="skip-link" href="#main">跳到正文</a><div class="article-progress" data-reading-progress aria-hidden="true"></div><header class="site-header"><div class="shell site-header__inner"><a class="site-brand" href="../../" translate="no">TaoismZp</a><nav class="site-nav" aria-label="主导航"><a href="../../">首页</a><a href="../" aria-current="page">长文</a><a href="../../projects/">项目</a><a href="../../about/">关于</a></nav></div></header><main id="main"><header class="shell article-head"><a class="article-head__back" href="../">← 返回长文</a><div class="article-head__meta">${escapeHtml(tags)} · ${escapeHtml(post.date.label)} · 约 ${readingMinutes(post.body)} 分钟</div><h1>${escapeHtml(post.title)}</h1><p class="article-head__dek">${escapeHtml(post.summary)}</p></header><div class="shell article-layout"><aside class="article-tools" aria-label="文章工具">${desktopOutline}${mobileOutline}<button type="button" data-share>分享这篇</button><span class="sr-only" data-share-status aria-live="polite"></span></aside><article class="article-body">${rendered}</article>${articleEnd}</div></main>${footer('../../', '读完一个判断，再决定信不信。')}</body></html>`;
 }
 
 
@@ -185,7 +220,7 @@ fs.writeFileSync(path.join(ESSAYS_DIR, 'index.html'), archivePage(posts));
 for (const post of posts) {
   const dir = path.join(ESSAYS_DIR, post.slug);
   fs.mkdirSync(dir, { recursive: true });
-  fs.writeFileSync(path.join(dir, 'index.html'), articlePage(post));
+  fs.writeFileSync(path.join(dir, 'index.html'), articlePage(post, posts));
 }
 
 console.log(`Built ${posts.length} published post(s).`);

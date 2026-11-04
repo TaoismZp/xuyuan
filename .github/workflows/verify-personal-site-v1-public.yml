@@ -109,6 +109,24 @@ jobs:
                   assert(result.article.fontSize >= (surface==='iphone'?18:16),`${surface}/${name}: article typography too small`);
                   assert(result.article.lastParagraph.length > 0,`${surface}/${name}: article ending missing`);
                   await p.screenshot({path:`personal-site-v1-public-evidence/${surface}-${name}.png`,fullPage:false});
+                  const headingCount = await p.locator('.article-body h2[id]').count();
+                  assert(headingCount >= 1,`${surface}/${name}: article headings lack anchors`);
+                  assert(await p.locator('.article-end a[href="../"]').count()===1,`${surface}/${name}: missing end-of-article archive link`);
+                  if(surface==='iphone'){
+                    const summary=p.locator('.article-outline-mobile summary');
+                    assert(await summary.count()===1,`${surface}/${name}: section disclosure missing`);
+                    const box=await summary.boundingBox();
+                    assert(box && box.height >= 44,`${surface}/${name}: section disclosure touch target below 44px`);
+                    await summary.click();
+                    assert(await p.locator('.article-outline-mobile').evaluate(el=>el.open),`${surface}/${name}: section disclosure did not open`);
+                    await p.locator('.article-outline-mobile [data-outline-link]').first().click();
+                    assert(p.url().includes('#section-01'),`${surface}/${name}: section jump failed`);
+                    assert(!(await p.locator('.article-outline-mobile').evaluate(el=>el.open)),`${surface}/${name}: section menu did not close`);
+                  } else {
+                    assert(await p.locator('.article-outline-desktop [data-outline-link]').count()===headingCount,`${surface}/${name}: desktop outline count mismatch`);
+                    await p.locator('.article-outline-desktop [data-outline-link]').first().click();
+                    assert(p.url().includes('#section-01'),`${surface}/${name}: desktop section jump failed`);
+                  }
                   const bottom = await p.evaluate(async () => {
                     document.documentElement.style.scrollBehavior = 'auto';
                     document.body.style.scrollBehavior = 'auto';

@@ -1,7 +1,7 @@
 name: Independent supervision — personal site v1
 on:
   push:
-    branches: [personal-site-v1-frontend, personal-site-v1-public-hardening, personal-site-v1-distribution-metadata]
+    branches: [personal-site-v1-frontend, personal-site-v1-public-hardening, personal-site-v1-distribution-metadata, personal-site-v1-reader-flow]
     paths:
       - 'personal-site-v1/**'
       - '.github/workflows/personal-site-v1-supervision.yml'
@@ -100,6 +100,11 @@ jobs:
           require_text 'Archive row preserved' personal-site-v1/essays/index.html 'class="archive-row"'
           require_text 'Article head generated' personal-site-v1/essays/supervision-published/index.html 'article-head'
           require_text 'Article body generated' personal-site-v1/essays/supervision-published/index.html 'article-body'
+          require_text 'Section anchors generated' personal-site-v1/essays/supervision-published/index.html 'id="section-01"'
+          require_text 'Desktop outline generated' personal-site-v1/essays/supervision-published/index.html 'article-outline-desktop'
+          require_text 'Mobile outline generated' personal-site-v1/essays/supervision-published/index.html 'article-outline-mobile'
+          require_text 'Article end navigation generated' personal-site-v1/essays/supervision-published/index.html 'article-end'
+          forbid_text 'Misleading read-mode label removed' personal-site-v1/essays/supervision-published/index.html '阅读模式'
           require_text 'Home navigation present on homepage' personal-site-v1/index.html '>首页<'
           require_text 'Home navigation present on archive' personal-site-v1/essays/index.html '>首页<'
           require_text 'Home navigation present on article' personal-site-v1/essays/supervision-published/index.html '>首页<'
@@ -157,6 +162,7 @@ jobs:
             echo '- Published content maps into the accepted frontend class vocabulary.'
             echo '- Deprecated/wrong generator class vocabulary is absent.'
             echo '- Generated archive/article navigation remains intact.'
+          echo '- Markdown H2 headings receive deterministic anchors; desktop/mobile sections and article-end navigation are generated.'
             echo '- Frontend fixture/sample language does not leak after a real build.'
             echo '- Empty production builds remove the sample article and render a truthful empty archive.'
             echo '- Draft/public filtering is separately exercised by backend integration CI.'

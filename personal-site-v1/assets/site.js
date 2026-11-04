@@ -53,6 +53,42 @@
     addEventListener('resize', requestUpdate);
   }
 
+  const outlineLinks = [...document.querySelectorAll('[data-outline-link]')];
+  if (outlineLinks.length) {
+    const headings = [...new Set(outlineLinks.map(link => link.hash.slice(1)))]
+      .map(id => document.getElementById(id))
+      .filter(Boolean);
+    let currentSection = '';
+    let queued = false;
+    const updateCurrentSection = () => {
+      queued = false;
+      let active = '';
+      for (const heading of headings) {
+        if (heading.getBoundingClientRect().top <= window.innerHeight * .32) active = heading.id;
+      }
+      if (currentSection === active) return;
+      currentSection = active;
+      for (const link of outlineLinks) {
+        if (link.hash === '#' + active) link.setAttribute('aria-current', 'location');
+        else link.removeAttribute('aria-current');
+      }
+    };
+    const queueOutlineUpdate = () => {
+      if (queued) return;
+      queued = true;
+      requestAnimationFrame(updateCurrentSection);
+    };
+    updateCurrentSection();
+    addEventListener('scroll', queueOutlineUpdate, { passive: true });
+    addEventListener('resize', queueOutlineUpdate);
+    addEventListener('hashchange', queueOutlineUpdate);
+    outlineLinks.forEach(link => link.addEventListener('click', () => {
+      const disclosure = link.closest('details');
+      if (disclosure) disclosure.open = false;
+      queueOutlineUpdate();
+    }));
+  }
+
   const shareUrl = document.querySelector('link[rel="canonical"]')?.href || location.href;
   const shareButton = document.querySelector('[data-share]');
   const shareStatus = document.querySelector('[data-share-status]');

@@ -1,18 +1,13 @@
 # Durable Task State — Personal Site v1
 
-- status: LIVE / DISTRIBUTION_METADATA_ACCEPTED
-- last_good_checkpoint: `01c51bae552b142d03ddcb483cfaad1b8eb957e3`
-- public_acceptance: GitHub Actions run `41767849763` — **PASS** (public HTTP + iPhone/iPad/desktop WebKit)
-- latest_accepted_public_surface: https://taoismzp.github.io/xuyuan/personal-site-v1/
-- first_published_essay: 《天才交易员为何注定陨落》 — https://taoismzp.github.io/xuyuan/personal-site-v1/essays/genius-trader/
-- original_article_source: `/作者第二大脑/01_成稿原文/天才交易员为何注定陨落_用户原稿_2026-10-22.md`; source_sha256 `312cf1ebad852621edd72078d7cce2f653da6e5072f12e0199787e823e5e23b4`
-- production_markdown: `content/posts/genius-trader.md`; do not edit original essay as part of infrastructure changes.
-- live_distribution: canonical / Open Graph / Twitter summary / RSS `feed.xml` / sitemap `sitemap.xml`; only published articles enter the public feed and index.
-- frontend_vision: third user-selected minimalist direction (warm ivory, near-black, restrained olive); preserved.
-- current_gate: OWNER CMS AUTHENTICATED WRITE (user-only).
-- unverified_step: first real Sveltia login and save using owner's restricted GitHub token; cannot be simulated by connector-based publication.
-- owner_secret_rule: token must only be entered in CMS login UI; never sent to ChatGPT, files, or commits.
-- privacy_rule: GitHub repository is public, so a `draft` markdown commit is **not** private even though draft pages are omitted from the public site, RSS and sitemap.
-- delivery_boundary: Pages artifact ships allowlisted public pages/assets only; no canonical Markdown, build scripts or internal reports.
-- next_executable_action: owner tests authenticating at `/personal-site-v1/admin/` and editing one published essay; verify token-authenticated commit → Pages → actual public page, or continue preparing more authorized longform publications via connected GitHub.
+- status: READER_FLOW_V2_CANDIDATE
+- last_accepted_commit: `22051ca373b6c24f8604507fb8a3df6188f2b784`
+- accepted_publication: 《天才交易员为何注定陨落》 — https://taoismzp.github.io/xuyuan/personal-site-v1/essays/genius-trader/
+- current_gate: reader-flow v2 branch CI and independent supervision → main promotion → real public WebKit acceptance.
+- design_fixture: third approved minimalist direction, warm ivory + near black + muted olive; no style reset.
+- scope: H2 chapter anchors, desktop outline, mobile disclosure, current-section state, end-of-essay continuation. Original article and its metadata remain untouched.
+- acceptance_blueprint: `personal-site-v1/READING_EXPERIENCE_V2.md`
+- source_of_truth: `personal-site-v1/content/posts/*.md`; all generated pages rebuilt from canonical Markdown at deployment.
+- owner_auth_untested: real user token login, editor save and GitHub write through Sveltia remain user-only.
+- privacy: status=draft hides website rendering, NOT underlying files in public GitHub repository.
 - updated_at: 2026-11-04

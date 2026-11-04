@@ -1,7 +1,7 @@
 name: Verify personal site v1 backend integration
 on:
   push:
-    branches: [personal-site-v1-frontend, personal-site-v1-public-hardening, personal-site-v1-distribution-metadata]
+    branches: [personal-site-v1-frontend, personal-site-v1-public-hardening, personal-site-v1-distribution-metadata, personal-site-v1-reader-flow]
     paths:
       - 'personal-site-v1/**'
       - '.github/workflows/personal-site-v1-backend-build.yml'
@@ -59,6 +59,12 @@ jobs:
           grep -q '等待：交易中最稀缺的能力' personal-site-v1/index.html
           grep -q '等待：交易中最稀缺的能力' personal-site-v1/essays/index.html
           grep -q '等待不是空白' personal-site-v1/essays/ci-published/index.html
+          grep -q 'id="section-01"' personal-site-v1/essays/ci-published/index.html
+          grep -q 'href="#section-01"' personal-site-v1/essays/ci-published/index.html
+          grep -q 'class="article-outline-mobile"' personal-site-v1/essays/ci-published/index.html
+          grep -q 'class="article-outline-desktop"' personal-site-v1/essays/ci-published/index.html
+          grep -q 'class="article-end"' personal-site-v1/essays/ci-published/index.html
+          ! grep -q '阅读模式' personal-site-v1/essays/ci-published/index.html
           ! grep -R '不应公开的草稿' personal-site-v1/index.html personal-site-v1/essays/index.html personal-site-v1/essays/ci-published/index.html
           grep -q 'auth_methods: \[token\]' personal-site-v1/admin/config.yml
           ! grep -R -E 'github_pat_[A-Za-z0-9_]+|ghp_[A-Za-z0-9]+' personal-site-v1/admin personal-site-v1/content
@@ -107,7 +113,29 @@ jobs:
                 assert(!data.overflow,`${name}/${surface}: horizontal overflow`);
                 assert(data.text.includes('等待：交易中最稀缺的能力'),`${name}/${surface}: generated post missing`);
                 assert(!data.text.includes('不应公开的草稿'),`${name}/${surface}: draft leaked`);
-                if(name==='article'&&mobile){const size=await p.locator('.article-body').evaluate(el=>parseFloat(getComputedStyle(el).fontSize));assert(size>=18,'mobile article text below 18px')}
+                if(name==='article'){
+                  const headCount=await p.locator('.article-body h2[id]').count();
+                  assert(headCount>=1,'generated article h2 anchors missing');
+                  assert(await p.locator('.article-end a[href="../"]').count()===1,'return-to-archive missing');
+                  if(mobile){
+                    const size=await p.locator('.article-body').evaluate(el=>parseFloat(getComputedStyle(el).fontSize));
+                    assert(size>=18,'mobile article text below 18px');
+                    const summary=p.locator('.article-outline-mobile summary');
+                    assert(await summary.count()===1,'mobile section disclosure missing');
+                    const box=await summary.boundingBox();
+                    assert(box&&box.height>=44,'mobile section control is too small');
+                    await summary.click();
+                    assert(await p.locator('.article-outline-mobile').evaluate(el=>el.open),'mobile outline did not open');
+                    await p.locator('.article-outline-mobile [data-outline-link]').first().click();
+                    assert(p.url().endsWith('#section-01'),'mobile section link did not navigate');
+                    assert(!(await p.locator('.article-outline-mobile').evaluate(el=>el.open)),'mobile outline stayed open after jump');
+                  } else {
+                    assert(await p.locator('.article-outline-desktop [data-outline-link]').count()===headCount,'desktop outline count mismatch');
+                    await p.locator('.article-outline-desktop [data-outline-link]').first().click();
+                    assert(p.url().endsWith('#section-01'),'desktop section link did not navigate');
+                  }
+                  assert(!(await p.evaluate(()=>document.documentElement.scrollWidth>document.documentElement.clientWidth)),'article overflows after section navigation');
+                }
                 await p.screenshot({path:`personal-site-v1/backend-evidence/${name}-${surface}.png`,fullPage:true});
                 await p.close();
               }
