@@ -1,0 +1,35 @@
+name: Wish Delivery - Revival trigger regressions
+on:
+  push:
+    branches: [wish-revival-trigger-20261104, main]
+    paths:
+      - 'wish-delivery/recovery/**'
+      - 'wish-delivery/candidates/v7.8-self-evolution-rc2-revival.md'
+      - '.github/workflows/wish-revival.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'wish-delivery/recovery/**'
+      - 'wish-delivery/candidates/v7.8-self-evolution-rc2-revival.md'
+      - '.github/workflows/wish-revival.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  synthetic-recovery-router:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+      - name: Run trigger and checkpoint adversarial regressions
+        run: node wish-delivery/recovery/test-revival.mjs
+      - name: Mark testing scope
+        if: always()
+        run: |
+          {
+            echo '## 断档重生 — tests and limits'
+            echo ''
+            echo 'Fixture PASS proves only routing logic and current spec identity. It does not prove access to every ChatGPT conversation, custom-instruction installation, or cold-start user recovery.'
+          } >> "$GITHUB_STEP_SUMMARY"

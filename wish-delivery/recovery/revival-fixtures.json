@@ -1,0 +1,784 @@
+{
+  "schema": "wish-revival-fixtures/v1",
+  "routes": [
+    {
+      "label": "本聊天仅有一个明确主题，裸短语命中",
+      "message": "断档重生",
+      "contextFocusId": "nofold",
+      "index": [
+        {
+          "id": "website",
+          "title": "个人长文网站",
+          "aliases": [
+            "网站",
+            "个人网站",
+            "长文网站",
+            "写作"
+          ],
+          "work_status": "ACTIVE",
+          "resume_candidate": true,
+          "checkpoint": "https://github.com/TaoismZp/xuyuan/blob/main/personal-site-v1/RECOVERY.md"
+        },
+        {
+          "id": "nofold",
+          "title": "NOFOLD 交易写作项目",
+          "aliases": [
+            "NO FOLD",
+            "交易书",
+            "写作"
+          ],
+          "work_status": "INTERRUPTED",
+          "resume_candidate": true,
+          "checkpoint": "/NOFOLD"
+        },
+        {
+          "id": "old",
+          "title": "已完结旧项目",
+          "aliases": [
+            "完结"
+          ],
+          "work_status": "COMPLETED",
+          "resume_candidate": false,
+          "checkpoint": "/archive/old"
+        }
+      ],
+      "expected": {
+        "status": "VERIFY_CHECKPOINT",
+        "id": "nofold"
+      }
+    },
+    {
+      "label": "新对话带网站名称直接路由",
+      "message": "断档重生：个人长文网站",
+      "index": [
+        {
+          "id": "website",
+          "title": "个人长文网站",
+          "aliases": [
+            "网站",
+            "个人网站",
+            "长文网站",
+            "写作"
+          ],
+          "work_status": "ACTIVE",
+          "resume_candidate": true,
+          "checkpoint": "https://github.com/TaoismZp/xuyuan/blob/main/personal-site-v1/RECOVERY.md"
+        },
+        {
+          "id": "nofold",
+          "title": "NOFOLD 交易写作项目",
+          "aliases": [
+            "NO FOLD",
+            "交易书",
+            "写作"
+          ],
+          "work_status": "INTERRUPTED",
+          "resume_candidate": true,
+          "checkpoint": "/NOFOLD"
+        },
+        {
+          "id": "old",
+          "title": "已完结旧项目",
+          "aliases": [
+            "完结"
+          ],
+          "work_status": "COMPLETED",
+          "resume_candidate": false,
+          "checkpoint": "/archive/old"
+        }
+      ],
+      "expected": {
+        "status": "VERIFY_CHECKPOINT",
+        "id": "website"
+      }
+    },
+    {
+      "label": "新对话 alias 路由",
+      "message": "断档重生：个人网站",
+      "index": [
+        {
+          "id": "website",
+          "title": "个人长文网站",
+          "aliases": [
+            "网站",
+            "个人网站",
+            "长文网站",
+            "写作"
+          ],
+          "work_status": "ACTIVE",
+          "resume_candidate": true,
+          "checkpoint": "https://github.com/TaoismZp/xuyuan/blob/main/personal-site-v1/RECOVERY.md"
+        },
+        {
+          "id": "nofold",
+          "title": "NOFOLD 交易写作项目",
+          "aliases": [
+            "NO FOLD",
+            "交易书",
+            "写作"
+          ],
+          "work_status": "INTERRUPTED",
+          "resume_candidate": true,
+          "checkpoint": "/NOFOLD"
+        },
+        {
+          "id": "old",
+          "title": "已完结旧项目",
+          "aliases": [
+            "完结"
+          ],
+          "work_status": "COMPLETED",
+          "resume_candidate": false,
+          "checkpoint": "/archive/old"
+        }
+      ],
+      "expected": {
+        "status": "VERIFY_CHECKPOINT",
+        "id": "website"
+      }
+    },
+    {
+      "label": "显式项目胜过当前焦点",
+      "message": "断档重生：NOFOLD",
+      "contextFocusId": "website",
+      "index": [
+        {
+          "id": "website",
+          "title": "个人长文网站",
+          "aliases": [
+            "网站",
+            "个人网站",
+            "长文网站",
+            "写作"
+          ],
+          "work_status": "ACTIVE",
+          "resume_candidate": true,
+          "checkpoint": "https://github.com/TaoismZp/xuyuan/blob/main/personal-site-v1/RECOVERY.md"
+        },
+        {
+          "id": "nofold",
+          "title": "NOFOLD 交易写作项目",
+          "aliases": [
+            "NO FOLD",
+            "交易书",
+            "写作"
+          ],
+          "work_status": "INTERRUPTED",
+          "resume_candidate": true,
+          "checkpoint": "/NOFOLD"
+        },
+        {
+          "id": "old",
+          "title": "已完结旧项目",
+          "aliases": [
+            "完结"
+          ],
+          "work_status": "COMPLETED",
+          "resume_candidate": false,
+          "checkpoint": "/archive/old"
+        }
+      ],
+      "expected": {
+        "status": "VERIFY_CHECKPOINT",
+        "id": "nofold"
+      }
+    },
+    {
+      "label": "全新聊天多个未完项目不能乱选",
+      "message": "断档重生",
+      "index": [
+        {
+          "id": "website",
+          "title": "个人长文网站",
+          "aliases": [
+            "网站",
+            "个人网站",
+            "长文网站",
+            "写作"
+          ],
+          "work_status": "ACTIVE",
+          "resume_candidate": true,
+          "checkpoint": "https://github.com/TaoismZp/xuyuan/blob/main/personal-site-v1/RECOVERY.md"
+        },
+        {
+          "id": "nofold",
+          "title": "NOFOLD 交易写作项目",
+          "aliases": [
+            "NO FOLD",
+            "交易书",
+            "写作"
+          ],
+          "work_status": "INTERRUPTED",
+          "resume_candidate": true,
+          "checkpoint": "/NOFOLD"
+        },
+        {
+          "id": "old",
+          "title": "已完结旧项目",
+          "aliases": [
+            "完结"
+          ],
+          "work_status": "COMPLETED",
+          "resume_candidate": false,
+          "checkpoint": "/archive/old"
+        }
+      ],
+      "expected": {
+        "status": "CHOOSE_TOPIC",
+        "optionCount": 2
+      }
+    },
+    {
+      "label": "主题短别名冲突必须选择",
+      "message": "断档重生：写作",
+      "index": [
+        {
+          "id": "website",
+          "title": "个人长文网站",
+          "aliases": [
+            "网站",
+            "个人网站",
+            "长文网站",
+            "写作"
+          ],
+          "work_status": "ACTIVE",
+          "resume_candidate": true,
+          "checkpoint": "https://github.com/TaoismZp/xuyuan/blob/main/personal-site-v1/RECOVERY.md"
+        },
+        {
+          "id": "nofold",
+          "title": "NOFOLD 交易写作项目",
+          "aliases": [
+            "NO FOLD",
+            "交易书",
+            "写作"
+          ],
+          "work_status": "INTERRUPTED",
+          "resume_candidate": true,
+          "checkpoint": "/NOFOLD"
+        },
+        {
+          "id": "old",
+          "title": "已完结旧项目",
+          "aliases": [
+            "完结"
+          ],
+          "work_status": "COMPLETED",
+          "resume_candidate": false,
+          "checkpoint": "/archive/old"
+        }
+      ],
+      "expected": {
+        "status": "CHOOSE_TOPIC",
+        "optionCount": 2
+      }
+    },
+    {
+      "label": "纯项目索引且唯一未完，可核验不算完成",
+      "message": "断档重生",
+      "index": [
+        {
+          "id": "website",
+          "title": "个人长文网站",
+          "aliases": [
+            "网站",
+            "个人网站",
+            "长文网站",
+            "写作"
+          ],
+          "work_status": "ACTIVE",
+          "resume_candidate": true,
+          "checkpoint": "https://github.com/TaoismZp/xuyuan/blob/main/personal-site-v1/RECOVERY.md"
+        },
+        {
+          "id": "old",
+          "title": "已完结旧项目",
+          "aliases": [
+            "完结"
+          ],
+          "work_status": "COMPLETED",
+          "resume_candidate": false,
+          "checkpoint": "/archive/old"
+        }
+      ],
+      "expected": {
+        "status": "VERIFY_CHECKPOINT",
+        "id": "website"
+      }
+    },
+    {
+      "label": "完全没有索引，先继续检索来源",
+      "message": "断档重生",
+      "index": [],
+      "expected": {
+        "status": "SEARCH_SOURCES"
+      }
+    },
+    {
+      "label": "未索引但已提供项目名称，不杜撰",
+      "message": "断档重生：新想法",
+      "index": [
+        {
+          "id": "website",
+          "title": "个人长文网站",
+          "aliases": [
+            "网站",
+            "个人网站",
+            "长文网站",
+            "写作"
+          ],
+          "work_status": "ACTIVE",
+          "resume_candidate": true,
+          "checkpoint": "https://github.com/TaoismZp/xuyuan/blob/main/personal-site-v1/RECOVERY.md"
+        },
+        {
+          "id": "nofold",
+          "title": "NOFOLD 交易写作项目",
+          "aliases": [
+            "NO FOLD",
+            "交易书",
+            "写作"
+          ],
+          "work_status": "INTERRUPTED",
+          "resume_candidate": true,
+          "checkpoint": "/NOFOLD"
+        },
+        {
+          "id": "old",
+          "title": "已完结旧项目",
+          "aliases": [
+            "完结"
+          ],
+          "work_status": "COMPLETED",
+          "resume_candidate": false,
+          "checkpoint": "/archive/old"
+        }
+      ],
+      "expected": {
+        "status": "SEARCH_SOURCES"
+      }
+    },
+    {
+      "label": "无效当前焦点不得凭空选项目",
+      "message": "断档重生",
+      "contextFocusId": "ghost",
+      "index": [
+        {
+          "id": "website",
+          "title": "个人长文网站",
+          "aliases": [
+            "网站",
+            "个人网站",
+            "长文网站",
+            "写作"
+          ],
+          "work_status": "ACTIVE",
+          "resume_candidate": true,
+          "checkpoint": "https://github.com/TaoismZp/xuyuan/blob/main/personal-site-v1/RECOVERY.md"
+        },
+        {
+          "id": "nofold",
+          "title": "NOFOLD 交易写作项目",
+          "aliases": [
+            "NO FOLD",
+            "交易书",
+            "写作"
+          ],
+          "work_status": "INTERRUPTED",
+          "resume_candidate": true,
+          "checkpoint": "/NOFOLD"
+        },
+        {
+          "id": "old",
+          "title": "已完结旧项目",
+          "aliases": [
+            "完结"
+          ],
+          "work_status": "COMPLETED",
+          "resume_candidate": false,
+          "checkpoint": "/archive/old"
+        }
+      ],
+      "expected": {
+        "status": "CHOOSE_TOPIC",
+        "optionCount": 2
+      }
+    },
+    {
+      "label": "可以恢复已完成的历史以供查阅但不擅自复工",
+      "message": "断档重生：完结",
+      "index": [
+        {
+          "id": "website",
+          "title": "个人长文网站",
+          "aliases": [
+            "网站",
+            "个人网站",
+            "长文网站",
+            "写作"
+          ],
+          "work_status": "ACTIVE",
+          "resume_candidate": true,
+          "checkpoint": "https://github.com/TaoismZp/xuyuan/blob/main/personal-site-v1/RECOVERY.md"
+        },
+        {
+          "id": "nofold",
+          "title": "NOFOLD 交易写作项目",
+          "aliases": [
+            "NO FOLD",
+            "交易书",
+            "写作"
+          ],
+          "work_status": "INTERRUPTED",
+          "resume_candidate": true,
+          "checkpoint": "/NOFOLD"
+        },
+        {
+          "id": "old",
+          "title": "已完结旧项目",
+          "aliases": [
+            "完结"
+          ],
+          "work_status": "COMPLETED",
+          "resume_candidate": false,
+          "checkpoint": "/archive/old"
+        }
+      ],
+      "expected": {
+        "status": "VERIFY_CHECKPOINT",
+        "id": "old"
+      }
+    },
+    {
+      "label": "提及暗号的普通聊天不是直接触发",
+      "message": "我想把断档重生写到规范",
+      "index": [
+        {
+          "id": "website",
+          "title": "个人长文网站",
+          "aliases": [
+            "网站",
+            "个人网站",
+            "长文网站",
+            "写作"
+          ],
+          "work_status": "ACTIVE",
+          "resume_candidate": true,
+          "checkpoint": "https://github.com/TaoismZp/xuyuan/blob/main/personal-site-v1/RECOVERY.md"
+        },
+        {
+          "id": "nofold",
+          "title": "NOFOLD 交易写作项目",
+          "aliases": [
+            "NO FOLD",
+            "交易书",
+            "写作"
+          ],
+          "work_status": "INTERRUPTED",
+          "resume_candidate": true,
+          "checkpoint": "/NOFOLD"
+        },
+        {
+          "id": "old",
+          "title": "已完结旧项目",
+          "aliases": [
+            "完结"
+          ],
+          "work_status": "COMPLETED",
+          "resume_candidate": false,
+          "checkpoint": "/archive/old"
+        }
+      ],
+      "expected": {
+        "status": "NOT_TRIGGER"
+      }
+    },
+    {
+      "label": "独立全角冒号",
+      "message": "断档重生：网站",
+      "index": [
+        {
+          "id": "website",
+          "title": "个人长文网站",
+          "aliases": [
+            "网站",
+            "个人网站",
+            "长文网站",
+            "写作"
+          ],
+          "work_status": "ACTIVE",
+          "resume_candidate": true,
+          "checkpoint": "https://github.com/TaoismZp/xuyuan/blob/main/personal-site-v1/RECOVERY.md"
+        },
+        {
+          "id": "nofold",
+          "title": "NOFOLD 交易写作项目",
+          "aliases": [
+            "NO FOLD",
+            "交易书",
+            "写作"
+          ],
+          "work_status": "INTERRUPTED",
+          "resume_candidate": true,
+          "checkpoint": "/NOFOLD"
+        },
+        {
+          "id": "old",
+          "title": "已完结旧项目",
+          "aliases": [
+            "完结"
+          ],
+          "work_status": "COMPLETED",
+          "resume_candidate": false,
+          "checkpoint": "/archive/old"
+        }
+      ],
+      "expected": {
+        "status": "VERIFY_CHECKPOINT",
+        "id": "website"
+      }
+    },
+    {
+      "label": "带空格的独立命令",
+      "message": "   断档重生   ",
+      "index": [
+        {
+          "id": "website",
+          "title": "个人长文网站",
+          "aliases": [
+            "网站",
+            "个人网站",
+            "长文网站",
+            "写作"
+          ],
+          "work_status": "ACTIVE",
+          "resume_candidate": true,
+          "checkpoint": "https://github.com/TaoismZp/xuyuan/blob/main/personal-site-v1/RECOVERY.md"
+        },
+        {
+          "id": "nofold",
+          "title": "NOFOLD 交易写作项目",
+          "aliases": [
+            "NO FOLD",
+            "交易书",
+            "写作"
+          ],
+          "work_status": "INTERRUPTED",
+          "resume_candidate": true,
+          "checkpoint": "/NOFOLD"
+        },
+        {
+          "id": "old",
+          "title": "已完结旧项目",
+          "aliases": [
+            "完结"
+          ],
+          "work_status": "COMPLETED",
+          "resume_candidate": false,
+          "checkpoint": "/archive/old"
+        }
+      ],
+      "expected": {
+        "status": "CHOOSE_TOPIC",
+        "optionCount": 2
+      }
+    },
+    {
+      "label": "只有完成项目，无未完，不自动重启",
+      "message": "断档重生",
+      "index": [
+        {
+          "id": "old",
+          "title": "已完结旧项目",
+          "aliases": [
+            "完结"
+          ],
+          "work_status": "COMPLETED",
+          "resume_candidate": false,
+          "checkpoint": "/archive/old"
+        }
+      ],
+      "expected": {
+        "status": "SEARCH_SOURCES"
+      }
+    },
+    {
+      "label": "内容非命令时保持不影响正常聊天",
+      "message": "断档重生的好处是什么？",
+      "index": [
+        {
+          "id": "website",
+          "title": "个人长文网站",
+          "aliases": [
+            "网站",
+            "个人网站",
+            "长文网站",
+            "写作"
+          ],
+          "work_status": "ACTIVE",
+          "resume_candidate": true,
+          "checkpoint": "https://github.com/TaoismZp/xuyuan/blob/main/personal-site-v1/RECOVERY.md"
+        },
+        {
+          "id": "nofold",
+          "title": "NOFOLD 交易写作项目",
+          "aliases": [
+            "NO FOLD",
+            "交易书",
+            "写作"
+          ],
+          "work_status": "INTERRUPTED",
+          "resume_candidate": true,
+          "checkpoint": "/NOFOLD"
+        },
+        {
+          "id": "old",
+          "title": "已完结旧项目",
+          "aliases": [
+            "完结"
+          ],
+          "work_status": "COMPLETED",
+          "resume_candidate": false,
+          "checkpoint": "/archive/old"
+        }
+      ],
+      "expected": {
+        "status": "NOT_TRIGGER"
+      }
+    }
+  ],
+  "continuation": [
+    {
+      "label": "注册表并非原稿，缺内容不可冒领",
+      "input": {
+        "exists": false
+      },
+      "expected": "BLOCKED_CONTEXT"
+    },
+    {
+      "label": "档案存在但新会话未真实读过",
+      "input": {
+        "exists": true,
+        "source_read": false
+      },
+      "expected": "BLOCKED_CONTEXT"
+    },
+    {
+      "label": "身份链与真实文件不一致",
+      "input": {
+        "exists": true,
+        "source_read": true,
+        "identity_verified": false,
+        "artifact_verified": true
+      },
+      "expected": "VERIFY_EVIDENCE"
+    },
+    {
+      "label": "原稿或部署身份未经核实",
+      "input": {
+        "exists": true,
+        "source_read": true,
+        "identity_verified": true,
+        "artifact_verified": false
+      },
+      "expected": "VERIFY_EVIDENCE"
+    },
+    {
+      "label": "需作者本人发表文章",
+      "input": {
+        "exists": true,
+        "source_read": true,
+        "identity_verified": true,
+        "artifact_verified": true,
+        "status": "ACTIVE",
+        "needs_owner_action": true,
+        "owner_action_verified": false,
+        "next_action": "公开文章"
+      },
+      "expected": "PENDING_OWNER"
+    },
+    {
+      "label": "私稿不能写公开库",
+      "input": {
+        "exists": true,
+        "source_read": true,
+        "identity_verified": true,
+        "artifact_verified": true,
+        "privacy_violation": true,
+        "next_action": "提交"
+      },
+      "expected": "BLOCKED_SAFETY"
+    },
+    {
+      "label": "明确终止的项目不能未经授权复活",
+      "input": {
+        "exists": true,
+        "source_read": true,
+        "identity_verified": true,
+        "artifact_verified": true,
+        "status": "TERMINATED",
+        "next_action": "继续"
+      },
+      "expected": "TERMINAL"
+    },
+    {
+      "label": "已完成旧项目不能自动重做",
+      "input": {
+        "exists": true,
+        "source_read": true,
+        "identity_verified": true,
+        "artifact_verified": true,
+        "status": "COMPLETED",
+        "next_action": "开始"
+      },
+      "expected": "TERMINAL"
+    },
+    {
+      "label": "仅状态报告没有下一动作应重建",
+      "input": {
+        "exists": true,
+        "source_read": true,
+        "identity_verified": true,
+        "artifact_verified": true,
+        "status": "ACTIVE"
+      },
+      "expected": "RECONSTRUCT_NEXT"
+    },
+    {
+      "label": "恢复真实、已授权且可执行的下一动作",
+      "input": {
+        "exists": true,
+        "source_read": true,
+        "identity_verified": true,
+        "artifact_verified": true,
+        "status": "INTERRUPTED",
+        "next_action": "检查 GitHub 最新提交"
+      },
+      "expected": "RESUME_EXECUTION"
+    },
+    {
+      "label": "无 owner gate 的写作工作不应被禁用",
+      "input": {
+        "exists": true,
+        "source_read": true,
+        "identity_verified": true,
+        "artifact_verified": true,
+        "status": "ACTIVE",
+        "next_action": "继续审稿"
+      },
+      "expected": "RESUME_EXECUTION"
+    },
+    {
+      "label": "故障后可继续但不能无步骤空跑",
+      "input": {
+        "exists": true,
+        "source_read": true,
+        "identity_verified": true,
+        "artifact_verified": true,
+        "status": "BLOCKED_TECH",
+        "next_action": "更换构建方案"
+      },
+      "expected": "RESUME_EXECUTION"
+    }
+  ]
+}
