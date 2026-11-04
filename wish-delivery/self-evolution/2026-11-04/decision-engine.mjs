@@ -11,7 +11,9 @@ export function decide(x) {
   if (x.privacy === 'public_unpublished') return why('FAIL', '把未发布内容提交到公开 Git 不能保密', '保存在私有存储并停止提交');
   if (x.identity_match === false) return why('FAIL', '验收证据与目标对象的版本身份不一致', '重新绑定正确版本并重验');
   if (x.scope === 'simple' && x.reversible === true) return why('DIRECT', '低风险明确任务不需复杂工程四件套', '直接处理并检查结果');
-  if (x.scope === 'complex' && (x.job_defined !== true || x.baseline_compared !== true)) {
+  // Gate 0 is prospective. Never stop an already-shipped project from closing
+  // its real owner gate merely because an older discovery document is absent.
+  if (x.scope === 'complex' && x.artifact_exists !== true && (x.job_defined !== true || x.baseline_compared !== true)) {
     return why('DISCOVERY_REQUIRED', '复杂愿望缺真实工作目标或不造/复用基线', '完成最小低成本对照');
   }
   if (x.artifact_exists !== true || x.core_function_tested !== true)
