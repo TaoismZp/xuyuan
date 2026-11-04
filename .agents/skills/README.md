@@ -37,3 +37,9 @@
 **PENDING**：本地原版苏格拉底 Skill 与此重建版的逐条比较。
 
 内容变更应新增版本说明和测试证据，不要把“创建文件成功”升级成“所有 AI 都已兼容”。
+
+## 2026-11-04 实测与多客户端兼容补丁
+- 本仓库现在同时提供三种**内容相同**的项目目录：`.agents/skills/`（Codex）、`.claude/skills/`（Claude Code）、`.github/skills/`（Copilot 的相关环境）。提交到这些目录不代表已在目标客户端真实自动加载。
+- **具体安装与使用**：[PORTABILITY.md](PORTABILITY.md)。
+- **首轮 8 题同会话测试原始输出**：[runs/2026-11-04-in-session-conformance.md](runs/2026-11-04-in-session-conformance.md)。该记录是 GPT-6 在同一会话内的自测，自评满足 8/8 rubric，**不是独立第三方 Agent 验收**。
+- 已公开三份镜像，未来每次改动需核对三个路径完全一致；第三方真实自动发现、模型行为和私人原版完整性仍 PENDING / UNVERIFIED。
