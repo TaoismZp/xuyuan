@@ -1,0 +1,38 @@
+name: Wish Delivery portable Agent skill checks
+on:
+  push:
+    branches: [main, wish-agent-runtime-2026-11-04]
+    paths:
+      - '.agents/skills/wish-delivery/**'
+      - '.claude/skills/wish-delivery/**'
+      - '.github/skills/wish-delivery/**'
+      - 'wish-delivery/portable/**'
+      - '.github/workflows/wish-portable-agent.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - '.agents/skills/wish-delivery/**'
+      - '.claude/skills/wish-delivery/**'
+      - '.github/skills/wish-delivery/**'
+      - 'wish-delivery/portable/**'
+      - '.github/workflows/wish-portable-agent.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  portable:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+      - name: Verify current protocol and portable Skill mirrors
+        run: node wish-delivery/portable/test-skill.mjs
+      - name: Verify existing protocol and recovery regressions
+        run: |
+          node wish-delivery/self-evolution/2026-11-04/test.mjs
+          node wish-delivery/recovery/test-revival.mjs
+      - name: Declare evidence boundary
+        if: always()
+        run: echo "Static and synthetic PASS is not proof that external agents auto-loaded this Skill or users completed real tasks." >> "$GITHUB_STEP_SUMMARY"
