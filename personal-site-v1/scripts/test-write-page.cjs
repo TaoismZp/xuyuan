@@ -62,7 +62,7 @@ const base = process.env.WRITER_BASE || 'http://127.0.0.1:4175/personal-site-v1/
     await page.screenshot({ path: output + '/' + name + '-preview.png', fullPage: false });
 
     await page.locator('#write-copy').click();
-    assert(await page.locator('#write-github').getAttribute('aria-disabled') === 'false', name + ': link not enabled after copy');
+    await page.waitForFunction(() => document.querySelector('#write-github').getAttribute('aria-disabled') === 'false', null, { timeout: 5000 });
     const clipboard = await page.evaluate(async () => navigator.clipboard.readText());
     assert(clipboard.startsWith('---\ntitle: "一个真正的交易问题"'), name + ': clipboard YAML title wrong');
     assert(clipboard.includes('status: published'), name + ': content not set to published');
