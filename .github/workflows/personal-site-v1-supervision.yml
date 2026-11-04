@@ -1,7 +1,7 @@
 name: Independent supervision — personal site v1
 on:
   push:
-    branches: [personal-site-v1-frontend, personal-site-v1-public-hardening]
+    branches: [personal-site-v1-frontend, personal-site-v1-public-hardening, personal-site-v1-distribution-metadata]
     paths:
       - 'personal-site-v1/**'
       - '.github/workflows/personal-site-v1-supervision.yml'
@@ -84,6 +84,8 @@ jobs:
           node personal-site-v1/scripts/verify-pages-artifact.mjs "$RUNNER_TEMP/pages-publish"
           test -f "$RUNNER_TEMP/pages-publish/personal-site-v1/essays/supervision-published/index.html"
           test ! -e "$RUNNER_TEMP/pages-publish/personal-site-v1/content"
+          grep -q 'supervision-published' "$RUNNER_TEMP/pages-publish/personal-site-v1/sitemap.xml"
+          grep -q '监理样稿：等待' "$RUNNER_TEMP/pages-publish/personal-site-v1/feed.xml"
           echo '[PASS] Public artifact excludes raw manuscripts and builder'
 
           require_text 'Accepted hero class preserved' personal-site-v1/index.html 'class="hero-title"'

@@ -30,7 +30,7 @@ for (const directory of ['crypto-tycoon-3d', 'crypto-tycoon', 'essays', 'longfor
 
 // Personal publication: ship ONLY the finished reading surface and CMS entry.
 // Never copy canonical Markdown, draft files, builder, CI or node_modules.
-for (const entry of ['index.html', 'assets', 'essays', 'projects', 'about', 'admin']) {
+for (const entry of ['index.html', 'feed.xml', 'sitemap.xml', 'assets', 'essays', 'projects', 'about', 'admin']) {
   copy('personal-site-v1/' + entry);
 }
 copy('personal-site-v1/media', 'personal-site-v1/media', true);

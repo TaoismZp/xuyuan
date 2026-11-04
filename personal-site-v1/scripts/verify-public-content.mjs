@@ -40,6 +40,15 @@ async function request(url, requireSuccess = true) {
 }
 const home = (await request(site)).text;
 const archive = (await request(site + 'essays/')).text;
+const rss = (await request(site + 'feed.xml')).text;
+const sitemap = (await request(site + 'sitemap.xml')).text;
+if (!rss.includes('<rss version="2.0">') || !sitemap.includes('<urlset')) {
+  throw new Error('RSS feed or sitemap malformed / missing');
+}
+if (!home.includes('<link rel="canonical" href="' + site + '"') ||
+    !home.includes('<link rel="alternate" type="application/rss+xml"')) {
+  throw new Error('Homepage SEO metadata missing');
+}
 if (!published.length) {
   if (!home.includes('第一篇公开长文，会从这里开始') ||
       !archive.includes('还没有公开长文')) {
@@ -54,10 +63,17 @@ if (!published.length) {
       throw new Error('Published article missing title: ' + post.file);
     }
     if (!archive.includes(post.title)) throw new Error('Archive missing published post: ' + post.file);
+    if (!rss.includes(url) || !sitemap.includes(url)) throw new Error('Published post missing in RSS/sitemap: ' + post.file);
+    if (!page.text.includes('<meta property="og:type" content="article">') ||
+        !page.text.includes('<meta property="og:url" content="' + url + '">') ||
+        !page.text.includes('<link rel="canonical" href="' + url + '">') ||
+        !page.text.includes('type="application/ld+json"')) {
+      throw new Error('Article social/SEO metadata missing: ' + post.file);
+    }
   }
 }
 for (const post of unpublished) {
-  if (home.includes(post.title) || archive.includes(post.title)) {
+  if (home.includes(post.title) || archive.includes(post.title) || rss.includes(post.title) || sitemap.includes(post.slug)) {
     throw new Error('Unpublished title leaked to public listing: ' + post.file);
   }
   const article = await request(site + 'essays/' + encodeURIComponent(post.slug) + '/', false);

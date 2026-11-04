@@ -1,7 +1,7 @@
 name: Verify personal site v1 backend integration
 on:
   push:
-    branches: [personal-site-v1-frontend, personal-site-v1-public-hardening]
+    branches: [personal-site-v1-frontend, personal-site-v1-public-hardening, personal-site-v1-distribution-metadata]
     paths:
       - 'personal-site-v1/**'
       - '.github/workflows/personal-site-v1-backend-build.yml'
@@ -69,6 +69,15 @@ jobs:
           test -f "$RUNNER_TEMP/pages-publish/personal-site-v1/essays/ci-published/index.html"
           grep -q '等待：交易中最稀缺的能力' "$RUNNER_TEMP/pages-publish/personal-site-v1/essays/ci-published/index.html"
           ! grep -R '不应公开的草稿' "$RUNNER_TEMP/pages-publish/personal-site-v1"
+          grep -q '等待：交易中最稀缺的能力' "$RUNNER_TEMP/pages-publish/personal-site-v1/feed.xml"
+          grep -q 'ci-published' "$RUNNER_TEMP/pages-publish/personal-site-v1/sitemap.xml"
+          ! grep -q 'ci-draft' "$RUNNER_TEMP/pages-publish/personal-site-v1/sitemap.xml"
+          ! grep -q '不应公开的草稿' "$RUNNER_TEMP/pages-publish/personal-site-v1/feed.xml"
+          python3 - <<'PY'
+          import xml.etree.ElementTree as ET,os
+          base=os.environ["RUNNER_TEMP"]+"/pages-publish/personal-site-v1/"
+          for f in ["feed.xml","sitemap.xml"]: ET.parse(base+f)
+          PY
       - name: Install browser verifier and CJK fonts
         run: |
           npm i playwright@1.56.1 --no-save

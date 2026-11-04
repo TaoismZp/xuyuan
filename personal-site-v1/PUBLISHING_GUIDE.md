@@ -22,3 +22,13 @@
 ## 当前验收边界
 
 已经在隔离的 CI 环境验证 Markdown → 首页 / 归档 / 正文，以及草稿不进入展示页。已在真实公网验证 CMS 登录入口。**尚未使用站长自己的 Token 完成生产环境首次授权保存**，因此这一项仍需真实作者发文时验收；不会假装完成。
+
+## 分享与订阅
+
+正式发布后，生成器会自动更新文章的 canonical URL、Open Graph/Twitter 分享信息、RSS 订阅和 Sitemap，无需手动填表：
+
+- 文章分享：页面「分享这篇」使用没有追踪参数的规范链接。
+- RSS： https://taoismzp.github.io/xuyuan/personal-site-v1/feed.xml
+- Sitemap： https://taoismzp.github.io/xuyuan/personal-site-v1/sitemap.xml
+
+只有 `status: published` 的文章进入这些索引；公开 GitHub 源文件的可见性仍由仓库决定。分享预览的实际效果依赖接收平台抓取与缓存策略，不保证每个平台立即显示一致。

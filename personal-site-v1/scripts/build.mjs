@@ -8,6 +8,8 @@ const ROOT = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const POSTS_DIR = path.join(ROOT, 'content', 'posts');
 const ESSAYS_DIR = path.join(ROOT, 'essays');
 const md = new MarkdownIt({ html: false, linkify: true, typographer: false, breaks: false });
+const SITE_ROOT = 'https://taoismzp.github.io/xuyuan/personal-site-v1/';
+const articleUrl = (post) => SITE_ROOT + 'essays/' + encodeURIComponent(post.slug) + '/';
 
 const escapeHtml = (value = '') => String(value)
   .replaceAll('&', '&amp;')
@@ -15,6 +17,13 @@ const escapeHtml = (value = '') => String(value)
   .replaceAll('>', '&gt;')
   .replaceAll('"', '&quot;')
   .replaceAll("'", '&#039;');
+
+const xmlEscape = (value = '') => String(value)
+  .replaceAll('&', '&amp;')
+  .replaceAll('<', '&lt;')
+  .replaceAll('>', '&gt;')
+  .replaceAll('"', '&quot;')
+  .replaceAll("'", '&apos;');
 
 const tagToken = (tag) => encodeURIComponent(String(tag).trim()).replaceAll('%', 'p');
 const normalizeDate = (value) => {
@@ -54,6 +63,7 @@ function readPosts() {
     const body = parsed.content.trim();
 
     if (!slug || seen.has(slug)) problems.push(`${file}: missing or duplicate slug "${slug}"`);
+    if (!/^[\p{L}\p{N}][\p{L}\p{N}_-]*$/u.test(slug)) problems.push(`${file}: unsafe slug "${slug}"`);
     seen.add(slug);
     if (!title) problems.push(`${file}: title is required`);
     if (!date) problems.push(`${file}: valid date is required`);
@@ -74,7 +84,13 @@ function readPosts() {
     .sort((a, b) => b.date.sort - a.date.sort);
 }
 
-const head = ({ title, description, depth = '' }) => `<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#f5f1e8"><meta name="description" content="${escapeHtml(description)}"><title>${escapeHtml(title)}</title><link rel="stylesheet" href="${depth}assets/site.css"></head>`;
+const head = ({ title, description, depth = '', canonical = SITE_ROOT, type = 'website', publishedAt = null, tags = [] }) => {
+  const articleMetadata = type === 'article'
+    ? '<meta property="article:published_time" content="' + escapeHtml(publishedAt || '') + '">' +
+      tags.map(tag => '<meta property="article:tag" content="' + escapeHtml(tag) + '">').join('')
+    : '';
+  return `<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#f5f1e8"><meta name="description" content="${escapeHtml(description)}"><title>${escapeHtml(title)}</title><link rel="canonical" href="${escapeHtml(canonical)}"><meta property="og:locale" content="zh_CN"><meta property="og:site_name" content="TaoismZp"><meta property="og:type" content="${type}"><meta property="og:title" content="${escapeHtml(title)}"><meta property="og:description" content="${escapeHtml(description)}"><meta property="og:url" content="${escapeHtml(canonical)}"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="${escapeHtml(title)}"><meta name="twitter:description" content="${escapeHtml(description)}">${articleMetadata}<link rel="alternate" type="application/rss+xml" title="TaoismZp 长文订阅" href="${SITE_ROOT}feed.xml"><link rel="stylesheet" href="${depth}assets/site.css"></head>`;
+};
 
 function siteHeader(surface) {
   const map = {
@@ -105,14 +121,47 @@ function archivePage(posts) {
     ? posts.map((post) => `<a class="archive-row" data-tags="${post.tags.map(tagToken).join(' ')}" href="./${encodeURIComponent(post.slug)}/"><div><span class="archive-row__meta">${escapeHtml(post.tags.slice(0, 2).join(' / ') || '长文')} · 约 ${readingMinutes(post.body)} 分钟</span><h2>${escapeHtml(post.title)}</h2></div><time class="archive-row__date" datetime="${post.date.iso}">${escapeHtml(post.date.label)}</time></a>`).join('')
     : `<p class="archive-empty">还没有公开长文。</p>`;
 
-  return `${head({ title: '长文 — TaoismZp', description: 'TaoismZp 的长文归档。', depth: '../' })}<body>${siteHeader('archive')}<main class="shell" id="main"><header class="page-head"><div class="page-head__eyebrow">ESSAYS</div><h1>把判断，<br>写到尽头。</h1><p class="page-head__desc">这里放完整推演。不是为了更新频率，而是把一个问题真正想清楚以后留下来。</p></header><section class="section" aria-labelledby="archive-heading"><div class="section-heading"><h2 id="archive-heading">全部长文</h2></div>${tags.length ? `<div class="filter-bar" aria-label="文章筛选">${filters}</div>` : ''}<div>${rows}</div></section></main>${footer('../', '长文不是日更，是归档。')}</body></html>`;
+  return `${head({ title: '长文 — TaoismZp', description: 'TaoismZp 的长文归档。', depth: '../', canonical: SITE_ROOT + 'essays/' })}<body>${siteHeader('archive')}<main class="shell" id="main"><header class="page-head"><div class="page-head__eyebrow">ESSAYS</div><h1>把判断，<br>写到尽头。</h1><p class="page-head__desc">这里放完整推演。不是为了更新频率，而是把一个问题真正想清楚以后留下来。</p></header><section class="section" aria-labelledby="archive-heading"><div class="section-heading"><h2 id="archive-heading">全部长文</h2></div>${tags.length ? `<div class="filter-bar" aria-label="文章筛选">${filters}</div>` : ''}<div>${rows}</div></section></main>${footer('../', '长文不是日更，是归档。')}</body></html>`;
 }
 
 function articlePage(post) {
   const rendered = md.render(post.body);
   const tags = post.tags.join(' / ') || '长文';
-  const documentHead = head({ title: `${post.title} — TaoismZp`, description: post.summary, depth: '../../' }).replace('</head>', '<link rel="stylesheet" href="../../assets/content.css"></head>');
+  const safeJson = (value) => JSON.stringify(value).replaceAll('<', '\\u003c');
+  const structuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: post.title,
+    description: post.summary,
+    datePublished: post.date.label,
+    inLanguage: 'zh-CN',
+    author: { '@type': 'Person', name: 'TaoismZp' },
+    mainEntityOfPage: articleUrl(post),
+    url: articleUrl(post)
+  };
+  const documentHead = head({
+    title: `${post.title} — TaoismZp`,
+    description: post.summary,
+    depth: '../../',
+    canonical: articleUrl(post),
+    type: 'article',
+    publishedAt: post.date.iso,
+    tags: post.tags
+  }).replace('</head>', '<link rel="stylesheet" href="../../assets/content.css"><script type="application/ld+json">' + safeJson(structuredData) + '</script></head>');
   return `${documentHead}<body><a class="skip-link" href="#main">跳到正文</a><div class="article-progress" data-reading-progress aria-hidden="true"></div><header class="site-header"><div class="shell site-header__inner"><a class="site-brand" href="../../" translate="no">TaoismZp</a><nav class="site-nav" aria-label="主导航"><a href="../../">首页</a><a href="../" aria-current="page">长文</a><a href="../../projects/">项目</a><a href="../../about/">关于</a></nav></div></header><main id="main"><header class="shell article-head"><a class="article-head__back" href="../">← 返回长文</a><div class="article-head__meta">${escapeHtml(tags)} · ${escapeHtml(post.date.label)} · 约 ${readingMinutes(post.body)} 分钟</div><h1>${escapeHtml(post.title)}</h1><p class="article-head__dek">${escapeHtml(post.summary)}</p></header><div class="shell article-layout"><aside class="article-tools" aria-label="文章工具"><span>阅读模式</span><button type="button" data-share>分享这篇</button><span class="sr-only" data-share-status aria-live="polite"></span></aside><article class="article-body">${rendered}</article></div></main>${footer('../../', '读完一个判断，再决定信不信。')}</body></html>`;
+}
+
+
+function rssFeed(posts) {
+  const items = posts.map(post => `<item><title>${xmlEscape(post.title)}</title><link>${xmlEscape(articleUrl(post))}</link><guid isPermaLink="true">${xmlEscape(articleUrl(post))}</guid><pubDate>${new Date(post.date.iso).toUTCString()}</pubDate><description>${xmlEscape(post.summary)}</description></item>`).join('');
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0"><channel><title>TaoismZp — 长期交易，长期写作</title><link>${SITE_ROOT}</link><description>关于市场、概率、风险与判断的长文。</description><language>zh-cn</language>${items}</channel></rss>`;
+}
+
+function sitemap(posts) {
+  const urls = [SITE_ROOT, SITE_ROOT + 'essays/', SITE_ROOT + 'projects/', SITE_ROOT + 'about/', ...posts.map(articleUrl)];
+  return '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' +
+    urls.map(url => '<url><loc>' + xmlEscape(url) + '</loc></url>').join('') + '</urlset>';
 }
 
 function cleanGeneratedArticles() {
@@ -129,6 +178,8 @@ if (!posts.length && process.env.ALLOW_EMPTY_BUILD !== '1') {
 }
 
 cleanGeneratedArticles();
+fs.writeFileSync(path.join(ROOT, 'feed.xml'), rssFeed(posts));
+fs.writeFileSync(path.join(ROOT, 'sitemap.xml'), sitemap(posts));
 fs.writeFileSync(path.join(ROOT, 'index.html'), homePage(posts));
 fs.writeFileSync(path.join(ESSAYS_DIR, 'index.html'), archivePage(posts));
 for (const post of posts) {

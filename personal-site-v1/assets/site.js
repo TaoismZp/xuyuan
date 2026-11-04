@@ -53,15 +53,16 @@
     addEventListener('resize', requestUpdate);
   }
 
+  const shareUrl = document.querySelector('link[rel="canonical"]')?.href || location.href;
   const shareButton = document.querySelector('[data-share]');
   const shareStatus = document.querySelector('[data-share-status]');
   if (shareButton) {
     shareButton.addEventListener('click', async () => {
       try {
         if (navigator.share) {
-          await navigator.share({ title: document.title, url: location.href });
+          await navigator.share({ title: document.title, url: shareUrl });
         } else if (navigator.clipboard) {
-          await navigator.clipboard.writeText(location.href);
+          await navigator.clipboard.writeText(shareUrl);
           if (shareStatus) shareStatus.textContent = '文章链接已复制。';
         } else if (shareStatus) {
           shareStatus.textContent = '当前浏览器不支持自动分享，请复制地址栏链接。';

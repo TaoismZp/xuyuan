@@ -15,7 +15,7 @@ const forbidPath = (name) => {
 for (const p of [
   'index.html', 'app.js', 'styles.css', 'crypto-tycoon-3d',
   'crypto-tycoon', 'essays', 'longform-v2', 'personal-site-lab',
-  'personal-site-v1/index.html', 'personal-site-v1/essays/index.html',
+  'personal-site-v1/index.html', 'personal-site-v1/feed.xml', 'personal-site-v1/sitemap.xml', 'personal-site-v1/essays/index.html',
   'personal-site-v1/projects/index.html', 'personal-site-v1/about/index.html',
   'personal-site-v1/admin/index.html', 'personal-site-v1/admin/config.yml',
   'personal-site-v1/assets/site.css'
@@ -26,7 +26,7 @@ for (const p of [
   'personal-site-v1/node_modules', 'personal-site-v1/PROJECT_STATE.md',
   'personal-site-v1/package.json', 'personal-site-v1/BACKEND_BUILD_BLUEPRINT.md'
 ]) forbidPath(p);
-const allowed = new Set(['index.html', 'assets', 'essays', 'projects', 'about', 'admin', 'media']);
+const allowed = new Set(['index.html', 'feed.xml', 'sitemap.xml', 'assets', 'essays', 'projects', 'about', 'admin', 'media']);
 for (const entry of fs.readdirSync(path.join(root, 'personal-site-v1'))) {
   if (!allowed.has(entry)) throw new Error('Unexpected personal-site public entry: ' + entry);
 }
