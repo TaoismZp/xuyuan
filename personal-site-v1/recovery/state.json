@@ -1,0 +1,51 @@
+{
+  "schema": "wish-recovery/v1",
+  "project": "personal-site-v1",
+  "repository": "TaoismZp/xuyuan",
+  "rulebook": {
+    "version": "v7.5",
+    "path": "wish-delivery/versions/v7.5.md"
+  },
+  "canonicalStatus": "personal-site-v1/PROJECT_STATE.md",
+  "bindingChain": {
+    "vision": {
+      "path": "personal-site-v1/VISION_FIXTURE_V2.md",
+      "blobSha": "72b6ca9c425f495d5680e2d1f9ab33de64f4056a"
+    },
+    "blueprint": {
+      "path": "personal-site-v1/BUILD_BLUEPRINT_V2.md",
+      "blobSha": "226e0904cc58d578aed7973ef6290624e47140c1"
+    },
+    "lastShippedCommit": "317c53ec032f6b37d65a82c7aab50a485c337046",
+    "deployment": {
+      "runId": 41827027397,
+      "conclusion": "success"
+    },
+    "publicSameSurfaceVerification": {
+      "runId": 41827098391,
+      "conclusion": "success"
+    },
+    "independentSupervision": {
+      "runId": 41826675293,
+      "conclusion": "success"
+    }
+  },
+  "delivery": {
+    "publicReader": "https://taoismzp.github.io/xuyuan/personal-site-v1/",
+    "authorPreparation": "https://taoismzp.github.io/xuyuan/personal-site-v1/write/",
+    "optionalCMS": "https://taoismzp.github.io/xuyuan/personal-site-v1/admin/"
+  },
+  "gates": {
+    "publicReader": "PASS_PINNED_RELEASE",
+    "tokenlessComposer": "PASS_PINNED_RELEASE",
+    "ownerAuthenticatedGitHubCommit": "PENDING_OWNER",
+    "publicationAfterOwnerCommit": "PENDING_OWNER",
+    "cmsAuthenticatedSave": "PENDING_OWNER",
+    "fullChatTranscriptRecovery": "NOT_COVERED_BY_GITHUB"
+  },
+  "authorContent": "personal-site-v1/content/posts/genius-trader.md",
+  "currentPriority": "Verify a real owner-intended essay from author preparation to GitHub commit to public article; do not create fake content or mark authentication PASS from automated checks.",
+  "checkpointPolicy": "After each independently accepted milestone update PROJECT_STATE.md and this state manifest; pin build+deploy+same-surface evidence to the exact release commit. Keep original content, version history, and private drafts safe.",
+  "privacy": "Repository is public. Never commit private drafts, tokens, ChatGPT export archives, conversations, or account data.",
+  "recordedDate": "2026-11-04"
+}
