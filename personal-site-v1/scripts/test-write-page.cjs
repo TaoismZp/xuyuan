@@ -30,6 +30,10 @@ const base = process.env.WRITER_BASE || 'http://127.0.0.1:4175/personal-site-v1/
     assert(await page.locator('input#write-title').count() === 1, name + ': missing writing fields');
     assert(await page.evaluate(() => typeof window.markdownit) === 'function', name + ': production Markdown-it bundle not loaded');
     assert(!await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth), name + ': initial overflow');
+    const heroLines = await page.locator('.write-intro h1').evaluate(el =>
+      el.getBoundingClientRect().height / parseFloat(getComputedStyle(el).lineHeight));
+    assert(heroLines > 1.8 && heroLines < 2.2, name + ': authored hero broken into ' + heroLines.toFixed(2) + ' lines instead of two');
+
     assert(externalRequests.length === 0, name + ': writing page made external requests before user confirms: ' + externalRequests);
     await page.screenshot({ path: output + '/' + name + '-empty.png', fullPage: false });
 

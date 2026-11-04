@@ -4,7 +4,7 @@
   .write-page{padding-bottom:5.5rem}
   .write-intro{padding:3.8rem 0 3rem;max-width:64rem}
   .write-intro h1{font-size:clamp(53px,7.1vw,101px);line-height:1.06;letter-spacing:-.065em;font-weight:600}
-  .write-intro h1 em{display:inline;color:var(--accent);font-style:normal}
+  .write-intro h1 em{display:block;color:var(--accent);font-style:normal}
   .write-lead{margin-top:1.5rem;max-width:42rem;font-size:19px;color:var(--soft);line-height:1.75}
   .write-warning{margin-top:1.7rem;max-width:53rem;padding:1.1rem 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);font-family:var(--sans);font-size:13px;line-height:1.8;color:var(--soft)}
   .write-warning strong{color:var(--ink);font-weight:600}

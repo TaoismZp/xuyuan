@@ -122,6 +122,9 @@ jobs:
                 }
                 if(name==='write'){
                   assert(await p.locator('#writing-form').count()===1,`${surface}/write: local writing form missing`);
+                  const heroLines=await p.locator('.write-intro h1').evaluate(el=>el.getBoundingClientRect().height/parseFloat(getComputedStyle(el).lineHeight));
+                  assert(heroLines>1.8&&heroLines<2.2,`${surface}/write: unexpected hero wrapping ${heroLines.toFixed(2)} lines`);
+
                   assert(await p.evaluate(()=>typeof window.markdownit)==='function',`${surface}/write: same Markdown parser missing`);
                   assert(!await p.evaluate(()=>Object.keys(localStorage).some(key=>key.includes('draft'))),`${surface}/write: unexpected local draft persistence`);
                   await p.locator('#write-title').fill('一篇本地写作演练');
