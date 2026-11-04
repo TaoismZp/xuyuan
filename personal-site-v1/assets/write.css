@@ -58,6 +58,7 @@
   .write-fallback{margin:1rem 0}
   .write-fallback label{display:block;font-family:var(--sans);font-size:13px;margin-bottom:.5rem}
   .write-fallback textarea{width:100%;min-height:16rem;padding:.9rem;font-family:monospace;font-size:13px;background:transparent;border:1px solid var(--line)}
+  .write-fallback #write-manual-ready{display:block;margin-top:.7rem;min-height:44px}
   .write-steps{max-width:55rem;margin-top:1.8rem;padding-left:1.4rem;color:var(--soft);font-family:var(--sans);font-size:14px;line-height:1.9}
   .write-steps li+li{margin-top:.65rem}
   .write-steps a{color:var(--ink);border-bottom:1px solid var(--accent)}

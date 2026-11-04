@@ -78,15 +78,16 @@
       <div class="write-actions">
         <button type="button" id="write-download">下载 .md 备份</button>
         <button type="button" id="write-copy" class="write-primary">复制完整发布稿</button>
-        <a id="write-github" href="https://github.com/TaoismZp/xuyuan/tree/main/personal-site-v1/content/posts" target="_blank" rel="noopener noreferrer" aria-disabled="true">去 GitHub 新建文件 ↗</a>
+        <a id="write-github" href="https://github.com/TaoismZp/xuyuan/tree/main/personal-site-v1/content/posts" target="_blank" rel="noopener noreferrer" aria-disabled="true">复制后去 GitHub 新建文件 ↗</a>
       </div>
       <p id="write-status" class="write-status" role="status" aria-live="polite"></p>
       <div id="write-fallback" class="write-fallback" hidden>
         <label for="write-generated">浏览器不允许自动复制时，请手动选择以下完整 Markdown：</label>
         <textarea id="write-generated" rows="9" readonly></textarea>
+        <button type="button" id="write-manual-ready" class="write-text-button">我已手动复制完整内容</button>
       </div>
       <ol class="write-steps">
-        <li>先点击「复制完整发布稿」，再打开 GitHub。文件名将尝试预填；如果没有预填，使用上方显示的文件名。</li>
+        <li>先点击「复制完整发布稿」，确认复制成功后才能打开 GitHub。文件名将尝试预填；如果没有预填，使用上方显示的文件名。</li>
         <li>将内容粘贴到 GitHub 编辑区，选择 <strong>Commit changes</strong> 并提交到 <code>main</code>，才会公开发布。</li>
         <li>GitHub Pages 自动构建后，打开 <a href="../essays/">长文列表</a> 检查文章。若要直接可视化编辑，也可使用 <a href="../admin/">Sveltia 写作台</a>（需要限定仓库的 Token）。</li>
       </ol>
