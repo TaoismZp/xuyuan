@@ -1,7 +1,7 @@
 name: Wish Delivery self-evolution negative-case checks
 on:
   push:
-    branches: [wish-self-iteration-20261104]
+    branches: [main, wish-self-iteration-20261104]
     paths:
       - 'wish-delivery/self-evolution/**'
       - 'wish-delivery/candidates/v7.8-self-evolution-rc1.md'
