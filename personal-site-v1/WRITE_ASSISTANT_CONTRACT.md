@@ -26,3 +26,13 @@
 
 ## 不在本轮
 真实用户 GitHub 会话/最终 Commit、Sveltia PAT 编辑保存，以及独立作者域名。它们不可以被自动化测试中的发文样稿代替。
+
+## Release evidence
+
+- Accepted public implementation commit: `317c53ec032f6b37d65a82c7aab50a485c337046`.
+- Independent supervisor: `41826675293` PASS.
+- Chromium browser end-to-end local composer tests: `41826675494` PASS.
+- GitHub Pages deploy: `41827027397` SUCCESS.
+- Public iPhone/iPad/desktop WebKit and HTTP: `41827098391` PASS; evidence artifact `personal-site-v1-acceptance-41827098391`.
+- 320px/390px/iPad/desktop visual snapshots were inspected; the desktop hero was repaired to two authored lines before release.
+- Limit remains: GitHub-authenticated owner Commit is **PENDING_OWNER**; Sveltia authenticated save separately **PENDING_OWNER**.
