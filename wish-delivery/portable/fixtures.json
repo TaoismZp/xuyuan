@@ -1,1 +1,1 @@
-[{"id":"one","must_include":["断档重生"]}]
+[{"id":"short-task","must_include":["明确低风险短任务"]},{"id":"writing","must_include":["写作、书稿","完整可读正文"]},{"id":"research","must_include":["研究、分析"]},{"id":"software","must_include":["网站、App、游戏"]},{"id":"revive","must_include":["断档重生"]},{"id":"privacy","must_include":["PENDING_OWNER"]},{"id":"nonvisual","must_include":["对非视觉任务，Vision"]},{"id":"candidate","must_include":["候选不能凭自写合成测试宣布正式晋级"]}]
