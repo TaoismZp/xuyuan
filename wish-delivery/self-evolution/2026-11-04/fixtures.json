@@ -1,0 +1,164 @@
+[
+  {
+    "name": "简单可逆任务不加工程文档",
+    "input": {
+      "scope": "simple",
+      "reversible": true
+    },
+    "expected": "DIRECT"
+  },
+  {
+    "name": "复杂网站没有不造基线",
+    "input": {
+      "scope": "complex",
+      "job_defined": true,
+      "baseline_compared": false
+    },
+    "expected": "DISCOVERY_REQUIRED"
+  },
+  {
+    "name": "网站可读但主人没真正发文",
+    "input": {
+      "scope": "complex",
+      "job_defined": true,
+      "baseline_compared": true,
+      "artifact_exists": true,
+      "core_function_tested": true,
+      "samesurface_tested": true,
+      "owner_action_required": true,
+      "owner_action_verified": false
+    },
+    "expected": "READY_FOR_OWNER_ACTION"
+  },
+  {
+    "name": "截图冒充 3D 游戏",
+    "input": {
+      "scope": "complex",
+      "job_defined": true,
+      "baseline_compared": true,
+      "artifact_exists": true,
+      "core_function_tested": false,
+      "samesurface_tested": true
+    },
+    "expected": "CANDIDATE"
+  },
+  {
+    "name": "私稿标 draft 但公开 Git",
+    "input": {
+      "scope": "complex",
+      "job_defined": true,
+      "baseline_compared": true,
+      "privacy": "public_unpublished",
+      "artifact_exists": true,
+      "core_function_tested": true
+    },
+    "expected": "FAIL"
+  },
+  {
+    "name": "旧施工图身份证明新构建",
+    "input": {
+      "scope": "complex",
+      "job_defined": true,
+      "baseline_compared": true,
+      "identity_match": false,
+      "artifact_exists": true,
+      "core_function_tested": true
+    },
+    "expected": "FAIL"
+  },
+  {
+    "name": "新会话找不到外部档案",
+    "input": {
+      "scope": "complex",
+      "context_missing": true,
+      "job_defined": true,
+      "baseline_compared": true
+    },
+    "expected": "BLOCKED_CONTEXT"
+  },
+  {
+    "name": "站长真实发文成功但未验证长期使用",
+    "input": {
+      "scope": "complex",
+      "job_defined": true,
+      "baseline_compared": true,
+      "artifact_exists": true,
+      "core_function_tested": true,
+      "samesurface_tested": true,
+      "owner_action_required": true,
+      "owner_action_verified": true
+    },
+    "expected": "DELIVERED"
+  },
+  {
+    "name": "站长发文且后续真实修订恢复",
+    "input": {
+      "scope": "complex",
+      "job_defined": true,
+      "baseline_compared": true,
+      "artifact_exists": true,
+      "core_function_tested": true,
+      "samesurface_tested": true,
+      "owner_action_required": true,
+      "owner_action_verified": true,
+      "aftercare_verified": true
+    },
+    "expected": "ADOPTED"
+  },
+  {
+    "name": "新协议只自写一份测试却自行升级",
+    "input": {
+      "scope": "protocol_promotion",
+      "external_review": false,
+      "real_trial": false,
+      "user_approval": false
+    },
+    "expected": "CANDIDATE"
+  },
+  {
+    "name": "长任务报状态但没有下一动作",
+    "input": {
+      "scope": "complex",
+      "status_only_no_next": true
+    },
+    "expected": "FAIL"
+  },
+  {
+    "name": "有主成品未验证真实最终入口",
+    "input": {
+      "scope": "complex",
+      "job_defined": true,
+      "baseline_compared": true,
+      "artifact_exists": true,
+      "core_function_tested": true,
+      "samesurface_tested": false
+    },
+    "expected": "CANDIDATE"
+  },
+  {
+    "name": "已有网站不因缺历史基线被迫回到规划",
+    "input": {
+      "scope": "complex",
+      "job_defined": true,
+      "baseline_compared": false,
+      "artifact_exists": true,
+      "core_function_tested": true,
+      "samesurface_tested": true,
+      "owner_action_required": true,
+      "owner_action_verified": false
+    },
+    "expected": "READY_FOR_OWNER_ACTION"
+  },
+  {
+    "name": "已有完整文章但只验收过预览、未核读交付稿",
+    "input": {
+      "scope": "complex",
+      "job_defined": true,
+      "baseline_compared": true,
+      "artifact_exists": true,
+      "core_function_tested": true,
+      "samesurface_tested": false
+    },
+    "expected": "CANDIDATE"
+  }
+]

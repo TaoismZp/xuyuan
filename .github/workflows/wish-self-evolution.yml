@@ -1,0 +1,32 @@
+name: Wish Delivery self-evolution negative-case checks
+on:
+  push:
+    branches: [wish-self-iteration-20261104]
+    paths:
+      - 'wish-delivery/self-evolution/**'
+      - 'wish-delivery/candidates/v7.8-self-evolution-rc1.md'
+      - '.github/workflows/wish-self-evolution.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'wish-delivery/self-evolution/**'
+      - 'wish-delivery/candidates/v7.8-self-evolution-rc1.md'
+      - '.github/workflows/wish-self-evolution.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  frozen-baseline-and-adversarial:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+      - name: Run frozen-baseline boundary tests
+        run: node wish-delivery/self-evolution/2026-11-04/test.mjs
+      - name: State verification boundaries in run summary
+        if: always()
+        run: |
+          echo "## Wish Delivery self-evolution" >> "$GITHUB_STEP_SUMMARY"
+          echo "This CI checks only frozen v7.6 identity and synthetic cases; it cannot authorize promotion or verify user adoption." >> "$GITHUB_STEP_SUMMARY"
