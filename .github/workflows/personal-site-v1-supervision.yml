@@ -1,7 +1,7 @@
 name: Independent supervision — personal site v1
 on:
   push:
-    branches: [personal-site-v1-frontend, personal-site-v1-public-hardening, personal-site-v1-distribution-metadata, personal-site-v1-reader-flow]
+    branches: [personal-site-v1-frontend, personal-site-v1-public-hardening, personal-site-v1-distribution-metadata, personal-site-v1-reader-flow, personal-site-v1-reader-qa-hardening]
     paths:
       - 'personal-site-v1/**'
       - '.github/workflows/personal-site-v1-supervision.yml'

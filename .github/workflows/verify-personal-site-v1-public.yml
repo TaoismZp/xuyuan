@@ -127,17 +127,30 @@ jobs:
                     await p.locator('.article-outline-desktop [data-outline-link]').first().click();
                     assert(p.url().includes('#section-01'),`${surface}/${name}: desktop section jump failed`);
                   }
-                  const bottom = await p.evaluate(async () => {
+                  // Fragment navigation may still be animating in WebKit.
+                  // Wait for the actual jump to settle before capturing the ending.
+                  await p.waitForTimeout(1000);
+                  await p.evaluate(() => {
                     document.documentElement.style.scrollBehavior = 'auto';
                     document.body.style.scrollBehavior = 'auto';
                     window.scrollTo(0, document.documentElement.scrollHeight);
-                    await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+                  });
+                  await p.locator('.article-end').scrollIntoViewIfNeeded();
+                  await p.waitForTimeout(350);
+                  const bottom = await p.evaluate(() => {
+                    const viewport = window.innerHeight;
+                    const end = document.querySelector('.article-end').getBoundingClientRect();
+                    const paragraphs = [...document.querySelectorAll('.article-body > p')];
+                    const last = paragraphs.at(-1).getBoundingClientRect();
                     return {
                       y: window.scrollY,
-                      maximum: Math.max(0, document.documentElement.scrollHeight - window.innerHeight)
+                      maximum: Math.max(0, document.documentElement.scrollHeight - viewport),
+                      endVisible: end.top < viewport && end.bottom > 0,
+                      lastParagraphVisible: last.top < viewport && last.bottom > 0
                     };
                   });
-                  assert(bottom.maximum > 1200 && bottom.y >= bottom.maximum - 16, `${surface}/${name}: failed to reach the actual article ending`);
+                  assert(bottom.maximum > 1200 && bottom.y >= bottom.maximum - 16, `${surface}/${name}: failed to reach actual scroll bottom`);
+                  assert(bottom.endVisible && bottom.lastParagraphVisible, `${surface}/${name}: final paragraph or end-of-article navigation not in viewport`);
                   await p.screenshot({path:`personal-site-v1-public-evidence/${surface}-${name}-end.png`,fullPage:false});
                 } else {
                   await p.screenshot({path:`personal-site-v1-public-evidence/${surface}-${name}.png`,fullPage:true});
