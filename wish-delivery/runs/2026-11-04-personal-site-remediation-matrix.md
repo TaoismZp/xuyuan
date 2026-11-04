@@ -25,3 +25,15 @@
 若 CMS 作者授权闭环仍未由本人实际操作，无论前台自动化如何通过，都只能叫“**阅读表面已验收 / 站长出版闭环待完成**”。
 
 新增规则只能在用户明确批准并通过独立实验后按正式版本管理晋级；本整改不产生 v7.8 自动升级。
+
+## 2026-11-04 实施与验证回填
+
+- **产品释放的精确 SHA：** `c68ca2806397e83847de0ea000fe9af2ff74d9b5`。
+- **主站实际 GitHub Pages 发布：** `41822468742` attempt 2 SUCCESS；首次因 GitHub Pages artifact metadata 查询异常失败，按 attempt-specific artifact 名重试，未修改产品代码掩盖平台问题。
+- **独立静态监理：** `41822203542` SUCCESS；功能／响应式 Chromium：`41822203861` SUCCESS。
+- **真实公网 HTTP 与 WebKit：** `41822690861` **PASS**；320/375/390/430px 的关于、项目、长文归档均验证预设两行标题、中文导航单行、无横向溢出，截图归档在对应运行中。
+- **视觉身份修复：** 报告绑定 `VISION_FIXTURE_V2.md` SHA-256 `df3c236efcc629f429084227b5dea998fc4f30a69f238f8b2cf7181b9c4f9c2c`，不再借旧 V1 证据。
+- **文档循环修复：** 页面部署工作流由大范围 `personal-site-v1/**` 改为实际生产路径白名单；部署归属以 Pages run 的 `head_sha` 为准，后续只修改文档允许 main HEAD 不等于已部署站点 SHA。
+- **规范状态：** `wish-delivery/CURRENT.json` 指向现行 v7.6；v7.7 是未晋级草稿。未创建或偷偷启用 v7.8。
+- **仍未验收：** `OWNER_AUTHENTICATED_AUTHORING` = **PENDING_OWNER**。网站阅读交付 PASS 不能替代本人 CMS 发文能力验证。
+
