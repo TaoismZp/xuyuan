@@ -1,0 +1,62 @@
+name: Verify personal site recovery checkpoint
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'personal-site-v1/RECOVERY.md'
+      - 'personal-site-v1/recovery/**'
+      - 'personal-site-v1/PROJECT_STATE.md'
+      - 'personal-site-v1/VISION_FIXTURE_V2.md'
+      - 'personal-site-v1/BUILD_BLUEPRINT_V2.md'
+      - 'personal-site-v1/content/posts/**'
+      - 'wish-delivery/versions/v7.5.md'
+      - '.github/workflows/personal-site-v1-recovery.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  checkpoint-integrity:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+      - name: Verify independent recovery from repository only
+        run: |
+          set -euo pipefail
+          node personal-site-v1/recovery/check.mjs | tee "$RUNNER_TEMP/recovery-result.json"
+          grep -q RECOVERY_CHECKPOINT_CONSISTENT "$RUNNER_TEMP/recovery-result.json"
+          {
+            echo '## Recovery checkpoint'
+            echo ''
+            echo 'Repository-only handoff integrity: PASS'
+            echo ''
+            echo 'This does not prove site author authentication or old ChatGPT chat recovery.'
+          } >> "$GITHUB_STEP_SUMMARY"
+  public-delivery-check:
+    needs: checkpoint-integrity
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify real public entrypoints are reachable
+        run: |
+          set -euo pipefail
+          base="https://taoismzp.github.io/xuyuan/personal-site-v1"
+          curl --fail --silent --show-error --retry 5 --retry-delay 3 "$base/" -o /tmp/reader.html
+          curl --fail --silent --show-error --retry 5 --retry-delay 3 "$base/write/" -o /tmp/writer.html
+          curl --fail --silent --show-error --retry 5 --retry-delay 3 "$base/admin/" -o /tmp/admin.html
+          test -s /tmp/reader.html
+          test -s /tmp/writer.html
+          test -s /tmp/admin.html
+          grep -q '长期交易' /tmp/reader.html
+          grep -q '<html' /tmp/writer.html
+          {
+            echo '## Public delivery surface'
+            echo ''
+            echo 'Reader, writer and CMS HTTP entrypoints: PASS'
+            echo ''
+            echo 'This is an availability smoke check, not an owner publication test or a new release-identity acceptance.'
+          } >> "$GITHUB_STEP_SUMMARY"
