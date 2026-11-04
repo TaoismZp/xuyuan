@@ -4,6 +4,7 @@ import { fileURLToPath } from 'node:url';
 
 const site = (process.argv[2] || '').replace(/\/+$/, '') + '/';
 if (!/^https?:\/\/[^/]+\//.test(site)) throw new Error('Supply the actual site root URL');
+const canonicalRoot = 'https://taoismzp.github.io/xuyuan/personal-site-v1/';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const postsDir = path.join(root, 'content', 'posts');
 const published = [];
@@ -45,7 +46,7 @@ const sitemap = (await request(site + 'sitemap.xml')).text;
 if (!rss.includes('<rss version="2.0">') || !sitemap.includes('<urlset')) {
   throw new Error('RSS feed or sitemap malformed / missing');
 }
-if (!home.includes('<link rel="canonical" href="' + site + '"') ||
+if (!home.includes('<link rel="canonical" href="' + canonicalRoot + '"') ||
     !home.includes('<link rel="alternate" type="application/rss+xml"')) {
   throw new Error('Homepage SEO metadata missing');
 }
@@ -63,10 +64,11 @@ if (!published.length) {
       throw new Error('Published article missing title: ' + post.file);
     }
     if (!archive.includes(post.title)) throw new Error('Archive missing published post: ' + post.file);
-    if (!rss.includes(url) || !sitemap.includes(url)) throw new Error('Published post missing in RSS/sitemap: ' + post.file);
+    const canonical = canonicalRoot + 'essays/' + encodeURIComponent(post.slug) + '/';
+    if (!rss.includes(canonical) || !sitemap.includes(canonical)) throw new Error('Published post missing in RSS/sitemap: ' + post.file);
     if (!page.text.includes('<meta property="og:type" content="article">') ||
-        !page.text.includes('<meta property="og:url" content="' + url + '">') ||
-        !page.text.includes('<link rel="canonical" href="' + url + '">') ||
+        !page.text.includes('<meta property="og:url" content="' + canonical + '">') ||
+        !page.text.includes('<link rel="canonical" href="' + canonical + '">') ||
         !page.text.includes('type="application/ld+json"')) {
       throw new Error('Article social/SEO metadata missing: ' + post.file);
     }

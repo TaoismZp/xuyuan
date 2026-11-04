@@ -112,15 +112,24 @@ jobs:
           forbid_dir 'Old sample article removed after real build' personal-site-v1/essays/sample
 
           rm -f personal-site-v1/content/posts/supervision-published.md
-          echo '[CHECK] Empty production build is truthful'
+          echo '[CHECK] Rebuild without supervision fixture'
           ALLOW_EMPTY_BUILD=1 node personal-site-v1/scripts/build.mjs
-          require_text 'Empty archive says no public essays' personal-site-v1/essays/index.html '还没有公开长文'
+          if grep -l '^status: published' personal-site-v1/content/posts/*.md | grep -q .; then
+            echo '[CHECK] Real published posts remain in archive'
+            if grep -q '还没有公开长文' personal-site-v1/essays/index.html; then
+              echo '[FAIL] Existing published posts replaced with empty state'; exit 1
+            fi
+            echo '[PASS] Existing published posts remain in archive'
+          else
+            require_text 'Empty archive says no public essays' personal-site-v1/essays/index.html '还没有公开长文'
+          fi
           echo '[CHECK] Supervision fixture removed from public output'
-          if grep -R '监理样稿：等待' personal-site-v1/index.html personal-site-v1/essays/index.html; then
+          if grep -R '监理样稿：等待' personal-site-v1/index.html personal-site-v1/essays/index.html personal-site-v1/feed.xml personal-site-v1/sitemap.xml; then
             echo '[FAIL] Supervision fixture remained after empty build'; exit 1
           fi
           echo '[PASS] Supervision fixture removed from public output'
-          forbid_dir 'Old sample article absent after empty build' personal-site-v1/essays/sample
+          forbid_dir 'Supervision article removed from public output' personal-site-v1/essays/supervision-published
+          forbid_dir 'Old sample article absent after rebuild' personal-site-v1/essays/sample
       - name: Generate bound supervision report
         if: always()
         env:
