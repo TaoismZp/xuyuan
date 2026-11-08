@@ -1,0 +1,27 @@
+{
+  "schema": "deepwrite/project-state/v0.1",
+  "project_id": "REPLACE_PROJECT_ID",
+  "title": "REPLACE_WORKING_TITLE",
+  "privacy": "PRIVATE_REQUIRED",
+  "github_repository": null,
+  "github_visibility": "UNVERIFIED",
+  "github_private_repo_gate": "PENDING",
+  "current_stage": "PROJECT_CREATED",
+  "status": "ACTIVE",
+  "chapter_count_verified": 0,
+  "candidate_artifact": null,
+  "latest_checkpoint": null,
+  "latest_sha256": null,
+  "source_pointer": null,
+  "next_executable_action": "核验已有素材与私有存储后建立CONCEPT_MAP；无实际仓库能力时先将私有档案持久化并标GitHub仓库PENDING",
+  "gates": {
+    "privacy": "PENDING",
+    "reader_contract": "PENDING",
+    "domain_map": "PENDING",
+    "calibration_chapters": "PENDING",
+    "full_manuscript": "PENDING",
+    "independent_audit": "PENDING",
+    "author_signoff": "PENDING"
+  },
+  "updated_at": null
+}
