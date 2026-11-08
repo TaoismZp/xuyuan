@@ -1,0 +1,31 @@
+{
+  "schema": "deepwrite/current/v1",
+  "name": "深写｜DeepWrite",
+  "slug": "deepwrite",
+  "active_workbench_version": "v0.1",
+  "active_workbench_spec": "deepwrite/versions/v0.1.md",
+  "effective_parent_protocol_pointer": "wish-delivery/CURRENT.json",
+  "capability_status": {
+    "workflow_spec": "PASS_DOCUMENTED",
+    "github_public_bootstrap": "PASS_AFTER_READBACK",
+    "source_hash_book_packager": "PASS_PREVIOUS_LOCAL_TEST_REVERIFY_IN_NEW_RUNTIME",
+    "automatic_full_book_generation": "NOT_IMPLEMENTED",
+    "independent_blind_AB": "PENDING",
+    "private_repo_creation_by_current_connector": "UNAVAILABLE",
+    "private_project_per_repo": "REQUIRED_WHEN_CAPABILITY_AVAILABLE",
+    "unpublished_content_in_public_repo": "FORBIDDEN",
+    "cross_chat_recovery": "REQUIRES_ACCESSIBLE_DURABLE_PROJECT_CHECKPOINT"
+  },
+  "current_status": "WORKBENCH_PROTOTYPE_NOT_ONE_CLICK_AUTONOMOUS_PRODUCT",
+  "new_project_policy": "ISOLATE_ID_AND_RECOVERY_FIRST; PRIVACY_CHECK; CREATE_PRIVATE_REPO_IF_SUPPORTED; OTHERWISE PRIVATE_LIBRARY_AND_EXPLICIT_GITHUB_REPO_PENDING",
+  "human_acceptance": "REQUIRED_FOR_FINAL_SIGNOFF",
+  "files": [
+    "deepwrite/START_HERE.md",
+    "deepwrite/PROJECT_INIT.md",
+    "deepwrite/versions/v0.1.md",
+    "deepwrite/HISTORY.md",
+    "deepwrite/EVALUATION.md",
+    "deepwrite/SECURITY.md"
+  ],
+  "updated_date": "2026-11-08"
+}
