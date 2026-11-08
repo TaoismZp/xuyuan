@@ -1,0 +1,59 @@
+{
+  "schema": "deepwrite/project-acceptance/v0.1",
+  "project_id": "REPLACE_PROJECT_ID",
+  "candidate_sha256": null,
+  "baseline_sha256": null,
+  "checks": [
+    {
+      "gate": "G0_READER",
+      "status": "PENDING",
+      "evidence": []
+    },
+    {
+      "gate": "G1_DOMAIN",
+      "status": "PENDING",
+      "evidence": []
+    },
+    {
+      "gate": "G2_CALIBRATION",
+      "status": "PENDING",
+      "evidence": []
+    },
+    {
+      "gate": "G3_UNIQUE_CHAPTER",
+      "status": "PENDING",
+      "evidence": []
+    },
+    {
+      "gate": "G4_SECOND_DISCOVERY",
+      "status": "PENDING",
+      "evidence": []
+    },
+    {
+      "gate": "G5_FACT_MATH",
+      "status": "PENDING",
+      "evidence": []
+    },
+    {
+      "gate": "G6_BOOK_COHERENCE",
+      "status": "PENDING",
+      "evidence": []
+    },
+    {
+      "gate": "G7_REAL_ARTIFACT",
+      "status": "PENDING",
+      "evidence": []
+    },
+    {
+      "gate": "AUTHOR_APPROVAL",
+      "status": "PENDING",
+      "evidence": []
+    },
+    {
+      "gate": "HUMAN_BLIND_REVIEW",
+      "status": "PENDING",
+      "evidence": []
+    }
+  ],
+  "final_status": "PENDING"
+}
