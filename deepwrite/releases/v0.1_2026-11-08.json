@@ -1,0 +1,104 @@
+{
+  "schema": "deepwrite/release-manifest/v1",
+  "release": "v0.1",
+  "date": "2026-11-08",
+  "repo": "TaoismZp/xuyuan",
+  "visibility": "public",
+  "status": "WORKFLOW_SPEC_AND_PACKAGER_NOT_AUTONOMOUS_BOOK_WRITER",
+  "source_history": "SANITIZED_ONLY_NOT_PRIVATE_TRANSCRIPT_ARCHIVE",
+  "git_blob_sha_note": "These are Git blob SHA-1 identifiers, not SHA256 file digests.",
+  "component_count": 17,
+  "components": [
+    {
+      "path": "deepwrite/README.md",
+      "git_blob_sha": "a745f4f0fe6ae48e32601ea30ba096d3dfd14ee6",
+      "chars": 1559
+    },
+    {
+      "path": "deepwrite/CURRENT.json",
+      "git_blob_sha": "f57402a510e051d53d04a59d17e6f09720130650",
+      "chars": 1352
+    },
+    {
+      "path": "deepwrite/START_HERE.md",
+      "git_blob_sha": "47cdd1eb06ed20b3414f197777ae1d40bc6106e7",
+      "chars": 1046
+    },
+    {
+      "path": "deepwrite/versions/v0.1.md",
+      "git_blob_sha": "f7ce01622df733bc59982854e37d4ac44a79ec99",
+      "chars": 1549
+    },
+    {
+      "path": "deepwrite/HISTORY.md",
+      "git_blob_sha": "8d4e5fcf99a3369ad665b90a3f4144220bec15aa",
+      "chars": 1303
+    },
+    {
+      "path": "deepwrite/SECURITY.md",
+      "git_blob_sha": "d0948aea4f20cda242f1f1deaa21867ce8599126",
+      "chars": 797
+    },
+    {
+      "path": "deepwrite/PROJECT_INIT.md",
+      "git_blob_sha": "24552a6c5219dd08af9fe93eb40263f0260a862a",
+      "chars": 1636
+    },
+    {
+      "path": "deepwrite/EVALUATION.md",
+      "git_blob_sha": "9aad1a1452b96ea1d9f698af4a3e05ddf65ab879",
+      "chars": 1177
+    },
+    {
+      "path": "deepwrite/CHANGELOG.md",
+      "git_blob_sha": "494ae4fc6f16e4336ae98e5731202c80b3c3616c",
+      "chars": 439
+    },
+    {
+      "path": "deepwrite/projects/README.md",
+      "git_blob_sha": "950a5ac12e442436851dc0dba1017b152a6d4d15",
+      "chars": 300
+    },
+    {
+      "path": "deepwrite/templates/RECOVERY.md",
+      "git_blob_sha": "81c27553fc22522e9320f11374a5e88764db488e",
+      "chars": 637
+    },
+    {
+      "path": "deepwrite/templates/STATE.json",
+      "git_blob_sha": "672f60f59e619bcd3b8441a83bd6fcc5a8e83a91",
+      "chars": 824
+    },
+    {
+      "path": "deepwrite/templates/ACCEPTANCE.json",
+      "git_blob_sha": "1ed450f4293764e8b46ddb2ac80e01a69d77e8ae",
+      "chars": 1128
+    },
+    {
+      "path": "deepwrite/tools/book_packager_v0.1.py",
+      "git_blob_sha": "d4d1b0b575c8df90ed5d8448d6bc0afe8f72b481",
+      "chars": 3544
+    },
+    {
+      "path": "deepwrite/tests/test_packager.py",
+      "git_blob_sha": "6cc9e4ea3dc4f10fd6c42e5ab1a6b96d3a504cbb",
+      "chars": 2759
+    },
+    {
+      "path": "deepwrite/EVIDENCE.md",
+      "git_blob_sha": "35e07ce2cec976b8bce07efec1c1b4f4cc38aabb",
+      "chars": 892
+    },
+    {
+      "path": "deepwrite/RECOVERY.md",
+      "git_blob_sha": "9051222305a83252edaf195baf208e492d1a5178",
+      "chars": 1166
+    }
+  ],
+  "open_gates": [
+    "E1_AUTONOMOUS_FULL_BOOK_NOT_IMPLEMENTED",
+    "E2_BLIND_AB_PENDING",
+    "PRIVATE_REPO_CREATION_TOOL_UNAVAILABLE",
+    "NEW_CHAT_COLD_BOOT_TEST_PENDING"
+  ]
+}
