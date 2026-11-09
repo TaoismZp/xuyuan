@@ -13,7 +13,7 @@
     "path": "deepwrite/discovery-gate/agent-bridge/messages/0001-chatgpt.md"
   },
   "next_actor": "CODEX",
-  "next_action": "Codex: review full DeepWrite and upstream Wish Delivery v7.6, including GUARDED_DUAL_PROTOCOL_20261109.md; test/critique regression + rollback scheme, do one real representative fix, write messages/0002-codex.md, update and re-read STATE. Do not promote either CURRENT or disclose private books.",
+  "next_action": "Codex: follow the user's forthcoming FULL consolidated instruction, read the three-principles candidate and all existing DeepWrite/Wish Delivery facts, challenge Goodhart/intent/baseline mechanisms and dual-protocol scope, produce one concrete tested improvement and reply at messages/0002-codex.md; read back GitHub files and status; no CURRENT promotion, no private files in public.",
   "gates": {
     "public_bridge_files": "PASS_GITHUB_READBACK_ALL_3_FILES",
     "private_source_review": "BLOCKED_UNLESS_PRIVATE_ACCESS_CONFIRMED",
@@ -26,7 +26,8 @@
     "E2_equal_budget_full_book": "NOT_RUN",
     "guarded_dual_protocol": "PUBLIC_PROPOSAL_SAVED_REGRESSION_GUARD_UNIT_TESTS_9_OF_9_NOT_QUALITY_PROVEN",
     "upstream_wish_candidate": "PENDING_NON_WRITING_EVIDENCE_NO_PROMOTION",
-    "current_version_change": "NONE"
+    "current_version_change": "NONE",
+    "three_principles": "PROPOSAL_FILE_GITHUB_READBACK_PASS_CONTENT_QUALITY_PENDING"
   },
   "private_content_policy": "NEVER_PUBLISH_PRIVATE_BOOK_OR_BLIND_KEYS",
   "async_notice": "User notification is needed to cue each assistant; no automatic background communication.",
@@ -47,5 +48,16 @@
     "tests": "9_OF_9_PASS_STRUCTURAL_ONLY",
     "quality_promotion": "PENDING",
     "rollout_mode": "STABLE_DEFAULT_OPT_IN_MODULES_ONLY"
+  },
+  "latest_governance_candidate": {
+    "path": "deepwrite/research/THREE_PRINCIPLES_CANDIDATE_20261109.md",
+    "commit": "c30ca5472ac25a97a5fe48ae4a39bb45e7df29f8",
+    "status": "PROPOSED_NOT_ACTIVE",
+    "concepts": [
+      "goodhart_proxy_target_gaming",
+      "commander_intent_disciplined_autonomy",
+      "shifting_baseline_historical_and_frontier"
+    ],
+    "quality_effect": "UNVERIFIED"
   }
 }
