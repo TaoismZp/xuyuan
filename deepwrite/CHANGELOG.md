@@ -23,3 +23,10 @@
 - 新增显式自愿、只读的resume_check：按独立冻结清单检查漏存、双层pin值与候选ID/commit冲突；稳定功能和合法opt-in对照通过。不是完整项目、授权或耐久验收。
 - 字节命令及receipt显式标注project_resume_gate NOT_RUN、complete_project_recovery UNVERIFIED。旧manifest/恢复接口保留，无静默迁移。
 - 回执、复跑命令、格式限制和停用说明：`experiments/2026-11-09-resume-boundary/`。E1/E2及真实作品质量门继续开放。
+
+## 0006真实文章探索 · 2026-11-09（不升正式版本）
+
+- 接受0005，关闭F1/F2有限工程支线，未扩建恢复工具。
+- 在生成前冻结公开资料、中性读者目标及Rival Probe 1候选；真实CLI两次因认证失败而无稿，保留失败记录。另预冻结两个新上下文探索，实际保存完整初/终稿与标签遮蔽AI阅读、来源核验。
+- 未见候选相对稳定适配的明确整体增益，拒绝默认采用，方法效果HOLD；过程里的可区分条件未充分进入正文是待检验的编辑迁移缺口，非新Skill发布。
+- 完整稿及映射只在本地受限保存，NOT_DURABLY_ARCHIVED；公开仅方法、哈希与编辑摘要。报告：`experiments/2026-11-09-work-comparison/REPORT.md`。E1/E2、人类盲评与正式晋升未通过。

@@ -1,0 +1,130 @@
+{
+  "experiment_id": "DW-WORK-0006-E",
+  "status": "ACTUAL_ARTIFACTS_WRITTEN_EXPLORATORY_NOT_FAIR_CAUSAL_AB",
+  "freeze_commit": "b1fb8b77812dfb09899e08045c95d51a0e4cb3c1",
+  "fallback_freeze_commit": "a17d5545a6f82d24dce76f89c11177b970780cb6",
+  "sources_sha256": "233e1627834a307f63c2c143197e04a7e05c17ed48e222bdd46eee543ea79ef9",
+  "cli_attempts": [
+    {
+      "route": "B",
+      "thread_id": "01a1c0f5-4288-7962-987b-c52866ad371d",
+      "status": "FAILED_NO_RETRY",
+      "returncode": 1,
+      "wall_seconds": 1.778,
+      "failure_code": "AUTHENTICATION_REFRESH_FAILED",
+      "article_generated": false,
+      "provider_usage": null
+    },
+    {
+      "route": "A",
+      "thread_id": "01a1c0f5-48e1-76c2-bed2-50467f479472",
+      "status": "FAILED_NO_RETRY",
+      "returncode": 1,
+      "wall_seconds": 1.487,
+      "failure_code": "AUTHENTICATION_REFRESH_FAILED",
+      "article_generated": false,
+      "provider_usage": null
+    }
+  ],
+  "fallback": {
+    "generation_method": "2 fresh collaboration contexts fork_turns=none, same inherited model without override",
+    "model_id_and_provider_token_usage": "NOT_EXPOSED",
+    "structured_response_files": "agent-written JSON artifacts, not provider-wire receipts",
+    "additional_research_by_authors": "NONE_REPORTED",
+    "read_isolation": "procedural assigned prompt only, shared filesystem permissions remain",
+    "self_reported_prompt_reads_per_author": 3,
+    "no_parent_revision_of_drafts": true,
+    "first_complete_workflow_outputs_preserved": true,
+    "public_route_to_work_map": "WITHHELD_PRIVATE_NO_REVEAL"
+  },
+  "cost": {
+    "cli_failed_attempts": 2,
+    "fallback_author_contexts": 2,
+    "masked_reader_contexts": 1,
+    "source_audit_contexts_including_reused_and_helpers": 3,
+    "coordination_context": "parent, additional usage not exposed",
+    "dollar_cost": null,
+    "provider_token_usage": null,
+    "cost_equivalence": "UNVERIFIED; same instructed bounds, no exact token, latency or billing parity claim"
+  },
+  "works": [
+    {
+      "work_id": "Text-173",
+      "article_sha256": "7c3d2a4c1ebd5ba8b4db91f9389b57a8054287c8ecc57235bf49ad38fbcaf506",
+      "paragraph_version_sha256": "9903a80873bfc93902ef269f5c0674bed054d6508daed83906fc4f4656c8d3a8",
+      "hanzi_counts": {
+        "working_notes": 603,
+        "draft": 1261,
+        "revision_log": 276,
+        "article": 1864
+      },
+      "paragraph_blocks": 17,
+      "private_output_file_sha256": {
+        "response.json": "27cb44730d495c9d31c8782c7e2b40e65f1b8c1c8fbee1f2522670949303156e",
+        "working_notes.md": "889a512b24e39660eed3c1912997a31cb5dce2779d07adf301ec826592a4bb37",
+        "draft.md": "bf3f3f142741565a8f229ac8442c1ebc1635b4c203b30f57ac3b23bf1e846ea4",
+        "revision_log.md": "4657ad6a8476a92d989f5207381dba7758ed369a851d95f8a2aa802e892fde08",
+        "article.md": "7c3d2a4c1ebd5ba8b4db91f9389b57a8054287c8ecc57235bf49ad38fbcaf506"
+      },
+      "payload_text_equal_except_terminal_newline": true
+    },
+    {
+      "work_id": "Text-628",
+      "article_sha256": "443957fb115b0cb593b864541403385a997dd3d972304cd622513a8dc1b90c49",
+      "paragraph_version_sha256": "603a5a8f6c748a8184af8be6f1f1f822fa1afde909a0c3188ec3fc86cd7ff131",
+      "hanzi_counts": {
+        "working_notes": 523,
+        "draft": 1295,
+        "revision_log": 305,
+        "article": 1981
+      },
+      "paragraph_blocks": 16,
+      "private_output_file_sha256": {
+        "response.json": "74abe5460b03e2912f768feb5c150d9e41f86d82911d23b573078c951e41ca21",
+        "working_notes.md": "f169c3bd6849608a7865b2af839bc92f0db6f70c3184d9e39f6c3d77aea44889",
+        "draft.md": "1f2c7f45d37f2e854fb05fd4fb0ff8df897c8081efeb25b39ea478da019b8d52",
+        "revision_log.md": "940c8e57ea6b198b9c79776e3c047a412df3b53d9e3ca97581cb97ce2dd0f7c5",
+        "article.md": "443957fb115b0cb593b864541403385a997dd3d972304cd622513a8dc1b90c49"
+      },
+      "payload_text_equal_except_terminal_newline": true
+    }
+  ],
+  "review": {
+    "type": "method-label-masked AI reading in a fresh context; shared filesystem, no human blind claim",
+    "human_blind": "NOT_RUN",
+    "external_independence": "UNVERIFIED",
+    "status": "COMPLETED_AI_ONLY",
+    "reading_review_sha256": "32b045c855da8f73a1178bfc3e7c7fe19de03e4e1db20759f79031c0dd0084f1",
+    "structured_review_sha256": "8b70ed58106c8d76556ee493328d9bc6b70994410bffcb02c37cc4b62fff450d",
+    "fact_review_sha256": "0e4e1a0b2d2f72a7c45d6afc03c57200126ed3c2a4fd32c5cc117f18232d2596",
+    "result": "NO_UNCONDITIONAL_WINNER_CONDITIONAL_PURPOSE_PREFERENCES",
+    "three_differences": "threshold mechanism; category-to-drawing translation; comparison type vs measurement comparability",
+    "shared_gap": "How new observations change a concrete judgment is insufficiently transferred into both articles"
+  },
+  "archive": {
+    "state": "NOT_DURABLY_ARCHIVED",
+    "storage": "restricted local runtime only, no remote manuscript upload",
+    "local_author_checkpoint_manifest_sha256": "1dfaa5e9b7f26062c0f69752287a051317b176a2aca4bee6bdb9530ebb735799",
+    "byte_verification": "PASS_BYTES_ONLY",
+    "project_resume_gate": "NOT_RUN",
+    "final_local_checkpoint_manifest_sha256": "800fc17776ddd0fc6ffa4295c5d67191b952673f67ff290c53ce502967d321ae",
+    "final_local_checkpoint_files": 51,
+    "final_local_verify_status": "PASS_BYTES_ONLY",
+    "review_reports_in_final_checkpoint": true,
+    "private_review_access_from_ChatGPT": "NOT_CONFIRMED_FULL_TEXT_REVIEW_BLOCKED_WITHOUT_PRIVATE_ACCESS",
+    "local_private_bundle_sha256": "3cf645797ed023aa2a87c71e441709fbae318376c8f569a08f19eb5c3cb4cc6d",
+    "local_private_bundle_bytes": 528816,
+    "zip_readback_crc": "PASS_LOCAL_ONLY"
+  },
+  "original_cli_plan": "BLOCKED_AUTHENTICATION_NO_RETRY; fallback recorded separately before generation",
+  "E1": "NOT_IMPLEMENTED",
+  "E2": "NOT_RUN",
+  "formal_promotion": "NOT_AUTHORIZED",
+  "decision": {
+    "candidate_default_adoption": "REJECT_NO_INCREMENTAL_BENEFIT_DEMONSTRATED",
+    "candidate_general_effectiveness": "HOLD_FOR_EVIDENCE",
+    "Discovery_Gate_quality": "UNVERIFIED_NOT_THE_SAME_INTERVENTION",
+    "new_skills_or_default_activation": false,
+    "originals_overwritten": false
+  }
+}
