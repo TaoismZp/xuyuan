@@ -3,8 +3,8 @@
   "project_id": "deepwrite-method-quality-20261109",
   "task_type": "METHOD_ITERATION",
   "privacy": "PUBLIC_METHOD_ONLY",
-  "status": "ACTIVE",
-  "current_gate": "ORIGIN_REVISED_REMOTE_CHECKPOINT",
+  "status": "COMPLETED",
+  "current_gate": "ORIGIN_REVISED_CANDIDATE_READY_FOR_REVIEW",
   "base_commit": "4c277410e892e0200584392097e00b2899627162",
   "active_deepwrite": "v0.1",
   "active_parent": "v7.6",
@@ -14,20 +14,20 @@
     "sha256": "9da98ad79801db6dd111070e645fe321f287ad4ae6326cc84147727c7182c3de"
   },
   "last_good_checkpoint": {
-    "commit": "5a34327b36c9bbf822a43942cdadc275592c924e",
+    "commit": "ffd1a3f606c18d92a4bf27828882d4a073a6a215",
     "path": "deepwrite/iterations/2026-11-09-quality",
-    "manifest_sha256": "1e6135803d2af55d5bc2caac5bc299acebdd2b4c926c9483d2006d2fc0eff194"
+    "manifest_sha256": "9da98ad79801db6dd111070e645fe321f287ad4ae6326cc84147727c7182c3de"
   },
-  "checkpoint_scope": "GITHUB_DURABLE_READ_BACK",
+  "checkpoint_scope": "GITHUB_PUBLIC_METHOD_READ_BACK_RAW_SOURCE_LOCAL_ONLY",
   "open_blocker": null,
-  "next_executable_action": "提交通用修订和脱敏审视，回读候选身份及草稿PR；不把未完整通过的历史回放判作研究能力PASS。",
+  "next_executable_action": "冻结CleanRoom输入隔离的实际执行安排，使用未参与设计的材料检验方向诊断能否改变正文、减少实质作者纠偏；继续保留独立读者、整书E1与E2门。先从PR12与当前清单回读，不把旧开发回放用于签收最终候选。",
   "updated_at": "2026-11-09",
   "completion_scope": "SOURCE_REVIEW_AND_CANDIDATE_REBUILD_ONLY_NOT_QUALITY_SIGNOFF",
   "readback": {
-    "commit": "5a34327b36c9bbf822a43942cdadc275592c924e",
-    "files_byte_identical": 24,
-    "artifact_sha256_verified": 20,
-    "github_connector_manifest_blob": "7d7c1a215d99e1e2f1eb78b3af3aa3b4b9e81297"
+    "commit": "ffd1a3f606c18d92a4bf27828882d4a073a6a215",
+    "revised_files_byte_identical": 17,
+    "artifact_sha256_verified": 22,
+    "github_connector_manifest_blob": "c65e82cb93db073c4f710920c63354edfed9a79c"
   },
   "pull_request": "https://github.com/TaoismZp/xuyuan/pull/12",
   "open_quality_gates": [

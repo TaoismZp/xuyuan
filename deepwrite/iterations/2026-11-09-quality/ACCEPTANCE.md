@@ -7,7 +7,7 @@
 - 目标VISION、施工图BLUEPRINT、监督SUPERVISION及当前候选/公开证据绑定于 [ARTIFACTS.json](ARTIFACTS.json)，SHA256：`9da98ad79801db6dd111070e645fe321f287ad4ae6326cc84147727c7182c3de`。
 - 原始两份分享、逐消息审查、历史回放原文未进入公开库；本公开清单不冒充这些本地私有对象的完整备份。
 - STATE、RECOVERY、本验收单是可更新元数据，按实际commit绑定，避免循环哈希。
-- 当前候选外部回读：PENDING，完成后在STATE记录。
+- 当前候选外部回读：commit `ffd1a3f606c18d92a4bf27828882d4a073a6a215`；17个本次修订文件逐字节一致，22项固定产物SHA256/长度匹配。GitHub连接亦按该commit回读清单，blob `c65e82cb93db073c4f710920c63354edfed9a79c`。控制元数据的后续提交不改变这些固定产物。
 - 交审入口：[草稿PR12](https://github.com/TaoismZp/xuyuan/pull/12)，未合并、未切换生效版本。
 
 ## 已执行与未关闭
