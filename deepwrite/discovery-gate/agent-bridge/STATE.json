@@ -3,20 +3,20 @@
   "bridge_id": "DG-AGENT-BRIDGE-001",
   "project": "deepwrite-full-workbench-evolution",
   "visibility": "PUBLIC_SANITIZED_ONLY",
-  "state": "AWAITING_CODEX_RESPONSE",
+  "state": "AWAITING_CHATGPT_REVIEW",
   "canonical_protocol_pointer": "deepwrite/CURRENT.json",
   "parent_protocol_pointer": "wish-delivery/CURRENT.json",
   "first_message": "deepwrite/discovery-gate/agent-bridge/messages/0001-chatgpt.md",
   "last_message": {
-    "id": "0001",
-    "sender": "CHATGPT",
-    "path": "deepwrite/discovery-gate/agent-bridge/messages/0001-chatgpt.md"
+    "id": "0002",
+    "sender": "CODEX",
+    "path": "deepwrite/discovery-gate/agent-bridge/messages/0002-codex.md"
   },
-  "next_actor": "CODEX",
-  "next_action": "Codex: follow the user's forthcoming FULL consolidated instruction, read the three-principles candidate and all existing DeepWrite/Wish Delivery facts, challenge Goodhart/intent/baseline mechanisms and dual-protocol scope, produce one concrete tested improvement and reply at messages/0002-codex.md; read back GitHub files and status; no CURRENT promotion, no private files in public.",
+  "next_actor": "CHATGPT",
+  "next_action": "ChatGPT: independently review Codex 0002, code commit 6aca4e26c309dce6da85be592ab34f57bfe83a1b and system-review artifacts; challenge recovery completeness, answer-cued quality probes and innovation false rejections; write immutable messages/0003-chatgpt.md with ACCEPT / REJECT_WITH_EVIDENCE / HOLD_FOR_EVIDENCE, read back and update STATE. No CURRENT promotion, no private manuscripts.",
   "gates": {
-    "public_bridge_files": "PASS_GITHUB_READBACK_ALL_3_FILES",
-    "private_source_review": "BLOCKED_UNLESS_PRIVATE_ACCESS_CONFIRMED",
+    "public_bridge_files": "PASS_STORAGE_MESSAGE_0002_GITHUB_READBACK",
+    "private_source_review": "BLOCKED_PRIVATE_SOURCE_UNAVAILABLE",
     "independent_human_blind": "NOT_RUN",
     "fair_isolated_ab": "NOT_RUN",
     "formal_discovery_promotion": "NOT_AUTHORIZED",
@@ -24,15 +24,20 @@
     "discovery_gate_quality": "UNVERIFIED",
     "E1_autonomous_full_book": "NOT_IMPLEMENTED",
     "E2_equal_budget_full_book": "NOT_RUN",
-    "guarded_dual_protocol": "PUBLIC_PROPOSAL_SAVED_REGRESSION_GUARD_UNIT_TESTS_9_OF_9_NOT_QUALITY_PROVEN",
-    "upstream_wish_candidate": "PENDING_NON_WRITING_EVIDENCE_NO_PROMOTION",
+    "guarded_dual_protocol": "QA_23_OF_23_PASS_12_BYTE_CHECKPOINT_11_STRUCTURAL_NOT_QUALITY_PROVEN",
+    "upstream_wish_candidate": "LOCAL_NON_WRITING_HTTP_BYTES_RESTORED_NO_ONLINE_OR_EXPERIENCE_VALIDATION_NO_PROMOTION",
     "current_version_change": "NONE",
-    "three_principles": "PROPOSAL_FILE_GITHUB_READBACK_PASS_CONTENT_QUALITY_PENDING"
+    "three_principles": "CONSTRUCTED_ANSWER_CUED_AI_PROBES_ONLY_UNKNOWN_CASE_DETECTION_NOT_RUN",
+    "local_byte_checkpoint_restore": "PASS_SYNTHETIC_SOURCE_DELETED_THEN_6_FILES_RESTORED_PER_CASE",
+    "transactional_source_snapshot": "NOT_SUPPORTED_CONCURRENT_MIXED_GENERATIONS_REPRODUCED_STOP_WRITERS_REQUIRED",
+    "private_durable_cross_environment_restore": "NOT_RUN",
+    "frontier_comparison": "NOT_RUN",
+    "formal_workbench_promotion": "NOT_AUTHORIZED"
   },
   "private_content_policy": "NEVER_PUBLISH_PRIVATE_BOOK_OR_BLIND_KEYS",
   "async_notice": "User notification is needed to cue each assistant; no automatic background communication.",
   "updated_date": "2026-11-09",
-  "latest_message_commit": "86d1177cb4ac6501300cffff34b88caf04ba4bbe",
+  "latest_message_commit": "c6079f3652962f203973e2d7ec932a8b68d3d744",
   "bridge_readback_verified": true,
   "scope": "FULL_DEEPWRITE_WORKBENCH_NOT_JUST_DISCOVERY_GATE",
   "system_entry": "deepwrite/AGENT_COLLABORATION.md",
@@ -45,7 +50,7 @@
     "recovery_and_user_value": "deepwrite/HISTORY.md",
     "added_codex_instruction": "deepwrite/discovery-gate/agent-bridge/GUARDED_DUAL_PROTOCOL_20261109.md",
     "current_versions_unchanged": true,
-    "tests": "9_OF_9_PASS_STRUCTURAL_ONLY",
+    "tests": "QA_23_OF_23_PASS_PLUS_WRITING_AND_LOCAL_HTTP_BYTE_RESTORE_ONLY",
     "quality_promotion": "PENDING",
     "rollout_mode": "STABLE_DEFAULT_OPT_IN_MODULES_ONLY"
   },
@@ -59,5 +64,22 @@
       "shifting_baseline_historical_and_frontier"
     ],
     "quality_effect": "UNVERIFIED"
+  },
+  "latest_message_blob_sha": "960b7e93e80e9120c5a213648a6f5805d7c30699",
+  "latest_codex_increment": {
+    "commit": "6aca4e26c309dce6da85be592ab34f57bfe83a1b",
+    "report": "deepwrite/experiments/2026-11-09-system-review/REPORT.md",
+    "engineering_receipt": "deepwrite/experiments/2026-11-09-system-review/ENGINEERING_RECEIPT.json",
+    "usage": "deepwrite/experiments/2026-11-09-system-review/CHECKPOINT_USAGE.md",
+    "probes": "deepwrite/experiments/2026-11-09-system-review/probes/RESULTS.md",
+    "code_files_remote_readback_byte_equal": 19,
+    "active_versions": {
+      "deepwrite": "v0.1",
+      "wish_delivery": "v7.6"
+    },
+    "current_pointer_files_unchanged": true,
+    "quality_improvement": "UNVERIFIED",
+    "counterexample_preserved": "mixed-generation source snapshot accepted as byte checkpoint; stop writers first",
+    "candidate_selection": "EXPLICIT_PROJECT_OPT_IN_PIN_6aca4e26c309dce6da85be592ab34f57bfe83a1b_NO_AUTO_ACTIVATION"
   }
 }
