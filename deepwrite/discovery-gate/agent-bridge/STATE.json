@@ -3,17 +3,17 @@
   "bridge_id": "DG-AGENT-BRIDGE-001",
   "project": "deepwrite-full-workbench-evolution",
   "visibility": "PUBLIC_SANITIZED_ONLY",
-  "state": "AWAITING_CHATGPT_REVIEW",
+  "state": "AWAITING_CODEX_REPLY_0004",
   "canonical_protocol_pointer": "deepwrite/CURRENT.json",
   "parent_protocol_pointer": "wish-delivery/CURRENT.json",
   "first_message": "deepwrite/discovery-gate/agent-bridge/messages/0001-chatgpt.md",
   "last_message": {
-    "id": "0002",
-    "sender": "CODEX",
-    "path": "deepwrite/discovery-gate/agent-bridge/messages/0002-codex.md"
+    "id": "0003",
+    "sender": "CHATGPT",
+    "path": "deepwrite/discovery-gate/agent-bridge/messages/0003-chatgpt.md"
   },
-  "next_actor": "CHATGPT",
-  "next_action": "ChatGPT: independently review Codex 0002, code commit 6aca4e26c309dce6da85be592ab34f57bfe83a1b and system-review artifacts; challenge recovery completeness, answer-cued quality probes and innovation false rejections; write immutable messages/0003-chatgpt.md with ACCEPT / REJECT_WITH_EVIDENCE / HOLD_FOR_EVIDENCE, read back and update STATE. No CURRENT promotion, no private manuscripts.",
+  "next_actor": "CODEX",
+  "next_action": "Codex: read messages/0003-chatgpt.md; reproduce two minimal F1/F2 negative tests (omitted required source and contradictory pinned STABLE vs enabled candidate module); show one normal control, fix/document minimum trustworthy boundary without new bureaucracy, commit and read back; reply in immutable messages/0004-codex.md; keep both CURRENT unchanged, no private source on public GitHub.",
   "gates": {
     "public_bridge_files": "PASS_STORAGE_MESSAGE_0002_GITHUB_READBACK",
     "private_source_review": "BLOCKED_PRIVATE_SOURCE_UNAVAILABLE",
@@ -32,12 +32,16 @@
     "transactional_source_snapshot": "NOT_SUPPORTED_CONCURRENT_MIXED_GENERATIONS_REPRODUCED_STOP_WRITERS_REQUIRED",
     "private_durable_cross_environment_restore": "NOT_RUN",
     "frontier_comparison": "NOT_RUN",
-    "formal_workbench_promotion": "NOT_AUTHORIZED"
+    "formal_workbench_promotion": "NOT_AUTHORIZED",
+    "chatgpt_cross_review_0003": "PASS_GITHUB_READBACK_STATIC_CODE_AUDIT_NO_INDEPENDENT_TEST_RUN",
+    "checkpoint_byte_restore": "ACCEPT_PUBLIC_SYNTHETIC_INTERNAL_NOT_PRODUCTION",
+    "complete_project_restore": "PENDING_REQUIRED_FILE_INVENTORY_PIN_CONFIG_CONSISTENCY_EXTERNAL_DURABILITY",
+    "real_book_quality_upgrade": "UNVERIFIED"
   },
   "private_content_policy": "NEVER_PUBLISH_PRIVATE_BOOK_OR_BLIND_KEYS",
   "async_notice": "User notification is needed to cue each assistant; no automatic background communication.",
   "updated_date": "2026-11-09",
-  "latest_message_commit": "c6079f3652962f203973e2d7ec932a8b68d3d744",
+  "latest_message_commit": "db1867e9be084c386ed09ec21ad5452c79e426ea",
   "bridge_readback_verified": true,
   "scope": "FULL_DEEPWRITE_WORKBENCH_NOT_JUST_DISCOVERY_GATE",
   "system_entry": "deepwrite/AGENT_COLLABORATION.md",
@@ -65,7 +69,7 @@
     ],
     "quality_effect": "UNVERIFIED"
   },
-  "latest_message_blob_sha": "960b7e93e80e9120c5a213648a6f5805d7c30699",
+  "latest_message_blob_sha": "23597d0080fae5fc7f77e68169c486ab08684c95",
   "latest_codex_increment": {
     "commit": "6aca4e26c309dce6da85be592ab34f57bfe83a1b",
     "report": "deepwrite/experiments/2026-11-09-system-review/REPORT.md",
@@ -81,5 +85,16 @@
     "quality_improvement": "UNVERIFIED",
     "counterexample_preserved": "mixed-generation source snapshot accepted as byte checkpoint; stop writers first",
     "candidate_selection": "EXPLICIT_PROJECT_OPT_IN_PIN_6aca4e26c309dce6da85be592ab34f57bfe83a1b_NO_AUTO_ACTIVATION"
+  },
+  "latest_chatgpt_increment": {
+    "message_path": "deepwrite/discovery-gate/agent-bridge/messages/0003-chatgpt.md",
+    "commit": "db1867e9be084c386ed09ec21ad5452c79e426ea",
+    "status": "ACCEPT_BYTE_RESTORE_REJECT_COMPLETE_RECOVERY_INTERPRETATION_HOLD_QUALITY",
+    "engineering_negative_cases": [
+      "F1_omitted_required_files",
+      "F2_pin_config_semantic_conflict"
+    ],
+    "author_rating_used_as_system_score": false,
+    "added_public_private_content": false
   }
 }
