@@ -1,0 +1,15 @@
+{
+  "schema":"deepwrite/project-pins/v0.1",
+  "status":"EXAMPLE_ONLY_DO_NOT_CLAIM_ACTIVATION",
+  "project_id":"PROJECT_ID_FILL_IN",
+  "protocols":{"deepwrite":{"version":"READ_FROM_CURRENT","spec_sha":"PIN_ACTUAL_BLOB_SHA","commit":"PIN_ACTUAL_GIT_COMMIT"},"wish_delivery":{"version":"READ_FROM_CURRENT","spec_sha":"PIN_ACTUAL_BLOB_SHA","commit":"PIN_ACTUAL_GIT_COMMIT"}},
+  "channel":"STABLE",
+  "modules":[],
+  "originals_immutable":true,
+  "frozen_quality_baseline":{"artifact_sha256":"SET_ON_REAL_PROJECT","author_score":null,"scoring_context":"NONE_YET"},
+  "last_good_checkpoint":{"file":"SET_ON_REAL_PROJECT","sha256":"SET_ON_REAL_PROJECT"},
+  "new_candidate":null,
+  "rollback_to":{"deepwrite_version":"READ_FROM_CURRENT","wish_delivery_version":"READ_FROM_CURRENT","artifact_sha256":"SET_ON_REAL_PROJECT"},
+  "gates":{"engineering":"PENDING","content_quality":"PENDING","author_acceptance":"PENDING","external_validation":"NOT_RUN"},
+  "next_executable_action":"PIN_VERSIONS_AND_START_PROJECT"
+}
