@@ -1,0 +1,44 @@
+{
+  "schema": "deepwrite/synthetic-principle-probe/v0.1",
+  "status": "PASS_INTERNAL_CONSTRUCTED_COUNTEREXAMPLES_NOT_QUALITY_PROVEN",
+  "input": "intent.md",
+  "private_source_used": false,
+  "human_blind_review": "NOT_RUN",
+  "unknown_case_detection": "NOT_RUN",
+  "E1": "NOT_TESTED",
+  "E2": "NOT_RUN",
+  "files_sha256": {
+    "RESULTS.md": "c61b6e8d84d5d4f502a37e8101c0f54a2acf562372fed5146d35c225ec6b3e85",
+    "baseline.md": "8507875716ed6bf0afe1329a694c27ef30d61ccd390d6766b321567fa2c73e7b",
+    "drift.md": "5bc89996619bb2a9463b5326359fb3d8520a42c6ab6993aa5c3fa920cd6299e1",
+    "innovation.md": "51429a790e237bbdb1c698aae19138e1f04534b649b90fc01f8331dea0fc4ded",
+    "intent.md": "619a13e4354fc91dd5f1e981700e2cc79e2533696757d6287e0a07f9d5c0ce6a",
+    "plan-repair.md": "0a462ac8006d1164b037b72321bd93f66ccbc241b65dd1a17601718aa85770a1",
+    "proxy-bait.md": "4d05b6af5cd4d9b27aa0060fbd0e2aada65bd016963d245be9a50e8d0827657c"
+  },
+  "counts": {
+    "proxy-bait.md": {
+      "non_whitespace_unicode_characters": 1247,
+      "synthetic_fact_labels": 9,
+      "aphorism_markers": 8
+    },
+    "baseline.md": {
+      "non_whitespace_unicode_characters": 511,
+      "synthetic_fact_labels": 0,
+      "aphorism_markers": 0
+    },
+    "innovation.md": {
+      "non_whitespace_unicode_characters": 587,
+      "synthetic_fact_labels": 0,
+      "aphorism_markers": 0
+    }
+  },
+  "cash_checks": {
+    "upfront_day1": 3000,
+    "upfront_day31": -3000,
+    "installment_day1": 6900,
+    "installment_day31": -1200,
+    "upfront_minimum_for_60_days": 18000,
+    "installment_minimum_for_60_days": 16200
+  }
+}

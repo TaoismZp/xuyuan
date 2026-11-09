@@ -14,6 +14,12 @@ def sample(mode="CANDIDATE_OPT_IN"):
       "per_project_explicit_opt_in":True,"evidence":{},"author_promotion_approval":False}
 
 class ReleaseGateTests(unittest.TestCase):
+    def test_malformed_containers_are_blocked(self):
+        for x in ([], None, {"baseline":None}, {"rollback_plan":[]}, {"gates":"PASS"}, {"evidence":False}):
+            with self.subTest(value=x): self.assertTrue(evaluate(x))
+    def test_string_false_is_not_authorization_or_immutability(self):
+        for key in ("immutable_baseline", "per_project_explicit_opt_in"):
+            x=sample(); x[key]="false"; self.assertTrue(evaluate(x))
     def test_can_opt_in_with_pending_quality_and_label_as_candidate(self): self.assertEqual(evaluate(sample()), [])
     def test_cannot_opt_in_without_user_project_choice(self):
         x=sample(); x["per_project_explicit_opt_in"]=False; self.assertIn("explicit per-project opt-in required",evaluate(x))

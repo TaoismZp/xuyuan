@@ -25,6 +25,8 @@
 
 ## 唯一下一步
 
-在新的对话里接受一个**此前未用于深写设计**的独立书籍题目，按 [EVALUATION.md](EVALUATION.md) 先执行 E1 工程通路测试；如果不能完成自主完整书，清楚记录实际能力缺口和已交付候选。与此同时登记同预算旧路线A/B，后续再做不同题材的盲审验证。
+当前会话是工作台联合研发：读取 `discovery-gate/agent-bridge/STATE.json` 的实际 `last_message`、最新提交与 `next_action`，由所列下一位执行交叉审查。2026-11-09首轮诊断和工程增量见 `experiments/2026-11-09-system-review/REPORT.md`；候选字节恢复不等于E1/E2或私有持久恢复通过。不要执行本入口历史上已过时的下一步。
+
+若任务是作者另行发起的真实写书项目，则从该项目自己的私有RECOVERY/STATE及固定双层版本恢复；新项目按 `START_HERE.md`、`PROJECT_INIT.md` 立项。E1、E2继续按 `EVALUATION.md` 保持未验收，不以本轮小样替代。
 
 如果没有自动新建私有GitHub仓库的能力，**先在私有文件库完成新项目隔离与可恢复检查点，标注 GitHub 私有repo PENDING，绝不把新书原稿放进本公开目录**。下一次先从本页和项目STATE接班，不重复建新的无关项目。

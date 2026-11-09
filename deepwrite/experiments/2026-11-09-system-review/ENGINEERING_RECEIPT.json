@@ -1,0 +1,71 @@
+{
+  "schema": "deepwrite/system-review-engineering/v0.1",
+  "base_commit": "d64b9e0a69deed62101dfe55d9798b84a32d9def",
+  "data": "PUBLIC_SYNTHETIC_ONLY",
+  "structural_guard_accepts_nonexistent_hash": true,
+  "byte_verifier_rejects_nonexistent_checkpoint": "missing/non-regular file: manifest.json",
+  "writing": {
+    "status": "PASS_BYTES_ONLY",
+    "manifest_sha256": "1b380ab38c66d6e9e685e848600c23da0319629b1ebd9d99265bf3555ee8985a",
+    "files": 6,
+    "artifact_sha256": "c4f17a193e692082a214012c4f3269ae156249991cafa22f4662511eaf7bb749",
+    "failed_candidate_sha256": "96c95109b129189dc26db35386970b4206b32b856a9e2435dc5ee1ff137390a5",
+    "source_deleted_before_restore": true,
+    "all_files_byte_equal": true,
+    "two_protocol_specs_and_pins_restored": true,
+    "candidate_preserved": true,
+    "module_disabled_in_restored_config": true,
+    "tamper_and_overwrite_blocked": {
+      "draft.md": "object size/SHA256 mismatch: draft.md",
+      "config.json": "object size/SHA256 mismatch: config.json",
+      "manifest": "manifest SHA256 mismatch",
+      "existing_destination": "destination already exists"
+    },
+    "http_response_byte_equal": null,
+    "verify": {
+      "status": "PASS_BYTES_ONLY",
+      "project_id": "PUBLIC_SYNTHETIC_WRITING",
+      "files": 6,
+      "manifest_sha256": "1b380ab38c66d6e9e685e848600c23da0319629b1ebd9d99265bf3555ee8985a"
+    }
+  },
+  "website": {
+    "status": "PASS_BYTES_ONLY",
+    "manifest_sha256": "0c00c5a00bb865a996a8e467c17283ee9604d879967e608f9d9500b55d686d9f",
+    "files": 6,
+    "artifact_sha256": "7b6f097bf3fb531295016945bbc51473fcae82b935b37f618667a34757b2a93c",
+    "failed_candidate_sha256": "c1ecacef12f9931fb994714ff020d3fdb1f6e2173993dc6c7a0fb1188624b883",
+    "source_deleted_before_restore": true,
+    "all_files_byte_equal": true,
+    "two_protocol_specs_and_pins_restored": true,
+    "candidate_preserved": true,
+    "module_disabled_in_restored_config": true,
+    "tamper_and_overwrite_blocked": {
+      "index.html": "object size/SHA256 mismatch: index.html",
+      "config.json": "object size/SHA256 mismatch: config.json",
+      "manifest": "manifest SHA256 mismatch",
+      "existing_destination": "destination already exists"
+    },
+    "http_response_byte_equal": true,
+    "verify": {
+      "status": "PASS_BYTES_ONLY",
+      "project_id": "PUBLIC_SYNTHETIC_WEBSITE",
+      "files": 6,
+      "manifest_sha256": "0c00c5a00bb865a996a8e467c17283ee9604d879967e608f9d9500b55d686d9f"
+    }
+  },
+  "concurrent_source_counterexample": {
+    "status": "LIMITATION_REPRODUCED_NOT_TRANSACTIONAL",
+    "restored_book": "generation 1",
+    "restored_config": {
+      "generation": 2
+    },
+    "requires_stopped_source_writers": true
+  },
+  "quality_improvement": "UNVERIFIED",
+  "independent_human_blind": "NOT_RUN",
+  "E1": "NOT_IMPLEMENTED",
+  "E2": "NOT_RUN",
+  "durable_private_cross_environment_restore": "NOT_RUN",
+  "website_public_deployment_and_interaction": "NOT_RUN"
+}
