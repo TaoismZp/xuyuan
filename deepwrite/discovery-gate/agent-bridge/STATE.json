@@ -13,7 +13,7 @@
     "path": "deepwrite/discovery-gate/agent-bridge/messages/0001-chatgpt.md"
   },
   "next_actor": "CODEX",
-  "next_action": "Codex: read full DeepWrite system entry and scope correction first, then historical message 0001. Audit whole DeepWrite capability/quality bottlenecks, implement one evidence-backed high-value improvement, write immutable messages/0002-codex.md, update STATE and read back. Discovery Gate is only a candidate module.",
+  "next_action": "Codex: review full DeepWrite and upstream Wish Delivery v7.6, including GUARDED_DUAL_PROTOCOL_20261109.md; test/critique regression + rollback scheme, do one real representative fix, write messages/0002-codex.md, update and re-read STATE. Do not promote either CURRENT or disclose private books.",
   "gates": {
     "public_bridge_files": "PASS_GITHUB_READBACK_ALL_3_FILES",
     "private_source_review": "BLOCKED_UNLESS_PRIVATE_ACCESS_CONFIRMED",
@@ -23,7 +23,10 @@
     "full_deepwrite_scope_correction": "PASS_PUBLIC_GITHUB_READBACK",
     "discovery_gate_quality": "UNVERIFIED",
     "E1_autonomous_full_book": "NOT_IMPLEMENTED",
-    "E2_equal_budget_full_book": "NOT_RUN"
+    "E2_equal_budget_full_book": "NOT_RUN",
+    "guarded_dual_protocol": "PUBLIC_PROPOSAL_SAVED_REGRESSION_GUARD_UNIT_TESTS_9_OF_9_NOT_QUALITY_PROVEN",
+    "upstream_wish_candidate": "PENDING_NON_WRITING_EVIDENCE_NO_PROMOTION",
+    "current_version_change": "NONE"
   },
   "private_content_policy": "NEVER_PUBLISH_PRIVATE_BOOK_OR_BLIND_KEYS",
   "async_notice": "User notification is needed to cue each assistant; no automatic background communication.",
@@ -33,5 +36,16 @@
   "scope": "FULL_DEEPWRITE_WORKBENCH_NOT_JUST_DISCOVERY_GATE",
   "system_entry": "deepwrite/AGENT_COLLABORATION.md",
   "scope_correction": "deepwrite/discovery-gate/agent-bridge/SCOPE_CORRECTION_20261109.md",
-  "last_protocol_change_commit": "c1d3baa004a9dac520b85b545eb04a1ca07f0ffc"
+  "last_protocol_change_commit": "c1d3baa004a9dac520b85b545eb04a1ca07f0ffc",
+  "dual_protocol_guarded_evolution": {
+    "proposal": "deepwrite/GUARDED_EVOLUTION.md",
+    "upstream_feedback": "wish-delivery/research/DEEPWRITE_FEEDBACK_CANDIDATE_20261109.md",
+    "module_channels": "deepwrite/WORKBENCH_RELEASE_CHANNELS.json",
+    "recovery_and_user_value": "deepwrite/HISTORY.md",
+    "added_codex_instruction": "deepwrite/discovery-gate/agent-bridge/GUARDED_DUAL_PROTOCOL_20261109.md",
+    "current_versions_unchanged": true,
+    "tests": "9_OF_9_PASS_STRUCTURAL_ONLY",
+    "quality_promotion": "PENDING",
+    "rollout_mode": "STABLE_DEFAULT_OPT_IN_MODULES_ONLY"
+  }
 }
