@@ -22,3 +22,7 @@
 ## 一次性交付意味着什么
 
 一次请求/一份完整作品，是**目标形式**。内部可以多次循环，不是“从目录开始按顺序吐完就成功”。DeepWrite v0.1 尚未验证自动完成全书的能力，新项目必须记录真实执行路径与阻塞。
+
+## 工作台本身的迭代（非用户写书任务）
+
+当用户要求 ChatGPT 与 Codex **共同研究和升级 DeepWrite 本身**时，进入 `deepwrite/AGENT_COLLABORATION.md`；通过 `deepwrite/discovery-gate/agent-bridge/README.md` 和 `STATE.json` 以 GitHub 文件进行异步接力。该目录路径沿用历史命名，但范围覆盖整个 DeepWrite，不只 Discovery Gate。公开协作仅放脱敏通用方法；未发表私人材料保持私有。候选改进不得擅自升级 `deepwrite/CURRENT.json`。
