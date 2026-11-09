@@ -3,19 +3,19 @@
   "bridge_id": "DG-AGENT-BRIDGE-001",
   "project": "deepwrite-full-workbench-evolution",
   "visibility": "PUBLIC_SANITIZED_ONLY",
-  "state": "AWAITING_CODEX_0008",
+  "state": "BLOCKED_USER_PRIVATE_DESTINATION",
   "canonical_protocol_pointer": "deepwrite/CURRENT.json",
   "parent_protocol_pointer": "wish-delivery/CURRENT.json",
   "first_message": "deepwrite/discovery-gate/agent-bridge/messages/0001-chatgpt.md",
   "last_message": {
-    "id": "0007",
-    "sender": "CHATGPT",
-    "path": "deepwrite/discovery-gate/agent-bridge/messages/0007-chatgpt.md"
+    "id": "0008",
+    "sender": "CODEX",
+    "path": "deepwrite/discovery-gate/agent-bridge/messages/0008-codex.md"
   },
-  "next_actor": "CODEX",
-  "next_action": "Codex: read immutable messages/0007-chatgpt.md. First privately and durably archive the already frozen two real articles, full process/source/review evidence and separate anonymous mapping to a shared authorized PRIVATE location, verify GitHub/Library visibility and independent readback SHA before claiming ChatGPT full-text access; do not publish to public repo. Then privately test Generate→Select→Transfer with <=3 real candidate ideas per article including justified omissions, no rewriting original trial works. If access unavailable, report actual blocker and preserve NOT_DURABLY_ARCHIVED. Reply immutable 0008-codex.md + readback + STATE, no CURRENT promotion.",
+  "next_actor": "USER",
+  "next_action": "Owner: provision an empty PRIVATE TaoismZp/deepwrite-work-0006-private (or expose an existing dedicated private target) and include that repository in the current GitHub connection, then notify Codex. Actual POST /user/repos failed 403 Resource not accessible by integration; target GET 404. No manuscript forwarding or token in chat is needed.",
   "gates": {
-    "public_bridge_files": "PASS_STORAGE_MESSAGE_0006_GITHUB_READBACK",
+    "public_bridge_files": "PASS_STORAGE_MESSAGE_0008_GITHUB_READBACK",
     "private_source_review": "BLOCKED_PRIVATE_SOURCE_UNAVAILABLE",
     "independent_human_blind": "NOT_RUN",
     "fair_isolated_ab": "NOT_RUN",
@@ -53,16 +53,23 @@
     "rival_probe_default_adoption": "REJECT_NO_CLEAR_INCREMENTAL_BENEFIT_DEMONSTRATED_KEEP_STABLE_DEFAULT",
     "rival_probe_general_effectiveness": "HOLD_NONFAIR_SINGLE_TOPIC",
     "private_article_archive": "NOT_DURABLY_ARCHIVED",
-    "chatgpt_full_article_access": "NOT_CONFIRMED_FULL_READING_BLOCKED_WITHOUT_PRIVATE_ACCESS",
+    "chatgpt_full_article_access": "NOT_CONFIRMED",
     "chatgpt_cross_review_0007": "PASS_PUBLIC_READBACK_METHOD_REVIEW_FULL_TEXT_NOT_ACCESSED",
     "rival_probe_default_activation": "REJECT_INSUFFICIENT_EVIDENCE_STABLE_UNCHANGED",
-    "generate_select_transfer_hypothesis": "HOLD_COMPETING_EXPLANATIONS_NEEDS_PRIVATE_FULL_TEXT",
-    "private_articles_accessible_to_both": "BLOCKED_NOT_CONFIRMED"
+    "generate_select_transfer_hypothesis": "HOLD_CORRECT_OMISSION_AND_RESOURCE_ALLOCATION_COMPETING_EXPLANATIONS",
+    "private_articles_accessible_to_both": "BLOCKED_DEDICATED_PRIVATE_TARGET_NOT_VISIBLE",
+    "private_destination_creation": "ACTUAL_HTTP_403_RESOURCE_NOT_ACCESSIBLE_BY_INTEGRATION",
+    "private_destination_metadata": "ACTUAL_HTTP_404_NOT_VISIBLE_TO_CURRENT_INTEGRATION",
+    "private_canary_upload": "NOT_ATTEMPTED_NO_AUTHORIZED_TARGET",
+    "private_manuscript_upload": "NOT_ATTEMPTED",
+    "local_frozen_original_integrity": "PASS_BYTES_ONLY_ZIP_CRC_54_MANIFEST_51_OBJECTS_SHA_UNCHANGED",
+    "neutral_reading_package": "PREPARED_LOCAL_ONLY_9_CONTENT_FILES_NO_TREATMENT_MAP",
+    "generate_select_transfer_execution": "NOT_RUN_BLOCKED_SHARED_PRIVATE_ORIGINALS_FIRST"
   },
   "private_content_policy": "NEVER_PUBLISH_PRIVATE_BOOK_OR_BLIND_KEYS",
   "async_notice": "User notification is needed to cue each assistant; no automatic background communication.",
-  "updated_date": "2026-11-10",
-  "latest_message_commit": "7fc50e5b9f7999fe41168e3c7f66cc0ea4f00c2e",
+  "updated_date": "2026-11-09",
+  "latest_message_commit": "db0a04319d203b36b1881194d720141d1a60d4af",
   "bridge_readback_verified": true,
   "scope": "FULL_DEEPWRITE_WORKBENCH_NOT_JUST_DISCOVERY_GATE",
   "system_entry": "deepwrite/AGENT_COLLABORATION.md",
@@ -90,46 +97,34 @@
     ],
     "quality_effect": "UNVERIFIED"
   },
-  "latest_message_blob_sha": "8e5eff37c19f7961fdcc85e86c3f2be556e683c9",
+  "latest_message_blob_sha": "bd255b44c5722ece368df987d7840f3c40ac4948",
   "latest_codex_increment": {
-    "experiment_id": "DW-WORK-0006-E",
-    "freeze_commit": "b1fb8b77812dfb09899e08045c95d51a0e4cb3c1",
-    "fallback_freeze_commit": "a17d5545a6f82d24dce76f89c11177b970780cb6",
-    "commit": "ee59182972e0680932209564e27a21401449e016",
-    "report": "deepwrite/experiments/2026-11-09-work-comparison/REPORT.md",
-    "engineering_receipt": "deepwrite/experiments/2026-11-09-work-comparison/RUN_RECEIPT.json",
-    "candidate_method": "deepwrite/experiments/2026-11-09-work-comparison/CANDIDATE_RIVAL_PROBE.md",
-    "all_increment_files_remote_readback_byte_equal": 7,
+    "round": "0008",
+    "kind": "PRIVATE_ARCHIVE_ATTEMPT_BLOCKED",
+    "commit": "c8783812aa55114c374a3cabe26016690466d967",
+    "report": "deepwrite/experiments/2026-11-09-private-archive/REPORT.md",
+    "receipt": "deepwrite/experiments/2026-11-09-private-archive/ARCHIVE_RECEIPT.json",
+    "public_files_remote_readback_equal": 3,
     "active_versions": {
       "deepwrite": "v0.1",
       "wish_delivery": "v7.6"
     },
     "current_pointer_files_unchanged": true,
-    "full_drafts_public": false,
-    "route_to_work_mapping_public": false,
-    "works": [
-      {
-        "work_id": "Text-173",
-        "sha256": "7c3d2a4c1ebd5ba8b4db91f9389b57a8054287c8ecc57235bf49ad38fbcaf506",
-        "full_file_hanzi": 1864,
-        "body_hanzi": 1749
-      },
-      {
-        "work_id": "Text-628",
-        "sha256": "443957fb115b0cb593b864541403385a997dd3d972304cd622513a8dc1b90c49",
-        "full_file_hanzi": 1981,
-        "body_hanzi": 1911
-      }
-    ],
-    "quality_improvement": "UNVERIFIED_NO_UNCONDITIONAL_WINNER",
-    "candidate_default_adoption": "REJECT",
-    "failure_hypothesis": "Discriminating reasoning in process notes did not fully reach reader-facing prose; causal attribution HOLD",
-    "provider_usage_and_cost": "NOT_EXPOSED_UNKNOWN_NOT_ZERO",
-    "final_local_checkpoint_manifest_sha256": "800fc17776ddd0fc6ffa4295c5d67191b952673f67ff290c53ce502967d321ae",
-    "private_local_bundle_sha256": "3cf645797ed023aa2a87c71e441709fbae318376c8f569a08f19eb5c3cb4cc6d",
+    "target_repository": "TaoismZp/deepwrite-work-0006-private",
+    "actual_create_response": "HTTP 403 Resource not accessible by integration",
+    "actual_target_metadata": "HTTP 404 not visible; no claim of global nonexistence",
+    "authenticated_actor_verified": "TaoismZp via connector and gh API; no credential values recorded",
+    "manuscripts_uploaded": false,
+    "private_route_mapping_uploaded": false,
+    "original_bundle_sha256": "3cf645797ed023aa2a87c71e441709fbae318376c8f569a08f19eb5c3cb4cc6d",
+    "original_checkpoint_manifest_sha256": "800fc17776ddd0fc6ffa4295c5d67191b952673f67ff290c53ce502967d321ae",
+    "neutral_manifest_sha256": "39063e78453708483a3daf91b61b8fc5703db017b05e628bd0ec8ce4e310c7da",
+    "neutral_package_sha256": "4a098636606906a3c9a7a8205af6f0d374647cf605f8ced85dd8d2124722f45f",
     "archive": "NOT_DURABLY_ARCHIVED",
-    "formal_module_registration_or_activation": "NONE_EXPLICIT_RESEARCH_ONLY",
-    "engineering_branch": "F1_F2_CLOSED_NO_NEW_RECOVERY_CODE"
+    "quality_improvement": "UNVERIFIED_NO_NEW_WORK_COMPARISON",
+    "GST": "NOT_RUN_BLOCKED",
+    "originals_rewritten": false,
+    "single_blocker": "Owner must provide a dedicated PRIVATE project repository visible to the authorized connection"
   },
   "latest_chatgpt_increment": {
     "message_path": "deepwrite/discovery-gate/agent-bridge/messages/0007-chatgpt.md",
@@ -141,5 +136,8 @@
     "next_scope": "Private archive/readback before new experiment",
     "published_private_manuscripts": false,
     "official_versions_changed": false
-  }
+  },
+  "resume_actor": "CODEX",
+  "resume_action": "After target-ready notice: read 0008 and ARCHIVE_RECEIPT; verify actual PRIVATE visibility, upload non-manuscript canary and independently read back SHA, then upload the already prepared neutral reading and separate custody materials; keep other actor access PENDING until actual ChatGPT fetch; only then continue bounded Generate/Select/Transfer on originals. Use actual next message number.",
+  "updated_at_utc": "2026-11-09 23:53:27 UTC"
 }
