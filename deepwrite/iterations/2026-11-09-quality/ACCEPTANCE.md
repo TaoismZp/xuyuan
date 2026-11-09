@@ -6,7 +6,8 @@
 - 目标：VISION.md；施工图：BLUEPRINT.md；监督：SUPERVISION.md，三者 SHA256 均在 ARTIFACTS.json 内。
 - 候选/证据清单：[ARTIFACTS.json](ARTIFACTS.json)，SHA256：`1e6135803d2af55d5bc2caac5bc299acebdd2b4c926c9483d2006d2fc0eff194`。清单中的正文、代码、模板、小样和测试日志是本轮固定对象。
 - STATE / RECOVERY / 本验收单为可更新检查点元数据，不纳入清单以避免循环哈希；其身份以实际 Git commit 为准。
-- 外部提交与回读：PENDING，将在同项目 STATE 中记录实际返回值。
+- 外部提交与回读：`5a34327b36c9bbf822a43942cdadc275592c924e`，24个文件逐字节一致、20项固定产物SHA256/长度一致；GitHub连接亦按该commit回读manifest与生效版本指针。
+- 交审入口：[草稿 PR #12](https://github.com/TaoismZp/xuyuan/pull/12)，未合并、未切换生效版本。
 
 ## 本轮结果
 

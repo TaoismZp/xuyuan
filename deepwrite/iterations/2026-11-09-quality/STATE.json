@@ -3,8 +3,8 @@
   "project_id": "deepwrite-method-quality-20261109",
   "task_type": "METHOD_ITERATION",
   "privacy": "PUBLIC_METHOD_ONLY",
-  "status": "ACTIVE",
-  "current_gate": "CANDIDATE_REMOTE_CHECKPOINT",
+  "status": "COMPLETED",
+  "current_gate": "CANDIDATE_READY_FOR_REVIEW",
   "base_commit": "4c277410e892e0200584392097e00b2899627162",
   "active_deepwrite": "v0.1",
   "active_parent": "v7.6",
@@ -13,9 +13,28 @@
     "manifest_path": "deepwrite/iterations/2026-11-09-quality/ARTIFACTS.json",
     "sha256": "1e6135803d2af55d5bc2caac5bc299acebdd2b4c926c9483d2006d2fc0eff194"
   },
-  "last_good_checkpoint": "deepwrite/iterations/2026-11-09-quality/",
-  "checkpoint_scope": "LOCAL_WORKSPACE_NOT_YET_REMOTE",
+  "last_good_checkpoint": {
+    "commit": "5a34327b36c9bbf822a43942cdadc275592c924e",
+    "path": "deepwrite/iterations/2026-11-09-quality",
+    "manifest_sha256": "1e6135803d2af55d5bc2caac5bc299acebdd2b4c926c9483d2006d2fc0eff194"
+  },
+  "checkpoint_scope": "GITHUB_DURABLE_READ_BACK",
   "open_blocker": null,
-  "next_executable_action": "将已冻结候选与证据提交到专用分支，按Git对象与SHA回读，再建立草稿PR。",
-  "updated_at": "2026-11-09"
+  "next_executable_action": "读回PR12及其评审意见，对照固定候选commit和ARTIFACTS身份修订具体缺陷；进入真实质量比较前先预登记素材、预算、评分锚点和真实读者。候选仍未生效。",
+  "updated_at": "2026-11-09T00:29:52Z",
+  "completion_scope": "CANDIDATE_METHOD_AND_COMPATIBLE_PATCH_ONLY_NOT_QUALITY_SIGNOFF",
+  "readback": {
+    "commit": "5a34327b36c9bbf822a43942cdadc275592c924e",
+    "files_byte_identical": 24,
+    "artifact_sha256_verified": 20,
+    "github_connector_manifest_blob": "7d7c1a215d99e1e2f1eb78b3af3aa3b4b9e81297"
+  },
+  "pull_request": "https://github.com/TaoismZp/xuyuan/pull/12",
+  "open_quality_gates": [
+    "REAL_READER_OBSERVATION_NOT_RUN",
+    "HUMAN_BLIND_AB_NOT_RUN",
+    "AUTHOR_SIGNOFF_PENDING",
+    "E1_NOT_IMPLEMENTED",
+    "E2_NOT_RUN"
+  ]
 }
