@@ -1,0 +1,17 @@
+{
+  "schema":"deepwrite/release-channels/v0.1",
+  "status":"PROPOSED_NOT_ACTIVE",
+  "official_current":"deepwrite/CURRENT.json",
+  "parent_official_current":"wish-delivery/CURRENT.json",
+  "last_verified_active":{"deepwrite_version":"v0.1","deepwrite_spec":"deepwrite/versions/v0.1.md","parent_version":"v7.6","parent_spec":"wish-delivery/versions/v7.6.md"},
+  "channels":{
+    "STABLE":{"selection":"resolve_CURRENT_on_new_project; pin_actual_versions_and_commits_per_project","default":true,"no_quality_guarantee":true},
+    "SHADOW":{"selection":"parallel output; do not replace stable baseline","default":false,"research_comparison_only":true},
+    "CANDIDATE_OPT_IN":{"selection":"explicit project module flag + exact candidate commit","default":false,"labels":["EXPERIMENTAL","NOT_FORMAL_VERSION"]},
+    "ROLLBACK":{"selection":"restore verified stable pointer and frozen artifact as new project checkpoint","default":false,"no_destructive_overwrite":true}
+  },
+  "candidate_modules":[{"id":"discovery_gate","path":"deepwrite/discovery-gate/SKILL.md","status":"PROPOSED_QUALITY_UNVERIFIED","usable":"OPT_IN_RESEARCH_ONLY"}],
+  "quality_baselines":{"project_A":"PRIVATE_CANDIDATES_EXIST_NO_INDEPENDENT_BOOK_GRADE","project_B":"AUTHOR_APPROX_60_ON_ONE_FROZEN_BOOK_NOT_A_WORKBENCH_SCORE"},
+  "promotion":{"auto_promote":false,"requires_author_approval":true,"requires_independent_quality_evidence":true,"requires_non_regression":true,"requires_backup_and_rollback_plan":true},
+  "recovery":"deepwrite/GUARDED_EVOLUTION.md"
+}
