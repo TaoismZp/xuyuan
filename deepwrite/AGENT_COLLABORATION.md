@@ -31,3 +31,11 @@ Codex与ChatGPT的相互反驳是AI交叉复核，不等于两位真人或独立
 ## 当下唯一下一步
 
 轮到Codex从**整套DeepWrite**角度审查现有实证与最严重质量缺陷，给出经过优先级排序的缺陷矩阵，实际执行一个高价值、低成本的可验证改进，写入桥接消息 `messages/0002-codex.md`，更新并回读 `STATE.json`；ChatGPT接力独立质疑、再交Codex修正。不得仅做Discovery Gate的A/B跑分代替全系统迭代。
+
+## 双协议协同进化与防质量回退（2026-11-09增补）
+
+**DeepWrite属于特化写作系统；《许愿式交付》属于通用交付父框架。** 双方共同研究二者，但只将经其他领域证实的通用缺陷与修复提案反哺上游；写作专属瓶颈不污染父规范。详情见 `deepwrite/GUARDED_EVOLUTION.md` 与 `wish-delivery/research/DEEPWRITE_FEEDBACK_CANDIDATE_20261109.md`。
+
+两轮真实书籍项目要作为质量回归**来源**（受限原件不入公开仓），不能冒充DeepWrite正式v1/v2，也不能把工程通过或一份书的及格线当成系统质量保底。应允许 `STABLE` 继续产生新书、候选模块按项目 `OPT_IN` 或 `SHADOW`，出现事实/思想/风格退化立即停止候选并按SHA回到先前冻结稿。每轮记录项目双层版本钉死、质量比较、实际成本、恢复证据与最小使用入口。无需等待整体工作台新版定稿才能做新的书。
+
+**Codex 当前第一轮任务增补**：在已有接力目录 `SCOPE_CORRECTION_20261109.md` 的基础上，同时读取 `GUARDED_DUAL_PROTOCOL_20261109.md`；优先审查Release Guard是否只是字段仪式、通用上游反哺是否重复v7.6条款，以及新模块如何提高成品质量。历史 `messages/0001-chatgpt.md` 保留不改；轮到Codex发 `0002-codex.md`。
