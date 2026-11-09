@@ -1,0 +1,149 @@
+{
+  "experiment_id": "DW-WORK-0006",
+  "status": "FROZEN_BEFORE_EXECUTION_NOT_QUALITY_PROVEN",
+  "frozen_at": "2026-11-09T15:36:38.732914+00:00",
+  "base_commit": "2a052b65435719dff42f6dffd50e0484491a9591",
+  "purpose": "写一篇可独立连续阅读的中文解释性文章，给没有气象学训练、需要讨论一段居民步行街道改造的社区工作人员和居民代表。核心问题：如何理解现有城市树木降温研究，并把它转化为街道改造前应问的问题与应收集的证据？读后应能识别研究能支持什么、尚不能支持什么，并知道实际讨论可以怎样推进。不得预设植树一定优于其他方案、一定无效，或一定存在某个反常识结论。\n边界：没有该街道实测/预算/树种/人群暴露数据，不得虚构现场、人物访谈、因果实验、量化本地降温承诺、健康或施工建议。区分公共研究事实、解释和作者建议。每项实质事实给来源ID/块定位，文末列来源链接。不自称学术原创。允许结论相同而解释更好。\n成品：完整标题、引入、连贯正文、结束与必要来源说明。最终正文目标约1800—2600汉字，初稿约1200—1800汉字；长度是本轮资源约束，不能补重复文字来达标。不要用目录/卡片/检查表代替文章。",
+  "protocols": {
+    "deepwrite": {
+      "version": "v0.1",
+      "spec_path": "deepwrite/versions/v0.1.md",
+      "commit": "2a052b65435719dff42f6dffd50e0484491a9591",
+      "spec_blob_sha": "f7ce01622df733bc59982854e37d4ac44a79ec99"
+    },
+    "wish_delivery": {
+      "version": "v7.6",
+      "spec_path": "wish-delivery/versions/v7.6.md",
+      "commit": "2a052b65435719dff42f6dffd50e0484491a9591",
+      "spec_blob_sha": "955bdde3d332283ff6ccc89f943555824f741d59"
+    }
+  },
+  "candidate_method": {
+    "id": "rival_probe_1",
+    "version": "v0.1",
+    "path": "deepwrite/experiments/2026-11-09-work-comparison/CANDIDATE_RIVAL_PROBE.md",
+    "sha256": "0755914e75fac10d7b1ceea07e10f5fe75dfcaf39b444f5a4799a0ee6c8d85e0",
+    "commit_binding": "THE_GIT_COMMIT_CONTAINING_THIS_FREEZE_AND_METHOD_BEFORE_EXECUTION"
+  },
+  "route_definitions": {
+    "A": "Stable v0.1 adapted transparently to one complete article",
+    "B": "Same stable adaptation plus Rival Probe 1, within same working-notes allowance"
+  },
+  "source_packet_sha256": "233e1627834a307f63c2c143197e04a7e05c17ed48e222bdd46eee543ea79ef9",
+  "source_packet_words": 9286,
+  "sources": [
+    {
+      "id": "S1",
+      "url": "https://www.epa.gov/heatislands/benefits-trees-and-vegetation",
+      "raw_html_sha256": "3f03c655f675bb57c419f62a5abbf151aa570adca4124d43375e41932e591fe4",
+      "selected_block_ranges_half_open": [
+        [
+          5,
+          11
+        ]
+      ],
+      "selection_rule": "full relevant sections: S1 heat mechanisms; S2 significance/abstract/results/discussion/methods; S3 abstract/design/predictors/main and hottest-day results/limitations/conclusion; S4 abstract and forest synthesis. No sentence-level answer labels."
+    },
+    {
+      "id": "S2",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6462107/",
+      "raw_html_sha256": "74ce462973c9f353eedd8d9496f319e77a3437b26213f8e32b46c33c2912581f",
+      "selected_block_ranges_half_open": [
+        [
+          45,
+          50
+        ],
+        [
+          59,
+          105
+        ]
+      ],
+      "selection_rule": "full relevant sections: S1 heat mechanisms; S2 significance/abstract/results/discussion/methods; S3 abstract/design/predictors/main and hottest-day results/limitations/conclusion; S4 abstract and forest synthesis. No sentence-level answer labels."
+    },
+    {
+      "id": "S3",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10862499/",
+      "raw_html_sha256": "73f43378628a20cedd5d5f64a7dd5cf24d94f42263e96ad1893e18fb12cbc6c0",
+      "selected_block_ranges_half_open": [
+        [
+          51,
+          54
+        ],
+        [
+          76,
+          118
+        ],
+        [
+          127,
+          145
+        ],
+        [
+          150,
+          155
+        ],
+        [
+          162,
+          171
+        ]
+      ],
+      "selection_rule": "full relevant sections: S1 heat mechanisms; S2 significance/abstract/results/discussion/methods; S3 abstract/design/predictors/main and hottest-day results/limitations/conclusion; S4 abstract and forest synthesis. No sentence-level answer labels."
+    },
+    {
+      "id": "S4",
+      "url": "https://environmentalevidencejournal.biomedcentral.com/articles/10.1186/s13750-021-00226-y",
+      "raw_html_sha256": "7f8796ce6deb1e20cc7747eb075d576926127e76ac1b0ddbf25ce951146c1a4c",
+      "selected_block_ranges_half_open": [
+        [
+          15,
+          24
+        ],
+        [
+          309,
+          324
+        ]
+      ],
+      "selection_rule": "full relevant sections: S1 heat mechanisms; S2 significance/abstract/results/discussion/methods; S3 abstract/design/predictors/main and hottest-day results/limitations/conclusion; S4 abstract and forest synthesis. No sentence-level answer labels."
+    }
+  ],
+  "prompt_sha256": {
+    "A": "69baad09734124e2615dde1435cdb85dad35083ee7cac06e4a87b0f106b20f37",
+    "B": "5487ac511507c39b66d454f3b1d4d3121d662d48efb2a3c9e9187d49c2bf1e67"
+  },
+  "output_schema_sha256": "4e0dec8000364788601ec36e116e3fe971b77bfc4c08d985fa96f4ec63296abe",
+  "execution_order": [
+    "B",
+    "A"
+  ],
+  "budget": {
+    "model_requested": "CLI_DEFAULT_NO_MODEL_OVERRIDE",
+    "model_identity_parity": "VERIFY_IF_RUNTIME_EXPOSES_MODEL_ELSE_UNVERIFIED",
+    "cli_version": "codex-cli 0.167.0-alpha.4",
+    "author_calls_per_route": 1,
+    "internal_passes": "working notes + full initial draft + factual/editorial revision + full final article",
+    "timeout_seconds_per_route": 300,
+    "additional_web_or_tool_calls": 0,
+    "working_notes_requested_max_hanzi": 900,
+    "revision_notes_requested_max_hanzi": 400,
+    "initial_article_requested_hanzi": [
+      1200,
+      1800
+    ],
+    "final_article_requested_hanzi": [
+      1800,
+      2600
+    ],
+    "hard_token_cap": "NOT_ENFORCEABLE_BY_THIS_CLI; record actual usage, no claim of exact equality",
+    "retries_or_replacements": 0
+  },
+  "context_controls": [
+    "fresh CLI process per route",
+    "empty workdir",
+    "ephemeral session",
+    "ignore user config and local rules",
+    "stdin only with frozen prompt",
+    "no tools requested; inspect actual tool events",
+    "read-only sandbox; filesystem still shared, not OS isolation"
+  ],
+  "review_plan": "After both outputs are frozen, masked-label AI review reads complete articles and same purpose/sources without methods or mapping; not human blind review. Independently source-check disputed claims. Allow B worse or no material change.",
+  "archive_policy": "Full drafts, raw outputs, prompts and mapping stay outside public repo in restricted local directory; no private durable service available; NOT_DURABLY_ARCHIVED unless independently confirmed. Public artifacts contain only methods/source identities/metadata and non-expressive editorial comparison."
+}
