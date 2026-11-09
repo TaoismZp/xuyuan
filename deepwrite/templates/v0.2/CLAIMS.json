@@ -1,0 +1,25 @@
+{
+  "schema": "deepwrite/claim-ledger/v0.2-candidate",
+  "draft_path": null,
+  "draft_sha256": null,
+  "claims": [
+    {
+      "id": "C01",
+      "draft_location": null,
+      "claim_text": null,
+      "kind": "FACT_OR_INFERENCE_OR_HYPOTHESIS_OR_ADVICE_OR_SYNTHETIC_EXAMPLE",
+      "source_uri": null,
+      "source_locator": null,
+      "source_access": "UNVERIFIED",
+      "source_identity": null,
+      "source_quality_or_conflict": null,
+      "date_scope_units": null,
+      "supports": null,
+      "does_not_support": null,
+      "counterevidence_or_limits": null,
+      "verification_action_and_result": null,
+      "status": "PENDING"
+    }
+  ],
+  "note": "Empty template. Source presence or SHA alone does not prove claim support."
+}

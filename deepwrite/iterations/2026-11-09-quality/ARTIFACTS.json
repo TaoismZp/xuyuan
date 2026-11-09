@@ -1,0 +1,121 @@
+{
+  "schema": "deepwrite/candidate-evidence/v1",
+  "project_id": "deepwrite-method-quality-20261109",
+  "base_commit": "4c277410e892e0200584392097e00b2899627162",
+  "supersedes_candidate_commit": "4d02fb07d64a9b516a22e715e4f2c28b4e04a4d3",
+  "candidate": "v0.2-origin-revised-DRAFT_NOT_ACTIVE",
+  "scope": "Public methods and sanitized origin review; no original source transcripts/manuscripts or replay input/output",
+  "control_files_excluded": "ARTIFACTS self, STATE, RECOVERY, ACCEPTANCE; bind mutable metadata by commit",
+  "artifacts": [
+    {
+      "path": "deepwrite/CHANGELOG.md",
+      "sha256": "2a07ff940f9bbd70b2d3a23cfe5c3495d19d0e99f4769a9c2232c991aa6627d9",
+      "bytes": 2249
+    },
+    {
+      "path": "deepwrite/CURRENT.json",
+      "sha256": "b34c5b461f6eba973014b2e19eee14f3db25e28eaede051ece3c560f709f83a6",
+      "bytes": 1580
+    },
+    {
+      "path": "deepwrite/EVALUATION.md",
+      "sha256": "b5795b6030566abbc76a00dbb308d36a8a8106c540c5d7982efb4bfac27b7274",
+      "bytes": 6579
+    },
+    {
+      "path": "deepwrite/EVIDENCE.md",
+      "sha256": "1c9d1e633b0487b7ea03ef2e2531ce2e0a31ce9549fae30a568e6c72a04e94f2",
+      "bytes": 2739
+    },
+    {
+      "path": "deepwrite/PROJECT_INIT.md",
+      "sha256": "e4d86f715a6e125789692d22df94c4a275847a0cd74ba4c1aa26442a79071381",
+      "bytes": 3642
+    },
+    {
+      "path": "deepwrite/README.md",
+      "sha256": "79aa36e300a1492dcbb62b40f9cec3de91d819848992c9286109f83b062738f3",
+      "bytes": 3810
+    },
+    {
+      "path": "deepwrite/RECOVERY.md",
+      "sha256": "54453c097447e1a6c61c3b1f8380aad1dd6cec0def3fedc553537cceae365015",
+      "bytes": 2264
+    },
+    {
+      "path": "deepwrite/START_HERE.md",
+      "sha256": "c6f4849bd9968f5133346527b90feb430eb1dee09e453dbb9f520743b987c03b",
+      "bytes": 3046
+    },
+    {
+      "path": "deepwrite/candidates/EDITORIAL_LOOP.md",
+      "sha256": "a5684b984a4af1cccf993264701f1e3cb1e6c2b61d96ca118541b8fff9eac684",
+      "bytes": 4603
+    },
+    {
+      "path": "deepwrite/candidates/RESEARCH_LOOP.md",
+      "sha256": "b12e638b5bdb436cc84d5a1851fea0c37d1f91c22b4742af10fc8cae6eb879e9",
+      "bytes": 5605
+    },
+    {
+      "path": "deepwrite/candidates/v0.2.md",
+      "sha256": "5cc1f2215190ae97659790528a819c8fcc0bfc411917a877191ff26e56c15eb3",
+      "bytes": 7118
+    },
+    {
+      "path": "deepwrite/iterations/2026-11-09-quality/BLUEPRINT.md",
+      "sha256": "be6c0b63fbacfbeb41e98fb6d07d9f7bdeddbaf0acdd759ace030a0971c87d39",
+      "bytes": 3035
+    },
+    {
+      "path": "deepwrite/iterations/2026-11-09-quality/EDITORIAL_SPIKE.md",
+      "sha256": "160f081525e811cb120c02ff92425d8a33108cde1c0a0865f5c493b0cd5427b0",
+      "bytes": 12176
+    },
+    {
+      "path": "deepwrite/iterations/2026-11-09-quality/ORIGIN_REASSESSMENT.md",
+      "sha256": "2c2a8df94c6a1c094675a8ef5d6ae05c7ed2677896884dbd58fdabb5ebe07374",
+      "bytes": 5821
+    },
+    {
+      "path": "deepwrite/iterations/2026-11-09-quality/SUPERVISION.md",
+      "sha256": "134854792adb091d4b44a17c7d6e78bea157351f403d762d2f1f64315a829076",
+      "bytes": 3806
+    },
+    {
+      "path": "deepwrite/iterations/2026-11-09-quality/TEST_RESULTS.txt",
+      "sha256": "451287667325d374c6dd38710eb01bc08a26bdc3576b014a65d39400906aeae9",
+      "bytes": 2238
+    },
+    {
+      "path": "deepwrite/iterations/2026-11-09-quality/VISION.md",
+      "sha256": "f0e61c4aaceb04d790427f7e68a5d2e87f2f53b720290c5e53873d5cd123b2e6",
+      "bytes": 2278
+    },
+    {
+      "path": "deepwrite/templates/v0.2/CHAPTER_REVIEW.md",
+      "sha256": "9f6882a9051032a78be1a0567267ba245c26a99d4d665f3d82e176f9f1632ceb",
+      "bytes": 1269
+    },
+    {
+      "path": "deepwrite/templates/v0.2/CLAIMS.json",
+      "sha256": "ae643792a0ca58a513bce4be61be04fad27c5a92668aec9ef1e0f195e5640c18",
+      "bytes": 743
+    },
+    {
+      "path": "deepwrite/templates/v0.2/EDITORIAL_BRIEF.md",
+      "sha256": "44856dfe13652368e5ea1cb211d3242379344bfc78eef8f9ae0627f129d3b189",
+      "bytes": 992
+    },
+    {
+      "path": "deepwrite/tests/test_packager.py",
+      "sha256": "5e56fb7d850f64cb51eaf1d77be9cf819c7f451a25f516f6df5f94651a380013",
+      "bytes": 10810
+    },
+    {
+      "path": "deepwrite/tools/book_packager_v0.1.py",
+      "sha256": "716cbedfe60ab7096f19b6de266b929cb81c0f8b8668c8ea322dd5e4286023e6",
+      "bytes": 8145
+    }
+  ]
+}

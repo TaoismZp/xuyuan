@@ -1,0 +1,25 @@
+Command: python -B -m unittest discover -s deepwrite/tests -v
+Scope: offline synthetic engineering regression; not editorial quality evidence.
+
+test_assembly_order_complete_identity_and_read_only_sources (test_packager.PackagerTests.test_assembly_order_complete_identity_and_read_only_sources) ... ok
+test_count_still_enforced_under_python_optimization (test_packager.PackagerTests.test_count_still_enforced_under_python_optimization) ... ok
+test_declared_bytes_checked_before_writing (test_packager.PackagerTests.test_declared_bytes_checked_before_writing) ... ok
+test_invalid_report_parent_does_not_leave_book (test_packager.PackagerTests.test_invalid_report_parent_does_not_leave_book) ... ok
+test_manifest_cannot_be_output_or_report (test_packager.PackagerTests.test_manifest_cannot_be_output_or_report) ... ok
+test_manifest_identity_must_describe_parsed_object (test_packager.PackagerTests.test_manifest_identity_must_describe_parsed_object) ... ok
+test_manifest_identity_uses_validated_snapshot (test_packager.PackagerTests.test_manifest_identity_uses_validated_snapshot) ... ok
+test_nested_report_directory_created (test_packager.PackagerTests.test_nested_report_directory_created) ... ok
+test_omitted_bytes_supported_and_measured (test_packager.PackagerTests.test_omitted_bytes_supported_and_measured) ... ok
+test_order_still_enforced_under_python_optimization (test_packager.PackagerTests.test_order_still_enforced_under_python_optimization) ... ok
+test_output_report_collision_rejected (test_packager.PackagerTests.test_output_report_collision_rejected) ... ok
+test_source_cannot_be_output_or_report (test_packager.PackagerTests.test_source_cannot_be_output_or_report) ... ok
+test_source_symlink_and_hardlink_aliases_cannot_be_destinations (test_packager.PackagerTests.test_source_symlink_and_hardlink_aliases_cannot_be_destinations) ... ok
+test_sources_cannot_escape_project_root (test_packager.PackagerTests.test_sources_cannot_escape_project_root) ... ok
+test_tamper_rejected_without_replacing_previous_derivatives (test_packager.PackagerTests.test_tamper_rejected_without_replacing_previous_derivatives) ... ok
+
+----------------------------------------------------------------------
+Ran 15 tests in 1.159s
+
+OK
+
+Exit code: 0
