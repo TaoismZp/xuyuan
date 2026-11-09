@@ -1,0 +1,49 @@
+{
+  "experiment_id": "DW-WORK-0006-E",
+  "status": "EXPLORATORY_FALLBACK_FROZEN_BEFORE_SUBAGENT_GENERATION",
+  "at": "2026-11-09T15:38:45.840071+00:00",
+  "original_freeze_commit": "b1fb8b77812dfb09899e08045c95d51a0e4cb3c1",
+  "original_cli_run": "BLOCKED_AUTHENTICATION_BOTH_ROUTES_NO_RETRY_NO_ARTICLE",
+  "original_cli_attempts": [
+    {
+      "route": "B",
+      "thread_id": "available_in_private_events",
+      "status": "FAILED_NO_RETRY",
+      "wall_seconds": 1.778,
+      "error_code": "AUTHENTICATION_REFRESH_FAILED",
+      "provider_token_usage": "NOT_RETURNED"
+    },
+    {
+      "route": "A",
+      "thread_id": "available_in_private_events",
+      "status": "FAILED_NO_RETRY",
+      "wall_seconds": 1.487,
+      "error_code": "AUTHENTICATION_REFRESH_FAILED",
+      "provider_token_usage": "NOT_RETURNED"
+    }
+  ],
+  "same_frozen_source_packet_sha256": "233e1627834a307f63c2c143197e04a7e05c17ed48e222bdd46eee543ea79ef9",
+  "same_frozen_prompt_sha256": {
+    "A": "69baad09734124e2615dde1435cdb85dad35083ee7cac06e4a87b0f106b20f37",
+    "B": "5487ac511507c39b66d454f3b1d4d3121d662d48efb2a3c9e9187d49c2bf1e67"
+  },
+  "candidate_method_commit": "b1fb8b77812dfb09899e08045c95d51a0e4cb3c1",
+  "fallback_mechanism": "two collaboration subagents fork_turns=none, inherited model no override; no parent conversation; read assigned frozen prompt and write only own output; do not inspect other route or project history",
+  "io_exception_to_prompt": "one assigned prompt file read and own output writes permitted; no other reading, browsing or delegation",
+  "budgets": {
+    "same_instructed_text_and_notes_limits_as_original": true,
+    "author_turns_per_route": 1,
+    "additional_research_calls": 0,
+    "model_inherited_same_parent_no_override": true,
+    "token_usage_and_billing": "NOT_EXPOSED_BY_COLLABORATION_TOOL",
+    "hard_timeout_seconds": "NOT_ENFORCED_BY_COLLABORATION_TOOL; record observed elapsed time"
+  },
+  "isolation_limits": [
+    "shared filesystem and same tool permissions; no OS access separation",
+    "procedural no-cross-reading instruction; inspect reported actions, not an external proof",
+    "not a fair causal A/B, no exact token/resource parity"
+  ],
+  "review": "fresh-context AI reads neutral-labelled final articles and common packet/purpose, no methods or mapping; not human blind review",
+  "archive": "LOCAL_RESTRICTED_NOT_DURABLY_ARCHIVED",
+  "promotion": "NONE"
+}
