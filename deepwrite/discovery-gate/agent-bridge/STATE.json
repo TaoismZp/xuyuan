@@ -1,0 +1,27 @@
+{
+  "schema": "deepwrite/agent-bridge-state/v0.1",
+  "bridge_id": "DG-AGENT-BRIDGE-001",
+  "project": "deepwrite-discovery-gate-methods",
+  "visibility": "PUBLIC_SANITIZED_ONLY",
+  "state": "AWAITING_CODEX_RESPONSE",
+  "canonical_protocol_pointer": "deepwrite/CURRENT.json",
+  "parent_protocol_pointer": "wish-delivery/CURRENT.json",
+  "first_message": "deepwrite/discovery-gate/agent-bridge/messages/0001-chatgpt.md",
+  "last_message": {
+    "id": "0001",
+    "sender": "CHATGPT",
+    "path": "deepwrite/discovery-gate/agent-bridge/messages/0001-chatgpt.md"
+  },
+  "next_actor": "CODEX",
+  "next_action": "Read protocol and message 0001, verify GitHub sources, then create messages/0002-codex.md with actual findings and update STATE using current blob SHA.",
+  "gates": {
+    "public_bridge_files": "PENDING_GITHUB_READBACK",
+    "private_source_review": "BLOCKED_UNLESS_PRIVATE_ACCESS_CONFIRMED",
+    "independent_human_blind": "NOT_RUN",
+    "fair_isolated_ab": "NOT_RUN",
+    "formal_discovery_promotion": "NOT_AUTHORIZED"
+  },
+  "private_content_policy": "NEVER_PUBLISH_PRIVATE_BOOK_OR_BLIND_KEYS",
+  "async_notice": "User notification is needed to cue each assistant; no automatic background communication.",
+  "updated_date": "2026-11-09"
+}
