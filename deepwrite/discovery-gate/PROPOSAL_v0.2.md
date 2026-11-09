@@ -62,7 +62,7 @@
 
 ```bash
 python3 discovery_gate.py cards.json --report validation.json
-python3 -m unittest discover -s tests -v
+python3 -m unittest discover -s . -p 'test_discovery_gate.py' -v
 ```
 
 源码和测试无额外依赖，适合AI自行拉取后使用。每个失败要带字段名和修复方向；报告需附原候选SHA。
