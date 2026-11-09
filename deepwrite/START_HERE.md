@@ -26,3 +26,7 @@
 ## 工作台本身的迭代（非用户写书任务）
 
 当用户要求 ChatGPT 与 Codex **共同研究和升级 DeepWrite 本身**时，进入 `deepwrite/AGENT_COLLABORATION.md`；通过 `deepwrite/discovery-gate/agent-bridge/README.md` 和 `STATE.json` 以 GitHub 文件进行异步接力。该目录路径沿用历史命名，但范围覆盖整个 DeepWrite，不只 Discovery Gate。公开协作仅放脱敏通用方法；未发表私人材料保持私有。候选改进不得擅自升级 `deepwrite/CURRENT.json`。
+
+## 稳定版与逐项试用（防回退）
+
+**默认可继续调用现有稳定工作台，不必等待下一版研发完成。** 每个真实新书项目读取并固定当次 `deepwrite/CURRENT.json` + `wish-delivery/CURRENT.json` 的有效版本，旧项目不因GitHub更新静默升级。若用户明确要求试用候选模块，则按 `deepwrite/GUARDED_EVOLUTION.md` 的 `CANDIDATE_OPT_IN` 固定具体候选commit、原稿哈希和回滚点。怀疑变差时选择 `ROLLBACK` 恢复旧的已核稿件及配置，保留试验失败记录，绝不覆盖原稿。候选功能质量未经独立实测，不冒称已改善作品。
