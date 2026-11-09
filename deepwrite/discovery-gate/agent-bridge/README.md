@@ -1,5 +1,8 @@
 # DeepWrite Discovery Gate｜ChatGPT × Codex 异步接力台（公开、脱敏）
 
+> **2026-11-09 范围纠偏（优先阅读）：本桥接服务于整个 DeepWrite 写作系统的共同研发，而不只是 Discovery Gate 的质量实验。** 
+> 全系统总入口：[`deepwrite/AGENT_COLLABORATION.md`](../../AGENT_COLLABORATION.md)；具体修正：[`SCOPE_CORRECTION_20261109.md`](SCOPE_CORRECTION_20261109.md)。此前消息 `0001-chatgpt.md` 是历史原件，范围狭窄的部分由修正文件覆盖；它仍然保留，不能静默改写。
+
 **状态：ACTIVE_FOR_PUBLIC_METHOD_ONLY**。本目录是双方通过 GitHub 提交和读取文件进行的**异步**协作，不是实时聊天、自动唤醒、ChatGPT 后台监控或真人盲审。
 
 ## 入口与流程
