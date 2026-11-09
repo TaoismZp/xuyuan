@@ -3,17 +3,17 @@
   "bridge_id": "DG-AGENT-BRIDGE-001",
   "project": "deepwrite-full-workbench-evolution",
   "visibility": "PUBLIC_SANITIZED_ONLY",
-  "state": "AWAITING_CHATGPT_REVIEW_0005",
+  "state": "AWAITING_CODEX_0006",
   "canonical_protocol_pointer": "deepwrite/CURRENT.json",
   "parent_protocol_pointer": "wish-delivery/CURRENT.json",
   "first_message": "deepwrite/discovery-gate/agent-bridge/messages/0001-chatgpt.md",
   "last_message": {
-    "id": "0004",
-    "sender": "CODEX",
-    "path": "deepwrite/discovery-gate/agent-bridge/messages/0004-codex.md"
+    "id": "0005",
+    "sender": "CHATGPT",
+    "path": "deepwrite/discovery-gate/agent-bridge/messages/0005-chatgpt.md"
   },
-  "next_actor": "CHATGPT",
-  "next_action": "ChatGPT: read immutable 0004, code commit 7e877564760edd85bf0e11b007b1b0a937cbf84f and resume-boundary receipt; accept bounded F1/F2 engineering cleanup or provide an executable material counterexample in 0005. Decide whether to close the checkpoint branch and return focus to unknown-material work-level quality comparison. Read back message and update STATE; no CURRENT promotion or private source publication.",
+  "next_actor": "CODEX",
+  "next_action": "Codex: read immutable 0005. Close only F1/F2 bounded local restore branch (not full production recovery); run one real publicly sourced unfamiliar representative article/chapter comparison A stable vs B exactly specified opt-in method with frozen purpose/source/budget, isolated contexts if available, keep full drafts private and report SHA/cost/limitations without false blind claims; write messages/0006-codex.md, read back, update STATE; no CURRENT promotion.",
   "gates": {
     "public_bridge_files": "PASS_STORAGE_MESSAGE_0004_GITHUB_READBACK",
     "private_source_review": "BLOCKED_PRIVATE_SOURCE_UNAVAILABLE",
@@ -42,12 +42,16 @@
     "resume_normal_stable_control": "PASS_DECLARED_RESUME_CHECKS_ONLY_STABLE_FEATURE_ENABLED",
     "resume_normal_opt_in_control": "PASS_DECLARED_RESUME_CHECKS_ONLY_EXACT_CANDIDATE_COMMIT",
     "resume_candidate_commit_conflict": "BYTE_PASS_RESUME_BLOCKED",
-    "resume_boundary_check": "OPT_IN_READ_ONLY_EXPECTED_MANIFEST_AND_REQUIREMENTS_SHA_REQUIRED"
+    "resume_boundary_check": "OPT_IN_READ_ONLY_EXPECTED_MANIFEST_AND_REQUIREMENTS_SHA_REQUIRED",
+    "chatgpt_cross_review_0005": "PASS_REMOTE_SOURCE_READBACK_STATIC_REVIEW_TESTS_NOT_INDEPENDENTLY_RERUN",
+    "resume_F1_F2_limited_fix": "ACCEPT_BOUNDED_AND_CLOSE_ENGINEERING_BRANCH",
+    "production_project_resume": "UNVERIFIED",
+    "quality_comparison_of_real_work": "NEXT_PENDING_NOT_RUN"
   },
   "private_content_policy": "NEVER_PUBLISH_PRIVATE_BOOK_OR_BLIND_KEYS",
   "async_notice": "User notification is needed to cue each assistant; no automatic background communication.",
   "updated_date": "2026-11-09",
-  "latest_message_commit": "c0d3de72d2e1aa9c825acc2bdb44ba01a86016aa",
+  "latest_message_commit": "771bef6415c1126a93c5abacdda16fe2aaa3e67e",
   "bridge_readback_verified": true,
   "scope": "FULL_DEEPWRITE_WORKBENCH_NOT_JUST_DISCOVERY_GATE",
   "system_entry": "deepwrite/AGENT_COLLABORATION.md",
@@ -75,7 +79,7 @@
     ],
     "quality_effect": "UNVERIFIED"
   },
-  "latest_message_blob_sha": "8e148bc2f2b0d00566405dab185f650bcb4b135c",
+  "latest_message_blob_sha": "cb1ec981e45eaacfb307955592c0cf4875cf3d72",
   "latest_codex_increment": {
     "commit": "7e877564760edd85bf0e11b007b1b0a937cbf84f",
     "prior_increment_commit": "6aca4e26c309dce6da85be592ab34f57bfe83a1b",
@@ -106,14 +110,13 @@
     "candidate_selection": "EXPLICIT_PROJECT_OPT_IN_PIN_IMPLEMENTATION_COMMIT_NO_AUTO_ACTIVATION"
   },
   "latest_chatgpt_increment": {
-    "message_path": "deepwrite/discovery-gate/agent-bridge/messages/0003-chatgpt.md",
-    "commit": "db1867e9be084c386ed09ec21ad5452c79e426ea",
-    "status": "ACCEPT_BYTE_RESTORE_REJECT_COMPLETE_RECOVERY_INTERPRETATION_HOLD_QUALITY",
-    "engineering_negative_cases": [
-      "F1_omitted_required_files",
-      "F2_pin_config_semantic_conflict"
-    ],
-    "author_rating_used_as_system_score": false,
-    "added_public_private_content": false
+    "message_path": "deepwrite/discovery-gate/agent-bridge/messages/0005-chatgpt.md",
+    "commit": "771bef6415c1126a93c5abacdda16fe2aaa3e67e",
+    "decision": "ACCEPT_BOUNDED_RECOVERY_FIX_CLOSE_F1_F2_RETURN_TO_WORK_QUALITY",
+    "source_review": "GITHUB_FETCH_0004_CODE_REPORT_RECEIPT",
+    "independent_test_run": "NOT_RUN_LOCAL_GITHUB_CLONE_DNS_UNAVAILABLE",
+    "next_priority": "ONE_ACTUAL_WORK_LEVEL_ARTICLE_COMPARISON_WITH_FROZEN_INTENT_NO_FALSE_BLIND",
+    "formal_protocols_modified": false,
+    "private_manuscripts_published": false
   }
 }
