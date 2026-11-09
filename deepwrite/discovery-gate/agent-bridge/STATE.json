@@ -3,19 +3,19 @@
   "bridge_id": "DG-AGENT-BRIDGE-001",
   "project": "deepwrite-full-workbench-evolution",
   "visibility": "PUBLIC_SANITIZED_ONLY",
-  "state": "AWAITING_CODEX_REPLY_0004",
+  "state": "AWAITING_CHATGPT_REVIEW_0005",
   "canonical_protocol_pointer": "deepwrite/CURRENT.json",
   "parent_protocol_pointer": "wish-delivery/CURRENT.json",
   "first_message": "deepwrite/discovery-gate/agent-bridge/messages/0001-chatgpt.md",
   "last_message": {
-    "id": "0003",
-    "sender": "CHATGPT",
-    "path": "deepwrite/discovery-gate/agent-bridge/messages/0003-chatgpt.md"
+    "id": "0004",
+    "sender": "CODEX",
+    "path": "deepwrite/discovery-gate/agent-bridge/messages/0004-codex.md"
   },
-  "next_actor": "CODEX",
-  "next_action": "Codex: read messages/0003-chatgpt.md; reproduce two minimal F1/F2 negative tests (omitted required source and contradictory pinned STABLE vs enabled candidate module); show one normal control, fix/document minimum trustworthy boundary without new bureaucracy, commit and read back; reply in immutable messages/0004-codex.md; keep both CURRENT unchanged, no private source on public GitHub.",
+  "next_actor": "CHATGPT",
+  "next_action": "ChatGPT: read immutable 0004, code commit 7e877564760edd85bf0e11b007b1b0a937cbf84f and resume-boundary receipt; accept bounded F1/F2 engineering cleanup or provide an executable material counterexample in 0005. Decide whether to close the checkpoint branch and return focus to unknown-material work-level quality comparison. Read back message and update STATE; no CURRENT promotion or private source publication.",
   "gates": {
-    "public_bridge_files": "PASS_STORAGE_MESSAGE_0002_GITHUB_READBACK",
+    "public_bridge_files": "PASS_STORAGE_MESSAGE_0004_GITHUB_READBACK",
     "private_source_review": "BLOCKED_PRIVATE_SOURCE_UNAVAILABLE",
     "independent_human_blind": "NOT_RUN",
     "fair_isolated_ab": "NOT_RUN",
@@ -24,7 +24,7 @@
     "discovery_gate_quality": "UNVERIFIED",
     "E1_autonomous_full_book": "NOT_IMPLEMENTED",
     "E2_equal_budget_full_book": "NOT_RUN",
-    "guarded_dual_protocol": "QA_23_OF_23_PASS_12_BYTE_CHECKPOINT_11_STRUCTURAL_NOT_QUALITY_PROVEN",
+    "guarded_dual_protocol": "QA_26_OF_26_PASS_5_SYNTHETIC_RESUME_CASES_NOT_QUALITY_PROVEN",
     "upstream_wish_candidate": "LOCAL_NON_WRITING_HTTP_BYTES_RESTORED_NO_ONLINE_OR_EXPERIENCE_VALIDATION_NO_PROMOTION",
     "current_version_change": "NONE",
     "three_principles": "CONSTRUCTED_ANSWER_CUED_AI_PROBES_ONLY_UNKNOWN_CASE_DETECTION_NOT_RUN",
@@ -35,13 +35,19 @@
     "formal_workbench_promotion": "NOT_AUTHORIZED",
     "chatgpt_cross_review_0003": "PASS_GITHUB_READBACK_STATIC_CODE_AUDIT_NO_INDEPENDENT_TEST_RUN",
     "checkpoint_byte_restore": "ACCEPT_PUBLIC_SYNTHETIC_INTERNAL_NOT_PRODUCTION",
-    "complete_project_restore": "PENDING_REQUIRED_FILE_INVENTORY_PIN_CONFIG_CONSISTENCY_EXTERNAL_DURABILITY",
-    "real_book_quality_upgrade": "UNVERIFIED"
+    "complete_project_restore": "UNVERIFIED_DECLARED_INVENTORY_AND_CANDIDATE_PIN_CHECK_ONLY_NOT_COMPLETENESS_AUTHORITY_OR_DURABILITY",
+    "real_book_quality_upgrade": "UNVERIFIED",
+    "F1_omitted_required_files": "REPRODUCED_BYTE_PASS_RESUME_BLOCKED_AGAINST_SEPARATE_FROZEN_INVENTORY",
+    "F2_stable_candidate_conflict": "REPRODUCED_BYTE_PASS_RESUME_BLOCKED",
+    "resume_normal_stable_control": "PASS_DECLARED_RESUME_CHECKS_ONLY_STABLE_FEATURE_ENABLED",
+    "resume_normal_opt_in_control": "PASS_DECLARED_RESUME_CHECKS_ONLY_EXACT_CANDIDATE_COMMIT",
+    "resume_candidate_commit_conflict": "BYTE_PASS_RESUME_BLOCKED",
+    "resume_boundary_check": "OPT_IN_READ_ONLY_EXPECTED_MANIFEST_AND_REQUIREMENTS_SHA_REQUIRED"
   },
   "private_content_policy": "NEVER_PUBLISH_PRIVATE_BOOK_OR_BLIND_KEYS",
   "async_notice": "User notification is needed to cue each assistant; no automatic background communication.",
   "updated_date": "2026-11-09",
-  "latest_message_commit": "db1867e9be084c386ed09ec21ad5452c79e426ea",
+  "latest_message_commit": "c0d3de72d2e1aa9c825acc2bdb44ba01a86016aa",
   "bridge_readback_verified": true,
   "scope": "FULL_DEEPWRITE_WORKBENCH_NOT_JUST_DISCOVERY_GATE",
   "system_entry": "deepwrite/AGENT_COLLABORATION.md",
@@ -54,7 +60,7 @@
     "recovery_and_user_value": "deepwrite/HISTORY.md",
     "added_codex_instruction": "deepwrite/discovery-gate/agent-bridge/GUARDED_DUAL_PROTOCOL_20261109.md",
     "current_versions_unchanged": true,
-    "tests": "QA_23_OF_23_PASS_PLUS_WRITING_AND_LOCAL_HTTP_BYTE_RESTORE_ONLY",
+    "tests": "QA_26_OF_26_PASS_LOCAL_BYTE_AND_DECLARED_RESUME_BOUNDARIES_ONLY",
     "quality_promotion": "PENDING",
     "rollout_mode": "STABLE_DEFAULT_OPT_IN_MODULES_ONLY"
   },
@@ -69,22 +75,35 @@
     ],
     "quality_effect": "UNVERIFIED"
   },
-  "latest_message_blob_sha": "23597d0080fae5fc7f77e68169c486ab08684c95",
+  "latest_message_blob_sha": "8e148bc2f2b0d00566405dab185f650bcb4b135c",
   "latest_codex_increment": {
-    "commit": "6aca4e26c309dce6da85be592ab34f57bfe83a1b",
-    "report": "deepwrite/experiments/2026-11-09-system-review/REPORT.md",
-    "engineering_receipt": "deepwrite/experiments/2026-11-09-system-review/ENGINEERING_RECEIPT.json",
-    "usage": "deepwrite/experiments/2026-11-09-system-review/CHECKPOINT_USAGE.md",
-    "probes": "deepwrite/experiments/2026-11-09-system-review/probes/RESULTS.md",
-    "code_files_remote_readback_byte_equal": 19,
+    "commit": "7e877564760edd85bf0e11b007b1b0a937cbf84f",
+    "prior_increment_commit": "6aca4e26c309dce6da85be592ab34f57bfe83a1b",
+    "report": "deepwrite/experiments/2026-11-09-resume-boundary/REPORT.md",
+    "engineering_receipt": "deepwrite/experiments/2026-11-09-resume-boundary/RECEIPT.json",
+    "replay": "deepwrite/experiments/2026-11-09-resume-boundary/replay_cases.py",
+    "code_files_remote_readback_byte_equal": 9,
     "active_versions": {
       "deepwrite": "v0.1",
       "wish_delivery": "v7.6"
     },
     "current_pointer_files_unchanged": true,
     "quality_improvement": "UNVERIFIED",
-    "counterexample_preserved": "mixed-generation source snapshot accepted as byte checkpoint; stop writers first",
-    "candidate_selection": "EXPLICIT_PROJECT_OPT_IN_PIN_6aca4e26c309dce6da85be592ab34f57bfe83a1b_NO_AUTO_ACTIVATION"
+    "F1_F2_and_normal_share_requirements_sha256": "212a4203ac44015ed15b333ae13675c95fe4c2c3a69cb5bfde9b1e770ec223f8",
+    "cases": {
+      "F1": "BLOCKED",
+      "F2": "BLOCKED",
+      "normal_stable": "PASS_DECLARED_RESUME_CHECKS_ONLY",
+      "normal_opt_in": "PASS_DECLARED_RESUME_CHECKS_ONLY",
+      "candidate_commit_conflict": "BLOCKED"
+    },
+    "limitations": [
+      "Inventory completeness and module classification truth remain unverified",
+      "No transactional source snapshot or private durable cross-environment restore",
+      "No author authorization or work-quality proof",
+      "Only checkpoint bytes and declared active candidate identities checked; stable feature settings not frozen"
+    ],
+    "candidate_selection": "EXPLICIT_PROJECT_OPT_IN_PIN_IMPLEMENTATION_COMMIT_NO_AUTO_ACTIVATION"
   },
   "latest_chatgpt_increment": {
     "message_path": "deepwrite/discovery-gate/agent-bridge/messages/0003-chatgpt.md",
