@@ -1,5 +1,9 @@
 # DeepWrite v0.1 验证与能力缺口（2026-11-08）
 
+## 2026-11-09 候选迭代补充
+
+兼容 v0.1 的打包器已在新运行环境复核并修复原稿覆盖、章序校验绕过和来源身份问题；15项离线回归见 [TEST_RESULTS](iterations/2026-11-09-quality/TEST_RESULTS.txt)。新增的 [v0.2 候选](candidates/v0.2.md)与[编辑小样](iterations/2026-11-09-quality/EDITORIAL_SPIKE.md)仅有内部开发证据，未生效、未经独立盲评。历史 v0.1 发布清单仍指向历史字节，不作为本次修改的身份凭据；本次以[ARTIFACTS](iterations/2026-11-09-quality/ARTIFACTS.json)和[验收记录](iterations/2026-11-09-quality/ACCEPTANCE.md)为准。下列原始能力记录保留，不能将工程回归扩展为写作质量证明。
+
 ## 真实已验证
 
 - 通用SHA256只读书稿打包器已存在：[tools/book_packager_v0.1.py](tools/book_packager_v0.1.py)。

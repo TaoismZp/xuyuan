@@ -1,0 +1,110 @@
+{
+  "schema": "deepwrite/candidate-evidence/v1",
+  "project_id": "deepwrite-method-quality-20261109",
+  "base_commit": "4c277410e892e0200584392097e00b2899627162",
+  "candidate": "v0.2-DRAFT_NOT_ACTIVE",
+  "scope": "Public methods, synthetic examples and compatible packager patch; not a book-quality claim",
+  "control_files_excluded": "ARTIFACTS self, STATE, RECOVERY, ACCEPTANCE are mutable checkpoint metadata; resolve their identity by commit, not this manifest.",
+  "artifacts": [
+    {
+      "path": "deepwrite/CHANGELOG.md",
+      "sha256": "2adfcb6d349789c6ba810a80165912660cd76cbc9cd372b93c93283895f9d915",
+      "bytes": 1655
+    },
+    {
+      "path": "deepwrite/CURRENT.json",
+      "sha256": "b34c5b461f6eba973014b2e19eee14f3db25e28eaede051ece3c560f709f83a6",
+      "bytes": 1580
+    },
+    {
+      "path": "deepwrite/EVALUATION.md",
+      "sha256": "55372db2909d8bb09c28f1dbfaf53242bf762e7cbc87f615f2a4cf5fc4348ffe",
+      "bytes": 5324
+    },
+    {
+      "path": "deepwrite/EVIDENCE.md",
+      "sha256": "514a511ab8a0cb4874d4153588c1c1dbf97abbf47d5bd1d10236eaa5dfd5700e",
+      "bytes": 2357
+    },
+    {
+      "path": "deepwrite/PROJECT_INIT.md",
+      "sha256": "e4d86f715a6e125789692d22df94c4a275847a0cd74ba4c1aa26442a79071381",
+      "bytes": 3642
+    },
+    {
+      "path": "deepwrite/README.md",
+      "sha256": "8274a039e8715b7c824af90becb81dcc1d7f4f350c48994b200bc74e95730268",
+      "bytes": 3691
+    },
+    {
+      "path": "deepwrite/RECOVERY.md",
+      "sha256": "54453c097447e1a6c61c3b1f8380aad1dd6cec0def3fedc553537cceae365015",
+      "bytes": 2264
+    },
+    {
+      "path": "deepwrite/START_HERE.md",
+      "sha256": "c6f4849bd9968f5133346527b90feb430eb1dee09e453dbb9f520743b987c03b",
+      "bytes": 3046
+    },
+    {
+      "path": "deepwrite/candidates/EDITORIAL_LOOP.md",
+      "sha256": "981f0cd46d06bee63e5db07508e8c73af0ba1ac75092751bcd42ea6194d5ce50",
+      "bytes": 4170
+    },
+    {
+      "path": "deepwrite/candidates/v0.2.md",
+      "sha256": "b6f8711c4188317ac0f999c15a6ce5fbfb7d9a7e4c3fd97e1ba6ae06dddc440b",
+      "bytes": 5049
+    },
+    {
+      "path": "deepwrite/iterations/2026-11-09-quality/BLUEPRINT.md",
+      "sha256": "7cbb51a221242c851af5407249c3a4e732076e07df6b3d977cbc72f31084cb65",
+      "bytes": 2027
+    },
+    {
+      "path": "deepwrite/iterations/2026-11-09-quality/EDITORIAL_SPIKE.md",
+      "sha256": "160f081525e811cb120c02ff92425d8a33108cde1c0a0865f5c493b0cd5427b0",
+      "bytes": 12176
+    },
+    {
+      "path": "deepwrite/iterations/2026-11-09-quality/SUPERVISION.md",
+      "sha256": "c2967fbd688994e83831080ff6df724202a8ab4ce69333fc41374c410cdae5e4",
+      "bytes": 2646
+    },
+    {
+      "path": "deepwrite/iterations/2026-11-09-quality/TEST_RESULTS.txt",
+      "sha256": "451287667325d374c6dd38710eb01bc08a26bdc3576b014a65d39400906aeae9",
+      "bytes": 2238
+    },
+    {
+      "path": "deepwrite/iterations/2026-11-09-quality/VISION.md",
+      "sha256": "3d964bee4910f696b16e6c9ca0b5a0f9dd417ec1c2719aa8c0f76f38f2b3338e",
+      "bytes": 1516
+    },
+    {
+      "path": "deepwrite/templates/v0.2/CHAPTER_REVIEW.md",
+      "sha256": "1a47901822d683d9c8067045e8cc01079ae927402b2b11fdb973bcb80d4fd97a",
+      "bytes": 1045
+    },
+    {
+      "path": "deepwrite/templates/v0.2/CLAIMS.json",
+      "sha256": "ae643792a0ca58a513bce4be61be04fad27c5a92668aec9ef1e0f195e5640c18",
+      "bytes": 743
+    },
+    {
+      "path": "deepwrite/templates/v0.2/EDITORIAL_BRIEF.md",
+      "sha256": "b18eda4aee001f0e6fb0d38adc65ff561e2132beb16a663d04c2fded1e0bfb0a",
+      "bytes": 791
+    },
+    {
+      "path": "deepwrite/tests/test_packager.py",
+      "sha256": "5e56fb7d850f64cb51eaf1d77be9cf819c7f451a25f516f6df5f94651a380013",
+      "bytes": 10810
+    },
+    {
+      "path": "deepwrite/tools/book_packager_v0.1.py",
+      "sha256": "716cbedfe60ab7096f19b6de266b929cb81c0f8b8668c8ea322dd5e4286023e6",
+      "bytes": 8145
+    }
+  ]
+}

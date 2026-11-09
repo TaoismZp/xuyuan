@@ -4,6 +4,14 @@
   "slug": "deepwrite",
   "active_workbench_version": "v0.1",
   "active_workbench_spec": "deepwrite/versions/v0.1.md",
+  "candidate_versions": [
+    {
+      "version": "v0.2",
+      "spec": "deepwrite/candidates/v0.2.md",
+      "status": "DRAFT_NOT_ACTIVE",
+      "recovery": "deepwrite/iterations/2026-11-09-quality/RECOVERY.md"
+    }
+  ],
   "effective_parent_protocol_pointer": "wish-delivery/CURRENT.json",
   "capability_status": {
     "workflow_spec": "PASS_DOCUMENTED",
@@ -27,5 +35,5 @@
     "deepwrite/EVALUATION.md",
     "deepwrite/SECURITY.md"
   ],
-  "updated_date": "2026-11-08"
+  "updated_date": "2026-11-09"
 }

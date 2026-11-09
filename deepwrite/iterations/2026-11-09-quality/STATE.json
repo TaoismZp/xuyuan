@@ -1,0 +1,21 @@
+{
+  "schema": "deepwrite/method-iteration/v1",
+  "project_id": "deepwrite-method-quality-20261109",
+  "task_type": "METHOD_ITERATION",
+  "privacy": "PUBLIC_METHOD_ONLY",
+  "status": "ACTIVE",
+  "current_gate": "CANDIDATE_REMOTE_CHECKPOINT",
+  "base_commit": "4c277410e892e0200584392097e00b2899627162",
+  "active_deepwrite": "v0.1",
+  "active_parent": "v7.6",
+  "candidate": "v0.2",
+  "candidate_identity": {
+    "manifest_path": "deepwrite/iterations/2026-11-09-quality/ARTIFACTS.json",
+    "sha256": "1e6135803d2af55d5bc2caac5bc299acebdd2b4c926c9483d2006d2fc0eff194"
+  },
+  "last_good_checkpoint": "deepwrite/iterations/2026-11-09-quality/",
+  "checkpoint_scope": "LOCAL_WORKSPACE_NOT_YET_REMOTE",
+  "open_blocker": null,
+  "next_executable_action": "将已冻结候选与证据提交到专用分支，按Git对象与SHA回读，再建立草稿PR。",
+  "updated_at": "2026-11-09"
+}
