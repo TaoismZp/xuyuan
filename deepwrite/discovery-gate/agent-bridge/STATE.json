@@ -3,19 +3,19 @@
   "bridge_id": "DG-AGENT-BRIDGE-001",
   "project": "deepwrite-full-workbench-evolution",
   "visibility": "PUBLIC_SANITIZED_ONLY",
-  "state": "AWAITING_CODEX_0006",
+  "state": "AWAITING_CHATGPT_0007",
   "canonical_protocol_pointer": "deepwrite/CURRENT.json",
   "parent_protocol_pointer": "wish-delivery/CURRENT.json",
   "first_message": "deepwrite/discovery-gate/agent-bridge/messages/0001-chatgpt.md",
   "last_message": {
-    "id": "0005",
-    "sender": "CHATGPT",
-    "path": "deepwrite/discovery-gate/agent-bridge/messages/0005-chatgpt.md"
+    "id": "0006",
+    "sender": "CODEX",
+    "path": "deepwrite/discovery-gate/agent-bridge/messages/0006-codex.md"
   },
-  "next_actor": "CODEX",
-  "next_action": "Codex: read immutable 0005. Close only F1/F2 bounded local restore branch (not full production recovery); run one real publicly sourced unfamiliar representative article/chapter comparison A stable vs B exactly specified opt-in method with frozen purpose/source/budget, isolated contexts if available, keep full drafts private and report SHA/cost/limitations without false blind claims; write messages/0006-codex.md, read back, update STATE; no CURRENT promotion.",
+  "next_actor": "CHATGPT",
+  "next_action": "ChatGPT: read immutable 0006 and public freeze/report/run receipt; assess rejection of default Rival Probe adoption and the hypothesis that internal discriminating reasoning did not fully reach final prose; reply in 0007 with ACCEPT / REJECT_WITH_EVIDENCE / HOLD. Full-article judgment requires confirmed private access: do not call metadata/summary review full reading. Keep F1/F2 bounded engineering branch closed, both CURRENT unchanged, no manuscript publication.",
   "gates": {
-    "public_bridge_files": "PASS_STORAGE_MESSAGE_0004_GITHUB_READBACK",
+    "public_bridge_files": "PASS_STORAGE_MESSAGE_0006_GITHUB_READBACK",
     "private_source_review": "BLOCKED_PRIVATE_SOURCE_UNAVAILABLE",
     "independent_human_blind": "NOT_RUN",
     "fair_isolated_ab": "NOT_RUN",
@@ -27,7 +27,7 @@
     "guarded_dual_protocol": "QA_26_OF_26_PASS_5_SYNTHETIC_RESUME_CASES_NOT_QUALITY_PROVEN",
     "upstream_wish_candidate": "LOCAL_NON_WRITING_HTTP_BYTES_RESTORED_NO_ONLINE_OR_EXPERIENCE_VALIDATION_NO_PROMOTION",
     "current_version_change": "NONE",
-    "three_principles": "CONSTRUCTED_ANSWER_CUED_AI_PROBES_ONLY_UNKNOWN_CASE_DETECTION_NOT_RUN",
+    "three_principles": "REAL_ARTICLE_EXPLORATION_PLUS_PRIOR_CONSTRUCTED_PROBES_NO_SYSTEM_QUALITY_VALIDATION",
     "local_byte_checkpoint_restore": "PASS_SYNTHETIC_SOURCE_DELETED_THEN_6_FILES_RESTORED_PER_CASE",
     "transactional_source_snapshot": "NOT_SUPPORTED_CONCURRENT_MIXED_GENERATIONS_REPRODUCED_STOP_WRITERS_REQUIRED",
     "private_durable_cross_environment_restore": "NOT_RUN",
@@ -44,14 +44,21 @@
     "resume_candidate_commit_conflict": "BYTE_PASS_RESUME_BLOCKED",
     "resume_boundary_check": "OPT_IN_READ_ONLY_EXPECTED_MANIFEST_AND_REQUIREMENTS_SHA_REQUIRED",
     "chatgpt_cross_review_0005": "PASS_REMOTE_SOURCE_READBACK_STATIC_REVIEW_TESTS_NOT_INDEPENDENTLY_RERUN",
-    "resume_F1_F2_limited_fix": "ACCEPT_BOUNDED_AND_CLOSE_ENGINEERING_BRANCH",
+    "resume_F1_F2_limited_fix": "CLOSE_SCOPE_LTD_ACCEPTED_0005_NO_NEW_ENGINEERING_WORK",
     "production_project_resume": "UNVERIFIED",
-    "quality_comparison_of_real_work": "NEXT_PENDING_NOT_RUN"
+    "quality_comparison_of_real_work": "TWO_COMPLETE_REAL_SOURCE_ARTICLES_EXPLORATORY_AI_READING_ONLY_NO_FAIR_CAUSAL_EFFECT",
+    "fresh_cli_author_pair": "BLOCKED_AUTHENTICATION_REFRESH_BOTH_ATTEMPTS_NO_ARTICLE_NO_RETRY",
+    "fallback_author_pair": "ACTUAL_FRESH_COLLABORATION_CONTEXT_ARTIFACTS_SHARED_FILESYSTEM_PARITY_UNVERIFIED",
+    "method_label_masked_AI_reading": "COMPLETE_AI_ONLY_NOT_INDEPENDENT_HUMAN_BLIND",
+    "rival_probe_default_adoption": "REJECT_NO_CLEAR_INCREMENTAL_BENEFIT_DEMONSTRATED_KEEP_STABLE_DEFAULT",
+    "rival_probe_general_effectiveness": "HOLD_FOR_EVIDENCE_SINGLE_EXPLORATION_NO_GENERALIZATION",
+    "private_article_archive": "NOT_DURABLY_ARCHIVED_LOCAL_CHECKPOINT_AND_ZIP_ONLY",
+    "chatgpt_full_article_access": "NOT_CONFIRMED_FULL_READING_BLOCKED_WITHOUT_PRIVATE_ACCESS"
   },
   "private_content_policy": "NEVER_PUBLISH_PRIVATE_BOOK_OR_BLIND_KEYS",
   "async_notice": "User notification is needed to cue each assistant; no automatic background communication.",
   "updated_date": "2026-11-09",
-  "latest_message_commit": "771bef6415c1126a93c5abacdda16fe2aaa3e67e",
+  "latest_message_commit": "e1713696b1697f94e47a2a59af7439b2d5c1f08b",
   "bridge_readback_verified": true,
   "scope": "FULL_DEEPWRITE_WORKBENCH_NOT_JUST_DISCOVERY_GATE",
   "system_entry": "deepwrite/AGENT_COLLABORATION.md",
@@ -79,35 +86,46 @@
     ],
     "quality_effect": "UNVERIFIED"
   },
-  "latest_message_blob_sha": "cb1ec981e45eaacfb307955592c0cf4875cf3d72",
+  "latest_message_blob_sha": "842707e59ce3bb2423250b2c99759f40f921cf28",
   "latest_codex_increment": {
-    "commit": "7e877564760edd85bf0e11b007b1b0a937cbf84f",
-    "prior_increment_commit": "6aca4e26c309dce6da85be592ab34f57bfe83a1b",
-    "report": "deepwrite/experiments/2026-11-09-resume-boundary/REPORT.md",
-    "engineering_receipt": "deepwrite/experiments/2026-11-09-resume-boundary/RECEIPT.json",
-    "replay": "deepwrite/experiments/2026-11-09-resume-boundary/replay_cases.py",
-    "code_files_remote_readback_byte_equal": 9,
+    "experiment_id": "DW-WORK-0006-E",
+    "freeze_commit": "b1fb8b77812dfb09899e08045c95d51a0e4cb3c1",
+    "fallback_freeze_commit": "a17d5545a6f82d24dce76f89c11177b970780cb6",
+    "commit": "ee59182972e0680932209564e27a21401449e016",
+    "report": "deepwrite/experiments/2026-11-09-work-comparison/REPORT.md",
+    "engineering_receipt": "deepwrite/experiments/2026-11-09-work-comparison/RUN_RECEIPT.json",
+    "candidate_method": "deepwrite/experiments/2026-11-09-work-comparison/CANDIDATE_RIVAL_PROBE.md",
+    "all_increment_files_remote_readback_byte_equal": 7,
     "active_versions": {
       "deepwrite": "v0.1",
       "wish_delivery": "v7.6"
     },
     "current_pointer_files_unchanged": true,
-    "quality_improvement": "UNVERIFIED",
-    "F1_F2_and_normal_share_requirements_sha256": "212a4203ac44015ed15b333ae13675c95fe4c2c3a69cb5bfde9b1e770ec223f8",
-    "cases": {
-      "F1": "BLOCKED",
-      "F2": "BLOCKED",
-      "normal_stable": "PASS_DECLARED_RESUME_CHECKS_ONLY",
-      "normal_opt_in": "PASS_DECLARED_RESUME_CHECKS_ONLY",
-      "candidate_commit_conflict": "BLOCKED"
-    },
-    "limitations": [
-      "Inventory completeness and module classification truth remain unverified",
-      "No transactional source snapshot or private durable cross-environment restore",
-      "No author authorization or work-quality proof",
-      "Only checkpoint bytes and declared active candidate identities checked; stable feature settings not frozen"
+    "full_drafts_public": false,
+    "route_to_work_mapping_public": false,
+    "works": [
+      {
+        "work_id": "Text-173",
+        "sha256": "7c3d2a4c1ebd5ba8b4db91f9389b57a8054287c8ecc57235bf49ad38fbcaf506",
+        "full_file_hanzi": 1864,
+        "body_hanzi": 1749
+      },
+      {
+        "work_id": "Text-628",
+        "sha256": "443957fb115b0cb593b864541403385a997dd3d972304cd622513a8dc1b90c49",
+        "full_file_hanzi": 1981,
+        "body_hanzi": 1911
+      }
     ],
-    "candidate_selection": "EXPLICIT_PROJECT_OPT_IN_PIN_IMPLEMENTATION_COMMIT_NO_AUTO_ACTIVATION"
+    "quality_improvement": "UNVERIFIED_NO_UNCONDITIONAL_WINNER",
+    "candidate_default_adoption": "REJECT",
+    "failure_hypothesis": "Discriminating reasoning in process notes did not fully reach reader-facing prose; causal attribution HOLD",
+    "provider_usage_and_cost": "NOT_EXPOSED_UNKNOWN_NOT_ZERO",
+    "final_local_checkpoint_manifest_sha256": "800fc17776ddd0fc6ffa4295c5d67191b952673f67ff290c53ce502967d321ae",
+    "private_local_bundle_sha256": "3cf645797ed023aa2a87c71e441709fbae318376c8f569a08f19eb5c3cb4cc6d",
+    "archive": "NOT_DURABLY_ARCHIVED",
+    "formal_module_registration_or_activation": "NONE_EXPLICIT_RESEARCH_ONLY",
+    "engineering_branch": "F1_F2_CLOSED_NO_NEW_RECOVERY_CODE"
   },
   "latest_chatgpt_increment": {
     "message_path": "deepwrite/discovery-gate/agent-bridge/messages/0005-chatgpt.md",
