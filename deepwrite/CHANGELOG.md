@@ -16,3 +16,10 @@
 - 增加显式自愿启用的本地checkpoint snapshot/verify/restore；原件与失败候选保留，全新目录恢复，外部manifest SHA固定身份。私有耐久存储与完整作品质量回滚未验证。
 - 系统诊断、两项目证据分级、三原则构造性反向检验及实际字节恢复证据：`experiments/2026-11-09-system-review/`。不是独立盲评，不关闭E1/E2。
 - 修复研发恢复入口过时下一步，接力事实以agent-bridge STATE与不可变消息为准。
+
+## 0004候选工程收尾 · 2026-11-09（不升正式版本）
+
+- 实跑0003的F1漏文件/F2稳定声明却开启候选负例，保留字节PASS与项目检查BLOCKED的区别。
+- 新增显式自愿、只读的resume_check：按独立冻结清单检查漏存、双层pin值与候选ID/commit冲突；稳定功能和合法opt-in对照通过。不是完整项目、授权或耐久验收。
+- 字节命令及receipt显式标注project_resume_gate NOT_RUN、complete_project_recovery UNVERIFIED。旧manifest/恢复接口保留，无静默迁移。
+- 回执、复跑命令、格式限制和停用说明：`experiments/2026-11-09-resume-boundary/`。E1/E2及真实作品质量门继续开放。

@@ -54,7 +54,11 @@
       },
       "usage": "deepwrite/experiments/2026-11-09-system-review/CHECKPOINT_USAGE.md",
       "evidence": "deepwrite/experiments/2026-11-09-system-review/ENGINEERING_RECEIPT.json",
-      "automatic_activation": false
+      "automatic_activation": false,
+      "resume_boundary_checker": "deepwrite/qa/resume_check.py",
+      "resume_boundary_usage": "deepwrite/experiments/2026-11-09-resume-boundary/REPORT.md",
+      "resume_boundary_evidence": "deepwrite/experiments/2026-11-09-resume-boundary/RECEIPT.json",
+      "resume_boundary_status": "OPT_IN_DECLARED_INVENTORY_AND_CANDIDATE_PIN_CHECK_ONLY_NOT_COMPLETE_RECOVERY"
     }
   ],
   "quality_baselines": {

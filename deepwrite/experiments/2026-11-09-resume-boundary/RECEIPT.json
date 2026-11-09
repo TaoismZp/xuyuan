@@ -1,0 +1,320 @@
+{
+  "schema": "deepwrite/resume-boundary-cases/v0.1",
+  "base_commit": "6c6d67c91c9b84d1beb1f59754cfbac4733d8d93",
+  "data": "PUBLIC_SYNTHETIC_ONLY",
+  "requirements_frozen_before_snapshots": true,
+  "first_three_share_identical_requirements": true,
+  "frozen_requirements": {
+    "stable": {
+      "project_id": "PUBLIC_RESUME_BOUNDARY",
+      "required_files": [
+        "book.md",
+        "pins.json",
+        "config.json",
+        "SOURCE_LEDGER.json",
+        "STATE.json"
+      ],
+      "protocols": {
+        "deepwrite": {
+          "version": "v0.1",
+          "commit": "6c6d67c91c9b84d1beb1f59754cfbac4733d8d93",
+          "spec_sha": "f7ce01622df733bc59982854e37d4ac44a79ec99"
+        },
+        "wish_delivery": {
+          "version": "v7.6",
+          "commit": "6c6d67c91c9b84d1beb1f59754cfbac4733d8d93",
+          "spec_sha": "955bdde3d332283ff6ccc89f943555824f741d59"
+        }
+      },
+      "channel": "STABLE",
+      "module_policy": {
+        "discovery_gate": "CANDIDATE",
+        "spellcheck": "STABLE"
+      },
+      "enabled_candidate_commits": {}
+    },
+    "opt_in": {
+      "project_id": "PUBLIC_RESUME_BOUNDARY",
+      "required_files": [
+        "book.md",
+        "pins.json",
+        "config.json",
+        "SOURCE_LEDGER.json",
+        "STATE.json"
+      ],
+      "protocols": {
+        "deepwrite": {
+          "version": "v0.1",
+          "commit": "6c6d67c91c9b84d1beb1f59754cfbac4733d8d93",
+          "spec_sha": "f7ce01622df733bc59982854e37d4ac44a79ec99"
+        },
+        "wish_delivery": {
+          "version": "v7.6",
+          "commit": "6c6d67c91c9b84d1beb1f59754cfbac4733d8d93",
+          "spec_sha": "955bdde3d332283ff6ccc89f943555824f741d59"
+        }
+      },
+      "channel": "CANDIDATE_OPT_IN",
+      "module_policy": {
+        "discovery_gate": "CANDIDATE",
+        "spellcheck": "STABLE"
+      },
+      "enabled_candidate_commits": {
+        "discovery_gate": "6aca4e26c309dce6da85be592ab34f57bfe83a1b"
+      }
+    }
+  },
+  "cases": [
+    {
+      "case": "F1_omitted_required_source_and_state",
+      "frozen_requirements_sha256": "212a4203ac44015ed15b333ae13675c95fe4c2c3a69cb5bfde9b1e770ec223f8",
+      "checkpoint_manifest_sha256": "71a9300e60859cc07388853f8c6a3b8e301acb0d53b44d73997b0aa82c1c4cd1",
+      "byte_snapshot": "PASS_BYTES_ONLY",
+      "byte_restore": "PASS_BYTES_ONLY",
+      "byte_operation_project_resume_gate": "NOT_RUN",
+      "all_included_files_byte_equal": true,
+      "source_deleted_before_restore": true,
+      "resume_check_did_not_modify_checkpoint": true,
+      "missing_required_files_after_restore": [
+        "SOURCE_LEDGER.json",
+        "STATE.json"
+      ],
+      "input": {
+        "pins_channel": "STABLE",
+        "pins_modules": [],
+        "config_modules": {
+          "discovery_gate": false,
+          "spellcheck": true
+        },
+        "config_module_commits": {}
+      },
+      "source_sha256": {
+        "book.md": "2a68dde41ee1adc9d47b03dff5cc580224c3daeb541dda5c8ae9a83cba50a7af",
+        "pins.json": "71f6001bbdfdffd97f3a3f8187a0b3d0636baa17c965b6bf6df4eea382e4323e",
+        "config.json": "68dc27f3b9a717a836223044c35af52b8480120916628a7c6e3fc304dde5e9b9",
+        "SOURCE_LEDGER.json": "12f32aba60087e8a549191ef7b2ed48277d273a18774cf2f40bc9c86463a7581",
+        "STATE.json": "1a46fb77a80a02a4d540e10aa93bcd36acd932c4b1fd14740c7d0b723f7835a0"
+      },
+      "expected_resume_status": "BLOCKED",
+      "actual_resume_check": {
+        "status": "BLOCKED",
+        "byte_gate": "PASS_BYTES_ONLY",
+        "resume_gate": "BLOCKED",
+        "manifest_sha256": "71a9300e60859cc07388853f8c6a3b8e301acb0d53b44d73997b0aa82c1c4cd1",
+        "requirements_sha256": "212a4203ac44015ed15b333ae13675c95fe4c2c3a69cb5bfde9b1e770ec223f8",
+        "complete_project_recovery": "UNVERIFIED",
+        "author_authorization_verified": false,
+        "transaction_consistency": "UNVERIFIED",
+        "durable_storage": "UNVERIFIED",
+        "content_quality": "UNVERIFIED",
+        "issues": [
+          "required files absent: SOURCE_LEDGER.json, STATE.json"
+        ]
+      }
+    },
+    {
+      "case": "F2_stable_with_candidate_enabled",
+      "frozen_requirements_sha256": "212a4203ac44015ed15b333ae13675c95fe4c2c3a69cb5bfde9b1e770ec223f8",
+      "checkpoint_manifest_sha256": "e811e9867621f2821bc12074b6ef1e5a9a13e4112207d240c1cc47abf288a10b",
+      "byte_snapshot": "PASS_BYTES_ONLY",
+      "byte_restore": "PASS_BYTES_ONLY",
+      "byte_operation_project_resume_gate": "NOT_RUN",
+      "all_included_files_byte_equal": true,
+      "source_deleted_before_restore": true,
+      "resume_check_did_not_modify_checkpoint": true,
+      "missing_required_files_after_restore": [],
+      "input": {
+        "pins_channel": "STABLE",
+        "pins_modules": [],
+        "config_modules": {
+          "discovery_gate": true,
+          "spellcheck": true
+        },
+        "config_module_commits": {}
+      },
+      "source_sha256": {
+        "book.md": "2a68dde41ee1adc9d47b03dff5cc580224c3daeb541dda5c8ae9a83cba50a7af",
+        "pins.json": "71f6001bbdfdffd97f3a3f8187a0b3d0636baa17c965b6bf6df4eea382e4323e",
+        "config.json": "74d9586cda101735b15e792af2012d48f85848481759dc81edf008a63d1740af",
+        "SOURCE_LEDGER.json": "12f32aba60087e8a549191ef7b2ed48277d273a18774cf2f40bc9c86463a7581",
+        "STATE.json": "1a46fb77a80a02a4d540e10aa93bcd36acd932c4b1fd14740c7d0b723f7835a0"
+      },
+      "expected_resume_status": "BLOCKED",
+      "actual_resume_check": {
+        "status": "BLOCKED",
+        "byte_gate": "PASS_BYTES_ONLY",
+        "resume_gate": "BLOCKED",
+        "manifest_sha256": "e811e9867621f2821bc12074b6ef1e5a9a13e4112207d240c1cc47abf288a10b",
+        "requirements_sha256": "212a4203ac44015ed15b333ae13675c95fe4c2c3a69cb5bfde9b1e770ec223f8",
+        "complete_project_recovery": "UNVERIFIED",
+        "author_authorization_verified": false,
+        "transaction_consistency": "UNVERIFIED",
+        "durable_storage": "UNVERIFIED",
+        "content_quality": "UNVERIFIED",
+        "issues": [
+          "STABLE channel cannot enable declared candidate modules"
+        ]
+      }
+    },
+    {
+      "case": "normal_stable_control",
+      "frozen_requirements_sha256": "212a4203ac44015ed15b333ae13675c95fe4c2c3a69cb5bfde9b1e770ec223f8",
+      "checkpoint_manifest_sha256": "9ea5bab2800aa90f7f0dfdc466b9bf690b952738d1a288d421558b99974d4be5",
+      "byte_snapshot": "PASS_BYTES_ONLY",
+      "byte_restore": "PASS_BYTES_ONLY",
+      "byte_operation_project_resume_gate": "NOT_RUN",
+      "all_included_files_byte_equal": true,
+      "source_deleted_before_restore": true,
+      "resume_check_did_not_modify_checkpoint": true,
+      "missing_required_files_after_restore": [],
+      "input": {
+        "pins_channel": "STABLE",
+        "pins_modules": [],
+        "config_modules": {
+          "discovery_gate": false,
+          "spellcheck": true
+        },
+        "config_module_commits": {}
+      },
+      "source_sha256": {
+        "book.md": "2a68dde41ee1adc9d47b03dff5cc580224c3daeb541dda5c8ae9a83cba50a7af",
+        "pins.json": "71f6001bbdfdffd97f3a3f8187a0b3d0636baa17c965b6bf6df4eea382e4323e",
+        "config.json": "68dc27f3b9a717a836223044c35af52b8480120916628a7c6e3fc304dde5e9b9",
+        "SOURCE_LEDGER.json": "12f32aba60087e8a549191ef7b2ed48277d273a18774cf2f40bc9c86463a7581",
+        "STATE.json": "1a46fb77a80a02a4d540e10aa93bcd36acd932c4b1fd14740c7d0b723f7835a0"
+      },
+      "expected_resume_status": "PASS_DECLARED_RESUME_CHECKS_ONLY",
+      "actual_resume_check": {
+        "status": "PASS_DECLARED_RESUME_CHECKS_ONLY",
+        "byte_gate": "PASS_BYTES_ONLY",
+        "resume_gate": "PASS_DECLARED_RESUME_CHECKS_ONLY",
+        "manifest_sha256": "9ea5bab2800aa90f7f0dfdc466b9bf690b952738d1a288d421558b99974d4be5",
+        "requirements_sha256": "212a4203ac44015ed15b333ae13675c95fe4c2c3a69cb5bfde9b1e770ec223f8",
+        "complete_project_recovery": "UNVERIFIED",
+        "author_authorization_verified": false,
+        "transaction_consistency": "UNVERIFIED",
+        "durable_storage": "UNVERIFIED",
+        "content_quality": "UNVERIFIED",
+        "issues": [],
+        "project_id": "PUBLIC_RESUME_BOUNDARY",
+        "required_files_checked": 5,
+        "protocol_pin_values_match": true,
+        "candidate_pin_config_values_match": true
+      }
+    },
+    {
+      "case": "normal_opt_in_control",
+      "frozen_requirements_sha256": "516d770c7d9659c84546064335e6f1508c8f1edaaed9e46f1037120230db6b77",
+      "checkpoint_manifest_sha256": "2920c97937c38445ef5213f011efa35556d700893da2341210f7dba5a8c18be9",
+      "byte_snapshot": "PASS_BYTES_ONLY",
+      "byte_restore": "PASS_BYTES_ONLY",
+      "byte_operation_project_resume_gate": "NOT_RUN",
+      "all_included_files_byte_equal": true,
+      "source_deleted_before_restore": true,
+      "resume_check_did_not_modify_checkpoint": true,
+      "missing_required_files_after_restore": [],
+      "input": {
+        "pins_channel": "CANDIDATE_OPT_IN",
+        "pins_modules": [
+          {
+            "id": "discovery_gate",
+            "commit": "6aca4e26c309dce6da85be592ab34f57bfe83a1b"
+          }
+        ],
+        "config_modules": {
+          "discovery_gate": true,
+          "spellcheck": true
+        },
+        "config_module_commits": {
+          "discovery_gate": "6aca4e26c309dce6da85be592ab34f57bfe83a1b"
+        }
+      },
+      "source_sha256": {
+        "book.md": "2a68dde41ee1adc9d47b03dff5cc580224c3daeb541dda5c8ae9a83cba50a7af",
+        "pins.json": "2c71f2c10085df13a87fd58cf07f6298c16cdfaecaff23ee57bca993206cd0c3",
+        "config.json": "1972fcdb88d2be499fe8e7c9583015fd44af99a70c67b32e33775f01e8e6647f",
+        "SOURCE_LEDGER.json": "12f32aba60087e8a549191ef7b2ed48277d273a18774cf2f40bc9c86463a7581",
+        "STATE.json": "1a46fb77a80a02a4d540e10aa93bcd36acd932c4b1fd14740c7d0b723f7835a0"
+      },
+      "expected_resume_status": "PASS_DECLARED_RESUME_CHECKS_ONLY",
+      "actual_resume_check": {
+        "status": "PASS_DECLARED_RESUME_CHECKS_ONLY",
+        "byte_gate": "PASS_BYTES_ONLY",
+        "resume_gate": "PASS_DECLARED_RESUME_CHECKS_ONLY",
+        "manifest_sha256": "2920c97937c38445ef5213f011efa35556d700893da2341210f7dba5a8c18be9",
+        "requirements_sha256": "516d770c7d9659c84546064335e6f1508c8f1edaaed9e46f1037120230db6b77",
+        "complete_project_recovery": "UNVERIFIED",
+        "author_authorization_verified": false,
+        "transaction_consistency": "UNVERIFIED",
+        "durable_storage": "UNVERIFIED",
+        "content_quality": "UNVERIFIED",
+        "issues": [],
+        "project_id": "PUBLIC_RESUME_BOUNDARY",
+        "required_files_checked": 5,
+        "protocol_pin_values_match": true,
+        "candidate_pin_config_values_match": true
+      }
+    },
+    {
+      "case": "candidate_commit_conflict",
+      "frozen_requirements_sha256": "516d770c7d9659c84546064335e6f1508c8f1edaaed9e46f1037120230db6b77",
+      "checkpoint_manifest_sha256": "169bff1219bc03cc88944d9ad61391cd336df80b9dae35d720f7060057d3e6f3",
+      "byte_snapshot": "PASS_BYTES_ONLY",
+      "byte_restore": "PASS_BYTES_ONLY",
+      "byte_operation_project_resume_gate": "NOT_RUN",
+      "all_included_files_byte_equal": true,
+      "source_deleted_before_restore": true,
+      "resume_check_did_not_modify_checkpoint": true,
+      "missing_required_files_after_restore": [],
+      "input": {
+        "pins_channel": "CANDIDATE_OPT_IN",
+        "pins_modules": [
+          {
+            "id": "discovery_gate",
+            "commit": "6aca4e26c309dce6da85be592ab34f57bfe83a1b"
+          }
+        ],
+        "config_modules": {
+          "discovery_gate": true,
+          "spellcheck": true
+        },
+        "config_module_commits": {
+          "discovery_gate": "11adac438ba0d31271a0481a4978c54e28c733a3"
+        }
+      },
+      "source_sha256": {
+        "book.md": "2a68dde41ee1adc9d47b03dff5cc580224c3daeb541dda5c8ae9a83cba50a7af",
+        "pins.json": "2c71f2c10085df13a87fd58cf07f6298c16cdfaecaff23ee57bca993206cd0c3",
+        "config.json": "9b14de77335eb0acc1f359d438519e930dba764afff1fdbe9684b7d5e90e0b5f",
+        "SOURCE_LEDGER.json": "12f32aba60087e8a549191ef7b2ed48277d273a18774cf2f40bc9c86463a7581",
+        "STATE.json": "1a46fb77a80a02a4d540e10aa93bcd36acd932c4b1fd14740c7d0b723f7835a0"
+      },
+      "expected_resume_status": "BLOCKED",
+      "actual_resume_check": {
+        "status": "BLOCKED",
+        "byte_gate": "PASS_BYTES_ONLY",
+        "resume_gate": "BLOCKED",
+        "manifest_sha256": "169bff1219bc03cc88944d9ad61391cd336df80b9dae35d720f7060057d3e6f3",
+        "requirements_sha256": "516d770c7d9659c84546064335e6f1508c8f1edaaed9e46f1037120230db6b77",
+        "complete_project_recovery": "UNVERIFIED",
+        "author_authorization_verified": false,
+        "transaction_consistency": "UNVERIFIED",
+        "durable_storage": "UNVERIFIED",
+        "content_quality": "UNVERIFIED",
+        "issues": [
+          "candidate commits differ across pins/config/frozen requirements"
+        ]
+      }
+    }
+  ],
+  "resume_checker_source_sha256": "d71d8aba9965206d68f0ee9e936cfa3a7a13d125a64662aa149df3b97510bbaa",
+  "limits": [
+    "Checks only the externally declared inventory and identities; not their truth or completeness.",
+    "Byte restoration is not project trust, author authorization, transaction consistency or durable storage.",
+    "Module choices and approvals here are synthetic fixtures, not real project authorizations."
+  ],
+  "quality_improvement": "UNVERIFIED",
+  "independent_human_blind": "NOT_RUN",
+  "E1": "NOT_IMPLEMENTED",
+  "E2": "NOT_RUN"
+}

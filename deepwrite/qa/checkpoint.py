@@ -22,6 +22,7 @@ SCHEMA = "deepwrite/checkpoint/v0.1"
 RECEIPT = "RESTORE_RECEIPT.json"
 HEX40 = re.compile(r"[0-9a-f]{40}")
 HEX64 = re.compile(r"[0-9a-f]{64}")
+BYTE_SCOPE = {"project_resume_gate": "NOT_RUN", "complete_project_recovery": "UNVERIFIED"}
 
 
 def digest(data):
@@ -159,7 +160,7 @@ def snapshot(root, destination, project_id, artifact, pins, config, files=()):
     manifest_data = (json.dumps(manifest, ensure_ascii=False, indent=2) + "\n").encode("utf-8")
     contents["manifest.json"] = manifest_data
     publish_directory(destination, lambda stage: write_files(stage, contents))
-    return {"status": "PASS_BYTES_ONLY", "manifest_sha256": digest(manifest_data),
+    return {**BYTE_SCOPE, "status": "PASS_BYTES_ONLY", "manifest_sha256": digest(manifest_data),
             "project_id": project_id, "files": len(records)}
 
 
@@ -187,13 +188,13 @@ def verified_contents(checkpoint, expected_manifest_sha256):
 
 def verify(checkpoint, expected_manifest_sha256):
     manifest, contents = verified_contents(checkpoint, expected_manifest_sha256)
-    return {"status": "PASS_BYTES_ONLY", "project_id": manifest["project_id"], "files": len(contents),
+    return {**BYTE_SCOPE, "status": "PASS_BYTES_ONLY", "project_id": manifest["project_id"], "files": len(contents),
             "manifest_sha256": expected_manifest_sha256}
 
 
 def restore(checkpoint, destination, expected_manifest_sha256):
     manifest, contents = verified_contents(checkpoint, expected_manifest_sha256)
-    receipt = {"schema": "deepwrite/restore-receipt/v0.1", "project_id": manifest["project_id"],
+    receipt = {**BYTE_SCOPE, "schema": "deepwrite/restore-receipt/v0.1", "project_id": manifest["project_id"],
                "manifest_sha256": expected_manifest_sha256,
                "restored_at": datetime.now(timezone.utc).isoformat(),
                "status": "PASS_BYTES_ONLY", "existing_files_overwritten": False}

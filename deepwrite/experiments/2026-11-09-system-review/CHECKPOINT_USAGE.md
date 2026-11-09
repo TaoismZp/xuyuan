@@ -2,6 +2,10 @@
 
 **能真实使用：snapshot / verify / restore。证据仅限本地字节，不是写作质量保证。** 不安装新框架；Python标准库，Linux原子无覆盖发布依赖libc `renameat2`（Windows使用拒绝覆盖的rename）；能力缺失返回BLOCKED。使用当前正式DeepWrite v0.1和父协议v7.6，不修改二者CURRENT。其他版本兼容未测。
 
+## 0004新增的有限恢复前检查（仍为显式自愿候选）
+
+字节命令现在明确输出 `project_resume_gate=NOT_RUN`、`complete_project_recovery=UNVERIFIED`。如果项目事先冻结了必需文件、双层版本与候选选择，另运行只读 `qa/resume_check.py` 检查漏存和pins/config候选冲突；通过仅为 `PASS_DECLARED_RESUME_CHECKS_ONLY`。没有清单的旧快照仍可字节恢复，不能据此获得继续执行项目的验收。示例、F1/F2失败样本、正常STABLE/opt-in对照和停用办法见 [0004实测](../2026-11-09-resume-boundary/REPORT.md)。清单完备、声明真实性、全部配置正确和持久性仍未验证。
+
 ## 选择启用与依赖
 
 新项目默认稳定流程。只有明确自愿试用时，在项目记录 `checkpoint_restore`、**包含 `deepwrite/qa/checkpoint.py` 的完整Git commit**、双层协议实际version/commit/spec blob SHA，以及 `EXPERIMENTAL_LOCAL_BYTES_ONLY`。不能以本说明的候选版本取代正式工作台。工具代码在公开仓；真实原稿、配置、pins、快照和恢复目录必须在授权私有存储。
