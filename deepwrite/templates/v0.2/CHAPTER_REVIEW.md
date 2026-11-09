@@ -2,6 +2,7 @@
 
 - 当前正文路径与 SHA256：
 - 素材 / 主张表 / 编辑契约身份：
+- 方向审查：源机制覆盖、竞争方向、预设母题污染与概念图/计划版本：
 - 审查者类型：MODEL_REVIEW / HUMAN_EDITOR / READER_OBSERVED
 - 是否看过作者思路或旧审稿（暴露范围）：
 
@@ -19,6 +20,7 @@
 - 结构缺陷 / 事实缺陷 / 表达缺陷分别是否解决：
 - 读者检查：MODEL_SIMULATION / READER_OBSERVED / NOT_RUN；题目、回答与理解缺口：
 - 跨章：新增贡献、必要复现、无效重复、与全书结论冲突：
+- 思想推进：初步解释、最强反例、实际新增/修正的理解、目标域不等价处（按章作用适用）：
 - 内部结论：KEEP / PASS_INTERNAL / REWRITE / RESEARCH_MORE / MERGE / STOP_WORK
 - 未解决项与唯一下一步：
 - 独立人类盲评与作者签收：PENDING（除非有真实证据）

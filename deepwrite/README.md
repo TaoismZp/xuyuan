@@ -6,7 +6,7 @@ DeepWrite 是可恢复、版本化的长篇非虚构写作工作台，源于一�
 
 **入口**：[START_HERE.md](START_HERE.md) · [当前能力状态](CURRENT.json) · [v0.1方法规范](versions/v0.1.md) · [形成过程](HISTORY.md) · [项目立项](PROJECT_INIT.md) · [盲测方案](EVALUATION.md) · [隐私边界](SECURITY.md)
 
-**质量迭代候选**：[v0.2](candidates/v0.2.md) · [可执行编辑循环](candidates/EDITORIAL_LOOP.md) · [本体迭代检查点](iterations/2026-11-09-quality/RECOVERY.md)。候选针对强制造新发现、商业题材偏置、来源与论断脱节、作者声音和小样评测；仅用于显式选择的开发试验，当前生效版本仍为 v0.1，质量提升尚未获独立盲评证明。
+**质量迭代候选**：[v0.2](candidates/v0.2.md) · [研究与发现循环](candidates/RESEARCH_LOOP.md) · [编辑循环](candidates/EDITORIAL_LOOP.md) · [源头复审](iterations/2026-11-09-quality/ORIGIN_REASSESSMENT.md) · [本体迭代检查点](iterations/2026-11-09-quality/RECOVERY.md)。候选经源过程复审后补回研究方向比较、原生重建、思想贡献与整书比较式编辑；仅用于显式选择的开发试验，当前生效版本仍为 v0.1，质量提升尚未获独立盲评证明。
 
 ## 现在可以怎样用
 

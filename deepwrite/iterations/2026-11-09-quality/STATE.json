@@ -3,15 +3,15 @@
   "project_id": "deepwrite-method-quality-20261109",
   "task_type": "METHOD_ITERATION",
   "privacy": "PUBLIC_METHOD_ONLY",
-  "status": "COMPLETED",
-  "current_gate": "CANDIDATE_READY_FOR_REVIEW",
+  "status": "ACTIVE",
+  "current_gate": "ORIGIN_REVISED_REMOTE_CHECKPOINT",
   "base_commit": "4c277410e892e0200584392097e00b2899627162",
   "active_deepwrite": "v0.1",
   "active_parent": "v7.6",
   "candidate": "v0.2",
   "candidate_identity": {
     "manifest_path": "deepwrite/iterations/2026-11-09-quality/ARTIFACTS.json",
-    "sha256": "1e6135803d2af55d5bc2caac5bc299acebdd2b4c926c9483d2006d2fc0eff194"
+    "sha256": "9da98ad79801db6dd111070e645fe321f287ad4ae6326cc84147727c7182c3de"
   },
   "last_good_checkpoint": {
     "commit": "5a34327b36c9bbf822a43942cdadc275592c924e",
@@ -20,9 +20,9 @@
   },
   "checkpoint_scope": "GITHUB_DURABLE_READ_BACK",
   "open_blocker": null,
-  "next_executable_action": "读回PR12及其评审意见，对照固定候选commit和ARTIFACTS身份修订具体缺陷；进入真实质量比较前先预登记素材、预算、评分锚点和真实读者。候选仍未生效。",
-  "updated_at": "2026-11-09T00:29:52Z",
-  "completion_scope": "CANDIDATE_METHOD_AND_COMPATIBLE_PATCH_ONLY_NOT_QUALITY_SIGNOFF",
+  "next_executable_action": "提交通用修订和脱敏审视，回读候选身份及草稿PR；不把未完整通过的历史回放判作研究能力PASS。",
+  "updated_at": "2026-11-09",
+  "completion_scope": "SOURCE_REVIEW_AND_CANDIDATE_REBUILD_ONLY_NOT_QUALITY_SIGNOFF",
   "readback": {
     "commit": "5a34327b36c9bbf822a43942cdadc275592c924e",
     "files_byte_identical": 24,
@@ -31,10 +31,24 @@
   },
   "pull_request": "https://github.com/TaoismZp/xuyuan/pull/12",
   "open_quality_gates": [
+    "FINAL_INPUT_ISOLATION_EXECUTION_UNTESTED",
+    "UNSEEN_TOPIC_RESEARCH_DIAGNOSIS_PENDING",
     "REAL_READER_OBSERVATION_NOT_RUN",
     "HUMAN_BLIND_AB_NOT_RUN",
-    "AUTHOR_SIGNOFF_PENDING",
+    "NEW_METHOD_AUTHOR_SIGNOFF_PENDING",
     "E1_NOT_IMPLEMENTED",
     "E2_NOT_RUN"
-  ]
+  ],
+  "source_review": {
+    "two_shared_conversations_text": "READ",
+    "all_legacy_chats": "NOT_OBTAINED",
+    "hidden_tools_and_attachments": "NOT_INDEPENDENTLY_VERIFIED",
+    "raw_source_storage": "LOCAL_WORKSPACE_ONLY_NOT_PUBLIC_REPO"
+  },
+  "historical_replay": {
+    "status": "RUN_PARTIAL_DIAGNOSTIC_NOT_PASS",
+    "scope": "FrozenR/SworkingSnapshots_not_final_candidate",
+    "exact_budget_equality": "UNVERIFIED",
+    "raw_evidence": "LOCAL_ONLY"
+  }
 }

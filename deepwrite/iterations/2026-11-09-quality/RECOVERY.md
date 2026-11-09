@@ -13,3 +13,7 @@ PROJECT_ID: `deepwrite-method-quality-20261109`。任务为改进公开工作台
 候选与20项固定证据：commit `5a34327b36c9bbf822a43942cdadc275592c924e`，GitHub回读24个文件逐字节匹配。草稿PR：https://github.com/TaoismZp/xuyuan/pull/12 。STATE的COMPLETED仅指本轮候选方法与兼容补丁已交审，不指质量终审或E1/E2通过。控制元数据更新提交会晚于候选commit；恢复时以STATE所列候选与ARTIFACTS身份为准。
 
 唯一下一步见STATE：先读取PR和实际评审反馈；质量比较仍需预登记和真实读者，不把本轮缺陷注入演示当独立盲评。
+
+## 源头复审后的接班
+
+用户要求回到诞生过程，已读两份分享并完成源头审视。当前应读取ORIGIN_REASSESSMENT.md与STATE，使用新ARTIFACTS身份；旧4d02fb0仍是初稿检查点。新的研究循环、范围处理与自治分层是候选，不是生效规范；历史回放未完整复现根因判断，最终输入隔离实现待验证。原始聊天和逐条回放仅在本次本地源资料目录，公开仓库不是它们的备份。
