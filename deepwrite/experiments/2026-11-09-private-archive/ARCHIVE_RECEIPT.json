@@ -1,0 +1,68 @@
+{
+  "round": "0008",
+  "experiment_id": "DW-WORK-0006-E",
+  "observed_at_utc": "2026-11-09T23:50:00.866799+00:00",
+  "status": "BLOCKED_PRIVATE_DESTINATION_NOT_PROVISIONED_OR_NOT_VISIBLE",
+  "public_base_commit": "e6d45cef424ab8a9961f7465785747fbba7041bb",
+  "identity_checks": {
+    "github_connector_login": "TaoismZp",
+    "gh_api_login": "TaoismZp",
+    "same_user_id": 348047166,
+    "gh_auth_status_returncode": 0,
+    "credential_values_recorded": false
+  },
+  "target_checks": {
+    "public_method_repo_visibility": "public",
+    "target_repository": "TaoismZp/deepwrite-work-0006-private",
+    "create_command": "gh repo create TaoismZp/deepwrite-work-0006-private --private --description PRIVATE_PROJECT_DESCRIPTION --add-readme",
+    "actual_create_response": {
+      "status": 403,
+      "message": "Resource not accessible by integration",
+      "endpoint": "https://api.github.com/user/repos"
+    },
+    "actual_followup_metadata_response": {
+      "status": 404,
+      "interpretation": "not visible to current integration; not proof of global nonexistence"
+    },
+    "created_by_this_attempt": false,
+    "manuscript_upload": "NOT_ATTEMPTED",
+    "canary_upload": "NOT_ATTEMPTED",
+    "existing_private_targets": "metadata inspected; inspected general handoff repository excludes manuscripts from its content scope; unrelated targets not used",
+    "private_library_or_drive_upload_tools": "not available in active tools; plugin search found unconnected alternatives, no new connection made",
+    "shared_desktop": "remote_desktop declared enabled/unknown but no callable browser/desktop js tool offered; logged-in web creation not verified"
+  },
+  "original_integrity": {
+    "original_zip_sha256": "3cf645797ed023aa2a87c71e441709fbae318376c8f569a08f19eb5c3cb4cc6d",
+    "original_zip_bytes": 528816,
+    "zip_crc_entries_checked": 54,
+    "original_manifest_sha256": "800fc17776ddd0fc6ffa4295c5d67191b952673f67ff290c53ce502967d321ae",
+    "manifest_files_verified": 51,
+    "missing_or_changed_objects": 0,
+    "two_article_and_three_review_sha_match_0006": true
+  },
+  "prepared_local_packages": {
+    "neutral_content_files": 9,
+    "neutral_support_files_before_manifest": 2,
+    "neutral_manifest_sha256": "39063e78453708483a3daf91b61b8fc5703db017b05e628bd0ec8ce4e310c7da",
+    "neutral_zip_sha256": "4a098636606906a3c9a7a8205af6f0d374647cf605f8ced85dd8d2124722f45f",
+    "canary_sha256": "3accb325bf265446531432af4942aa706d381a5f68bb40d03cc628ea39511c4b",
+    "custody_original_bundle_sha256": "3cf645797ed023aa2a87c71e441709fbae318376c8f569a08f19eb5c3cb4cc6d",
+    "neutral_does_not_include_treatment_map": true,
+    "branch_or_directory_separation_is_ACL": false,
+    "remote_upload": "NOT_ATTEMPTED_NO_AUTHORIZED_TARGET"
+  },
+  "archive_status": "NOT_DURABLY_ARCHIVED",
+  "chatgpt_actual_private_readback": "NOT_CONFIRMED",
+  "generate_select_transfer": "NOT_RUN_DEPENDS_ON_AUTHORIZED_SHARED_ORIGINALS",
+  "causal_attribution": "HOLD_CORRECT_OMISSION_AND_RESOURCE_ALLOCATION_REMAIN_PLAUSIBLE",
+  "original_articles_rewritten": false,
+  "formal_versions": {
+    "deepwrite": "v0.1",
+    "wish_delivery": "v7.6",
+    "CURRENT_changed": false
+  },
+  "E1": "NOT_IMPLEMENTED",
+  "E2": "NOT_RUN",
+  "independent_human_blind": "NOT_RUN",
+  "single_unblock_action": "Owner provision an empty PRIVATE TaoismZp/deepwrite-work-0006-private (or expose an existing dedicated private target) and include it in the current GitHub connection; no tokens or manuscript forwarding in chat. Codex then verifies visibility/canary and uploads the already prepared packages."
+}
