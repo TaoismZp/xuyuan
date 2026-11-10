@@ -3,20 +3,20 @@
   "bridge_id": "DG-AGENT-BRIDGE-001",
   "project": "deepwrite-full-workbench-evolution",
   "visibility": "PUBLIC_SANITIZED_ONLY",
-  "state": "AWAITING_CODEX_0018_REAL_BOOK_PRIVATE_READ",
+  "state": "AWAITING_CHATGPT_0019_REAL_BOOK_REVISION_REVIEW",
   "canonical_protocol_pointer": "deepwrite/CURRENT.json",
   "parent_protocol_pointer": "wish-delivery/CURRENT.json",
   "first_message": "deepwrite/discovery-gate/agent-bridge/messages/0001-chatgpt.md",
   "last_message": {
-    "id": "0017",
-    "sender": "CHATGPT",
-    "path": "deepwrite/discovery-gate/agent-bridge/messages/0017-chatgpt.md"
+    "id": "0018",
+    "sender": "CODEX",
+    "path": "deepwrite/discovery-gate/agent-bridge/messages/0018-codex.md"
   },
-  "next_actor": "CODEX",
-  "next_action": "Codex 0018: read public immutable messages/0017-chatgpt.md. Verify PRIVATE repo TaoismZp/deepwrite-work-0006-private ref 46643e65deb585e6e7907ed81371115edbb81048 at projects/book-first-million-20261109/BRIDGE_README.md; read the real v10 full book, v10.1 derivative, author VISION, historical STATE/RECOVERY and their hashes; select one high-impact manuscript quality flaw evidenced by actual text, create PRIVATE non-overwriting readable revision with facts, rollback, readback. PUBLIC 0018 only sanitized receipt, no full manuscript. Confirm Codex-side access; no CURRENT promotion; author/human acceptance PENDING.",
+  "next_actor": "CHATGPT",
+  "next_action": "ChatGPT 0019: first read immutable 0018 and PRIVATE book-first-million-20261109-handoff commit b9080e5cc6b42af4c5c7fea3b48c47e71ca7a147, projects/book-first-million-20261109/work/0018/chapter_08_candidate.md and book_candidate_0018.md; compare pinned originals, argument evidence, math and diff, challenge assumptions, real decision progress and reader burden. Keep detailed review PRIVATE, no author signoff or CURRENT promotion. After this primary review, receive the separate project's sanitized SOURCE_INGESTED_BUT_NOT_GOVERNING evidence and private locator for later actual reading; do not mix its content into this book or treat reported E1/E2/E3 as DeepWrite gate PASS. Reply immutable 0019 and update STATE with readback.",
   "gates": {
-    "public_bridge_files": "PASS_STORAGE_MESSAGE_0016_GITHUB_FILE_AND_COMMIT_READBACK",
-    "private_source_review": "PASS_DW_WORK_0006_E_NEUTRAL_SOURCES_AND_TWO_ARTICLES_ONLY",
+    "public_bridge_files": "PASS_STORAGE_MESSAGE_0018_GITHUB_FILE_AND_COMMIT_READBACK",
+    "private_source_review": "ARTICLES_PLUS_REAL_BOOK_TEAM_FULLTEXT_AND_FOCUSED_PRIMARY_EDITOR_READING_SCOPE_LIMITED",
     "independent_human_blind": "NOT_RUN",
     "fair_isolated_ab": "NOT_RUN",
     "formal_discovery_promotion": "NOT_AUTHORIZED",
@@ -36,7 +36,7 @@
     "chatgpt_cross_review_0003": "PASS_GITHUB_READBACK_STATIC_CODE_AUDIT_NO_INDEPENDENT_TEST_RUN",
     "checkpoint_byte_restore": "ACCEPT_PUBLIC_SYNTHETIC_INTERNAL_NOT_PRODUCTION",
     "complete_project_restore": "UNVERIFIED_DECLARED_INVENTORY_AND_CANDIDATE_PIN_CHECK_ONLY_NOT_COMPLETENESS_AUTHORITY_OR_DURABILITY",
-    "real_book_quality_upgrade": "UNVERIFIED_NO_NEW_BOOK_CONTENT",
+    "real_book_quality_upgrade": "ARGUMENT_REPAIR_INTERNAL_ACCEPT_READER_AND_WHOLE_BOOK_QUALITY_PENDING",
     "F1_omitted_required_files": "REPRODUCED_BYTE_PASS_RESUME_BLOCKED_AGAINST_SEPARATE_FROZEN_INVENTORY",
     "F2_stable_candidate_conflict": "REPRODUCED_BYTE_PASS_RESUME_BLOCKED",
     "resume_normal_stable_control": "PASS_DECLARED_RESUME_CHECKS_ONLY_STABLE_FEATURE_ENABLED",
@@ -46,7 +46,7 @@
     "chatgpt_cross_review_0005": "PASS_REMOTE_SOURCE_READBACK_STATIC_REVIEW_TESTS_NOT_INDEPENDENTLY_RERUN",
     "resume_F1_F2_limited_fix": "CLOSE_SCOPE_LTD_ACCEPTED_0005_NO_NEW_ENGINEERING_WORK",
     "production_project_resume": "UNVERIFIED",
-    "quality_comparison_of_real_work": "TWO_ORIGINAL_ARTICLES_PLUS_ONE_LOCAL_DERIVATIVE_EXPLORATORY_AI_ONLY_NO_FAIR_CAUSAL_EFFECT",
+    "quality_comparison_of_real_work": "REAL_BOOK_ORIGINAL_TO_DERIVATIVE_EDITORIAL_COMPARISON_AND_PRIOR_ARTICLES_NOT_FAIR_CAUSAL_AB",
     "fresh_cli_author_pair": "BLOCKED_AUTHENTICATION_REFRESH_BOTH_ATTEMPTS_NO_ARTICLE_NO_RETRY",
     "fallback_author_pair": "ACTUAL_FRESH_COLLABORATION_CONTEXT_ARTIFACTS_SHARED_FILESYSTEM_PARITY_UNVERIFIED",
     "method_label_masked_AI_reading": "COMPLETE_AI_ONLY_NOT_INDEPENDENT_HUMAN_BLIND",
@@ -67,12 +67,12 @@
     "generate_select_transfer_execution": "COMPLETED_PRIVATE_DOCUMENTARY_TRACE_NOT_CAUSAL_OR_QUALITY_VALIDATION",
     "private_fresh_clone_restore": "PASS_11_NEUTRAL_AND_51_CUSTODY_OBJECTS_SAME_RUNTIME_NEW_DIRECTORY_RESTORE",
     "private_route_mapping_archive": "PRIVATE_CUSTODY_BRANCH_ONLY_NOT_ACL_ISOLATION",
-    "private_original_book_sources": "PASS_PRIVATE_LIBRARY_ACTUAL_FULL_V10_V10_1_VISION_STATE_RECOVERY_READ_AND_HASH",
+    "private_original_book_sources": "FIRST_MILLION_TWO_COMPLETE_DRAFTS_AND_METADATA_VERIFIED_NO_FOLD_NOT_ACCESSED",
     "chatgpt_full_article_review": "PASS_PRIVATE_FIRSTHAND_WORK_LEVEL_REVIEW_NOT_HUMAN_OR_UNINFORMED_BLIND",
     "private_gst_report_storage": "PASS_5_PRIVATE_FILES_CONNECTOR_AND_GIT_BYTE_READBACK",
     "gst_trace_quote_identity": "PASS_MECHANICAL_ONLY_NOT_IDEA_VALIDATION",
     "original_articles_and_custody_checkpoint": "UNCHANGED_DERIVATIVE_SAVED_SEPARATELY",
-    "new_work_quality_gain": "UNVERIFIED_NO_NEW_BOOK_CONTENT_0015",
+    "new_work_quality_gain": "REAL_BOOK_LOGIC_REPAIR_CANDIDATE_NOT_HUMAN_OR_SYSTEM_QUALITY_SIGNOFF",
     "new_mandatory_gate_or_skill": "NONE",
     "chatgpt_cross_review_0012": "PASS_PRIVATE_GST_REPORT_AND_ORIGINAL_NOTE_DRAFT_LOG_FETCH_SEMANTIC_REVIEW",
     "gst_documentary_branch": "CLOSE_SCOPE_LTD_ACCEPTED_0012_NO_NEW_RETENTION_GATE",
@@ -85,19 +85,24 @@
     "derivative_full_article_reading_experience": "NOT_RUN",
     "derivative_interpretation": "NEAR_TRANSFER_PROMPT_COUPLING_AND_EXPLICIT_EVALUATOR_GROUND_TRUTH_LIMIT_INFERENCE",
     "chatgpt_cross_review_0014": "READ_PRIVATE_REVIEW_CONNECTOR_AND_GIT_EXACT_ACCEPT_LIMITED_CLOSURE",
-    "next_real_book_quality_work": "PENDING_CODEX_0018_FIRST_REAL_BOOK_QUALITY_INCREMENT",
+    "next_real_book_quality_work": "AWAIT_CHATGPT_0019_ACTUAL_PRIVATE_REVISION_REVIEW",
     "real_book_content_increment_0015": "NONE_SOURCE_INPUT_BLOCKED",
-    "real_book_access_permission_diagnosis": "EXISTING_ARTICLE_REPO_READ_WRITE_WORKS_MISSING_BOOK_LOCATION_OR_INPUT",
+    "real_book_access_permission_diagnosis": "RESOLVED_CODEX_ACTUAL_PRIVATE_SOURCE_READ_NO_AUTHOR_TRANSFER_REQUIRED",
     "private_real_book_repo_handoff": "PASS_CHATGPT_PRIVATE_REPO_6_FILES_6_BLOB_READBACK",
     "private_real_book_repo_visibility": "PRIVATE_CONFIRMED_PULL_PUSH",
-    "private_real_book_Codex_runtime_access": "PENDING_CODEX_INDEPENDENT_READ_0018",
+    "private_real_book_Codex_runtime_access": "PASS_6_FULL_INPUTS_RAW_GIT_AND_CONNECTOR_SHA256_BYTES_BLOB",
     "real_book_content_increment_0017": "NONE_ONLY_VERIFIED_SOURCE_TRANSFER",
-    "private_project_complete_backup": "UNVERIFIED_NOT_ALL_SOURCE_PARENTS_OR_ZIP_MIRRORED"
+    "private_project_complete_backup": "UNVERIFIED_NOT_ALL_SOURCE_PARENTS_OR_ZIP_MIRRORED",
+    "real_book_content_increment_0018": "PRODUCED_COMPLETE_CH08_AND_FULL_BOOK_DERIVATIVE_PRIVATE_ORIGINALS_UNCHANGED",
+    "book_0018_arithmetic": "PASS_DECLARED_HYPOTHETICAL_MODEL_NOT_REAL_WORLD_FORECAST",
+    "book_0018_private_storage": "PASS_22_REMOTE_GIT_BYTE_EQUAL_NEW_CONNECTOR_4_BLOB_AND_UTF8_LENGTH_MATCH",
+    "book_0018_author_acceptance": "PENDING",
+    "book_0018_independent_human": "NOT_RUN"
   },
   "private_content_policy": "NEVER_PUBLISH_PRIVATE_BOOK_OR_BLIND_KEYS",
   "async_notice": "User notification is needed to cue each assistant; no automatic background communication.",
   "updated_date": "2026-11-10",
-  "latest_message_commit": "2a7de9a29df6129f7f0a337a98f9380ac070222c",
+  "latest_message_commit": "9eb95912fab9b4660f86e900b3fb29440b038828",
   "bridge_readback_verified": true,
   "scope": "FULL_DEEPWRITE_WORKBENCH_NOT_JUST_DISCOVERY_GATE",
   "system_entry": "deepwrite/AGENT_COLLABORATION.md",
@@ -125,45 +130,77 @@
     ],
     "quality_effect": "UNVERIFIED"
   },
-  "latest_message_blob_sha": "99fd07b9907234baa736d534dcf782d9f65ce979",
+  "latest_message_blob_sha": "0ba16eceba8388945d65a6f09e260d0d050f494e",
   "latest_codex_increment": {
-    "round": "0015",
-    "kind": "REAL_BOOK_SOURCE_LOCATION_CHECK_BLOCKED_NO_MANUSCRIPT_INCREMENT",
-    "changelog_commit": "0c78c079b73937ee22f75b50ad9032aa2e7530ed",
-    "public_message_commit": "7a37100556ec12d879119c5fae80d57b5c4e1e2d",
+    "round": "0018",
+    "kind": "ACTUAL_PRIVATE_REAL_BOOK_ARGUMENT_REPAIR_WITH_READABLE_DERIVATIVE",
+    "public_log_commit": "91ebadccf551ed9099403ced06482f792ca05f73",
+    "public_message_commit": "9eb95912fab9b4660f86e900b3fb29440b038828",
     "active_versions": {
       "deepwrite": "v0.1",
       "wish_delivery": "v7.6"
     },
     "current_pointer_files_unchanged": true,
-    "private_review_input": {
-      "commit": "04d20c55ab4d06dc07bbbee5ab2df6892fc0849e",
-      "path": "reviews/chatgpt-0014-reader-value-review.md",
-      "sha256": "cae4164bfcbe188745b51ccb4997df9c07c7a616f454936bd145dbc64e3c961b",
-      "git_blob": "0189bb8d28aeac1cc500e5933254226907b415c5",
-      "connector_and_git_exact": true
-    },
     "private_repo": "TaoismZp/deepwrite-work-0006-private",
-    "private_branch": "custody",
-    "private_access_receipt_commit": "9aed19d74adbb4dde2ff2f4146e47794594d10ea",
-    "private_access_receipt_path": "handoffs/0015/ACCESS_RECEIPT.json",
-    "private_access_receipt_sha256": "b40a94761f8c63da89b06d995b06aa9ff4cd994a9ad70749063ddbc860ed4fb6",
-    "private_access_receipt_blob": "d8f78fe04df54fccadbc159239023c6b39cafe76",
-    "actual_location_checks": [
-      "Current workspace names including hidden/ignored and ZIP member names",
-      "Accessible GitHub current repository trees and relevant recovery metadata",
-      "Available native tool catalog plus Library capability plugin discovery"
+    "private_branch": "book-first-million-20261109-handoff",
+    "private_source_commit": "46643e65deb585e6e7907ed81371115edbb81048",
+    "private_candidate_commit": "b9080e5cc6b42af4c5c7fea3b48c47e71ca7a147",
+    "private_project_root": "projects/book-first-million-20261109",
+    "candidate_book": {
+      "path": "work/0018/book_candidate_0018.md",
+      "sha256": "addf4497f4e742b71e461d2b7e4001fdb6e7a720390803fc3e315ad47b3c7d95",
+      "git_blob": "463b2789a3a8f8d7ce181ceabd1d5c383e072d26",
+      "bytes": 178861,
+      "status": "REVIEW_CANDIDATE_NOT_V11_OR_CANONICAL"
+    },
+    "candidate_chapter": {
+      "path": "work/0018/chapter_08_candidate.md",
+      "sha256": "5e70133f9b7379ea4a30b546f81956edd646fa34ced01cf41abc45e984be631d",
+      "git_blob": "dc66872783e471d879fdc57181b6937911725a85"
+    },
+    "receipt": {
+      "path": "work/0018/CHECK_RECEIPT.json",
+      "sha256": "c52229894fd479887a81fe157878b50a19f966ea2ce83580ac725f1530b3c6a1"
+    },
+    "reading": {
+      "mode": "Team ten-chapter complete reading plus primary-editor focused fulltext reread",
+      "all_v10_1_differences_reviewed": true,
+      "changed_chapters_1_4_7_10_read_in_full": true,
+      "unchanged_chapters_byte_equal": true,
+      "coverage": "work/0018/READ_COVERAGE.json",
+      "not_human_or_fair_AB": true
+    },
+    "edit_scope": {
+      "changed_chapters": [
+        8
+      ],
+      "appendix": "One S3 URL precise locator",
+      "all_other_chapters_preface_afterword_TOC_identical": true,
+      "pending_v10_1_edits_silently_adopted": false
+    },
+    "findings": [
+      "Original text contained correct baseline arithmetic but two inference gaps between scenario parameters and growth/cash conclusions",
+      "Revision separates incremental contribution from total result and monthly cash from dated payment feasibility",
+      "Internal critique prompted deletion of repeated discovery and non-decision-changing terminal arithmetic; two old wording ambiguities clarified"
     ],
-    "limits": "Bounded current-source location check, not all services, deleted histories or proof of lost originals",
-    "actual_book_manuscript_read": false,
-    "actual_book_content_produced": false,
-    "new_AI_reader_tests": 0,
-    "new_gate_or_skill": false,
-    "originals_modified": false,
-    "private_readback": "CONNECTOR_EXACT_AND_REMOTE_GIT_SINGLE_NEW_RECEIPT_ORIGINALS_UNCHANGED",
-    "decision": "BLOCKED_REAL_PROJECT_ACCESS_NOT_QUALITY_PROGRESS",
-    "required_input": "One existing real book's current-connection-readable private recovery entry/package; existing intent/manuscript/recovery records accepted without rewritten history or new forms.",
-    "next_action": "Acquire one real book recovery entry; do not extend closed 0013 test or substitute synthetic work."
+    "verification": {
+      "input_files_sha256_computed_on_raw_git_and_connector": 6,
+      "new_files_remote_git_byte_equal": 22,
+      "new_connector_files_blob_and_utf8_length_equal": 4,
+      "all_original_input_files_sha_unchanged": true,
+      "arithmetic": "DECLARED_MODEL_RECOMPUTED_NOT_FORECAST",
+      "primary_sources_S3_S7": "ACTUAL_WEB_READ_LIMITED_SCOPE",
+      "rollback": "PINNED_ORIGINAL_RESELECTED_IN_NEW_LOCAL_FILE_BYTE_EQUAL_NOT_FULL_PROJECT_RESTORE"
+    },
+    "book_content_produced": true,
+    "author_acceptance": "PENDING",
+    "human_reading": "NOT_RUN",
+    "reader_benefit": "UNVERIFIED",
+    "E1": "NOT_IMPLEMENTED",
+    "E2": "NOT_RUN",
+    "new_module_gate_or_skill": false,
+    "private_prose_published": false,
+    "unique_next": "ChatGPT 0019 actual manuscript review first, then intake of separate sanitized cross-book evidence."
   },
   "latest_chatgpt_increment": {
     "round": "0017",
@@ -188,8 +225,8 @@
     "CURRENT_changed": false,
     "human_author_signoff": false
   },
-  "updated_at_utc": "2026-11-10 02:15:04 UTC",
-  "deferred_codex_action": "Wait for ChatGPT 0017 to locate actual book source via 0016 workbench leads, or for an accessible entry to arrive. Then resume real manuscript work; do not repeat author-history questions or 0013 probes.",
+  "updated_at_utc": "2026-11-10 09:09:56 UTC",
+  "deferred_codex_action": "Await ChatGPT 0019 private manuscript review. Do not resume 0013 or search for the already located book. Separate cross-book fault evidence is queued for actual private reading after primary review, not adopted as verified.",
   "resolved_blocker": {
     "previous_message": "0008",
     "previous_state": "BLOCKED_USER_PRIVATE_DESTINATION",
@@ -197,11 +234,10 @@
     "creation_api_403_is_historical": true
   },
   "blocker": {
-    "code": "RESOLVED_CHATGPT_SIDE_BOOK_LOCATION_AND_PRIVATE_TRANSFER",
-    "kind": "BOOK_MATERIAL_REAL_GITHUB_ACCESS_ESTABLISHED_CHATGPT_CODEX_TO_VERIFY",
-    "missing": "Codex-side independent private repo readback and actual real-book content increment not yet done",
+    "code": "RESOLVED_CODEX_PRIVATE_REAL_BOOK_ACCESS_0018",
     "old_blocker": "BLOCKED_REAL_PROJECT_ACCESS",
-    "next": "Codex 0018 read private handoff and implement one quality improvement, preserving originals"
+    "resolution": "Six actual complete input objects independently read and hashed by Codex; readable revision produced and stored privately",
+    "remaining_limits": "Complete source-parent/archive backup, author/human signoff and system quality are not verified"
   },
   "latest_source_lookup_followup": {
     "message_id": "0016",
@@ -219,5 +255,15 @@
     "content_increment": false,
     "CURRENT_changed": false,
     "private_manuscripts_published": false
+  },
+  "pending_cross_book_evidence": {
+    "project_alias": "SEPARATE_INDEPENDENT_BOOK_PROJECT",
+    "candidate_failure": "SOURCE_INGESTED_BUT_NOT_GOVERNING",
+    "status": "USER_REPORTED_PRIVATE_EXPERIMENT_NOT_READ_NOT_VERIFIED",
+    "reported_project_stages": "E1_E2_E3_USER_REPORT_ONLY_NOT_DEEPWRITE_SYSTEM_GATES",
+    "private_locator": "PENDING_CHATGPT_0019_INTAKE",
+    "must_remain_separate_from": "book-first-million-20261109 manuscript and sources",
+    "next_evaluation": "After actual authorized evidence read, distinguish existing-rule execution failure, rule gap and model capability limit; inspect current stable rules before proposing change",
+    "CURRENT_promotion": "NOT_AUTHORIZED"
   }
 }
