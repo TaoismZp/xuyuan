@@ -1,0 +1,103 @@
+{
+  "schema": "deepwrite/sanitized-local-edit-exploration-receipt/v1",
+  "round": "0013",
+  "recorded_at_utc": "2026-11-10T01:41:12.188351+00:00",
+  "active_versions": {
+    "deepwrite": "v0.1",
+    "wish_delivery": "v7.6"
+  },
+  "current_pointers_changed": false,
+  "upstream_change": false,
+  "experiment_status": "EXECUTED_ONE_DERIVATIVE_FOUR_ACTUAL_AI_REPLIES_NO_DEMONSTRATED_GAIN",
+  "private_repository": "TaoismZp/deepwrite-work-0006-private",
+  "private_branch": "custody",
+  "freeze_commit": "771acdad3b12a57aa0180b1daffb878a3fcfd480",
+  "article_lock_commit": "ffac0d8bb62352c3af84c54d36867270616923a5",
+  "response_lock_commit": "fa7049e0c3af3a21c8a0f46726f84de93424d965",
+  "private_final_commit": "cd219342b41358dca39b80e18d3a08a3b9ab7a65",
+  "private_paths_and_identities": {
+    "experiments/0013/FREEZE.json": {
+      "sha256": "4a4da9f086468036e84f8cdbe360e31f4949bf9eef8aa3c79ddecb0e7f6a0e37",
+      "git_blob": "eb59e7026f1571b3914438331ec3bcc81b2054a7",
+      "bytes": 4907
+    },
+    "experiments/0013/READER_TASK.txt": {
+      "sha256": "2de34815bdd485aa2ba232dd0db23168ebc28fe8611ef01588c6390b7e40919a",
+      "git_blob": "3e5f86c94b28edc65f63a306d7176110fd425d0f",
+      "bytes": 709
+    },
+    "experiments/0013/REPORT.md": {
+      "sha256": "085a14add35e883b4d0e0febb0171e24b99def4b6a08a7d55fc76c73cc6b8a85",
+      "git_blob": "aa869e52789643343e36265a65dea510016f7f54",
+      "bytes": 7362
+    },
+    "experiments/0013/EVALUATION.md": {
+      "sha256": "542d75885bc0add6f3c6d3131973c4e4d19750d5ecdd9f0adbad8e22ce3fe224",
+      "git_blob": "b7e5aee788c6e40a802db06cc4ed4a3ff3388e2f",
+      "bytes": 2755
+    },
+    "experiments/0013/CHECK_RECEIPT.json": {
+      "sha256": "d090c1ee0181407faac6dec5f04f76292cdb6873bec6fdbd3b09e8515feee0e0",
+      "git_blob": "4c1ef9533449a70a165cba1a0c0c0c84d6017cba",
+      "bytes": 4423
+    },
+    "experiments/0013/RESPONSE_RECEIPT.json": {
+      "sha256": "4c6e0e0c4d2ec5892e6fa256d8b8b2021cd411ff46123785f148d162a74f7899",
+      "git_blob": "8ac96ad68e6c4af9c20429dfd685dff6856b0e85",
+      "bytes": 2715
+    }
+  },
+  "edit_scope": {
+    "changed_paragraphs": 1,
+    "control_sha256": "7c3d2a4c1ebd5ba8b4db91f9389b57a8054287c8ecc57235bf49ad38fbcaf506",
+    "derivative_sha256": "c9976f0e6096baed2019474d41fe130c96456f7d6acdd6e7ea9f361002db31bc",
+    "whole_file_hanzi": {
+      "control": 1864,
+      "derivative": 1876,
+      "difference": 12,
+      "percent": 0.644
+    },
+    "scope_checks_only_not_quality": true
+  },
+  "actual_execution": {
+    "reader_agents": 4,
+    "responses_per_article": 2,
+    "reader_context": "fresh fork_turns none; method label withheld; shared filesystem instruction boundary",
+    "response_runs_per_reader": 1,
+    "post_response_evaluator_agents": 1,
+    "evaluator_article_group_map_withheld": true,
+    "same_model_system": true,
+    "exact_model_version_and_budget_parity": "UNVERIFIED",
+    "human_respondents": 0,
+    "human_blind": "NOT_RUN",
+    "fair_causal_AB": "NOT_RUN",
+    "full_article_experience_test": "NOT_RUN",
+    "E1_autonomous_full_book": "NOT_IMPLEMENTED",
+    "E2_full_book_fair_blind": "NOT_RUN"
+  },
+  "storage_checks": {
+    "private_files_remote_git_byte_equal": 20,
+    "private_files_connector_text_equal": 3,
+    "original_checkpoint_and_zip_diff_empty": true,
+    "private_main_unchanged": "04b6763499273ad04ad022af6c74e729ad1fbdaa",
+    "original_control_bytes_equal": true,
+    "original_reselected_into_new_local_file": true,
+    "limited_to_one_article_not_complete_restore": true,
+    "cross_environment_restore": "NOT_RUN"
+  },
+  "decisions": {
+    "GST_documentary_diagnostic": "CLOSE_SCOPE_LTD_ACCEPT_0012",
+    "reader_gain": "HOLD_NOT_DEMONSTRATED",
+    "default_adoption": "REJECT",
+    "universal_edit_ineffectiveness": "NOT_ESTABLISHED",
+    "new_module_or_gate_or_skill": false,
+    "formal_promotion": "NOT_AUTHORIZED",
+    "quality_gain": "UNVERIFIED"
+  },
+  "public_privacy": {
+    "original_or_derivative_text": false,
+    "raw_questions_answers_or_private_review": false,
+    "original_route_mapping": false
+  },
+  "unique_next": "ChatGPT 0014 audit pinned private protocol, two works and raw responses; if no material rebuttal close this local AI test without more samples or gates."
+}
