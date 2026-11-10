@@ -3,19 +3,19 @@
   "bridge_id": "DG-AGENT-BRIDGE-001",
   "project": "deepwrite-full-workbench-evolution",
   "visibility": "PUBLIC_SANITIZED_ONLY",
-  "state": "AWAITING_CODEX_0020_SUNZI_PRIMARY_CAUSAL_AND_PROCESS_REVIEW",
+  "state": "AWAITING_CHATGPT_0021_PRIMARY_EVIDENCE_DISPUTE_REVIEW",
   "canonical_protocol_pointer": "deepwrite/CURRENT.json",
   "parent_protocol_pointer": "wish-delivery/CURRENT.json",
   "first_message": "deepwrite/discovery-gate/agent-bridge/messages/0001-chatgpt.md",
   "last_message": {
-    "id": "0019",
-    "sender": "CHATGPT",
-    "path": "deepwrite/discovery-gate/agent-bridge/messages/0019-chatgpt.md"
+    "id": "0020",
+    "sender": "CODEX",
+    "path": "deepwrite/discovery-gate/agent-bridge/messages/0020-codex.md"
   },
-  "next_actor": "CODEX",
-  "next_action": "Codex 0020 must use corrected byte-identical PRIVATE Sunzi evidence commit ca5cf2d53cb0829c3e6e6771d264e417780d2df7 (not first text-normalized snapshot cc0951d); read E1/E2/E3 primary texts, challenge bounded SOURCE_INGESTED_BUT_NOT_GOVERNING and retrospectively test one minimum KEEP-vs-REPLAN counterfactual; write private report and public sanitized immutable 0020 with readback. E6 four-arm remains preregistered NOT RUN, no CURRENT promotion or original changes.",
+  "next_actor": "CHATGPT",
+  "next_action": "ChatGPT 0021: read PRIVATE 0020 REPORT, E1 direct counterevidence and both original retrospective outputs; adjudicate E2 documentary overstatement separately from 0019 bounded execution hypothesis. If asserting violation of author requirements, retrieve original author intent, E1 task/acceptance, approved plan and post-plan production pointers from own authorized archive. Missing records remain HOLD; no user material forwarding, more replay samples, 0013 revival, E6 execution claim or CURRENT promotion.",
   "gates": {
-    "public_bridge_files": "PASS_STORAGE_MESSAGE_0018_GITHUB_FILE_AND_COMMIT_READBACK",
+    "public_bridge_files": "PASS_STORAGE_MESSAGE_0020_ACTUAL_FILE_AND_COMMIT_READBACK_NOT_QUALITY_VALIDATION",
     "private_source_review": "ARTICLES_PLUS_REAL_BOOK_TEAM_FULLTEXT_AND_FOCUSED_PRIMARY_EDITOR_READING_SCOPE_LIMITED",
     "independent_human_blind": "NOT_RUN",
     "fair_isolated_ab": "NOT_RUN",
@@ -27,7 +27,7 @@
     "guarded_dual_protocol": "QA_26_OF_26_PASS_5_SYNTHETIC_RESUME_CASES_NOT_QUALITY_PROVEN",
     "upstream_wish_candidate": "LOCAL_NON_WRITING_HTTP_BYTES_RESTORED_NO_ONLINE_OR_EXPERIENCE_VALIDATION_NO_PROMOTION",
     "current_version_change": "NONE",
-    "three_principles": "APPLIED_TO_ONE_REAL_LOCAL_EDIT_EXPLORATION_NOT_SYSTEM_QUALITY_VALIDATION",
+    "three_principles": "APPLIED_TO_REAL_EDIT_AND_PRIMARY_SOURCE_DISPUTE_NOT_SYSTEM_QUALITY_VALIDATION",
     "local_byte_checkpoint_restore": "PASS_SYNTHETIC_SOURCE_DELETED_THEN_6_FILES_RESTORED_PER_CASE",
     "transactional_source_snapshot": "NOT_SUPPORTED_CONCURRENT_MIXED_GENERATIONS_REPRODUCED_STOP_WRITERS_REQUIRED",
     "private_durable_cross_environment_restore": "NOT_RUN",
@@ -85,7 +85,7 @@
     "derivative_full_article_reading_experience": "NOT_RUN",
     "derivative_interpretation": "NEAR_TRANSFER_PROMPT_COUPLING_AND_EXPLICIT_EVALUATOR_GROUND_TRUTH_LIMIT_INFERENCE",
     "chatgpt_cross_review_0014": "READ_PRIVATE_REVIEW_CONNECTOR_AND_GIT_EXACT_ACCEPT_LIMITED_CLOSURE",
-    "next_real_book_quality_work": "AWAIT_CHATGPT_0019_ACTUAL_PRIVATE_REVISION_REVIEW",
+    "next_real_book_quality_work": "AWAIT_CHATGPT_0021_PRIMARY_EVIDENCE_AND_APPROVED_SCOPE_ADJUDICATION",
     "real_book_content_increment_0015": "NONE_SOURCE_INPUT_BLOCKED",
     "real_book_access_permission_diagnosis": "RESOLVED_CODEX_ACTUAL_PRIVATE_SOURCE_READ_NO_AUTHOR_TRANSFER_REQUIRED",
     "private_real_book_repo_handoff": "PASS_CHATGPT_PRIVATE_REPO_6_FILES_6_BLOB_READBACK",
@@ -100,14 +100,21 @@
     "book_0018_independent_human": "NOT_RUN",
     "chatgpt_cross_review_0019": "PASS_PRIVATE_REAL_BOOK_CONTENT_READBACK_AND_INDEPENDENT_ARITHMETIC_WITH_SCOPE_LTD_ACCEPT_NOT_HUMAN",
     "sunzi_cross_evidence_private_transfer_0019": "PASS_PRIVATE_16_OF_16_SOURCE_RAW_GIT_BLOBS_EXACT_CORRECTED_COMMIT_AND_READBACK",
-    "sunzi_source_ingested_but_not_governing": "ACCEPT_BOUNDED_SINGLE_PROJECT_RULE_VS_EXECUTION_REMAINS_OPEN",
-    "sunzi_E6_causal_four_arm": "PRE_REGISTERED_NOT_RUN_NO_CLEAN_EXECUTION_OR_HUMAN_REVIEW",
-    "real_book_quality_0018": "ARGUMENT_REPAIR_LTD_ACCEPTED_READER_AND_WHOLE_BOOK_QUALITY_PENDING"
+    "sunzi_source_ingested_but_not_governing": "HOLD_EXECUTION_CAUSE_E1_CANDIDATE_NO_CHANGE_OVERSTATEMENT_REJECTED_0020",
+    "sunzi_E6_causal_four_arm": "PRE_REGISTERED_NOT_EXECUTED_NO_CLEAN_EXECUTION_OR_HUMAN_REVIEW",
+    "real_book_quality_0018": "ARGUMENT_REPAIR_LTD_ACCEPTED_READER_AND_WHOLE_BOOK_QUALITY_PENDING",
+    "sunzi_Codex_source_access_0020": "PASS_17_RAW_GIT_OBJECTS_QA_8_IDENTITY_MATCHES_4_CONNECTOR_BLOB_LENGTH_NO_DIRECT_LIBRARY_REVERIFY",
+    "sunzi_E1_candidate_no_plan_change": "REJECT_WITH_PRIMARY_DOCUMENTARY_COUNTEREVIDENCE_NOT_EXECUTION_SUCCESS_PROOF",
+    "sunzi_validation_coverage_gap": "ACCEPT_SCOPE_LTD_LOCAL_SAMPLES_CANNOT_SIGN_OFF_GLOBAL_HIERARCHY",
+    "sunzi_governing_counterfactual_probe": "EXECUTED_TWO_ROLE_POSTHOC_SHORT_PLAN_NO_READER_EFFECT_MEASURED_NO_WINNER",
+    "sunzi_default_new_module": "REJECT_UNPROVEN_EFFECT_HOLD_NO_SKILL_GATE_OR_UPSTREAM_CHANGE",
+    "sunzi_real_manuscript_increment_0020": "NONE_RESEARCH_ONLY_NOT_A_QUALITY_GAIN",
+    "sunzi_private_audit_storage_0020": "PASS_17_NEW_REMOTE_GIT_BYTE_EQUAL_4_CONNECTOR_TEXT_EQUAL_SOURCE_17_UNCHANGED"
   },
   "private_content_policy": "NEVER_PUBLISH_PRIVATE_BOOK_OR_BLIND_KEYS",
   "async_notice": "User notification is needed to cue each assistant; no automatic background communication.",
   "updated_date": "2026-11-10",
-  "latest_message_commit": "c9b87431f30c3bed7e2acd558f4b03e0f6a02dd3",
+  "latest_message_commit": "e59c238b4068f3c0336d5bcbbb65b890b9bc0449",
   "bridge_readback_verified": true,
   "scope": "FULL_DEEPWRITE_WORKBENCH_NOT_JUST_DISCOVERY_GATE",
   "system_entry": "deepwrite/AGENT_COLLABORATION.md",
@@ -135,77 +142,70 @@
     ],
     "quality_effect": "UNVERIFIED"
   },
-  "latest_message_blob_sha": "374cd2a786e7fd7f6f3e65cca4ee107876738444",
+  "latest_message_blob_sha": "c399534e940e610a84cfcd97d3f23412d880ab35",
   "latest_codex_increment": {
-    "round": "0018",
-    "kind": "ACTUAL_PRIVATE_REAL_BOOK_ARGUMENT_REPAIR_WITH_READABLE_DERIVATIVE",
-    "public_log_commit": "91ebadccf551ed9099403ced06482f792ca05f73",
-    "public_message_commit": "9eb95912fab9b4660f86e900b3fb29440b038828",
+    "round": "0020",
+    "kind": "PRIMARY_PRIVATE_SOURCE_CAUSAL_CHALLENGE_AND_ACTUAL_MINIMUM_RETROSPECTIVE_KEEP_REPLAN",
+    "public_log_commit": "3696a37c8ae5e827d26cde20fbd17f9d1fdaac8f",
+    "public_message_commit": "e59c238b4068f3c0336d5bcbbb65b890b9bc0449",
     "active_versions": {
       "deepwrite": "v0.1",
       "wish_delivery": "v7.6"
     },
     "current_pointer_files_unchanged": true,
     "private_repo": "TaoismZp/deepwrite-work-0006-private",
-    "private_branch": "book-first-million-20261109-handoff",
-    "private_source_commit": "46643e65deb585e6e7907ed81371115edbb81048",
-    "private_candidate_commit": "b9080e5cc6b42af4c5c7fea3b48c47e71ca7a147",
-    "private_project_root": "projects/book-first-million-20261109",
-    "candidate_book": {
-      "path": "work/0018/book_candidate_0018.md",
-      "sha256": "addf4497f4e742b71e461d2b7e4001fdb6e7a720390803fc3e315ad47b3c7d95",
-      "git_blob": "463b2789a3a8f8d7ce181ceabd1d5c383e072d26",
-      "bytes": 178861,
-      "status": "REVIEW_CANDIDATE_NOT_V11_OR_CANONICAL"
-    },
-    "candidate_chapter": {
-      "path": "work/0018/chapter_08_candidate.md",
-      "sha256": "5e70133f9b7379ea4a30b546f81956edd646fa34ced01cf41abc45e984be631d",
-      "git_blob": "dc66872783e471d879fdc57181b6937911725a85"
+    "private_branch": "sunzi-cross-audit-0019-20261110",
+    "private_source_commit": "ca5cf2d53cb0829c3e6e6771d264e417780d2df7",
+    "private_audit_commit": "b3d2622c52095db62d118a1dc810ab7d21761078",
+    "private_work_root": "sunzi/DW-SUNZI-20261110-01/work/0020",
+    "report": {
+      "path": "REPORT.md",
+      "sha256": "78548ed3ff03db35fe1ad0ba9097e5d178609353170c8039089aab123dd9c432",
+      "git_blob": "a4a3913f6cfc393bd25dfb1bff74889e23d63559"
     },
     "receipt": {
-      "path": "work/0018/CHECK_RECEIPT.json",
-      "sha256": "c52229894fd479887a81fe157878b50a19f966ea2ce83580ac725f1530b3c6a1"
+      "path": "CHECK_RECEIPT.json",
+      "sha256": "3031aa4e69e6b19bb2c3732f1b35117339f943078b6a4a1ef662cea14d6f1297"
     },
     "reading": {
-      "mode": "Team ten-chapter complete reading plus primary-editor focused fulltext reread",
-      "all_v10_1_differences_reviewed": true,
-      "changed_chapters_1_4_7_10_read_in_full": true,
-      "unchanged_chapters_byte_equal": true,
-      "coverage": "work/0018/READ_COVERAGE.json",
-      "not_human_or_fair_AB": true
+      "primary": "E1/E2 plus reports and prior review; E3 eight full chapters split between two agents with primary focused reread",
+      "coverage": "READ_COVERAGE.json",
+      "Codex_direct_Library_raw_source_reverification": false,
+      "not_obtained": "Original author wish and E1 task/acceptance/approval, underlying full course notes, all original full books, E4/E5 full texts and post-plan whole-book production chain"
     },
-    "edit_scope": {
-      "changed_chapters": [
-        8
-      ],
-      "appendix": "One S3 URL precise locator",
-      "all_other_chapters_preface_afterword_TOC_identical": true,
-      "pending_v10_1_edits_silently_adopted": false
+    "decisions": {
+      "E2_E1_candidate_no_change": "REJECT_WITH_EVIDENCE",
+      "E1_local_sample_global_validation_gap": "ACCEPT_SCOPE_LTD",
+      "actual_source_governance_execution_cause": "HOLD_FOR_MISSING_PRIMARY_CHAIN",
+      "new_default_module": "REJECT_UNPROVEN",
+      "current_replan_authorization": "NO_AUTOMATIC_WHOLE_BOOK_REPLAN_FROM_THIS_PROBE"
     },
-    "findings": [
-      "Original text contained correct baseline arithmetic but two inference gaps between scenario parameters and growth/cash conclusions",
-      "Revision separates incremental contribution from total result and monthly cash from dated payment feasibility",
-      "Internal critique prompted deletion of repeated discovery and non-decision-changing terminal arithmetic; two old wording ambiguities clarified"
-    ],
+    "actual_probe": {
+      "source": "Same three frozen E1 outputs only",
+      "calls": 2,
+      "method": "Fresh fork contexts one KEEP and one REPLAN; local task freeze before calls, explicitly posthoc, raw outputs preserved without retry",
+      "observation": "Conditional first decisions close, sample priorities differ; actual reader effects not measured; neither route wins",
+      "limits": "Same model, shared filesystem instruction restriction, budget unverified, not isolated fair AB or human blind or E6",
+      "internal_countercheck": "Narrowed conclusion: plan existence not execution, close answers not equal effects or KEEP superiority, no evidence not author authorization"
+    },
     "verification": {
-      "input_files_sha256_computed_on_raw_git_and_connector": 6,
-      "new_files_remote_git_byte_equal": 22,
-      "new_connector_files_blob_and_utf8_length_equal": 4,
-      "all_original_input_files_sha_unchanged": true,
-      "arithmetic": "DECLARED_MODEL_RECOMPUTED_NOT_FORECAST",
-      "primary_sources_S3_S7": "ACTUAL_WEB_READ_LIMITED_SCOPE",
-      "rollback": "PINNED_ORIGINAL_RESELECTED_IN_NEW_LOCAL_FILE_BYTE_EQUAL_NOT_FULL_PROJECT_RESTORE"
+      "source_raw_Git_objects": 17,
+      "E3_QA_identity_matches": 8,
+      "critical_source_connector_blob_and_UTF8_length_matches": 4,
+      "new_files_remote_Git_byte_equal": 17,
+      "new_connector_full_text_equal": 4,
+      "all_source_objects_unchanged": true,
+      "book_first_million_branch_unchanged": true
     },
-    "book_content_produced": true,
-    "author_acceptance": "PENDING",
-    "human_reading": "NOT_RUN",
-    "reader_benefit": "UNVERIFIED",
+    "book_content_produced": false,
+    "reader_benefit": "UNMEASURED",
+    "human_readers": 0,
+    "E6": "NOT_EXECUTED",
     "E1": "NOT_IMPLEMENTED",
     "E2": "NOT_RUN",
     "new_module_gate_or_skill": false,
     "private_prose_published": false,
-    "unique_next": "ChatGPT 0019 actual manuscript review first, then intake of separate sanitized cross-book evidence."
+    "unique_next": "ChatGPT 0021: read PRIVATE 0020 REPORT, E1 direct counterevidence and both original retrospective outputs; adjudicate E2 documentary overstatement separately from 0019 bounded execution hypothesis. If asserting violation of author requirements, retrieve original author intent, E1 task/acceptance, approved plan and post-plan production pointers from own authorized archive. Missing records remain HOLD; no user material forwarding, more replay samples, 0013 revival, E6 execution claim or CURRENT promotion."
   },
   "latest_chatgpt_increment": {
     "round": "0019",
@@ -222,8 +222,8 @@
     "earlier_text_snapshot": "cc0951d73e523d4797c757f017d9c92b95ae1825_HISTORICAL_NORMALIZED_ONE_FINAL_LF",
     "source_transfer_correction_public_note": "deepwrite/discovery-gate/agent-bridge/EVIDENCE_TRANSFER_CORRECTION_20261110.md"
   },
-  "updated_at_utc": "2026-11-10 09:09:56 UTC",
-  "deferred_codex_action": "Await ChatGPT 0019 private manuscript review. Do not resume 0013 or search for the already located book. Separate cross-book fault evidence is queued for actual private reading after primary review, not adopted as verified.",
+  "updated_at_utc": "2026-11-10 12:27:48 UTC",
+  "deferred_codex_action": "Await ChatGPT 0021 primary-evidence adjudication. No further 0013/local replay expansion, silent module activation or automatic whole-book replan. Missing approval/production records remain HOLD.",
   "resolved_blocker": {
     "previous_message": "0008",
     "previous_state": "BLOCKED_USER_PRIVATE_DESTINATION",
@@ -256,11 +256,11 @@
   "pending_cross_book_evidence": {
     "project_alias": "SEPARATE_INDEPENDENT_BOOK_PROJECT",
     "candidate_failure": "SOURCE_INGESTED_BUT_NOT_GOVERNING",
-    "status": "USER_REPORTED_PRIVATE_EXPERIMENT_NOT_READ_NOT_VERIFIED",
-    "reported_project_stages": "E1_E2_E3_USER_REPORT_ONLY_NOT_DEEPWRITE_SYSTEM_GATES",
-    "private_locator": "PENDING_CHATGPT_0019_INTAKE",
+    "status": "ACTUAL_PRIVATE_PACKET_READ_CAUSAL_CLAIM_CHALLENGED_0020_NOT_QUALITY_VALIDATED",
+    "reported_project_stages": "PRIVATE_PROJECT_E1_E2_E3_OUTPUTS_READ_E6_PREREG_NOT_EXECUTED_NOT_SYSTEM_GATES",
+    "private_locator": "TaoismZp/deepwrite-work-0006-private @ ca5cf2d53cb0829c3e6e6771d264e417780d2df7; sunzi/DW-SUNZI-20261110-01/evidence/README_PRIVATE.md",
     "must_remain_separate_from": "book-first-million-20261109 manuscript and sources",
-    "next_evaluation": "After actual authorized evidence read, distinguish existing-rule execution failure, rule gap and model capability limit; inspect current stable rules before proposing change",
+    "next_evaluation": "ChatGPT 0021 separately adjudicate E2 strong documentary claim versus 0019 bounded execution hypothesis against E1 and missing author/approved-plan/post-plan primary chain",
     "CURRENT_promotion": "NOT_AUTHORIZED"
   },
   "evidence_transfer_correction": {
