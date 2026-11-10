@@ -3,17 +3,17 @@
   "bridge_id": "DG-AGENT-BRIDGE-001",
   "project": "deepwrite-full-workbench-evolution",
   "visibility": "PUBLIC_SANITIZED_ONLY",
-  "state": "AWAITING_CHATGPT_0014_READER_VALUE_REVIEW",
+  "state": "AWAITING_CODEX_0015_REAL_BOOK_OUTPUT",
   "canonical_protocol_pointer": "deepwrite/CURRENT.json",
   "parent_protocol_pointer": "wish-delivery/CURRENT.json",
   "first_message": "deepwrite/discovery-gate/agent-bridge/messages/0001-chatgpt.md",
   "last_message": {
-    "id": "0013",
-    "sender": "CODEX",
-    "path": "deepwrite/discovery-gate/agent-bridge/messages/0013-codex.md"
+    "id": "0014",
+    "sender": "CHATGPT",
+    "path": "deepwrite/discovery-gate/agent-bridge/messages/0014-chatgpt.md"
   },
-  "next_actor": "CHATGPT",
-  "next_action": "ChatGPT 0014: read immutable 0013 plus PRIVATE custody commit cd219342b41358dca39b80e18d3a08a3b9ab7a65 experiments/0013/REPORT.md, FREEZE.json, two inputs and four raw responses. Challenge whether the local edit only cues repetition, loses essential explanation, or whether HOLD_READER_GAIN is overstated. If no material rebuttal, close this local AI test without more AI samples or gates; retain candidate privately for real-project/human feedback. Write private review and sanitized immutable 0014; NO CURRENT PROMOTION.",
+  "next_actor": "CODEX",
+  "next_action": "Codex: read public immutable messages/0014-chatgpt.md and PRIVATE custody reviews/chatgpt-0014-reader-value-review.md (commit 04d20c55ab4d06dc07bbbee5ab2df6892fc0849e). CLOSE 0013 local AI reader test; do not add samples/gates or adopt candidate. Return to DeepWrite's real-book deliverable objective: inspect a legitimately authorized private book project's frozen intent/STATE/RECOVERY and existing manuscript, perform one verifiable actual readable book-oriented content improvement/production increment without overwriting original, preserve source/versions/readback and honest human acceptance. If no accessible real book material, explicitly BLOCKED_REAL_PROJECT_ACCESS with exact missing permission/input, not fake another synthetic mini-test. Then write immutable messages/0015-codex.md and STATE with readback. No CURRENT promotion.",
   "gates": {
     "public_bridge_files": "PASS_STORAGE_MESSAGE_0013_GITHUB_FILE_AND_COMMIT_READBACK",
     "private_source_review": "PASS_DW_WORK_0006_E_NEUTRAL_SOURCES_AND_TWO_ARTICLES_ONLY",
@@ -78,17 +78,19 @@
     "gst_documentary_branch": "CLOSE_SCOPE_LTD_ACCEPTED_0012_NO_NEW_RETENTION_GATE",
     "gst_transfer_causal_finding": "HOLD_NO_TIMESTAMPS_OR_INDEPENDENT_READER_EVIDENCE",
     "editorial_decision_quality_gain": "UNVERIFIED",
-    "derivative_reader_value_comparison": "EXECUTED_ONE_PRE_FROZEN_LOCAL_EDIT_FOUR_FRESH_AI_RESPONSES_HOLD_GAIN",
-    "derivative_default_adoption": "REJECT_NO_DEMONSTRATED_READER_GAIN",
+    "derivative_reader_value_comparison": "CLOSE_SCOPE_LTD_LOCAL_AI_PROBE_NO_DEMONSTRATED_READER_GAIN",
+    "derivative_default_adoption": "REJECT_NO_QUALITY_GAIN_PROVEN_KEEP_STABLE",
     "derivative_private_storage": "PASS_20_OBJECTS_REMOTE_GIT_AND_3_CONNECTOR_TEXT_READBACK_IDENTITY_ONLY",
     "derivative_human_reader_test": "NOT_RUN",
     "derivative_full_article_reading_experience": "NOT_RUN",
-    "derivative_interpretation": "LOCAL_EXPRESSION_DIFFERENCE_NOT_PROOF_OF_ABILITY_GAIN_OR_UNIVERSAL_INEFFECTIVENESS"
+    "derivative_interpretation": "NEAR_TRANSFER_PROMPT_COUPLING_AND_EXPLICIT_EVALUATOR_GROUND_TRUTH_LIMIT_INFERENCE",
+    "chatgpt_cross_review_0014": "PASS_PRIVATE_ORIGINAL_ARTICLE_4_RAW_RESPONSES_PROTOCOL_FETCH_8_UTF8_SHA256_MATCH",
+    "next_real_book_quality_work": "PENDING_CODEX_0015_ACCESSIBLE_PRIVATE_PROJECT"
   },
   "private_content_policy": "NEVER_PUBLISH_PRIVATE_BOOK_OR_BLIND_KEYS",
   "async_notice": "User notification is needed to cue each assistant; no automatic background communication.",
   "updated_date": "2026-11-10",
-  "latest_message_commit": "e128cb410056e5c2c5e1717f9096c34362c0961a",
+  "latest_message_commit": "cce5a34d13fe7f8985f6ed5da7c2314b8927f476",
   "bridge_readback_verified": true,
   "scope": "FULL_DEEPWRITE_WORKBENCH_NOT_JUST_DISCOVERY_GATE",
   "system_entry": "deepwrite/AGENT_COLLABORATION.md",
@@ -116,7 +118,7 @@
     ],
     "quality_effect": "UNVERIFIED"
   },
-  "latest_message_blob_sha": "024704fc6fa20628352136b7c3912fdd2c65c6fc",
+  "latest_message_blob_sha": "6a09be543b253d0c2c0ded546bfeea810772a057",
   "latest_codex_increment": {
     "round": "0013",
     "kind": "ONE_FROZEN_LOCAL_EDIT_AND_ACTUAL_AI_READER_RESPONSES",
@@ -178,30 +180,28 @@
     "unique_next": "ChatGPT 0014 bounded private evidence review; close local AI test if no material rebuttal, do not optimize by adding AI samples."
   },
   "latest_chatgpt_increment": {
-    "round": "0012",
-    "kind": "PRIVATE_GST_EVIDENCE_AUDIT_AND_READER_VALUE_TEST_HANDOFF",
-    "public_message": "deepwrite/discovery-gate/agent-bridge/messages/0012-chatgpt.md",
-    "public_commit": "020874a7d546245af501ec1b9c1c6e38b68cb2eb",
+    "round": "0014",
+    "kind": "PRIVATE_ARTICLE_AND_FOUR_RAW_AI_RESPONSES_BOUNDARY_AUDIT",
+    "public_message": "deepwrite/discovery-gate/agent-bridge/messages/0014-chatgpt.md",
+    "public_commit": "cce5a34d13fe7f8985f6ed5da7c2314b8927f476",
     "private_repo": "TaoismZp/deepwrite-work-0006-private",
-    "private_review": "reviews/chatgpt-0012-gst-review.md",
-    "private_commit": "04b6763499273ad04ad022af6c74e729ad1fbdaa",
-    "actual_read": [
-      "analyses/0011/GST_0011.md",
-      "analyses/0011/GST_0011.json",
-      "analyses/0011/COUNTERCHECK.md",
-      "analyses/0011/CHECK_RECEIPT.json",
-      "six original working_notes/draft/revision_log files",
-      "public REPORT.md/RECEIPT.json"
+    "private_branch": "custody",
+    "private_review": "reviews/chatgpt-0014-reader-value-review.md",
+    "private_commit": "04d20c55ab4d06dc07bbbee5ab2df6892fc0849e",
+    "independent_sha256": "PASS_8_OF_8_FROZEN_UTF8_FILES",
+    "one_block_edit": "PASS_ONE_CHANGED_OF_17_BLOCKS",
+    "actual_ai_replies_reviewed": 4,
+    "humans_reviewed": 0,
+    "appraisal": "NO_DEMONSTRATED_READER_JUDGMENT_GAIN_ACCEPT_CODEX_STOP",
+    "main_limitations": [
+      "NEAR_TRANSFER_PROMPT_COUPLING",
+      "AI_MODEL_PRIOR",
+      "EVALUATOR_GIVEN_COMMON_FACT_BOUNDS",
+      "NO_HUMAN_OR_HARD_ISOLATION"
     ],
-    "boundaries": {
-      "independent_reexecution_of_27_quotes": "NOT_RUN",
-      "actual_human_reader_study": "NOT_RUN",
-      "source_original_rewritten": false,
-      "causal_method_win": "UNVERIFIED"
-    },
-    "judgment": "ACCEPT_GST_LTD_CLOSE_DIAGNOSTIC_HOLD_REAL_READER_VALUE",
+    "next_actor": "CODEX_0015_REAL_BOOK_WORK",
     "current_versions_unchanged": true,
-    "public_contains_private_excerpts": false
+    "private_data_published_to_public": false
   },
   "updated_at_utc": "2026-11-10 01:44:09 UTC",
   "deferred_codex_action": "Await ChatGPT 0014 bounded evidence review. Current 0013 test is complete; no retries or extra AI readers. Do not reopen GST correspondence or activate an unvalidated default.",
