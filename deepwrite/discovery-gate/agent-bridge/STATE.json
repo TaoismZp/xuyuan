@@ -8,14 +8,14 @@
   "parent_protocol_pointer": "wish-delivery/CURRENT.json",
   "first_message": "deepwrite/discovery-gate/agent-bridge/messages/0001-chatgpt.md",
   "last_message": {
-    "id": "0015",
+    "id": "0016",
     "sender": "CODEX",
-    "path": "deepwrite/discovery-gate/agent-bridge/messages/0015-codex.md"
+    "path": "deepwrite/discovery-gate/agent-bridge/messages/0016-codex.md"
   },
   "next_actor": "CHATGPT",
-  "next_action": "ChatGPT/archive holder: obtain ONE existing authorized real-book recovery entry/package (author's existing intent, current manuscript, STATE/RECOVERY/reliable version and source pointers) in a private project location readable by the current connection; give repo/ref/path in 0016, or explicitly keep source-access blocked if unavailable. User only needs to notify the entry is updated. Do not review or extend 0013, create another mini-test, invent a new book topic, or promote CURRENT. Codex resumes actual book content only when material is accessible.",
+  "next_action": "ChatGPT 0017: read immutable 0016 source-location question. Search existing authorized book archives; prioritize the source materials mentioned by PR12 and branch deepwrite/v0.2-editorial-quality-20261109 at e5a1c9f0b057f5483022bd196a53790e905b0896, deepwrite/iterations/2026-11-09-quality/ORIGIN_REASSESSMENT.md and RECOVERY.md. Return one actually readable real-book private repo/ref/path with intent/manuscript/recovery status; keep original share links and manuscripts PRIVATE. If inaccessible, report exact missing material. User need only notify this GitHub question; do not ask them to retell history or repeat 0013 tests.",
   "gates": {
-    "public_bridge_files": "PASS_STORAGE_MESSAGE_0015_GITHUB_FILE_AND_COMMIT_READBACK",
+    "public_bridge_files": "PASS_STORAGE_MESSAGE_0016_GITHUB_FILE_AND_COMMIT_READBACK",
     "private_source_review": "PASS_DW_WORK_0006_E_NEUTRAL_SOURCES_AND_TWO_ARTICLES_ONLY",
     "independent_human_blind": "NOT_RUN",
     "fair_isolated_ab": "NOT_RUN",
@@ -92,7 +92,7 @@
   "private_content_policy": "NEVER_PUBLISH_PRIVATE_BOOK_OR_BLIND_KEYS",
   "async_notice": "User notification is needed to cue each assistant; no automatic background communication.",
   "updated_date": "2026-11-10",
-  "latest_message_commit": "7a37100556ec12d879119c5fae80d57b5c4e1e2d",
+  "latest_message_commit": "1fc571b832973de5ece09434a7e6368a48f58a8c",
   "bridge_readback_verified": true,
   "scope": "FULL_DEEPWRITE_WORKBENCH_NOT_JUST_DISCOVERY_GATE",
   "system_entry": "deepwrite/AGENT_COLLABORATION.md",
@@ -120,7 +120,7 @@
     ],
     "quality_effect": "UNVERIFIED"
   },
-  "latest_message_blob_sha": "ab7e87f6c02966f87611adcb8dc76f5c96ba336b",
+  "latest_message_blob_sha": "9c9e6c3e3b7a8a33ab8cefafb0dc19562c5ae9e2",
   "latest_codex_increment": {
     "round": "0015",
     "kind": "REAL_BOOK_SOURCE_LOCATION_CHECK_BLOCKED_NO_MANUSCRIPT_INCREMENT",
@@ -184,8 +184,8 @@
     "current_versions_unchanged": true,
     "private_data_published_to_public": false
   },
-  "updated_at_utc": "2026-11-10 02:07:20 UTC",
-  "deferred_codex_action": "Waiting only for an accessible real-book recovery entry/package. When it arrives, read author intent, manuscript and reliable version, preserve original and produce a real book-oriented revision. No more 0013 reader probes, gates or invented topic.",
+  "updated_at_utc": "2026-11-10 02:15:04 UTC",
+  "deferred_codex_action": "Wait for ChatGPT 0017 to locate actual book source via 0016 workbench leads, or for an accessible entry to arrive. Then resume real manuscript work; do not repeat author-history questions or 0013 probes.",
   "resolved_blocker": {
     "previous_message": "0008",
     "previous_state": "BLOCKED_USER_PRIVATE_DESTINATION",
@@ -201,5 +201,22 @@
     "repeat_existing_GitHub_authorization_needed": false,
     "not_a_claim_of_lost_originals": true,
     "resolution": "Archive holder supplies accessible private repo/ref/path or existing recovery package; no token or history retelling required."
+  },
+  "latest_source_lookup_followup": {
+    "message_id": "0016",
+    "kind": "AUTHOR_REQUESTED_WORKBENCH_RECHECK_AND_DIRECT_QUESTION_TO_CHATGPT",
+    "workbench_main_rechecked": true,
+    "candidate_branches_rechecked": [
+      "deepwrite-v0.1-20261108",
+      "deepwrite/v0.2-editorial-quality-20261109"
+    ],
+    "origin_review_ref": "e5a1c9f0b057f5483022bd196a53790e905b0896",
+    "origin_review_path": "deepwrite/iterations/2026-11-09-quality/ORIGIN_REASSESSMENT.md",
+    "origin_review_blob": "1175a31ed4ace34854ffce25900b649bb8ae59c0",
+    "finding": "Prior source review read two shares but recorded raw source as then-local only, without a currently readable archive address; not proof of either book's recovery",
+    "book_manuscript_access": false,
+    "content_increment": false,
+    "CURRENT_changed": false,
+    "private_manuscripts_published": false
   }
 }
