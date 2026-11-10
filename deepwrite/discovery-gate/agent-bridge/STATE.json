@@ -3,17 +3,17 @@
   "bridge_id": "DG-AGENT-BRIDGE-001",
   "project": "deepwrite-full-workbench-evolution",
   "visibility": "PUBLIC_SANITIZED_ONLY",
-  "state": "AWAITING_CHATGPT_0021_PRIMARY_EVIDENCE_DISPUTE_REVIEW",
+  "state": "AWAITING_CODEX_0022_AUTHOR_DECISION_OBJECT_CLOSEOUT",
   "canonical_protocol_pointer": "deepwrite/CURRENT.json",
   "parent_protocol_pointer": "wish-delivery/CURRENT.json",
   "first_message": "deepwrite/discovery-gate/agent-bridge/messages/0001-chatgpt.md",
   "last_message": {
-    "id": "0020",
-    "sender": "CODEX",
-    "path": "deepwrite/discovery-gate/agent-bridge/messages/0020-codex.md"
+    "id": "0021",
+    "sender": "CHATGPT",
+    "path": "deepwrite/discovery-gate/agent-bridge/messages/0021-chatgpt.md"
   },
-  "next_actor": "CHATGPT",
-  "next_action": "ChatGPT 0021: read PRIVATE 0020 REPORT, E1 direct counterevidence and both original retrospective outputs; adjudicate E2 documentary overstatement separately from 0019 bounded execution hypothesis. If asserting violation of author requirements, retrieve original author intent, E1 task/acceptance, approved plan and post-plan production pointers from own authorized archive. Missing records remain HOLD; no user material forwarding, more replay samples, 0013 revival, E6 execution claim or CURRENT promotion.",
+  "next_actor": "CODEX",
+  "next_action": "Codex 0022: independently verify the archived E4 author direction feedback and E6/E8 real artifact statuses from authorized private sources if accessible; reconcile E1 documentary overstatement vs unproven post-approval execution vs E3 author-negative wrong decision object. Produce one bounded E8 author review acceptance card only, without new book text, more replay, forwarding user material, fresh gates/skills, E6 claim or CURRENT promotion. Then close the attribution dispute and return to E8 real author acceptance.",
   "gates": {
     "public_bridge_files": "PASS_STORAGE_MESSAGE_0020_ACTUAL_FILE_AND_COMMIT_READBACK_NOT_QUALITY_VALIDATION",
     "private_source_review": "ARTICLES_PLUS_REAL_BOOK_TEAM_FULLTEXT_AND_FOCUSED_PRIMARY_EDITOR_READING_SCOPE_LIMITED",
@@ -100,7 +100,7 @@
     "book_0018_independent_human": "NOT_RUN",
     "chatgpt_cross_review_0019": "PASS_PRIVATE_REAL_BOOK_CONTENT_READBACK_AND_INDEPENDENT_ARITHMETIC_WITH_SCOPE_LTD_ACCEPT_NOT_HUMAN",
     "sunzi_cross_evidence_private_transfer_0019": "PASS_PRIVATE_16_OF_16_SOURCE_RAW_GIT_BLOBS_EXACT_CORRECTED_COMMIT_AND_READBACK",
-    "sunzi_source_ingested_but_not_governing": "HOLD_EXECUTION_CAUSE_E1_CANDIDATE_NO_CHANGE_OVERSTATEMENT_REJECTED_0020",
+    "sunzi_source_ingested_but_not_governing": "HOLD_EXECUTION_CAUSE_E2_ABSOLUTE_DOC_CLAIM_REJECTED_E3_AUTHOR_DIRECTION_FAIL_DISTINCT",
     "sunzi_E6_causal_four_arm": "PRE_REGISTERED_NOT_EXECUTED_NO_CLEAN_EXECUTION_OR_HUMAN_REVIEW",
     "real_book_quality_0018": "ARGUMENT_REPAIR_LTD_ACCEPTED_READER_AND_WHOLE_BOOK_QUALITY_PENDING",
     "sunzi_Codex_source_access_0020": "PASS_17_RAW_GIT_OBJECTS_QA_8_IDENTITY_MATCHES_4_CONNECTOR_BLOB_LENGTH_NO_DIRECT_LIBRARY_REVERIFY",
@@ -109,12 +109,17 @@
     "sunzi_governing_counterfactual_probe": "EXECUTED_TWO_ROLE_POSTHOC_SHORT_PLAN_NO_READER_EFFECT_MEASURED_NO_WINNER",
     "sunzi_default_new_module": "REJECT_UNPROVEN_EFFECT_HOLD_NO_SKILL_GATE_OR_UPSTREAM_CHANGE",
     "sunzi_real_manuscript_increment_0020": "NONE_RESEARCH_ONLY_NOT_A_QUALITY_GAIN",
-    "sunzi_private_audit_storage_0020": "PASS_17_NEW_REMOTE_GIT_BYTE_EQUAL_4_CONNECTOR_TEXT_EQUAL_SOURCE_17_UNCHANGED"
+    "sunzi_private_audit_storage_0020": "PASS_17_NEW_REMOTE_GIT_BYTE_EQUAL_4_CONNECTOR_TEXT_EQUAL_SOURCE_17_UNCHANGED",
+    "chatgpt_cross_review_0021": "PASS_E1_E2_PRIVATE_PRIMARY_DOC_AND_E4_E6_E8_LIBRARY_REVIEW_NOT_CAUSAL_QUALITY_TEST",
+    "sunzi_E2_absolute_candidate_no_replan": "REJECT_FACTUALLY_E1_CANDIDATE_REPLANNED",
+    "sunzi_E1_approved_execution_causal_failure": "HOLD_MISSING_APPROVAL_AND_POST_PLAN_FULL_BOOK_CHAIN",
+    "sunzi_E3_wrong_decision_object": "ACCEPT_AUTHOR_NEGATIVE_DIRECTION_FEEDBACK_NOT_CAUSAL_MECHANISM",
+    "sunzi_keep_replan_0020_author_construct": "INSUFFICIENT_TO_TEST_E4_AUTHOR_TARGET_NO_HUMAN_EFFECT"
   },
   "private_content_policy": "NEVER_PUBLISH_PRIVATE_BOOK_OR_BLIND_KEYS",
   "async_notice": "User notification is needed to cue each assistant; no automatic background communication.",
   "updated_date": "2026-11-10",
-  "latest_message_commit": "e59c238b4068f3c0336d5bcbbb65b890b9bc0449",
+  "latest_message_commit": "5fdc58369cde1447d012ff5a5e9509e3b896d280",
   "bridge_readback_verified": true,
   "scope": "FULL_DEEPWRITE_WORKBENCH_NOT_JUST_DISCOVERY_GATE",
   "system_entry": "deepwrite/AGENT_COLLABORATION.md",
@@ -142,7 +147,7 @@
     ],
     "quality_effect": "UNVERIFIED"
   },
-  "latest_message_blob_sha": "c399534e940e610a84cfcd97d3f23412d880ab35",
+  "latest_message_blob_sha": "9e5911a5276c6c94080c373c4df5065b6adae565",
   "latest_codex_increment": {
     "round": "0020",
     "kind": "PRIMARY_PRIVATE_SOURCE_CAUSAL_CHALLENGE_AND_ACTUAL_MINIMUM_RETROSPECTIVE_KEEP_REPLAN",
@@ -208,19 +213,31 @@
     "unique_next": "ChatGPT 0021: read PRIVATE 0020 REPORT, E1 direct counterevidence and both original retrospective outputs; adjudicate E2 documentary overstatement separately from 0019 bounded execution hypothesis. If asserting violation of author requirements, retrieve original author intent, E1 task/acceptance, approved plan and post-plan production pointers from own authorized archive. Missing records remain HOLD; no user material forwarding, more replay samples, 0013 revival, E6 execution claim or CURRENT promotion."
   },
   "latest_chatgpt_increment": {
-    "round": "0019",
-    "kind": "PRIVATE_REAL_BOOK_INDEPENDENT_EDITORIAL_AUDIT_AND_SEPARATE_SUNZI_PRIMARY_EVIDENCE_BRIDGE",
-    "private_book_review_commit": "4ddf91a9dd181cdeeb4c5b01c0a290a6a4b56f26",
-    "private_book_review_path": "projects/book-first-million-20261109/work/0019/CHATGPT_PRIVATE_REVIEW.md",
-    "private_sunzi_evidence_commit": "ca5cf2d53cb0829c3e6e6771d264e417780d2df7",
-    "private_sunzi_evidence_branch": "sunzi-cross-audit-0019-20261110",
-    "source_status": "PRIVATE_E1_E2_E3_E6_EVIDENCE_TRANSFERRED_CODEX_INDEPENDENT_EVALUATION_PENDING",
-    "effect": "HYPOTHESIS_NOT_VALIDATED",
-    "book_0018": "SCOPE_LTD_ARGUMENT_REPAIR_ACCEPTED_HUMAN_HOLD",
-    "current_pointers_unchanged": true,
-    "private_sunzi_evidence_provenance": "SOURCE_RAW_BYTE_BLOB_EQUAL_16_OF_16",
-    "earlier_text_snapshot": "cc0951d73e523d4797c757f017d9c92b95ae1825_HISTORICAL_NORMALIZED_ONE_FINAL_LF",
-    "source_transfer_correction_public_note": "deepwrite/discovery-gate/agent-bridge/EVIDENCE_TRANSFER_CORRECTION_20261110.md"
+    "round": "0021",
+    "kind": "PRIVATE_AUTHOR_TARGET_CROSS_REVIEW_AND_E1_E2_DOCUMENTARY_ADJUDICATION",
+    "public_message_commit": "5fdc58369cde1447d012ff5a5e9509e3b896d280",
+    "private_repo": "TaoismZp/deepwrite-work-0006-private",
+    "private_branch": "sunzi-cross-audit-0019-20261110",
+    "private_review_commit": "a55ba90421a10bab0714069f0a23d49cbf5f230f",
+    "private_review_path": "sunzi/DW-SUNZI-20261110-01/work/0021/CHATGPT_ADJUDICATION.md",
+    "decisions": {
+      "E2_documentary_absolute_claim": "REJECT_DIRECT_E1_BLUEPRINT",
+      "E1_coverage": "ACCEPT_SCOPE_LTD",
+      "E1_execution_source_governance": "HOLD_MISSING_APPROVAL_AND_POST_PLAN_CHAIN",
+      "E3_wrong_decision_object": "ACCEPT_E4_AUTHOR_DIRECTION_FEEDBACK",
+      "KEEP_REPLAN_effect": "HOLD_NO_AUTHOR_CONSTRUCT_OR_READER_EFFECT",
+      "new_module": "REJECT_UNPROVEN"
+    },
+    "active_versions": {
+      "deepwrite": "v0.1",
+      "wish_delivery": "v7.6"
+    },
+    "book_latest_full": "v2.7_ORIGINAL_UNCHANGED",
+    "E8": "AUTHOR_FEEDBACK_PENDING",
+    "E6": "NOT_EXECUTED",
+    "human_readers": 0,
+    "quality_gain_proven": false,
+    "unique_next": "Codex 0022 verify private E4/E6/E8 authorized original and provide one E8 author-direction acceptance card; close attribution dispute, no new writing or system promotion."
   },
   "updated_at_utc": "2026-11-10 12:27:48 UTC",
   "deferred_codex_action": "Await ChatGPT 0021 primary-evidence adjudication. No further 0013/local replay expansion, silent module activation or automatic whole-book replan. Missing approval/production records remain HOLD.",
@@ -268,5 +285,21 @@
     "commit": "ca5cf2d53cb0829c3e6e6771d264e417780d2df7",
     "verified_source_blob_count": 16,
     "provenance": "GIT_SHA_OF_RAW_LIBRARY_MATERIALIZED_FILES_MATCHES_PRIVATE_GITHUB_FETCH"
+  },
+  "last_message_commit": "5fdc58369cde1447d012ff5a5e9509e3b896d280",
+  "previous_chatgpt_increment_0019": {
+    "round": "0019",
+    "kind": "PRIVATE_REAL_BOOK_INDEPENDENT_EDITORIAL_AUDIT_AND_SEPARATE_SUNZI_PRIMARY_EVIDENCE_BRIDGE",
+    "private_book_review_commit": "4ddf91a9dd181cdeeb4c5b01c0a290a6a4b56f26",
+    "private_book_review_path": "projects/book-first-million-20261109/work/0019/CHATGPT_PRIVATE_REVIEW.md",
+    "private_sunzi_evidence_commit": "ca5cf2d53cb0829c3e6e6771d264e417780d2df7",
+    "private_sunzi_evidence_branch": "sunzi-cross-audit-0019-20261110",
+    "source_status": "PRIVATE_E1_E2_E3_E6_EVIDENCE_TRANSFERRED_CODEX_INDEPENDENT_EVALUATION_PENDING",
+    "effect": "HYPOTHESIS_NOT_VALIDATED",
+    "book_0018": "SCOPE_LTD_ARGUMENT_REPAIR_ACCEPTED_HUMAN_HOLD",
+    "current_pointers_unchanged": true,
+    "private_sunzi_evidence_provenance": "SOURCE_RAW_BYTE_BLOB_EQUAL_16_OF_16",
+    "earlier_text_snapshot": "cc0951d73e523d4797c757f017d9c92b95ae1825_HISTORICAL_NORMALIZED_ONE_FINAL_LF",
+    "source_transfer_correction_public_note": "deepwrite/discovery-gate/agent-bridge/EVIDENCE_TRANSFER_CORRECTION_20261110.md"
   }
 }
