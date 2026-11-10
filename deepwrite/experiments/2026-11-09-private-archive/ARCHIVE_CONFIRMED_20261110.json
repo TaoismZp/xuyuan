@@ -1,0 +1,58 @@
+{
+  "status": "PASS_REMOTE_PRIVATE_GITHUB_BYTE_ARCHIVE_SAME_RUNTIME_RESTORE",
+  "verified_at": "2026-11-10T00:22:19.626487+00:00",
+  "private_repo": "TaoismZp/deepwrite-work-0006-private",
+  "visibility": "private",
+  "canary_commit": "d1ca7e225eb5e107fc1975fc5f90513ae3db9ed7",
+  "canary_sha256": "3accb325bf265446531432af4942aa706d381a5f68bb40d03cc628ea39511c4b",
+  "reading_commit": "5a6d160aebea21261306414e94c412c871ed99df",
+  "custody_commit": "f9db6806da141fc36c0b64223f866f766c8a717b",
+  "neutral_manifest_sha256": "39063e78453708483a3daf91b61b8fc5703db017b05e628bd0ec8ce4e310c7da",
+  "neutral_manifest_objects_verified": 11,
+  "custody_manifest_sha256": "800fc17776ddd0fc6ffa4295c5d67191b952673f67ff290c53ce502967d321ae",
+  "custody_manifest_objects_verified": 51,
+  "original_zip_sha256": "3cf645797ed023aa2a87c71e441709fbae318376c8f569a08f19eb5c3cb4cc6d",
+  "fresh_remote_clone": true,
+  "original_local_sources_not_used_for_recovery": true,
+  "restored_from_git_objects": true,
+  "restore_status": "PASS_BYTES_ONLY",
+  "remote_main_has_no_custody_or_mapping_files": true,
+  "user_initial_readme_preserved": true,
+  "private_visibility_rechecked_after_upload": true,
+  "chatgpt_actual_fetch": "PENDING",
+  "cross_environment_restore": "NOT_RUN_SAME_RUNTIME_ONLY",
+  "human_blind": "NOT_RUN",
+  "branch_separation_is_acl": false,
+  "round_message": "0009-codex",
+  "continues": "0008 blocked archive resumed after owner provision",
+  "private_index_commit": "75c176f3bd2d41996558172a1f1a2968032b559c",
+  "private_entry": "https://github.com/TaoismZp/deepwrite-work-0006-private/blob/75c176f3bd2d41996558172a1f1a2968032b559c/START_HERE.md",
+  "private_index_two_files_connector_and_git_readback": true,
+  "connector_article_blob_checks": [
+    {
+      "path": "reading/Text-173.md",
+      "git_blob_sha": "042bde765faa85a4d1180c7fc8ac3023918e84dc"
+    },
+    {
+      "path": "reading/Text-628.md",
+      "git_blob_sha": "d1667324b87b900830447e3115a8a0d0392edcc0"
+    }
+  ],
+  "same_model_helper_readonly_recheck": {
+    "neutral_manifest_objects": 11,
+    "custody_manifest_objects": 51,
+    "restored_files": 51,
+    "scope": "same-runtime Git objects and local restored files; no peer reading claim"
+  },
+  "archive_status": "REMOTE_PRIVATE_GITHUB_ARCHIVE_VERIFIED_SINGLE_SERVICE",
+  "previous_not_durable_records": "preserved immutable historical records; superseded only for this archive by this receipt",
+  "GST": "NOT_RUN_WAITING_ACTUAL_PEER_PRIVATE_READING",
+  "formal_versions": {
+    "deepwrite": "v0.1",
+    "wish_delivery": "v7.6",
+    "CURRENT_changed": false
+  },
+  "quality_improvement": "UNVERIFIED",
+  "E1": "NOT_IMPLEMENTED",
+  "E2": "NOT_RUN"
+}

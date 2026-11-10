@@ -37,3 +37,10 @@
 - 实测同账号GitHub连接/CLI均已认证，但创建专用private repo的POST返回403；目标GET404。未向公开仓或不合适的其他私库上传原稿。
 - 原0006 ZIP和51对象检查点完整回读；中性9内容文件与含映射/过程的保管包分开准备，NOT_DURABLY_ARCHIVED不变。
 - 阻断回执与恢复动作：`experiments/2026-11-09-private-archive/`。唯一先决条件是所有者提供当前连接可见的项目专用私有目的地，无需转发全文或提供token。
+
+## 0009恢复私有归档 · 2026-11-10（无正式升版）
+
+- 所有者提供专用PRIVATE库后恢复0008，先验证无稿canary，再上传中性读稿及独立custody保管分支；原稿与原ZIP字节不变。
+- 全新远端clone核11中性对象、51保管对象，并只从远端对象恢复新目录，身份一致；连接回读全文成功。状态限于私有单服务归档和同运行环境恢复。
+- 私有START_HERE含固定提交、读取顺序和Git blob/SHA身份。ChatGPT亲读尚待其实际回执，GST继续等待，不以本方连接成功代替双边全文审稿。
+- 实际回执：`experiments/2026-11-09-private-archive/ARCHIVE_CONFIRMED_20261110.json`；正式CURRENT、E1/E2及质量晋升状态均未改。
