@@ -1,0 +1,97 @@
+{
+  "round": "0011",
+  "project": "DW-WORK-0006-E",
+  "status": "PRIVATE_DOCUMENTARY_GST_TRACE_COMPLETED_NOT_QUALITY_VALIDATION",
+  "observed_at_utc": "2026-11-10T01:15:00.175354+00:00",
+  "public_base_commit": "8a60258e0cc5d84d7ff128b561a3a077600a4754",
+  "private_repo": "TaoismZp/deepwrite-work-0006-private",
+  "private_analysis_commit": "0622af1febeaa899e1427601c5e73164481a9163",
+  "private_source_custody_commit": "f9db6806da141fc36c0b64223f866f766c8a717b",
+  "private_neutral_reading_commit": "5a6d160aebea21261306414e94c412c871ed99df",
+  "peer_review_inputs": [
+    {
+      "commit": "a1301876fb9d43783f04c890e03de3967e34b66d",
+      "path": "reviews/chatgpt-0010-independent.md",
+      "sha256": "2ac9a78d4fcf54acb621e3da6249fb296a9be7e181b20b46e2cc2fdd55fb18f1"
+    },
+    {
+      "commit": "9368775490700165cdc287dd75ea5f6818bc8c30",
+      "path": "reviews/chatgpt-0010-crosscheck.md",
+      "sha256": "0a10b5c9af92e265e6454e53aa07e038ac5164796c8b1681b575965fde41b033"
+    }
+  ],
+  "analysis_artifacts": [
+    {
+      "path": "analyses/0011/GST_0011.md",
+      "sha256": "7d82f5e99b64a7c153f6a8d7c7034ad7412c86ba079b73b08c4b98297f0236fa",
+      "bytes": 23436
+    },
+    {
+      "path": "analyses/0011/GST_0011.json",
+      "sha256": "264066b2f708e2a34df38e83a9668b018ae1cd32d65d615491a5690b70c95eb1",
+      "bytes": 30589
+    },
+    {
+      "path": "analyses/0011/CHECK_RECEIPT.json",
+      "sha256": "4e873f5aa168f468056bf0f04b590aad8fbae4de1d4e939ada9cb91d02fa7662",
+      "bytes": 2640
+    },
+    {
+      "path": "analyses/0011/COUNTERCHECK.md",
+      "sha256": "3eda92ba31cadcca30e6c46580785a66a4635c224e4f41c635a868b25a848f13",
+      "bytes": 14427
+    },
+    {
+      "path": "analyses/0011/README.md",
+      "sha256": "7321497045939fa747efcfc9f8e058e8340565fb1d06dec3b103267c08e37f9b",
+      "bytes": 1840
+    }
+  ],
+  "case_scope": {
+    "units_total": 5,
+    "max_per_article": 3,
+    "within_requested_limit": true,
+    "one_unit_is_editorial_formulation_not_a_new_theory": true,
+    "not_an_idea_count_success_metric": true
+  },
+  "mechanical_checks": {
+    "selected_frozen_original_objects_matched": 15,
+    "exact_quote_identity_matches": 27,
+    "checks_are_not_semantic_or_quality_validation": true,
+    "original_custody_checkpoint_and_zip_git_diff": "NONE",
+    "neutral_main_changed_by_codex_this_round": false,
+    "connector_private_readback_files_exact": 5,
+    "git_remote_fetch_private_readback_files_exact": 5,
+    "private_visibility_before_and_after": true
+  },
+  "findings": [
+    "Some source-backed distinctions are preserved and expanded in the finished work.",
+    "An editorial formulation is restructured with a recorded reason while the facts remain; actual reader benefit has not been tested.",
+    "A specific conditional example appears in the draft but not the final; the general distinction remains and the removal reason is not recorded.",
+    "An author log of non-adoption is not proof of literal deletion or scientific source error."
+  ],
+  "decisions": {
+    "omission_implies_transfer_failure": "REJECT_UNSUPPORTED_INFERENCE",
+    "editorial_causal_diagnosis": "HOLD",
+    "reader_harm_or_quality_gain": "UNVERIFIED",
+    "rival_probe_default_activation": "REJECT_NO_NEW_EVIDENCE_FOR_DEFAULT",
+    "new_mandatory_gate_or_skill": "NONE",
+    "original_article_rewrite": false
+  },
+  "limits": [
+    "Notes/draft/log/final are same-turn agent-authored artifacts, not timestamped cognitive traces.",
+    "Explicit recorded reasons, analyst assessment and unknown author intent remain distinct.",
+    "Same-model helper countercheck is not human or causal validation.",
+    "No new fair A/B, reader experiment or whole-book execution."
+  ],
+  "formal_versions": {
+    "deepwrite": "v0.1",
+    "wish_delivery": "v7.6",
+    "CURRENT_changed": false
+  },
+  "E1": "NOT_IMPLEMENTED",
+  "E2": "NOT_RUN",
+  "human_blind": "NOT_RUN",
+  "public_contains_manuscript_quotes_or_treatment_map": false,
+  "next_action": "ChatGPT review private GST correspondence and justified omission at pinned commit, reply sanitized 0012; if no material rebuttal, close trace branch and move toward one separately frozen derivative reader-value comparison."
+}
