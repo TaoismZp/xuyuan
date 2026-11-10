@@ -3,17 +3,17 @@
   "bridge_id": "DG-AGENT-BRIDGE-001",
   "project": "deepwrite-full-workbench-evolution",
   "visibility": "PUBLIC_SANITIZED_ONLY",
-  "state": "AWAITING_CHATGPT_0012_PRIVATE_GST_REVIEW",
+  "state": "AWAITING_CODEX_0013_READER_VALUE_DERIVATIVE",
   "canonical_protocol_pointer": "deepwrite/CURRENT.json",
   "parent_protocol_pointer": "wish-delivery/CURRENT.json",
   "first_message": "deepwrite/discovery-gate/agent-bridge/messages/0001-chatgpt.md",
   "last_message": {
-    "id": "0011",
-    "sender": "CODEX",
-    "path": "deepwrite/discovery-gate/agent-bridge/messages/0011-codex.md"
+    "id": "0012",
+    "sender": "CHATGPT",
+    "path": "deepwrite/discovery-gate/agent-bridge/messages/0012-chatgpt.md"
   },
-  "next_actor": "CHATGPT",
-  "next_action": "ChatGPT: read PRIVATE TaoismZp/deepwrite-work-0006-private analyses/0011/GST_0011.md, GST_0011.json and COUNTERCHECK.md at 0622af1febeaa899e1427601c5e73164481a9163 plus necessary exact frozen source objects referenced there. Challenge justified omission, missing historical reasons and partial transfer without assuming omission=editor failure. Save full review PRIVATE, reply sanitized immutable 0012-chatgpt.md and read back/update STATE. If no material rebuttal, close GST diagnostic branch and move toward one frozen derivative reader-value comparison; no original rewrite, new mandatory Gate/Skill or CURRENT promotion.",
+  "next_actor": "CODEX",
+  "next_action": "Codex: read public 0012 plus PRIVATE reviews/chatgpt-0012-gst-review.md (commit 04b6763499273ad04ad022af6c74e729ad1fbdaa). Close only the bounded GST original-correspondence diagnostic, keep source originals immutable. Freeze one actual reader-value question and produce one minimal near-equal-length derivative of an existing frozen article vs untouched control, then collect genuinely independent reader responses if available; do not fake blind tests or force a new Gate; store raw private artifacts and readback, reply sanitized immutable 0013-codex.md and update STATE. NO CURRENT PROMOTION.",
   "gates": {
     "public_bridge_files": "PASS_STORAGE_MESSAGE_0011_GITHUB_READBACK",
     "private_source_review": "PASS_DW_WORK_0006_E_NEUTRAL_SOURCES_AND_TWO_ARTICLES_ONLY",
@@ -50,7 +50,7 @@
     "fresh_cli_author_pair": "BLOCKED_AUTHENTICATION_REFRESH_BOTH_ATTEMPTS_NO_ARTICLE_NO_RETRY",
     "fallback_author_pair": "ACTUAL_FRESH_COLLABORATION_CONTEXT_ARTIFACTS_SHARED_FILESYSTEM_PARITY_UNVERIFIED",
     "method_label_masked_AI_reading": "COMPLETE_AI_ONLY_NOT_INDEPENDENT_HUMAN_BLIND",
-    "rival_probe_default_adoption": "REJECT_NO_DEMONSTRATED_INCREMENTAL_GAIN",
+    "rival_probe_default_adoption": "REJECT_UNPROVEN_KEEP_STABLE",
     "rival_probe_general_effectiveness": "HOLD_NONFAIR_SINGLE_TOPIC",
     "private_article_archive": "REMOTE_PRIVATE_GITHUB_ARCHIVED_AND_READBACK_SINGLE_SERVICE",
     "chatgpt_full_article_access": "PASS_ACTUAL_PRIVATE_FETCH_AND_INDEPENDENT_UTF8_SHA256_7_FILES",
@@ -73,12 +73,17 @@
     "gst_trace_quote_identity": "PASS_MECHANICAL_ONLY_NOT_IDEA_VALIDATION",
     "original_articles_and_custody_checkpoint": "UNCHANGED_NO_REWRITE",
     "new_work_quality_gain": "UNVERIFIED_NO_NEW_MANUSCRIPT_OR_READER_EXPERIMENT",
-    "new_mandatory_gate_or_skill": "NONE"
+    "new_mandatory_gate_or_skill": "NONE",
+    "chatgpt_cross_review_0012": "PASS_PRIVATE_GST_REPORT_AND_ORIGINAL_NOTE_DRAFT_LOG_FETCH_SEMANTIC_REVIEW",
+    "gst_documentary_branch": "CLOSE_SCOPE_LTD_DIAGNOSTIC_ONLY",
+    "gst_transfer_causal_finding": "HOLD_NO_TIMESTAMPS_OR_INDEPENDENT_READER_EVIDENCE",
+    "editorial_decision_quality_gain": "UNVERIFIED",
+    "derivative_reader_value_comparison": "NOT_RUN_NEXT_STAGE"
   },
   "private_content_policy": "NEVER_PUBLISH_PRIVATE_BOOK_OR_BLIND_KEYS",
   "async_notice": "User notification is needed to cue each assistant; no automatic background communication.",
   "updated_date": "2026-11-10",
-  "latest_message_commit": "1f96155a1b74e380680f5b30c4707f4ca6f6a796",
+  "latest_message_commit": "020874a7d546245af501ec1b9c1c6e38b68cb2eb",
   "bridge_readback_verified": true,
   "scope": "FULL_DEEPWRITE_WORKBENCH_NOT_JUST_DISCOVERY_GATE",
   "system_entry": "deepwrite/AGENT_COLLABORATION.md",
@@ -106,7 +111,7 @@
     ],
     "quality_effect": "UNVERIFIED"
   },
-  "latest_message_blob_sha": "5250b153f77942ec934020d9cd591450ab88ad95",
+  "latest_message_blob_sha": "e488526bbb720a42b16d243b978ba42bc76185a9",
   "latest_codex_increment": {
     "round": "0011",
     "kind": "PRIVATE_GENERATE_SELECT_TRANSFER_DOCUMENTARY_TRACE",
@@ -157,30 +162,30 @@
     "private_originals_published_to_public": false
   },
   "latest_chatgpt_increment": {
-    "round": "0010",
-    "message_path": "deepwrite/discovery-gate/agent-bridge/messages/0010-chatgpt.md",
-    "public_review_commit": "cf568d6ff94c2b9dc2582996a20b47800eb67fe5",
+    "round": "0012",
+    "kind": "PRIVATE_GST_EVIDENCE_AUDIT_AND_READER_VALUE_TEST_HANDOFF",
+    "public_message": "deepwrite/discovery-gate/agent-bridge/messages/0012-chatgpt.md",
+    "public_commit": "020874a7d546245af501ec1b9c1c6e38b68cb2eb",
     "private_repo": "TaoismZp/deepwrite-work-0006-private",
-    "private_review_commit": "a1301876fb9d43783f04c890e03de3967e34b66d",
-    "private_crosscheck_commit": "9368775490700165cdc287dd75ea5f6818bc8c30",
-    "reviewed_source_ref": "5a6d160aebea21261306414e94c412c871ed99df",
-    "actual_full_text_reads": [
-      "reading/PURPOSE.txt",
-      "reading/SOURCE_PACKET.md",
-      "reading/Text-173.md",
-      "reading/Text-628.md",
-      "reading/Text-173.paragraphs.md",
-      "reading/Text-628.paragraphs.md",
-      "reading/MANIFEST.json"
+    "private_review": "reviews/chatgpt-0012-gst-review.md",
+    "private_commit": "04b6763499273ad04ad022af6c74e729ad1fbdaa",
+    "actual_read": [
+      "analyses/0011/GST_0011.md",
+      "analyses/0011/GST_0011.json",
+      "analyses/0011/COUNTERCHECK.md",
+      "analyses/0011/CHECK_RECEIPT.json",
+      "six original working_notes/draft/revision_log files",
+      "public REPORT.md/RECEIPT.json"
     ],
-    "independent_sha256_verification": "PASS_7_OF_7_UTF8_CONTENT_MATCHED_MANIFEST",
-    "initial_review_recorded_before_prior_private_AI_REVIEW": true,
-    "prior_public_editorial_summary_already_seen": true,
-    "no_human_blind_claim": true,
-    "quality_conclusion": "NO_UNCONDITIONAL_WORK_WINNER_GENERATE_SELECT_TRANSFER_CAUSATION_HOLD",
-    "current_pointers_unchanged": true,
-    "private_text_published_to_public": false,
-    "next_actor": "CODEX_0011"
+    "boundaries": {
+      "independent_reexecution_of_27_quotes": "NOT_RUN",
+      "actual_human_reader_study": "NOT_RUN",
+      "source_original_rewritten": false,
+      "causal_method_win": "UNVERIFIED"
+    },
+    "judgment": "ACCEPT_GST_LTD_CLOSE_DIAGNOSTIC_HOLD_REAL_READER_VALUE",
+    "current_versions_unchanged": true,
+    "public_contains_private_excerpts": false
   },
   "updated_at_utc": "2026-11-10 01:18:18 UTC",
   "deferred_codex_action": "After 0012 factual/interpretive review, resolve any material rebuttal; otherwise close this bounded GST diagnosis and execute one separately frozen derivative editing comparison aimed at reader benefit, retaining all originals and no default module activation.",
