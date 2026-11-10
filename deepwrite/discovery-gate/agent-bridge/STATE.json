@@ -13,7 +13,7 @@
     "path": "deepwrite/discovery-gate/agent-bridge/messages/0019-chatgpt.md"
   },
   "next_actor": "CODEX",
-  "next_action": "Codex 0020 must independently fetch PRIVATE sunzi evidence at commit cc0951d73e523d4797c757f017d9c92b95ae1825, read E1/E2/E3 originals, challenge bounded source-ingested-but-not-governing interpretation and retrospectively test one minimum KEEP-vs-REPLAN counterfactual at BOOK_PLAN/G6; write private result and public sanitized 0020 with readback. No E6 contaminated pseudo-isolation, no CURRENT promotion, no book-original mutation.",
+  "next_action": "Codex 0020 must use corrected byte-identical PRIVATE Sunzi evidence commit ca5cf2d53cb0829c3e6e6771d264e417780d2df7 (not first text-normalized snapshot cc0951d); read E1/E2/E3 primary texts, challenge bounded SOURCE_INGESTED_BUT_NOT_GOVERNING and retrospectively test one minimum KEEP-vs-REPLAN counterfactual; write private report and public sanitized immutable 0020 with readback. E6 four-arm remains preregistered NOT RUN, no CURRENT promotion or original changes.",
   "gates": {
     "public_bridge_files": "PASS_STORAGE_MESSAGE_0018_GITHUB_FILE_AND_COMMIT_READBACK",
     "private_source_review": "ARTICLES_PLUS_REAL_BOOK_TEAM_FULLTEXT_AND_FOCUSED_PRIMARY_EDITOR_READING_SCOPE_LIMITED",
@@ -99,7 +99,7 @@
     "book_0018_author_acceptance": "PENDING",
     "book_0018_independent_human": "NOT_RUN",
     "chatgpt_cross_review_0019": "PASS_PRIVATE_REAL_BOOK_CONTENT_READBACK_AND_INDEPENDENT_ARITHMETIC_WITH_SCOPE_LTD_ACCEPT_NOT_HUMAN",
-    "sunzi_cross_evidence_private_transfer_0019": "PASS_PRIVATE_17_TEXT_ARTIFACTS_GIT_COMMIT_AND_5_SAMPLE_BLOB_READBACK_CODEX_SIDE_PENDING",
+    "sunzi_cross_evidence_private_transfer_0019": "PASS_PRIVATE_16_OF_16_SOURCE_RAW_GIT_BLOBS_EXACT_CORRECTED_COMMIT_AND_READBACK",
     "sunzi_source_ingested_but_not_governing": "ACCEPT_BOUNDED_SINGLE_PROJECT_RULE_VS_EXECUTION_REMAINS_OPEN",
     "sunzi_E6_causal_four_arm": "PRE_REGISTERED_NOT_RUN_NO_CLEAN_EXECUTION_OR_HUMAN_REVIEW",
     "real_book_quality_0018": "ARGUMENT_REPAIR_LTD_ACCEPTED_READER_AND_WHOLE_BOOK_QUALITY_PENDING"
@@ -212,12 +212,15 @@
     "kind": "PRIVATE_REAL_BOOK_INDEPENDENT_EDITORIAL_AUDIT_AND_SEPARATE_SUNZI_PRIMARY_EVIDENCE_BRIDGE",
     "private_book_review_commit": "4ddf91a9dd181cdeeb4c5b01c0a290a6a4b56f26",
     "private_book_review_path": "projects/book-first-million-20261109/work/0019/CHATGPT_PRIVATE_REVIEW.md",
-    "private_sunzi_evidence_commit": "cc0951d73e523d4797c757f017d9c92b95ae1825",
+    "private_sunzi_evidence_commit": "ca5cf2d53cb0829c3e6e6771d264e417780d2df7",
     "private_sunzi_evidence_branch": "sunzi-cross-audit-0019-20261110",
     "source_status": "PRIVATE_E1_E2_E3_E6_EVIDENCE_TRANSFERRED_CODEX_INDEPENDENT_EVALUATION_PENDING",
     "effect": "HYPOTHESIS_NOT_VALIDATED",
     "book_0018": "SCOPE_LTD_ARGUMENT_REPAIR_ACCEPTED_HUMAN_HOLD",
-    "current_pointers_unchanged": true
+    "current_pointers_unchanged": true,
+    "private_sunzi_evidence_provenance": "SOURCE_RAW_BYTE_BLOB_EQUAL_16_OF_16",
+    "earlier_text_snapshot": "cc0951d73e523d4797c757f017d9c92b95ae1825_HISTORICAL_NORMALIZED_ONE_FINAL_LF",
+    "source_transfer_correction_public_note": "deepwrite/discovery-gate/agent-bridge/EVIDENCE_TRANSFER_CORRECTION_20261110.md"
   },
   "updated_at_utc": "2026-11-10 09:09:56 UTC",
   "deferred_codex_action": "Await ChatGPT 0019 private manuscript review. Do not resume 0013 or search for the already located book. Separate cross-book fault evidence is queued for actual private reading after primary review, not adopted as verified.",
@@ -259,5 +262,11 @@
     "must_remain_separate_from": "book-first-million-20261109 manuscript and sources",
     "next_evaluation": "After actual authorized evidence read, distinguish existing-rule execution failure, rule gap and model capability limit; inspect current stable rules before proposing change",
     "CURRENT_promotion": "NOT_AUTHORIZED"
+  },
+  "evidence_transfer_correction": {
+    "public_note": "deepwrite/discovery-gate/agent-bridge/EVIDENCE_TRANSFER_CORRECTION_20261110.md",
+    "commit": "ca5cf2d53cb0829c3e6e6771d264e417780d2df7",
+    "verified_source_blob_count": 16,
+    "provenance": "GIT_SHA_OF_RAW_LIBRARY_MATERIALIZED_FILES_MATCHES_PRIVATE_GITHUB_FETCH"
   }
 }
