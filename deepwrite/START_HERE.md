@@ -30,3 +30,12 @@
 ## 稳定版与逐项试用（防回退）
 
 **默认可继续调用现有稳定工作台，不必等待下一版研发完成。** 每个真实新书项目读取并固定当次 `deepwrite/CURRENT.json` + `wish-delivery/CURRENT.json` 的有效版本，旧项目不因GitHub更新静默升级。若用户明确要求试用候选模块，则按 `deepwrite/GUARDED_EVOLUTION.md` 的 `CANDIDATE_OPT_IN` 固定具体候选commit、原稿哈希和回滚点。怀疑变差时选择 `ROLLBACK` 恢复旧的已核稿件及配置，保留试验失败记录，绝不覆盖原稿。候选功能质量未经独立实测，不冒称已改善作品。
+
+
+## Canonical executable entry point (activation-rail candidate, contingent on merge)
+
+When this section exists in the **main branch**, resolve the actual runtime using `python3 deepwrite/release/activation.py --root .` in a checked-out repository. `CURRENT.json` remains the only formal version authority. A returned `WORKBENCH_ONLY_NO_LIVE_AUTONOMOUS_RUNNER` must NOT be treated as a launched book-writing engine. A candidacy branch and passing tests do not update the stable pointer.
+
+To promote future capabilities follow `deepwrite/release/RELEASE_PROCESS.md`: candidate tests → real content+reader acceptance → author approval through GitHub PR → atomic active pointer+runner+release record → post-merge runtime verification. If the running environment cannot invoke the CLI or access the repo, describe the limitation rather than quietly replacing the official engine with remembered prompts.
+
+Existing projects use their pinned version. This release rail must never auto-migrate or rewrite historical book drafts.
