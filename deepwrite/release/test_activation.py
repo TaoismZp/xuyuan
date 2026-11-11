@@ -77,18 +77,41 @@ class TestActivation(unittest.TestCase):
         return {'schema':'deepwrite/promotion-request/v1','base_version':'v0.1',
                 'base_current_sha256':hashlib.sha256((self.root/'deepwrite/CURRENT.json').read_bytes()).hexdigest(),
                 'parent_wish_version':'v7.6','new_version':'v0.2',
-                'release_channel':'STABLE','candidate_commit':'a'*40,'rollback_commit':'b'*40,
+                'release_channel':'STABLE','change_scope':'QUALITY_BEHAVIOR_CHANGE',
+                'candidate_commit':'a'*40,'rollback_commit':'b'*40,
                 'spec':{'path':'deepwrite/versions/v0.2.md','sha256':h(spec)},
                 'runner':{'path':'deepwrite/tools/run_new.py','sha256':h(runner)},
                 'old_artifact_preserved':True,
-                'gates': {k:'PASS' for k in ('engineering','content_quality','author_acceptance','independent_validation','rollback_test')},
-                'evidence':{**{k:'private_ref_'+k for k in ('engineering','content_quality','author_acceptance','independent_validation','rollback_test')}, 'independent_topic_count':3,'reader_count':2},
+                'gates': {k:'PASS' for k in ('engineering','content_quality','author_acceptance','independent_validation','rollback_test','non_regression')},
+                'evidence':{**{k:'private_ref_'+k for k in ('engineering','content_quality','author_acceptance','independent_validation','rollback_test','non_regression')}, 'independent_topic_count':3,'reader_count':2},
                 'human_authorization_evidence':{'verification':'GITHUB_PROTECTED_PR_APPROVAL_REQUIRED'}}
 
     def test_promotion_gate_cannot_authorize_human_by_itself(self):
         result=verify(self.root,self._promotion())
         self.assertEqual(result['status'],'STRUCTURAL_READY_NEEDS_GITHUB_AUTHENTICATED_REVIEW')
         self.assertFalse(result['author_identity_verified_by_script'])
+
+    def test_engineering_patch_can_release_with_narrower_evidence(self):
+        x=self._promotion();x['change_scope']='ENGINEERING_PATCH'
+        x['gates']['author_acceptance']='PENDING'
+        x['gates']['content_quality']='PENDING'
+        x['gates']['independent_validation']='NOT_RUN'
+        x['evidence']['independent_topic_count']=0
+        x['evidence']['reader_count']=0
+        x['evidence']['no_quality_behavior_change_rationale']='Only repaired source identity readback; no new prompt or selection semantics.'
+        self.assertEqual(verify(self.root,x)['status'],'STRUCTURAL_READY_NEEDS_GITHUB_AUTHENTICATED_REVIEW')
+
+    def test_engineering_patch_cannot_ignore_known_failed_content(self):
+        x=self._promotion();x['change_scope']='ENGINEERING_PATCH'
+        x['evidence']['no_quality_behavior_change_rationale']='Only release metadata changes.'
+        x['gates']['content_quality']='FAIL'
+        self.assertIn('PATCH_CANNOT_BYPASS_KNOWN_CONTENT_FAILURE',verify(self.root,x)['reasons'])
+
+    def test_engineering_patch_requires_real_regression_evidence(self):
+        x=self._promotion();x['change_scope']='ENGINEERING_PATCH'
+        x['evidence']['no_quality_behavior_change_rationale']='Only release metadata changes.'
+        x['gates']['non_regression']='PENDING'
+        self.assertIn('PROMOTION_GATE_NOT_PASS_NON_REGRESSION',verify(self.root,x)['reasons'])
 
     def test_missing_author_evidence_blocks(self):
         x=self._promotion();x['human_authorization_evidence']=None
