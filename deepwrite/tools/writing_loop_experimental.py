@@ -113,10 +113,13 @@ class CodexExec:
 
 class WritingLoop:
     def __init__(self, root, config, model=None, expected_state_sha=None, stop_after=None):
-        self.root = Path(root).absolute()
-        if self.root.is_symlink():
-            raise Blocked("SYMLINK_PROJECT_ROOT")
-        if self.root.is_relative_to(DEEPWRITE.parent):
+        candidate_root = Path(root).absolute()
+        try:
+            checkpoint.no_symlinks(candidate_root)
+        except ValueError as error:
+            raise Blocked("SYMLINK_PROJECT_ROOT_OR_ANCESTOR") from error
+        self.root = candidate_root.resolve()
+        if self.root.is_relative_to(DEEPWRITE.parent.resolve()):
             raise Blocked("PROJECT_OUTPUT_MUST_BE_OUTSIDE_CODE_REPOSITORY")
         self.root.mkdir(parents=True, exist_ok=True)
         self.config = copy.deepcopy(config)
@@ -137,8 +140,10 @@ class WritingLoop:
             if any(self.root.iterdir()) and not all(p.name == "sources" for p in self.root.iterdir()):
                 raise Blocked("NEW_PROJECT_OUTPUT_NOT_EMPTY")
             self.state = {"schema": "deepwrite/writing-loop-state/v0", "config_sha256": self.cfg_sha,
-                          "status": "STARTED", "files": {}, "completed": {}, "calls": {},
+                          "status": "STARTED", "files": {}, "completed": {}, "calls": {}, "call_completions": {},
                           "tokens": 0, "usage_uncertain_calls": [], "model_reported": None, "quality": "UNVERIFIED",
+                          "run_mode": config.get("run_mode", "fresh"),
+                          "draft_origin": ("FROZEN_BASELINE_REPLAY_NOT_FRESH_B0_B1" if config.get("run_mode") == "replay_frozen_drafts" else "MODEL_DRAFTED"),
                           "human_acceptance": "NOT_RUN", "fair_B0_B1": "UNVERIFIED"}
             self.write("config.json", json_bytes(config))
             self.write("pins.json", json_bytes(config["pins"]))
@@ -177,6 +182,20 @@ class WritingLoop:
             raise Blocked("UNSAFE_OR_DUPLICATE_CHAPTER_ID")
         if not isinstance(c.get("sources"), list) or not c["sources"]:
             raise Blocked("FROZEN_SOURCES_REQUIRED")
+        mode = c.get("run_mode", "fresh")
+        if mode not in ("fresh", "replay_frozen_drafts"):
+            raise Blocked("UNKNOWN_RUN_MODE")
+        if mode == "fresh" and (c.get("replay_drafts") or c.get("known_findings")):
+            raise Blocked("REPLAY_INPUT_FORBIDDEN_FRESH_EXPERIMENT")
+        if mode == "replay_frozen_drafts":
+            seeds = c.get("replay_drafts")
+            if not isinstance(seeds, dict) or set(seeds) != set(ids):
+                raise Blocked("REPLAY_NEEDS_EXACT_FROZEN_CHAPTER_INVENTORY")
+            frozen_paths = {s["path"] for s in c["sources"]}
+            if any(path not in frozen_paths for path in seeds.values()):
+                raise Blocked("REPLAY_DRAFT_MUST_BE_HASH_PINNED_SOURCE")
+            if not isinstance(c.get("known_findings", []), list):
+                raise Blocked("KNOWN_FINDINGS_MUST_BE_FROZEN_LIST")
         if c.get("channel") not in ("CANDIDATE_OPT_IN", "SHADOW"):
             raise Blocked("EXPERIMENTAL_RUNNER_REQUIRES_CANDIDATE_CHANNEL")
         checkpoint.validate_pins(json_bytes(c["pins"]), c["project_id"])
@@ -233,6 +252,14 @@ class WritingLoop:
                 self.config["token_budget"] - self.state["tokens"])
         request_raw = json_bytes(request)
         if self.path(res).exists():
+            completed = self.state.get("call_completions", {}).get(key)
+            if not completed:
+                raise Blocked("INCOMPLETE_CALL_COMMIT_NOT_AUTOMATICALLY_RETRIED")
+            for part, relative in (("request", req), ("response", res), ("transport", stem + ".transport.json")):
+                expected = completed.get(part)
+                if (not expected or self.state["files"].get(relative) != expected or
+                        digest(self.path(relative).read_bytes()) != expected):
+                    raise Blocked("INCOMPLETE_OR_TAMPERED_CALL_COMMIT")
             data = json.loads(self.path(res).read_text())
             if data["request_sha256"] != digest(request_raw):
                 raise Blocked("CACHED_RESPONSE_REQUEST_MISMATCH")
@@ -251,9 +278,13 @@ class WritingLoop:
                 data["is_live"] = bool(getattr(self.model, "is_live", False))
                 data["output_limit_enforced"] = bool(getattr(self.model, "output_limit_enforced", False))
                 self.write(res, json_bytes(data))
-                raw_transport = getattr(self.model, "last_transport", None)
-                if raw_transport:
-                    self.write(stem + ".transport.json", json_bytes(raw_transport))
+                raw_transport = getattr(self.model, "last_transport", None) or {
+                    "payload_available": False, "reason": "ADAPTER_DID_NOT_EXPOSE_TRANSPORT_PAYLOAD"}
+                self.write(stem + ".transport.json", json_bytes(raw_transport))
+                self.state.setdefault("call_completions", {})[key] = {
+                    "request": self.state["files"][req], "response": self.state["files"][res],
+                    "transport": self.state["files"][stem + ".transport.json"]}
+                self.save_state()
             except Exception as error:
                 raw_transport = getattr(self.model, "last_transport", None)
                 if raw_transport:
@@ -375,6 +406,8 @@ class WritingLoop:
 
     def review_cycle(self, key, current):
         baseline = dict(current)
+        known = ([copy.deepcopy(f) for f in self.config.get("known_findings", [])
+                  if f.get("artifact_id") == key] if self.config.get("run_mode") == "replay_frozen_drafts" else [])
         payload = {"manuscripts": {a: self.path(p).read_text() for a, p in current.items()},
                    "task": "Review actual prose and cross-chapter contribution when multiple chapters. "
                    "Return JSON findings; each manuscript needs at least one located finding or justified NOTE KEEP. "
@@ -382,9 +415,18 @@ class WritingLoop:
                    "issue,evidence,paragraph(1-based blank-line-delimited),reason for KEEP. "
                    "Computable assertions only contains/not_contains/literal_count with value/count. "
                    "Do not invent defects to force rewriting."}
+        if known:
+            payload["caller_frozen_known_findings"] = known
+            payload["task"] += " Known finding ids belong to the caller; do not duplicate or override them."
         reviewed = self.call(key + "_review", "review", payload)
         identity = reviewed["provider_kind"] + ":" + reviewed["model"] + ":" + reviewed["response_id"]
-        findings = self.build_initial(parse_object(reviewed["text"]), current, identity)
+        initial = parse_object(reviewed["text"])
+        if known:
+            reported = initial.get("findings", [])
+            if not isinstance(reported, list) or any(f.get("id") in {k["id"] for k in known} for f in reported):
+                raise Blocked("MODEL_CANNOT_OVERRIDE_CALLER_FROZEN_FINDING")
+            initial["findings"] = reported + known
+        findings = self.build_initial(initial, current, identity)
         self.write("reviews/" + key + ".frozen.json", json_bytes(findings))
         expected = copy.deepcopy(findings)
         record = self.record(baseline, current, findings)
@@ -418,8 +460,22 @@ class WritingLoop:
                      "manuscripts": {a: self.path(p).read_text() for a, p in current.items()},
                      "task": "Return JSON findings exactly covering frozen ids: id,status(OPEN/CLOSED/KEEP),"
                              "paragraph,evidence,reason if KEEP. Re-read actual manuscript; do not claim closure from intent. "
-                             "No new issue may be silently discarded; report unresolved as OPEN."})
-            replies = parse_object(data["text"]).get("findings", [])
+                             "Use new_findings:[{artifact_id,severity,issue,evidence,paragraph}] for newly discovered "
+                             "issues; never drop a major new issue or replace a frozen id."})
+            rechecked = parse_object(data["text"])
+            new_findings = rechecked.get("new_findings", [])
+            if not isinstance(new_findings, list):
+                raise Blocked("NEW_FINDINGS_NOT_LIST")
+            if new_findings:
+                self.write("reviews/" + key + ".new_findings." + str(turn+1) + ".json", json_bytes(new_findings))
+                for fresh in new_findings:
+                    if (fresh.get("artifact_id") not in current or fresh.get("severity") not in
+                            ("NOTE", "MINOR", "MAJOR", "CRITICAL") or not fresh.get("issue") or not fresh.get("evidence")):
+                        raise Blocked("INVALID_NEW_FINDING")
+                    self.location(current[fresh["artifact_id"]], fresh.get("paragraph"))
+                if any(f["severity"] in ("MAJOR", "CRITICAL") for f in new_findings):
+                    raise Blocked("NEW_MAJOR_FINDINGS_HOLD_REVIEW_SCOPE_NOT_SILENTLY_EXPANDED")
+            replies = rechecked.get("findings", [])
             if len(replies) != len(expected) or {x.get("id") for x in replies} != {x["id"] for x in expected}:
                 raise Blocked("RECHECK_FROZEN_FINDING_SET_MISMATCH")
             mapping = {x["id"]: x for x in replies}
@@ -442,6 +498,46 @@ class WritingLoop:
             record = self.record(baseline, current, findings)
             outcome = self.check_record(record, expected)
         raise Blocked("UNREACHABLE_REVIEW_STATE")
+
+    def check_historical_findings(self, current):
+        """Final bytes must still satisfy earlier known computable resolutions.
+
+        A later edit invalidates an earlier model-review byte binding. Hold for
+        explicit located rereading; do not pretend the old judgment covers it.
+        """
+        if self.config["guard"] == "off":
+            return {"status": "BYPASSED_BASELINE_ARM"}
+        latest = {}
+        for relative in sorted(self.state["files"]):
+            match = re.fullmatch(r"reviews/(.+)\.([0-9]+)\.json", relative)
+            if match:
+                key, turn = match.group(1), int(match.group(2))
+                if key not in latest or turn > latest[key][0]:
+                    latest[key] = (turn, relative)
+        checks, failures = [], []
+        for key, (_, relative) in sorted(latest.items()):
+            record = json.loads(self.path(relative).read_text())["record"]
+            for finding in record["findings"]:
+                if finding["status"] not in ("CLOSED", "KEEP"):
+                    continue
+                art = finding["artifact_id"]
+                final = self.path(current[art])
+                row = {"review": key, "finding_id": finding["id"], "artifact_id": art,
+                       "final_path": current[art], "final_sha256": digest(final.read_bytes())}
+                if finding["kind"] == "computable":
+                    evaluated = self.guard.evaluate(finding["assertion"], final.read_text())
+                    row["assertion_result"] = evaluated
+                    if not evaluated["passed"]:
+                        failures.append({"reason": "COMPUTABLE_REGRESSION", **row})
+                elif finding["review"]["artifact_sha256"] != row["final_sha256"]:
+                    failures.append({"reason": "MODEL_REVIEW_BINDING_STALE_EXPLICIT_REREAD_REQUIRED", **row})
+                checks.append(row)
+        outcome = {"status": "HOLD" if failures else "PASS_KNOWN_FINDINGS_ONLY",
+                   "checks": checks, "failures": failures, "semantic_status": "NOT_MACHINE_CERTIFIED"}
+        self.write("reviews/final_historical_findings.json", json_bytes(outcome))
+        if failures:
+            raise Blocked("HISTORICAL_FINDING_REGRESSION_OR_STALE_MODEL_REVIEW")
+        return outcome
 
     def checkpoint_now(self):
         self.save_state()
@@ -479,26 +575,36 @@ class WritingLoop:
             sources = {s["path"]: self.path(s["path"]).read_text() for s in self.config["sources"]}
             policy = "\n".join((DEEPWRITE / "candidates" / name).read_text()
                                for name in ("RESEARCH_LOOP.md", "EDITORIAL_LOOP.md"))
-            research = self.stage("research", lambda: self.save_text_call(
-                "research", "research", {"wish": self.config["wish"], "sources": sources,
-                                         "workflow": policy}, "research.md"))
-            plan = self.stage("direction", lambda: self.save_text_call(
-                "direction", "select_direction", {"research": self.path(research).read_text(),
-                "topics": self.config["chapters"], "task": "Compare genuinely different directions, select chapter-specific "
-                "questions, counterexamples and dependencies. Return the selected plan as Markdown."}, "plan.md"))
+            replay = self.config.get("run_mode") == "replay_frozen_drafts"
+            if not replay:
+                research = self.stage("research", lambda: self.save_text_call(
+                    "research", "research", {"wish": self.config["wish"], "sources": sources,
+                                             "workflow": policy}, "research.md"))
+                plan = self.stage("direction", lambda: self.save_text_call(
+                    "direction", "select_direction", {"research": self.path(research).read_text(),
+                    "topics": self.config["chapters"], "task": "Compare genuinely different directions, select chapter-specific "
+                    "questions, counterexamples and dependencies. Return the selected plan as Markdown."}, "plan.md"))
             chapters = {}
             for row in self.config["chapters"]:
                 art = row["artifact_id"]
-                path = self.stage("draft_" + art, lambda row=row, art=art: self.save_text_call(
-                    "draft_" + art, "draft", {"chapter": row, "sources": sources,
-                    "research": self.path(research).read_text(), "plan": self.path(plan).read_text(),
-                    "already_completed": {a: self.path(p).read_text() for a, p in chapters.items()},
-                    "task": "Write the complete readable chapter in Markdown, not a plan or audit."},
-                    "chapters/" + art + ".draft.md", manuscript=True))
+                def draft(row=row, art=art):
+                    dest = "chapters/" + art + ".draft.md"
+                    if replay:
+                        source = self.config["replay_drafts"][art]
+                        self.write(dest, self.path(source).read_bytes())
+                        return dest
+                    return self.save_text_call(
+                        "draft_" + art, "draft", {"chapter": row, "sources": sources,
+                        "research": self.path(research).read_text(), "plan": self.path(plan).read_text(),
+                        "already_completed": {a: self.path(p).read_text() for a, p in chapters.items()},
+                        "task": "Write the complete readable chapter in Markdown, not a plan or audit."},
+                        dest, manuscript=True)
+                path = self.stage("draft_" + art, draft)
                 reviewed = self.stage("close_" + art,
                                       lambda art=art, path=path: self.review_cycle(art, {art: path}))
                 chapters.update(reviewed)
             chapters = self.stage("cross_close", lambda: self.review_cycle("cross", dict(chapters)))
+            self.stage("historical_findings", lambda: self.check_historical_findings(chapters))
             front = self.stage("front", lambda: self.save_text_call(
                 "front", "front_matter", {"chapters": {a: self.path(p).read_text() for a,p in chapters.items()},
                 "task": "Write a short honest preface in Markdown; do not oversell evidence."},

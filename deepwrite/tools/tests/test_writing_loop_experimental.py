@@ -200,6 +200,114 @@ class WritingLoopTests(unittest.TestCase):
         self.assertEqual(record["guard"]["semantic_status"], "MODEL_REVIEW_REQUIRED")
         self.assertEqual(json.loads((self.root/"run_state.json").read_text())["human_acceptance"], "NOT_RUN")
 
+    def test_frozen_draft_replay_reads_real_baseline_and_preserves_it(self):
+        source = self.root/"sources/material.md"
+        source.write_text(DRAFT)
+        self.cfg["sources"][0]["sha256"] = loop.digest(source.read_bytes())
+        self.cfg["run_mode"] = "replay_frozen_drafts"
+        self.cfg["replay_drafts"] = {"alpha": "sources/material.md"}
+        self.cfg["known_findings"] = [{"id": "known_arithmetic", "artifact_id": "alpha",
+            "kind": "computable", "severity": "MAJOR", "status": "OPEN",
+            "issue": "Caller-frozen known literal defect", "evidence": "Original paragraph has ERROR.",
+            "paragraph": 2, "assertion": {"op": "not_contains", "value": "ERROR"}}]
+        model = ScriptedModel()
+        obj, result = self.run_model(model)
+        self.assertEqual(result["status"], "ENGINEERING_FIXTURE_ONLY_NOT_LIVE", result)
+        self.assertEqual(obj.state["draft_origin"], "FROZEN_BASELINE_REPLAY_NOT_FRESH_B0_B1")
+        self.assertEqual(source.read_text(), DRAFT)
+        self.assertEqual((self.root/"chapters/alpha.draft.md").read_text(), DRAFT)
+        self.assertNotIn("ERROR", (self.root/"chapters/alpha.alpha.r1.md").read_text())
+        self.assertNotIn("research", model.calls)
+        self.assertNotIn("select_direction", model.calls)
+        self.assertNotIn("draft", model.calls)
+        frozen = json.loads((self.root/"reviews/alpha.frozen.json").read_text())
+        self.assertIn("known_arithmetic", {f["id"] for f in frozen})
+
+    def test_fresh_mode_rejects_frozen_draft_replay_inputs(self):
+        self.cfg["replay_drafts"] = {"alpha": "sources/material.md"}
+        with self.assertRaisesRegex(loop.Blocked, "REPLAY_INPUT_FORBIDDEN"):
+            loop.WritingLoop(self.root, self.cfg, model=ScriptedModel())
+
+    def test_recheck_new_major_is_saved_and_blocks_delivery(self):
+        class NewMajor(ScriptedModel):
+            def generate(self, instructions, prompt, max_output_tokens=6000):
+                result = super().generate(instructions, prompt, max_output_tokens)
+                if json.loads(prompt)["role"] != "recheck":
+                    return result
+                obj = json.loads(result.text)
+                obj["new_findings"] = [{"artifact_id": "alpha", "severity": "MAJOR",
+                    "issue": "A newly noticed unsupported inference", "evidence": "Paragraph three.",
+                    "paragraph": 3}]
+                return loop.transport.ModelResult(result.response_id, result.model, json.dumps(obj),
+                                                   result.usage, result.provider_kind)
+        _, result = self.run_model(NewMajor())
+        self.assertEqual(result["status"], "BLOCKED")
+        self.assertIn("NEW_MAJOR_FINDINGS_HOLD", result["failure"]["message"])
+        self.assertTrue((self.root/"reviews/alpha.new_findings.1.json").exists())
+        self.assertFalse((self.root/"book.md").exists())
+
+    def test_dotdot_cannot_hide_project_inside_code_repository(self):
+        target = TOOLS.parent/"not_created_e18"/".."/"forbidden_e18_output"
+        with self.assertRaisesRegex(loop.Blocked, "OUTSIDE_CODE_REPOSITORY"):
+            loop.WritingLoop(target, self.cfg, model=ScriptedModel())
+        self.assertFalse((TOOLS.parent/"forbidden_e18_output").exists())
+
+    def test_ancestor_symlink_is_rejected_before_resolving(self):
+        actual = self.base/"actual"
+        actual.mkdir()
+        alias = self.base/"alias"
+        alias.symlink_to(actual, target_is_directory=True)
+        with self.assertRaisesRegex(loop.Blocked, "SYMLINK_PROJECT_ROOT_OR_ANCESTOR"):
+            loop.WritingLoop(alias/"project", self.cfg, model=ScriptedModel())
+
+    def test_crash_after_response_before_transport_cannot_be_cached_as_success(self):
+        class PowerLoss(BaseException):
+            pass
+        first = ScriptedModel()
+        obj = loop.WritingLoop(self.root, self.cfg, model=first)
+        old_write = obj.write
+        def interrupted_write(relative, data):
+            old_write(relative, data)
+            if relative == "calls/research.response.json":
+                raise PowerLoss()
+        obj.write = interrupted_write
+        with self.assertRaises(PowerLoss):
+            obj.run()
+        state_sha = loop.digest((self.root/"run_state.json").read_bytes())
+        second = ScriptedModel()
+        resumed = loop.WritingLoop(self.root, self.cfg, model=second, expected_state_sha=state_sha).run()
+        self.assertEqual(resumed["status"], "BLOCKED")
+        self.assertIn("INCOMPLETE_CALL_COMMIT", resumed["failure"]["message"])
+        self.assertEqual(second.calls, [])
+        self.assertFalse((self.root/"book.md").exists())
+
+    def test_cross_revision_cannot_reintroduce_earlier_closed_computable_error(self):
+        class Regression(ScriptedModel):
+            review_turn = 0
+            def generate(self, instructions, prompt, max_output_tokens=6000):
+                req = json.loads(prompt)
+                if req["role"] == "review":
+                    self.review_turn += 1
+                    if self.review_turn == 2:
+                        self.calls.append("cross_review")
+                        text = json.dumps({"findings": [{"id": "cross_change", "artifact_id": "alpha",
+                            "kind": "model_review", "severity": "MAJOR", "status": "OPEN",
+                            "issue": "Give a different perspective", "evidence": "Paragraph two needs a new action.",
+                            "paragraph": 2}]})
+                        return loop.transport.ModelResult("cross-review", "fixture-model", text,
+                            {"input_tokens":10,"output_tokens":10}, "scripted_fixture")
+                if req["role"] == "revise" and any(f["id"] == "cross_change" for f in req["payload"]["frozen_findings"]):
+                    self.calls.append("cross_revise")
+                    return loop.transport.ModelResult("cross-revision", "fixture-model", DRAFT,
+                        {"input_tokens":10,"output_tokens":10}, "scripted_fixture")
+                return super().generate(instructions, prompt, max_output_tokens)
+        _, result = self.run_model(Regression())
+        self.assertEqual(result["status"], "BLOCKED")
+        self.assertIn("HISTORICAL_FINDING_REGRESSION", result["failure"]["message"])
+        record = json.loads((self.root/"reviews/final_historical_findings.json").read_text())
+        self.assertIn("COMPUTABLE_REGRESSION", {f["reason"] for f in record["failures"]})
+        self.assertFalse((self.root/"book.md").exists())
+
     def test_missing_actual_usage_blocks_retains_response(self):
         obj, result = self.run_model(ScriptedModel(usage={}))
         self.assertEqual(result["status"], "BLOCKED")
@@ -329,4 +437,17 @@ class WritingLoopTests(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    unittest.main()
+    import argparse
+    import sys
+    parser = argparse.ArgumentParser(add_help=False)
+    parser.add_argument("--fixture-output", type=Path)
+    args, remaining = parser.parse_known_args()
+    if args.fixture_output:
+        cfg = config(args.fixture_output)
+        result = loop.WritingLoop(args.fixture_output, cfg, model=ScriptedModel()).run()
+        receipt = args.fixture_output.parent/(args.fixture_output.name+".fixture-receipt.json")
+        receipt.write_bytes(loop.json_bytes(result))
+        print(json.dumps({"evidence_kind": "ENGINEERING_FIXTURE_ONLY", "result": result,
+                          "receipt_path": str(receipt)}, indent=2))
+        raise SystemExit(0 if result["status"] == "ENGINEERING_FIXTURE_ONLY_NOT_LIVE" else 2)
+    unittest.main(argv=[sys.argv[0], *remaining])
