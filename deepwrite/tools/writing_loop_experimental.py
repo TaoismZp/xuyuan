@@ -102,8 +102,8 @@ class CodexExec:
             if proc.returncode:
                 raise Blocked("BLOCKED_CODEX_AUTH_OR_TRANSPORT")
             parsed = self.events_parser.parse_events(proc.stdout)
-            if parsed["tool_event_types"]:
-                raise Blocked("MODEL_TOOLS_USED_ISOLATION_UNVERIFIED")
+            self.last_transport["codex_tool_event_types"] = parsed["tool_event_types"]
+            self.last_transport["event_count"] = parsed["event_count"]
             text = last.read_text(encoding="utf-8").strip()
             if not text:
                 raise Blocked("EMPTY_MODEL_OUTPUT")
@@ -314,8 +314,9 @@ class WritingLoop:
         log_path = self.path(stem + ".transport.json")
         raw_transport = json.loads(log_path.read_text()) if log_path.exists() else {}
         provider_response = raw_transport.get("provider_response", {})
-        if any(item.get("type") not in ("message", "reasoning")
-               for item in provider_response.get("output", [])):
+        if raw_transport.get("codex_tool_event_types") or any(
+                item.get("type") not in ("message", "reasoning")
+                for item in provider_response.get("output", [])):
             raise Blocked("MODEL_TOOLS_USED_ISOLATION_UNVERIFIED")
         if not isinstance(reported, str) or not reported or reported == "UNKNOWN_MODEL":
             raise Blocked("MISSING_MODEL_IDENTITY")
