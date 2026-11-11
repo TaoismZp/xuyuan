@@ -246,6 +246,22 @@ class WritingLoopTests(unittest.TestCase):
         self.assertTrue((self.root/"reviews/alpha.new_findings.1.json").exists())
         self.assertFalse((self.root/"book.md").exists())
 
+    def test_new_minor_is_retained_without_being_misread_as_a_closeout_record(self):
+        class NewMinor(ScriptedModel):
+            def generate(self, instructions, prompt, max_output_tokens=6000):
+                result = super().generate(instructions, prompt, max_output_tokens)
+                if json.loads(prompt)["role"] != "recheck":
+                    return result
+                obj = json.loads(result.text)
+                obj["new_findings"] = [{"artifact_id": "alpha", "severity": "MINOR",
+                    "issue": "Potentially smoother transition", "evidence": "Paragraph three.",
+                    "paragraph": 3}]
+                return loop.transport.ModelResult(result.response_id, result.model, json.dumps(obj),
+                                                   result.usage, result.provider_kind)
+        _, result = self.run_model(NewMinor())
+        self.assertEqual(result["status"], "ENGINEERING_FIXTURE_ONLY_NOT_LIVE", result)
+        self.assertTrue((self.root/"reviews/alpha.new_findings.1.json").exists())
+
     def test_dotdot_cannot_hide_project_inside_code_repository(self):
         target = TOOLS.parent/"not_created_e18"/".."/"forbidden_e18_output"
         with self.assertRaisesRegex(loop.Blocked, "OUTSIDE_CODE_REPOSITORY"):
