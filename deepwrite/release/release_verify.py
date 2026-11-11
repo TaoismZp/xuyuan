@@ -44,6 +44,9 @@ def verify(root, manifest):
     if manifest.get("parent_wish_version") != parent.get("active_version"):
         reasons.append("PARENT_VERSION_CHANGED")
     if manifest.get("release_channel") != "STABLE": reasons.append("INVALID_RELEASE_CHANNEL")
+    scope = manifest.get("change_scope")
+    if scope not in ("ENGINEERING_PATCH", "QUALITY_BEHAVIOR_CHANGE"):
+        reasons.append("INVALID_CHANGE_SCOPE")
     if not manifest.get("new_version") or manifest.get("new_version") == manifest.get("base_version"):
         reasons.append("VERSION_NOT_ADVANCED")
     if not HEX40.fullmatch(str(manifest.get("candidate_commit", ""))):
@@ -68,15 +71,27 @@ def verify(root, manifest):
     if not isinstance(evidence,dict) or not isinstance(gates,dict):
         reasons.append("INVALID_EVIDENCE_OR_GATES")
         gates,evidence={},{}
-    for key in ("engineering", "content_quality", "author_acceptance", "independent_validation", "rollback_test"):
+    required = ("engineering", "rollback_test", "non_regression")
+    if scope == "QUALITY_BEHAVIOR_CHANGE":
+        required += ("content_quality", "author_acceptance", "independent_validation")
+    elif scope == "ENGINEERING_PATCH":
+        # Patch releases must be scoped to implementation/identity fixes that
+        # do not alter cognitive prompts, book selection, or reader outcomes.
+        # A GitHub protected reviewer must examine this claim; code cannot.
+        if not evidence.get("no_quality_behavior_change_rationale"):
+            reasons.append("PATCH_SCOPE_NOT_JUSTIFIED")
+        if any(gates.get(k) == "FAIL" for k in ("content_quality", "author_acceptance", "independent_validation")):
+            reasons.append("PATCH_CANNOT_BYPASS_KNOWN_CONTENT_FAILURE")
+    for key in required:
         if gates.get(key) != "PASS":
             reasons.append("PROMOTION_GATE_NOT_PASS_"+key.upper())
         if not evidence.get(key):
             reasons.append("MISSING_EVIDENCE_"+key.upper())
-    if not isinstance(evidence.get("independent_topic_count"),int) or evidence.get("independent_topic_count",0)<3:
-        reasons.append("NOT_ENOUGH_INDEPENDENT_TOPICS")
-    if not isinstance(evidence.get("reader_count"),int) or evidence.get("reader_count",0)<2:
-        reasons.append("NOT_ENOUGH_INDEPENDENT_READERS")
+    if scope == "QUALITY_BEHAVIOR_CHANGE":
+        if not isinstance(evidence.get("independent_topic_count"),int) or evidence.get("independent_topic_count",0)<3:
+            reasons.append("NOT_ENOUGH_INDEPENDENT_TOPICS")
+        if not isinstance(evidence.get("reader_count"),int) or evidence.get("reader_count",0)<2:
+            reasons.append("NOT_ENOUGH_INDEPENDENT_READERS")
     # A boolean 'author_approved' in model-generated JSON is NEVER enough.
     if manifest.get("human_authorization_evidence") is None:
         reasons.append("NO_HUMAN_RELEASE_AUTHORITY")
