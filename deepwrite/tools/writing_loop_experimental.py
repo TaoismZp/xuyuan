@@ -510,7 +510,7 @@ class WritingLoop:
             return {"status": "BYPASSED_BASELINE_ARM"}
         latest = {}
         for relative in sorted(self.state["files"]):
-            match = re.fullmatch(r"reviews/(.+)\.([0-9]+)\.json", relative)
+            match = re.fullmatch(r"reviews/([A-Za-z0-9_-]+)\.([0-9]+)\.json", relative)
             if match:
                 key, turn = match.group(1), int(match.group(2))
                 if key not in latest or turn > latest[key][0]:
