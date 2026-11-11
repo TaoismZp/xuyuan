@@ -17,6 +17,8 @@ The runner performs research, direction selection, complete chapter drafting, lo
 
 The process owns artifact inventories, paths, baseline hashes and frozen finding identities. The model supplies content, findings and paragraph references. It cannot replace the frozen issue/assertion/severity with its recheck answer. New unresolved major findings cannot be dropped just by changing CLOSED text. At least one located finding or justified KEEP is required per artifact. KEEP permits preserving correct prose.
 
+Before assembly the guard-on arm also reexecutes every previously CLOSED/KEEP computable assertion against the final chapter bytes. A later chapter revision that invalidates a prior model-review artifact SHA is held for an explicit located reread; this initial implementation deliberately does not silently transfer that semantic judgment. Newly discovered MAJOR/CRITICAL recheck findings are saved in new_findings records and put the run on HOLD rather than being discarded from a fixed finding inventory.
+
 Guard on rejects unchanged or whitespace-only fake fixes for CLOSED, reads the actual artifacts and reexecutes the supported literal assertion. Model review is still a model's located judgment; its verdict is bound to actual candidate bytes and saved as MODEL_REVIEW_REQUIRED. It is not proof of thought quality, truth, style or human acceptance. Unexpected protocol output, unavailable usage, missing identity, tool events and unresolved findings fail closed, leaving the evidence.
 
 Guard off retains the ordinary review/rewrite prompts but bypasses the repaired closeout checker. It exists to isolate the guard's engineering effect. This switch does not establish that the whole B0/B1 experiment is fair, blinded, sufficiently budgeted or independent.
@@ -45,9 +47,15 @@ Use an explicit provider-supported model name. Do not put secrets in config, sou
 python deepwrite/tools/writing_loop_experimental.py /private/e18-config.json /private/e18-b1
 ~~~
 
+Cached-call reuse requires a state-anchored completion record binding the actual request, response and transport hashes together. A crash between response and transport persistence is an uncertain incomplete call: no cache acceptance and no automatic re-send.
+
 Each model call stores its request, model/provider response identity, text, usage and available transport payload in calls/. Tokens are charged from actual input_tokens + output_tokens. Output caps are sent to Responses; Codex caps are post hoc only. Unknown usage blocks the run, rather than recording a convenient zero. The provider can consume tokens before an overrun is detected. No accepted run may exceed the configured accounted total; this is not a provider-side hard total spending guarantee.
 
 CLI identity is the requested model flag plus CLI event/thread identity, not independent server attestation. An empty working directory, ephemeral turns and tool-event rejection do not establish OS-level isolation from author answers or the A baseline. Strict B0/B1 fairness stays UNVERIFIED until a separate controlled execution supplies evidence.
+
+## Frozen manuscript replay
+
+For an already identified defect in an existing private manuscript (such as the E12 replay), set run_mode to replay_frozen_drafts. Supply replay_drafts as an exact artifact-ID-to-path map; every path must already be a hash-pinned source. The runner copies actual source bytes to an immutable draft, skips fresh research/drafting, and then uses the same review/rewrite/recheck/cross-review/assembly/checkpoint loop. Optional known_findings are caller-owned frozen finding objects (id, artifact_id, kind, severity, OPEN/KEEP status, issue, evidence, paragraph and assertion where computable); model output cannot override their ids. The code resolves actual paragraph hashes from the real baseline. This is FROZEN_BASELINE_REPLAY_NOT_FRESH_B0_B1, never evidence of a new book written from scratch. Fresh mode rejects these replay inputs.
 
 ## Pause, resume, restore and rollback
 
@@ -68,6 +76,14 @@ The snapshot proves only declared files and policy values. It does not prove dur
 ~~~bash
 python -m unittest discover -s deepwrite/tools/tests -p 'test_writing_loop_experimental.py' -v
 ~~~
+
+An actual CI can retain a complete readable synthetic output, responses, diffs and checkpoint with:
+
+~~~bash
+python deepwrite/tools/tests/test_writing_loop_experimental.py --fixture-output /tmp/e18-engineering-fixture
+~~~
+
+The command prints its receipt path. Archive the fixture directory and sibling receipt/checkpoint/requirements; it is public arithmetic content, not a live author manuscript. An output directory must be new.
 
 All scripted tests are explicit ENGINEERING_FIXTURE_ONLY, use public arithmetic text, and make no provider call. They test actual file rewrite/diff, false CLOSED, whitespace fake fixes, correct KEEP, cross-chapter model-review binding, token accounting, unknown usage, identity switches, tool contamination, missing auth, interrupted-call nonrepeat, real snapshot/restore, tamper detection and packaged output SHA. A test suite only counts as PASS after actual CI execution; the source commit alone is not a receipt.
 

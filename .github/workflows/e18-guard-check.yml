@@ -23,3 +23,12 @@ jobs:
         run: python3 -B -m unittest discover -s deepwrite/candidates/e15-review-closure -p 'test_*.py' -v
       - name: Exercise writing, actual revisions, packaging and restore with explicit fixtures
         run: python3 -B -m unittest discover -s deepwrite/tools/tests -p 'test_writing_loop_experimental.py' -v
+      - name: Export actual engineering fixture files and checkpoint
+        run: python3 -B deepwrite/tools/tests/test_writing_loop_experimental.py --fixture-output "$RUNNER_TEMP/e18-engineering/project"
+      - name: Preserve explicit fixture evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e18-engineering-fixture-not-live-model
+          path: ${{ runner.temp }}/e18-engineering
+          retention-days: 30
