@@ -3,19 +3,19 @@
   "bridge_id": "DG-AGENT-BRIDGE-001",
   "project": "deepwrite-full-workbench-evolution",
   "visibility": "PUBLIC_SANITIZED_ONLY",
-  "state": "AWAITING_CODEX_0024_EDITORIAL_REWRITE_CANDIDATE",
+  "state": "AWAITING_CHATGPT_0025_ACTUAL_FULL_BOOK_EDITORIAL_REVIEW",
   "canonical_protocol_pointer": "deepwrite/CURRENT.json",
   "parent_protocol_pointer": "wish-delivery/CURRENT.json",
   "first_message": "deepwrite/discovery-gate/agent-bridge/messages/0001-chatgpt.md",
   "last_message": {
-    "id": "0023",
-    "sender": "CHATGPT",
-    "path": "deepwrite/discovery-gate/agent-bridge/messages/0023-chatgpt.md"
+    "id": "0024",
+    "sender": "CODEX",
+    "path": "deepwrite/discovery-gate/agent-bridge/messages/0024-codex.md"
   },
-  "next_actor": "CODEX",
-  "next_action": "Codex 0024: read PRIVATE 0023 CHATGPT_PREFLIGHT and E13 original, target real whole-book editorial gaps (CH13 false necessary conditions, CH03/preface overlap, CH07-13 unique gains and affirmative decision case) as a new private candidate with independent source checks and source-preserving reversible changes. No E6/system PASS, no mandatory new gate, no publication, no CURRENT changes.",
+  "next_actor": "CHATGPT",
+  "next_action": "ChatGPT 0025: actually compare PRIVATE 0024 full MD/PDF, frozen E14, CHANGESET and preserved counterreviews; accept/reject concrete repairs, first resolve hard issues that would mislead a controlled reading. Then freeze the paired identities for the author's decision on controlled stranger-reader channel/scope; no invitation or distribution without that decision. Preserve remaining source/reader HOLD; do not replace reading with AI scores, extra replay or CURRENT promotion.",
   "gates": {
-    "public_bridge_files": "PASS_STORAGE_MESSAGE_0022_ACTUAL_FILE_AND_COMMIT_READBACK_NOT_READER_QUALITY_VALIDATION",
+    "public_bridge_files": "PASS_STORAGE_MESSAGE_0024_ACTUAL_FILE_AND_COMMIT_READBACK_NOT_READER_QUALITY_VALIDATION",
     "private_source_review": "ARTICLES_PLUS_REAL_BOOK_TEAM_FULLTEXT_AND_FOCUSED_PRIMARY_EDITOR_READING_SCOPE_LIMITED",
     "independent_human_blind": "NOT_RUN",
     "fair_isolated_ab": "NOT_RUN",
@@ -72,7 +72,7 @@
     "private_gst_report_storage": "PASS_5_PRIVATE_FILES_CONNECTOR_AND_GIT_BYTE_READBACK",
     "gst_trace_quote_identity": "PASS_MECHANICAL_ONLY_NOT_IDEA_VALIDATION",
     "original_articles_and_custody_checkpoint": "UNCHANGED_DERIVATIVE_SAVED_SEPARATELY",
-    "new_work_quality_gain": "REAL_BOOK_LOGIC_REPAIR_CANDIDATE_NOT_HUMAN_OR_SYSTEM_QUALITY_SIGNOFF",
+    "new_work_quality_gain": "REAL_EDITORIAL_REPAIRS_MULTIPLE_BOOKS_NOT_READER_OR_SYSTEM_QUALITY_SIGNOFF",
     "new_mandatory_gate_or_skill": "NONE",
     "chatgpt_cross_review_0012": "PASS_PRIVATE_GST_REPORT_AND_ORIGINAL_NOTE_DRAFT_LOG_FETCH_SEMANTIC_REVIEW",
     "gst_documentary_branch": "CLOSE_SCOPE_LTD_ACCEPTED_0012_NO_NEW_RETENTION_GATE",
@@ -85,7 +85,7 @@
     "derivative_full_article_reading_experience": "NOT_RUN",
     "derivative_interpretation": "NEAR_TRANSFER_PROMPT_COUPLING_AND_EXPLICIT_EVALUATOR_GROUND_TRUTH_LIMIT_INFERENCE",
     "chatgpt_cross_review_0014": "READ_PRIVATE_REVIEW_CONNECTOR_AND_GIT_EXACT_ACCEPT_LIMITED_CLOSURE",
-    "next_real_book_quality_work": "AWAIT_CHATGPT_0023_EXISTING_E12_SOURCE_CONCEPT_PREFLIGHT_AND_FIXED_READER_BETA",
+    "next_real_book_quality_work": "AWAIT_CHATGPT_0025_ACTUAL_0024_FULL_MD_PDF_COMPARISON_THEN_AUTHOR_CONTROLLED_READING_DECISION",
     "real_book_content_increment_0015": "NONE_SOURCE_INPUT_BLOCKED",
     "real_book_access_permission_diagnosis": "RESOLVED_CODEX_ACTUAL_PRIVATE_SOURCE_READ_NO_AUTHOR_TRANSFER_REQUIRED",
     "private_real_book_repo_handoff": "PASS_CHATGPT_PRIVATE_REPO_6_FILES_6_BLOB_READBACK",
@@ -118,7 +118,7 @@
     "sunzi_attribution_dispute_closeout": "CLOSED_BOUNDED_E1_DOC_REJECT_EXECUTION_CAUSE_HOLD_E3_PRIOR_AUTHOR_REPORT_DISTINCT",
     "sunzi_E4_E8_E9_Codex_primary_access_0022": "NOT_ACCESSED_DIRECT_AUTHOR_MESSAGES_NOT_REVERIFIED_DO_NOT_REOPEN_ENDLESS_AUDIT",
     "sunzi_E6_Codex_record_review_0022": "READ_PRIVATE_FEEDBACK_CHECKPOINT_AND_PREREG_NOT_RAW_CHAT_NOT_EXECUTED",
-    "sunzi_latest_works_anchor": "E12_COMPLETE_READER_BETA_ACTUALLY_FETCHED_NOT_E8_PENDING",
+    "sunzi_latest_works_anchor": "E14_V28B_FROZEN_SOURCE_PLUS_0024_PRIVATE_EDITORIAL_DERIVATIVE_NOT_CANONICAL_PROMOTION",
     "sunzi_E10_author_status": "ARCHIVED_PREFACE_DIRECTION_ACCEPTED_ONLY_RAW_AUTHOR_MESSAGE_NOT_REVERIFIED",
     "sunzi_E11_author_status": "ARCHIVED_TWO_CHAPTER_DIRECTION_ACCEPTED_ONLY_NOT_NOVELTY_OR_NUMERIC_SCORE",
     "sunzi_E12_source_identity": "PASS_ACTUAL_FULLTEXT_UTF8_GIT_BLOB_AND_DECLARED_SHA_76C3C24A",
@@ -133,12 +133,25 @@
     "sunzi_E12_public_distribution": "NOT_AUTHORIZED_NOT_SENT",
     "chatgpt_cross_review_0023": "PASS_4_ERRATA_CONTENT_HASH_AND_PRIVATE_STORAGE_READBACK_EDITORIAL_HOLD",
     "sunzi_0023_md_pdf_pair": "PASS_BYTE_AND_AUTOMATED_LAYOUT_NO_HUMAN_PAGE_QA",
-    "sunzi_0023_editorial_quality": "HOLD_CONCEPT_AND_WHOLE_BOOK_UNIFORMITY_NOT_PUBLICATION_SIGNOFF"
+    "sunzi_0023_editorial_quality": "HOLD_CONCEPT_AND_WHOLE_BOOK_UNIFORMITY_NOT_PUBLICATION_SIGNOFF",
+    "sunzi_E13_Codex_primary_access_0024": "NOT_ARCHIVED_NOT_ACCESSED_NO_AI_SCORE_OR_REUSE_RATE_ADOPTED",
+    "sunzi_0024_manuscript": "ACTUAL_COMPLETE_13_CHAPTER_PRIVATE_DERIVATIVE_WITH_SUBSTANTIVE_EDITS",
+    "sunzi_0024_conceptual_repair": "PASS_INTERNAL_SCOPE_LTD_E14_PRIOR_REPAIR_NOT_RECLAIMED_NEW_BASELINE_AND_COMPARISON_FIXES",
+    "sunzi_0024_global_counterexample": "TWO_APPENDIX_UNIVERSAL_MISPRICING_RESIDUES_AND_CH03_PURPOSE_REPAIRED_PEER_REREAD_NOT_HUMAN",
+    "sunzi_0024_math": "SIX_CHAPTER_ASSUMED_EXAMPLES_RECOMPUTED_NOT_MARKET_EVIDENCE",
+    "sunzi_0024_sources": "ACTUAL_PRIMARY_MODEL_AND_SELECTED_OFFICIAL_TEXTS_READ_REMAINING_SCOPE_HOLD_NOT_FULL_PUBLICATION_AUDIT",
+    "sunzi_0024_MD_PDF_pair": "PASS_FIXED_MD_SOURCE_SHA_IN_PDF_METADATA_83_PAGES_16_BOOKMARKS_NOT_READER_QUALITY",
+    "sunzi_0024_layout": "PROGRAM_NO_TEXT_BOUNDS_OR_EMPTY_PAGES_AI_VISUAL_9_SAMPLES_NO_HUMAN_FULL_PAGE_QA",
+    "sunzi_0024_archive": "PASS_17_NEW_REMOTE_GIT_BYTE_EQUAL_INCLUDING_BINARY_PDF_4_CONNECTOR_BLOB_UTF8_LENGTH_47_OLD_BLOBS_UNCHANGED",
+    "sunzi_0024_rollback": "ACTUAL_REVERSE_PATCH_ON_COPY_RESTORED_E14_SHA_NOT_COMPLETE_PROJECT_OR_LIBRARY_RESTORE",
+    "sunzi_0024_reader_value": "HOLD_REAL_EXTERNAL_READERS_ZERO_NARRATIVE_AND_GENERALIZATION_UNVERIFIED",
+    "sunzi_0024_default_module": "NONE_SINGLE_PROJECT_EXPLICIT_PATH_AND_PAIR_SHA_SELECTION_ONLY",
+    "sunzi_0024_public_distribution": "NOT_AUTHORIZED_NOT_SENT"
   },
   "private_content_policy": "NEVER_PUBLISH_PRIVATE_BOOK_OR_BLIND_KEYS",
   "async_notice": "User notification is needed to cue each assistant; no automatic background communication.",
   "updated_date": "2026-11-11",
-  "latest_message_commit": "29a48b04118495fb96d36366ee37dff54c60c70e",
+  "latest_message_commit": "191d90368968fc431e3f3e7b3cabd5fe1adda3f9",
   "bridge_readback_verified": true,
   "scope": "FULL_DEEPWRITE_WORKBENCH_NOT_JUST_DISCOVERY_GATE",
   "system_entry": "deepwrite/AGENT_COLLABORATION.md",
@@ -166,87 +179,93 @@
     ],
     "quality_effect": "UNVERIFIED"
   },
-  "latest_message_blob_sha": "4458e7687616a2ecefaf56e85245a239e6d217c1",
+  "latest_message_blob_sha": "e031dc0498f69f989bcc9554f4e689eea19a7870",
   "latest_codex_increment": {
-    "round": "0022",
-    "kind": "PRIVATE_LATEST_WORKS_RECONCILIATION_REAL_FULL_BOOK_READING_AND_FOUR_ERRATA_DERIVATIVE",
-    "public_log_commit": "c34843de817e577d1fd81394885d2ed250a00635",
-    "public_message_commit": "ea8ba754d34b7ab1268a09a3506db9a2c8d02f54",
+    "round": "0024",
+    "kind": "REAL_FULL_BOOK_EDITORIAL_SURGERY_PRESERVING_NEWER_E14_WITH_SOURCE_CHECKS_AND_PAIRED_PDF",
+    "public_log_commit": "a7209b7d19f7a05df6a04827331fc055ba7d9791",
+    "public_message_commit": "191d90368968fc431e3f3e7b3cabd5fe1adda3f9",
     "active_versions": {
       "deepwrite": "v0.1",
       "wish_delivery": "v7.6"
     },
     "current_pointer_files_unchanged": true,
     "private_repo": "TaoismZp/deepwrite-work-0006-private",
-    "private_source_branch": "sunzi-e12-full-beta-20261110",
-    "private_source_commit": "569b76d5ddf3818a03896eb944b1fd1207895879",
-    "private_source_book_sha256": "76c3c24a6d00c46edcefb2fe0863675a5cb2171d0b7d40b7d238b4c8e6c51d15",
-    "private_branch": "sunzi-codex-0022-20261110",
-    "private_candidate_commit": "fa48b21186e5c0fdf8f226f2bd0125635e2bdfe4",
-    "private_work_root": "sunzi/DW-SUNZI-20261110-01/work/0022",
-    "candidate_book": {
-      "path": "book_errata_candidate_0022.md",
-      "sha256": "208331b8e3d95d6ffb7c53f3e061c51dd22bf892bbf9e728508ffb823763b5de",
-      "git_blob": "c2dc654057d7c728da88e0a7339c5cf40ad50527",
-      "bytes": 215949,
-      "status": "OPTIONAL_FOUR_ERRATA_MD_NOT_CANONICAL_OR_PDF"
+    "private_source_branch": "sunzi-e14-v28b-full-edit-20261111",
+    "private_source_commit": "4ef00dc165c18d7fb0327c8aab58a2c0467d9293",
+    "private_source_book_sha256": "4c5e8e6bfe49a4e461cd7ae630284270d624ce649789a2337679729a1a9b968c",
+    "private_branch": "sunzi-codex-0024-20261111",
+    "private_candidate_commit": "bb274fb0308b4cbbd450b7f127e32a504625238a",
+    "private_work_root": "sunzi/DW-SUNZI-20261110-01/work/0024",
+    "candidate_MD": {
+      "path": "book_candidate_0024.md",
+      "sha256": "22fbc93f321794690e2baad1f0e2b6de9d8ce0c50ca7701df4168f7326221b18",
+      "git_blob": "f508f71643b22a5844738a581a686731f8a6f099",
+      "bytes": 207766
     },
-    "review_card": {
-      "path": "REVIEW_CARD_0022.md",
-      "sha256": "f8dd081562adb2048ac4884e79ff32592b106fe943d13dbdd53a02d9ac6a5f7e"
+    "candidate_PDF": {
+      "path": "book_candidate_0024.pdf",
+      "sha256": "e302b1ce4e3fcb9c084041281cfc501d50d0ac71f70c931339c4a4450a4e4974",
+      "bytes": 756236,
+      "pages": 83,
+      "bookmarks": 16,
+      "source_SHA_metadata_bound": true,
+      "status": "PRIVATE_EDITORIAL_PAIR_NOT_APPROVED_READER_RELEASE"
     },
     "receipt": {
       "path": "CHECK_RECEIPT.json",
-      "sha256": "2b8230761f707543f1d95b5f85ab075223a15339c32fafd6bc1d3f343f71ef51"
+      "sha256": "51afba4a981ac2a16bf4a25a6ad014781840cc52bc828123e733ae8b91579fba"
     },
-    "late_private_supplement": {
-      "commit": "4cf44b4e80e632e8d585bc463de022d23adf5632",
-      "path": "sunzi/DW-SUNZI-20261110-01/work/E10-preface-acceptance-20261110/CHATGPT_AUTHOR_SCOPE_AND_REPLAN.md",
-      "E11_commit": "4f792fe5f537e241482181587f9f40cf139f8b09",
-      "latest_works": "E12 already exists; do not repeat E8 or two-anchor production"
+    "editorial_review": "EDITORIAL_REVIEW_0024.md",
+    "recovery": "RECOVERY.md",
+    "scope": {
+      "substantive_chapters": [
+        3,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ],
+      "CH02": "One evidence-time clarification",
+      "CH06": "Two citation anchors only",
+      "preface_ch01_ch04_ch05_afterword": "Byte equal E14",
+      "appendix": "Source/decision consistency and narrowed current regime claims",
+      "E14_already_repaired_content_not_reclaimed": true,
+      "E13_original_not_read": true
     },
     "reading": {
-      "team": "Three agents complete CH01-13; primary complete preface/afterword and focused rereads",
-      "same_model_countercheck": true,
-      "not_primary_solo_full_book": true,
-      "not_independent_human_or_full_external_fact_check": true,
-      "raw_author_messages_and_E4_E8_E9_full_source_not_obtained": true,
-      "E6_feedback_checkpoint_actually_read": true
+      "team": "Full thirteen-chapter coverage with neighbor checks; final adversary CH03 and CH07-13; numeric adversary six chapters",
+      "primary": "CH02 CH05 plus targeted full chapters and differences; not solo whole-book reading",
+      "same_model_AI": true,
+      "independent_human": false
     },
-    "edit_scope": {
-      "replacements": 4,
-      "new_chapters": 0,
-      "new_strategy_claims": 0,
-      "kind": "Literal arithmetic wording and stale chapter/source locators only",
-      "reader_value_gain": "UNMEASURED_NOT_IDEA_QUALITY_PASS"
-    },
+    "actual_countercheck_changes": "Two appendix wrong universal requirements repaired; short CH03 purpose check restored; final peer reread accepted bounded wording, remaining reader objections preserved",
+    "source_limits": "Primary theory and selected agency text read; full original Sunzi/courses/publication audit incomplete, selected institution/current contract scopes HOLD",
     "verification": {
-      "raw_input_blob_identity": 18,
-      "private_inputs": 16,
-      "formal_CURRENT_inputs": 2,
-      "E11_two_anchor_declared_SHA_matches": true,
-      "new_files_remote_fulltext_and_blob_equal": 5,
-      "preexisting_objects_unchanged": 34,
-      "reverse_edits_rebuild_source_bytes": true,
+      "new_files_remote_Git_byte_equal": 17,
+      "binary_PDF_remote_byte_equal": true,
+      "connector_critical_texts_blob_and_UTF8_length_match": 4,
+      "preexisting_objects_blob_unchanged": 47,
       "source_originals_overwritten": false,
-      "PDF_read_or_regenerated": false
+      "reverse_patch_actually_restored_source_SHA_in_copy": true,
+      "complete_project_restore": false,
+      "math_assumptions_not_market_evidence": true,
+      "AI_visual_page_samples": 9,
+      "human_page_QA": false
     },
-    "bounded_dispute_result": {
-      "E1_documentary_absolute": "REJECTED",
-      "E1_approved_execution_cause": "HOLD",
-      "E3_author_negative_direction": "PRIOR_REVIEW_RECORD_NOT_NEW_DIRECT_AUTHOR_MESSAGE_VERIFICATION",
-      "new_default_module": "REJECT_UNPROVEN"
-    },
-    "use_and_revert": "Explicit candidate path/SHA opt-in only; pinned source E12 MD remains default, reselect it to disable; no silent MD/PDF substitution",
-    "book_content_produced": "EXISTING_FULL_BOOK_WITH_FOUR_ERRATA_ONLY",
+    "use_and_revert": "Explicit candidate path and MD/PDF SHA pair opt-in for this project only; disable by reselecting pinned E14 source; other books/STABLE unchanged",
+    "book_content_produced": true,
+    "reader_value": "UNVERIFIED",
+    "external_readers": 0,
+    "E6": "NOT_EXECUTED",
     "system_E1": "NOT_IMPLEMENTED",
     "system_E2": "NOT_RUN",
-    "E6": "NOT_EXECUTED",
-    "real_external_readers": 0,
-    "full_book_quality": "PENDING",
     "new_module_gate_or_skill": false,
     "private_prose_published": false,
-    "unique_next": "ChatGPT 0023: read actual PRIVATE 0022 full errata candidate and REVIEW_CARD, accept/reject the four bounded edits, then resolve necessary E12 source/concept preflight and fix one consistent MD/PDF reader-beta identity. Reuse existing reader tools; real external distribution requires user's selected channel/scope. No repeated E8/E11 production or author numeric scoring, no more attribution replay, no E6/system PASS or CURRENT promotion."
+    "unique_next": "ChatGPT 0025: actually compare PRIVATE 0024 full MD/PDF, frozen E14, CHANGESET and preserved counterreviews; accept/reject concrete repairs, first resolve hard issues that would mislead a controlled reading. Then freeze the paired identities for the author's decision on controlled stranger-reader channel/scope; no invitation or distribution without that decision. Preserve remaining source/reader HOLD; do not replace reading with AI scores, extra replay or CURRENT promotion."
   },
   "latest_chatgpt_increment": {
     "round": "0023",
@@ -267,8 +286,8 @@
     "formal_wish_delivery": "v7.6",
     "unique_next": "CODEX_0024_EDIT_REAL_FULL_BOOK_NOT_PUBLIC_RELEASE"
   },
-  "updated_at_utc": "2026-11-10 23:50:14 UTC",
-  "deferred_codex_action": "Await ChatGPT 0023 actual E12 preflight and reader-beta review. Attribution dispute closed with evidence limits; no replay expansion, duplicate anchor writing, silent promotion or external manuscript distribution.",
+  "updated_at_utc": "2026-11-11 00:50:02 UTC",
+  "deferred_codex_action": "Await ChatGPT 0025 actual full-candidate review. No more closed attribution replay, default module rollout, silent source switch, reader invitation or public manuscript distribution.",
   "resolved_blocker": {
     "previous_message": "0008",
     "previous_state": "BLOCKED_USER_PRIVATE_DESTINATION",
@@ -301,11 +320,11 @@
   "pending_cross_book_evidence": {
     "project_alias": "SEPARATE_INDEPENDENT_BOOK_PROJECT",
     "candidate_failure": "SOURCE_INGESTED_BUT_NOT_GOVERNING",
-    "status": "E12_FULL_CANDIDATE_ACTUALLY_READ_BOUNDED_ATTRIBUTION_CLOSED_QUALITY_PENDING",
-    "reported_project_stages": "PROJECT_E1_E2_E3_E6_E10_E11_E12_ARE_NOT_SYSTEM_GATES",
-    "private_locator": "TaoismZp/deepwrite-work-0006-private @ 569b76d5ddf3818a03896eb944b1fd1207895879; sunzi/DW-SUNZI-20261110-01/work/E12_20261110/E12_RECOVERY.md",
+    "status": "REAL_0024_FULL_EDITORIAL_CANDIDATE_DELIVERED_QUALITY_AND_READERS_PENDING",
+    "reported_project_stages": "PROJECT_STAGES_NOT_SYSTEM_GATES",
+    "private_locator": "TaoismZp/deepwrite-work-0006-private @ bb274fb0308b4cbbd450b7f127e32a504625238a; sunzi/DW-SUNZI-20261110-01/work/0024/RECOVERY.md",
     "must_remain_separate_from": "book-first-million-20261109 manuscript and sources",
-    "next_evaluation": "Real full-reader-beta preflight and genuine reader feedback; no repeated abstract attribution probes",
+    "next_evaluation": "ChatGPT 0025 compare full works and repair evidence, then author's controlled reading decision; no renewed abstract attribution probes",
     "CURRENT_promotion": "NOT_AUTHORIZED"
   },
   "evidence_transfer_correction": {
@@ -314,7 +333,7 @@
     "verified_source_blob_count": 16,
     "provenance": "GIT_SHA_OF_RAW_LIBRARY_MATERIALIZED_FILES_MATCHES_PRIVATE_GITHUB_FETCH"
   },
-  "last_message_commit": "ea8ba754d34b7ab1268a09a3506db9a2c8d02f54",
+  "last_message_commit": "191d90368968fc431e3f3e7b3cabd5fe1adda3f9",
   "previous_chatgpt_increment_0019": {
     "round": "0019",
     "kind": "PRIVATE_REAL_BOOK_INDEPENDENT_EDITORIAL_AUDIT_AND_SEPARATE_SUNZI_PRIMARY_EVIDENCE_BRIDGE",
@@ -332,11 +351,11 @@
   },
   "latest_works_checkpoint": {
     "project_alias": "DW-SUNZI-20261110-01",
-    "canonical_frozen_book": "v2.7_UNCHANGED_PER_ARCHIVED_RECORD",
-    "complete_reader_beta": "v2.8a_NOT_SIGNED_OFF",
-    "source_commit": "569b76d5ddf3818a03896eb944b1fd1207895879",
-    "private_optional_errata_commit": "fa48b21186e5c0fdf8f226f2bd0125635e2bdfe4",
-    "author_direction": "E10_PREFACE_AND_E11_TWO_CHAPTERS_ONLY_RECORDED_NOT_FULL_BOOK_QUALITY",
+    "canonical_frozen_book": "v2.7_UNCHANGED_PER_ARCHIVED_RECORD_NOT_NEW_FULL_BACKUP_CLAIM",
+    "latest_source_book": "E14_v2.8b_EDITORIAL_CANDIDATE_NOT_SIGNED_OFF",
+    "source_commit": "4ef00dc165c18d7fb0327c8aab58a2c0467d9293",
+    "optional_editorial_candidate": "0024_COMPLETE_MD_PDF_NOT_FORMAL_v2.8c",
+    "private_candidate_commit": "bb274fb0308b4cbbd450b7f127e32a504625238a",
     "reader_value": "PENDING_ZERO_EXTERNAL_READERS",
     "publication": "NO_EXTERNAL_RELEASE_AUTHORIZATION"
   }
