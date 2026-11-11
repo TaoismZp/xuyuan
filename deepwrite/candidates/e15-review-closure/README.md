@@ -31,3 +31,7 @@ A successful result is still only PASS_STRUCTURAL_ONLY. semantic_status is MODEL
 The runner must own/freeze the complete artifact inventory, file identities and initial review findings; never let a revising model substitute paths, shorten the book or redefine the finding. This checker alone cannot know omitted chapters or discover unreported literary weaknesses. Literal checks are deliberately narrow and do not certify removal of every semantic error.
 
 This change is not a live-model runner, an autonomous book, a fair B0/B1 experiment, independent human review or a promotion. The earlier local 31-test variant had a later-discovered static bypass and is not the code tested here. The new remote suite must be judged by its actual GitHub Actions run; no test result is preclaimed.
+
+## Executed remote regression evidence
+
+GitHub Actions [run 42991098335](https://github.com/TaoismZp/xuyuan/actions/runs/42991098335), job 130423898016, tested commit `393df4d23dbb613bc3392fa8d3d75be83ed7938a` on Python 3.12.3: **42 tests ran, OK**. Logs were actually fetched and read. `CI_RECEIPT.json` pins the tested guard/test/legacy blobs. This is new remote engineering evidence, not an inheritance of the interrupted local variant's 31 tests, nor real-model or writing-quality evidence.
