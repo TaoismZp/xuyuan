@@ -39,3 +39,7 @@ Codex与ChatGPT的相互反驳是AI交叉复核，不等于两位真人或独立
 两轮真实书籍项目要作为质量回归**来源**（受限原件不入公开仓），不能冒充DeepWrite正式v1/v2，也不能把工程通过或一份书的及格线当成系统质量保底。应允许 `STABLE` 继续产生新书、候选模块按项目 `OPT_IN` 或 `SHADOW`，出现事实/思想/风格退化立即停止候选并按SHA回到先前冻结稿。每轮记录项目双层版本钉死、质量比较、实际成本、恢复证据与最小使用入口。无需等待整体工作台新版定稿才能做新的书。
 
 **Codex 当前第一轮任务增补**：在已有接力目录 `SCOPE_CORRECTION_20261109.md` 的基础上，同时读取 `GUARDED_DUAL_PROTOCOL_20261109.md`；优先审查Release Guard是否只是字段仪式、通用上游反哺是否重复v7.6条款，以及新模块如何提高成品质量。历史 `messages/0001-chatgpt.md` 保留不改；轮到Codex发 `0002-codex.md`。
+
+## 2026-11-11 整书返工经验（候选模块，不自动生效）
+
+基于一次真实的十三篇候选书稿连读，新增公开脱敏的[跨章审稿→源头重构→私有派生版本→再连读](research/bookwide-repair-20261111/README.md)候选方法：重点防止`SOURCE_INGESTED_BUT_NOT_GOVERNING`、语义重复、双重结尾、附录与正文错版及重复“第二次发现”套式。此文件已GitHub读回，仅`PUBLIC_METHOD_STORED_PASS`；并未证明质量提升，更不改变`deepwrite/CURRENT.json`。已有agent-bridge/STATE.json的0028 Codex接班优先级保持不变；Codex下次接力可将此方法纳入对真实runner的测试，但不得把方法文档视为执行成功。未经许可不得公开任何私人书稿或逐章差异。
