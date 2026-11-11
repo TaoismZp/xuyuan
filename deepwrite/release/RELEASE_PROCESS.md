@@ -36,3 +36,14 @@ For every new change, its pull request must include a `release_intent`:
 It must end as `MERGED_AND_ACTIVE`, `MERGED_INFRA_ONLY`, `CANDIDATE_HOLD`, or `REJECTED`—never ambiguously “iterated”.
 
 *This mechanism cannot force a plain ChatGPT conversation to execute external repository code without a connected capable runtime. A genuine CLI/Work or Codex execution must invoke the launcher. A ChatGPT-only writing task should read CURRENT and state honestly which implementation is or is not executable.*
+
+
+## Two different promotion tracks (avoid permanent candidate limbo)
+
+**ENGINEERING_PATCH**: an isolated repair to execution/recovery/identity that demonstrably does not alter the source-to-decision cognitive policy. It needs real CI, regression non-degradation, rollback, an explicit no-behavior-change rationale, and authenticated GitHub review. It does **not** require collecting three new book topics and two reader evaluations for every typo or hash fix; claiming this track while changing prompts, writing decisions, or content quality is a release-policy violation.
+
+**QUALITY_BEHAVIOR_CHANGE**: a change affecting source-frame interpretation, chapter selection, discovery, revision policy or reader experience. Requires the same engineering and rollback proof **plus** controlled actual work, content quality evidence, author acceptance, independent human assessment (at least two readers, three previously unused topics) and an authorized release PR. The E23 perspective inversion is on this track and has **not** passed it.
+
+The release tool `release_verify.py` implements distinct evidence requirements for these two scopes. It always reports `STRUCTURAL_READY_NEEDS_GITHUB_AUTHENTICATED_REVIEW`, never `AUTHOR_APPROVED`. No GitHub merge and no downstream runtime re-read means **NOT_ACTIVE**, irrespective of CI.
+
+The absolute requirement "every iteration must go live immediately" is unsafe if iteration just means a drafted change. The enforceable requirement is **every accepted, tested patch is promoted without a second development project or relying on memory**; every novel cognitive change remains SHADOW until it earns promotion. GitHub auto-merge requires repo `allow_auto_merge=true` and protected required checks, neither of which was true at investigation; owner config and authority policy are still needed.
