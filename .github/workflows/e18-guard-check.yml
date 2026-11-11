@@ -1,9 +1,12 @@
-name: E18 guard regressions
+name: E18 actual-file engineering regressions
 on:
   push:
     branches: [experiment/deepwrite-e18-closure-runner-20261111]
     paths:
       - 'deepwrite/candidates/e15-review-closure/**'
+      - 'deepwrite/candidates/e18-writing-loop/**'
+      - 'deepwrite/tools/**'
+      - 'deepwrite/qa/**'
       - '.github/workflows/e18-guard-check.yml'
   workflow_dispatch:
 permissions:
@@ -11,10 +14,12 @@ permissions:
 jobs:
   real-file-regressions:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
       - name: Python version
         run: python3 --version
       - name: Reproduce old false passes and verify repaired real-file checks
         run: python3 -B -m unittest discover -s deepwrite/candidates/e15-review-closure -p 'test_*.py' -v
+      - name: Exercise writing, actual revisions, packaging and restore with explicit fixtures
+        run: python3 -B -m unittest discover -s deepwrite/tools/tests -p 'test_writing_loop_experimental.py' -v
