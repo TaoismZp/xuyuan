@@ -41,7 +41,7 @@ class BlindOriginGuardTests(unittest.TestCase):
         a = check_run_config(cfg)
         b = inspect_proposals(candidate, {"sources/public.md": SOURCE})
         self.assertEqual(a["status"], "PASS_DISCLOSED_INPUT_CONTRACT_ONLY")
-        self.assertEqual(b["status"], "PASS_STRUCTURAL_ORIGIN_FROZEN_SEMANTICS_UNVERIFIED")
+        self.assertEqual(b["status"], "PASS_STRUCTURAL_ORIGIN_FROZEN_SEMANTICS_UNVERIFIED", b)
         self.assertEqual(b["semantic_novelty"], "UNVERIFIED")
         self.assertEqual(b["human_blind_review"], "NOT_RUN")
 
