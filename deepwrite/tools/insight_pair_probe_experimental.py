@@ -62,6 +62,8 @@ def preflight(config, source_root):
         raise ValueError("REQUIRES_EXPERIMENTAL_SHADOW_CONFIG")
     if not isinstance(config.get("model"), str) or not config["model"].strip():
         raise ValueError("EXPLICIT_MODEL_REQUIRED")
+    if config["model"].upper().startswith(("VERIFY_", "REPLACE_", "MODEL_ID_")):
+        raise ValueError("MODEL_ID_MUST_BE_VERIFIED_BEFORE_PREFLIGHT")
     lim = config.get("max_output_tokens_per_arm")
     if type(lim) is not int or not 256 <= lim <= 16000:
         raise ValueError("INVALID_EQUAL_OUTPUT_BUDGET")
@@ -190,9 +192,12 @@ def run_probe(config_path, source_root, output_dir, model_factory=None, prefligh
             write_once(output_dir / "status.json", canonical(status))
             return status
     is_live = all(x["provider_kind"] == "openai_live" for x in receipts.values())
-    status = {"status": ("LIVE_A0_A1_FROZEN_QUALITY_UNVERIFIED" if is_live else
+    models_match = (receipts["A0_NEUTRAL"]["model"] == receipts["A1_ASSUMPTION_CHALLENGE"]["model"])
+    status = {"status": ("BLOCKED_SERVED_MODEL_MISMATCH" if not models_match else
+                          "LIVE_A0_A1_FROZEN_QUALITY_UNVERIFIED" if is_live else
                           "FIXTURE_A0_A1_FROZEN_NO_MODEL_EVIDENCE"),
               "same_model_requested": True,
+              "served_model_identity_equal": models_match,
               "same_output_cap": True,
               "actual_token_usage_equal": (receipts["A0_NEUTRAL"]["usage"] ==
                                             receipts["A1_ASSUMPTION_CHALLENGE"]["usage"]),
