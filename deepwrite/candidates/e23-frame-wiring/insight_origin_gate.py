@@ -34,7 +34,7 @@ def check_run_config(cfg):
         raise ValueError("BLIND_ORIGIN_REQUIRES_SHADOW_FRESH")
     if spec.get("author_thesis_disclosed") is not False:
         raise ValueError("BLIND_ORIGIN_AUTHOR_THESIS_DISCLOSURE_NOT_EXCLUDED")
-    if spec.get("neutral_wish_sha256") != sha256(cfg.get("wish", "").encode("utf-8")):
+    if not isinstance(cfg.get("wish"), str) or spec.get("neutral_wish_sha256") != sha256(cfg["wish"].encode("utf-8")):
         raise ValueError("BLIND_ORIGIN_NEUTRAL_WISH_SHA_MISMATCH")
     if not isinstance(spec.get("experiment_id"), str) or not re.fullmatch(
         r"[A-Za-z0-9_-]{4,90}", spec["experiment_id"]
@@ -56,7 +56,9 @@ def check_run_config(cfg):
             raise ValueError("BLIND_ORIGIN_INVALID_SOURCE")
         if row.get("role") not in ROLES:
             raise ValueError("BLIND_ORIGIN_SOURCE_ROLE_DISALLOWED")
-        if row.get("path") != pinned.get("path") or row.get("sha256") != pinned.get("sha256"):
+        if (not isinstance(row.get("path"), str) or not row["path"] or
+            not isinstance(row.get("sha256"), str) or
+            row.get("path") != pinned.get("path") or row.get("sha256") != pinned.get("sha256")):
             raise ValueError("BLIND_ORIGIN_PIN_MISMATCH")
         if row["path"] in seen:
             raise ValueError("BLIND_ORIGIN_DUPLICATE_SOURCE")
@@ -105,15 +107,14 @@ def inspect_proposals(candidate, source_text):
         elif ident in ids:
             errors.append("DUPLICATE_ID_" + str(ix))
         ids.add(ident)
-        contrast = (
-            lens.get("alternative_question"),
-            lens.get("decision_before"),
-            lens.get("decision_after"),
-        )
+        contrast = tuple(str(lens.get(k)) for k in (
+            "alternative_question", "decision_before", "decision_after"))
         if contrast in distinctions:
             errors.append("DUPLICATE_CONTRAST_" + str(ix))
         distinctions.add(contrast)
-        if lens.get("decision_before", "").strip() == lens.get("decision_after", "").strip():
+        if (isinstance(lens.get("decision_before"), str) and
+            isinstance(lens.get("decision_after"), str) and
+            lens["decision_before"].strip() == lens["decision_after"].strip()):
             errors.append("NO_DECISION_DIFFERENCE_" + str(ix))
         anchor = lens.get("source_anchor")
         if (not isinstance(anchor, dict) or
