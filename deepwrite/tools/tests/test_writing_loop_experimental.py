@@ -104,6 +104,39 @@ class WritingLoopTests(unittest.TestCase):
         result = obj.run()
         return obj, result
 
+    def test_author_guided_writing_records_user_origin_before_research(self):
+        source = self.cfg["sources"][0]
+        self.cfg["author_guidance"] = {
+            "schema": "deepwrite/author-guided-frame/v0.1",
+            "mode": "AUTHOR_GUIDED", "origin": "USER_SUPPLIED_PERSPECTIVE",
+            "source_path": source["path"],
+            "experiment_or_project_id": "test_author_guided_case",
+            "count_as_autonomous": False,
+        }
+        model = ScriptedModel(clean=True)
+        _, result = self.run_model(model)
+        self.assertEqual(result["status"], "ENGINEERING_FIXTURE_ONLY_NOT_LIVE", result)
+        record_path = self.root / "insight/author_guidance_provenance.json"
+        self.assertTrue(record_path.is_file())
+        record = json.loads(record_path.read_text())
+        self.assertEqual(record["status"], "AUTHOR_GUIDED_NOT_BLIND")
+        self.assertEqual(record["independent_insight_claim"], "NOT_TESTED")
+        self.assertTrue((self.root / "research.md").is_file())
+        self.assertIn("insight/author_guidance_provenance.json", json.loads(
+            (self.root/"run_state.json").read_text())["files"])
+
+    def test_guided_mode_cannot_be_self_classified_as_autonomous(self):
+        source = self.cfg["sources"][0]
+        self.cfg["author_guidance"] = {
+            "schema": "deepwrite/author-guided-frame/v0.1",
+            "mode": "AUTHOR_GUIDED", "origin": "USER_SUPPLIED_PERSPECTIVE",
+            "source_path": source["path"],
+            "experiment_or_project_id": "test_author_guided_case",
+            "count_as_autonomous": True,
+        }
+        with self.assertRaisesRegex(ValueError, "AUTONOMOUS_MUST_BE_FALSE"):
+            loop.WritingLoop(self.root, self.cfg, model=ScriptedModel(clean=True))
+
     def prepare_blind_fixture(self):
         self.cfg["channel"] = "SHADOW"
         self.cfg["pins"]["channel"] = "SHADOW"
