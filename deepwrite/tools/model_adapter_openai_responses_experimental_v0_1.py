@@ -54,8 +54,10 @@ class OpenAIResponses:
         if not (is_official or is_local):
             raise ModelProtocolError('Endpoint is not official TLS endpoint or explicitly enabled test loopback')
         self.provider_kind='local_protocol_fixture' if is_local else 'openai_live'
+        self.last_transport={}
 
     def generate(self, instructions, prompt, max_output_tokens=6000) -> ModelResult:
+        self.last_transport={}
         if not self.api_key:
             raise MissingCredential('OPENAI_API_KEY is absent; LIVE_MODEL_UNVERIFIED')
         if not self.model:
@@ -76,4 +78,6 @@ class OpenAIResponses:
             raise ModelError('Provider transport failed; no response identity available') from None
         try: data=json.loads(raw)
         except (UnicodeDecodeError,json.JSONDecodeError) as e:raise ModelProtocolError('Malformed provider JSON') from e
+        # Auditable payload only: never authorization headers or credentials.
+        self.last_transport={'provider_response':data,'provider_status':data.get('status')}
         return parse_response(data,self.provider_kind)

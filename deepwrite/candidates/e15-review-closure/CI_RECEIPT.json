@@ -1,0 +1,22 @@
+{
+  "schema": "deepwrite/e18-guard-remote-ci/v1",
+  "tested_commit": "393df4d23dbb613bc3392fa8d3d75be83ed7938a",
+  "run_id": 42991098335,
+  "job_id": 130423898016,
+  "run_url": "https://github.com/TaoismZp/xuyuan/actions/runs/42991098335",
+  "conclusion": "success",
+  "python": "3.12.3",
+  "command": "python3 -B -m unittest discover -s deepwrite/candidates/e15-review-closure -p 'test_*.py' -v",
+  "tests": 42,
+  "log_evidence": "Ran 42 tests in 0.149s; OK",
+  "legacy_source_commit": "d7dadf80aaef3963d0784787219e2b5e6e12b59f",
+  "legacy_blob": "a086c03a24730df79343763523cca8d3f7a4c8b9",
+  "current_guard_blob": "1ef044813e856d8990986ae2d757abb8d95411dd",
+  "current_test_blob": "0a8f7506d9fdeb7920da06ebb0ab14ff5c0db3a2",
+  "engineering_only": true,
+  "live_model_runner": "NOT_TESTED_HERE",
+  "real_book_repair": "NOT_ESTABLISHED",
+  "semantic_quality": "NOT_CERTIFIED",
+  "human_acceptance": "NOT_ESTABLISHED",
+  "CURRENT_or_bridge_modified": false
+}
