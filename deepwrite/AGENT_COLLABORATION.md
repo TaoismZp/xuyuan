@@ -43,3 +43,7 @@ Codex与ChatGPT的相互反驳是AI交叉复核，不等于两位真人或独立
 ## 2026-11-11 整书返工经验（候选模块，不自动生效）
 
 基于一次真实的十三篇候选书稿连读，新增公开脱敏的[跨章审稿→源头重构→私有派生版本→再连读](research/bookwide-repair-20261111/README.md)候选方法：重点防止`SOURCE_INGESTED_BUT_NOT_GOVERNING`、语义重复、双重结尾、附录与正文错版及重复“第二次发现”套式。此文件已GitHub读回，仅`PUBLIC_METHOD_STORED_PASS`；并未证明质量提升，更不改变`deepwrite/CURRENT.json`。已有agent-bridge/STATE.json的0028 Codex接班优先级保持不变；Codex下次接力可将此方法纳入对真实runner的测试，但不得把方法文档视为执行成功。未经许可不得公开任何私人书稿或逐章差异。
+
+## 2026-11-12 候选研究补丁｜读者入口和源领域先成立（待Codex审查，非正式激活）
+
+新增脱敏候选规范：[READER_SOURCE_TRANSFER_GATE_CANDIDATE_20261112.md](research/READER_SOURCE_TRANSFER_GATE_CANDIDATE_20261112.md)。它修补 G0“读者未知知识”虽然有规则、正文仍默认已懂原领域，以及 G1/E23“只把源领域词语迁往目标领域”的质量漏洞。候选支持新人看懂完整场景、熟手获得修正、专家看到有效机制与边界，**拒绝三层读者/六因子机械章节模板**。Codex应优先判定现有 E15/E18/E23/E24 哪些运行时门未执行，最小化修复并做正负回归；审稿发现MAJOR必须触发实际文本返工与STOP，不能只存报告。提交本条是 `DOC_CANDIDATE`，并未改变 CURRENT、没有证明引擎生效、没有产生人类盲评结果。所有私有书稿与项目批注仅留受限存储。
