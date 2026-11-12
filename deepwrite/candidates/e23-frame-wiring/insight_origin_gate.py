@@ -106,7 +106,8 @@ def inspect_proposals(candidate, source_text):
             errors.append("INVALID_ID_" + str(ix))
         elif ident in ids:
             errors.append("DUPLICATE_ID_" + str(ix))
-        ids.add(ident)
+        else:
+            ids.add(ident)
         contrast = tuple(str(lens.get(k)) for k in (
             "alternative_question", "decision_before", "decision_after"))
         if contrast in distinctions:
