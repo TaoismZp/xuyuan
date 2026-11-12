@@ -1,0 +1,23 @@
+name: E23 frame prewrite wiring engineering regressions
+on:
+  push:
+    branches: [experiment/deepwrite-e23-frame-wired-runner-20261111]
+    paths:
+      - 'deepwrite/candidates/e23-frame-wiring/**'
+      - 'deepwrite/tools/**'
+      - '.github/workflows/e23-frame-prewrite.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  frame-engineering:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Python version
+        run: python3 --version
+      - name: Test genuine private-gate analogs against synthetic sources
+        run: python3 -B -m unittest discover -s deepwrite/candidates/e23-frame-wiring -p 'test_*.py' -v
+      - name: Preserve E18 actual-file engineering behavior on candidate branch
+        run: python3 -B -m unittest discover -s deepwrite/tools/tests -p 'test_writing_loop_experimental.py' -v

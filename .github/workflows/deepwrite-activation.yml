@@ -1,0 +1,33 @@
+name: DeepWrite activation rail and E18/E23 regressions
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'deepwrite/**'
+      - '.github/workflows/deepwrite-activation.yml'
+  push:
+    branches: [experiment/deepwrite-activation-rail-20261111]
+    paths:
+      - 'deepwrite/**'
+      - '.github/workflows/deepwrite-activation.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  activation-and-runtime-regressions:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - name: Python version
+        run: python3 --version
+      - name: Validate activation pointer and offline release rules
+        run: python3 -B -m unittest discover -s deepwrite/release -p 'test_*.py' -v
+      - name: Resolve CURRENT as the unique source of current engine identity
+        run: python3 -B deepwrite/release/activation.py --root .
+      - name: Verify E23 source-frame wiring cannot mislabel old discoveries
+        run: python3 -B -m unittest discover -s deepwrite/candidates/e23-frame-wiring -p 'test_*.py' -v
+      - name: Preserve E18 true-file writing/checkpoint behavior
+        run: python3 -B -m unittest discover -s deepwrite/tools/tests -p 'test_writing_loop_experimental.py' -v
+      - name: Verify equal-call A0 A1 research probe and safety regressions
+        run: python3 -B -m unittest discover -s deepwrite/tools/tests -p 'test_insight_pair_probe_experimental.py' -v
