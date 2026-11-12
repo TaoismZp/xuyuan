@@ -202,6 +202,8 @@ class WritingLoop:
         checkpoint.validate_pins(json_bytes(c["pins"]), c["project_id"])
         if "insight_origin" in c:
             self.insight_gate.check_run_config(c)
+        if "author_guidance" in c:
+            self.insight_gate.check_author_guided_contract(c)
 
     def path(self, relative):
         p = checkpoint.no_symlinks(self.root / checkpoint.relative_path(relative))
@@ -580,6 +582,13 @@ class WritingLoop:
             # Optional clean-input origin study, before research, direction and prose.
             # Source-role labels are not semantic proof that the author thesis is absent.
             origin_frozen = None
+            # An explicitly provided author's perspective is useful for guided
+            # writing, but MUST NEVER be misreported as independent discovery.
+            if "author_guidance" in self.config:
+                author_record = self.insight_gate.check_author_guided_contract(self.config)
+                self.stage("author_guidance_provenance", lambda: self.write(
+                    "insight/author_guidance_provenance.json", json_bytes(author_record))
+                    or "insight/author_guidance_provenance.json")
             if "insight_origin" in self.config:
                 def originate():
                     result = self.call("blind_origin", "insight_origin",
