@@ -104,6 +104,80 @@ class WritingLoopTests(unittest.TestCase):
         result = obj.run()
         return obj, result
 
+    def prepare_blind_fixture(self):
+        self.cfg["channel"] = "SHADOW"
+        self.cfg["pins"]["channel"] = "SHADOW"
+        original = self.cfg["sources"][0]
+        self.cfg["insight_origin"] = {
+            "schema": "deepwrite/insight-origin-blind/v0.1",
+            "mode": "BLIND_PRE_REVEAL",
+            "experiment_id": "fixture_no_author_reveal_001",
+            "author_thesis_disclosed": False,
+            "neutral_wish_sha256": loop.digest(self.cfg["wish"].encode("utf-8")),
+            "source_roles": [dict(original, role="SOURCE_DOMAIN")]
+        }
+
+    def blind_model(self, faulty=False):
+        class Model(ScriptedModel):
+            def generate(self, instructions, prompt, max_output_tokens=6000):
+                req = json.loads(prompt)
+                if req["role"] != "insight_origin":
+                    return super().generate(instructions, prompt, max_output_tokens)
+                self.calls.append("insight_origin")
+                quote = "two pairs contain four objects"
+                source = "sources/material.md"
+                frames = [{
+                    "id": "L" + str(i),
+                    "default_question": "How should someone apply the existing arithmetic convention " + str(i),
+                    "alternative_question": "How would a different decision sequence change the evaluation " + str(i),
+                    "decision_before": "Choose the ordinary calculation procedure for test " + str(i),
+                    "decision_after": "Change the procedure after testing assumptions for test " + str(i),
+                    "source_falsifier": "A test that yields equal results for all feasible actions under fixed assumptions",
+                    "source_anchor": {"path": source, "quote": quote},
+                } for i in range(1, 4)]
+                if faulty:
+                    frames[1]["source_anchor"]["quote"] = "The nonexistent author theory was proven"
+                payload = {"origin_status": "MODEL_PROPOSAL_UNVERIFIED", "lenses": frames}
+                return loop.transport.ModelResult(
+                    "fixture-insight-origin", "fixture-model", json.dumps(payload),
+                    {"input_tokens": 10, "output_tokens": 10}, "scripted_fixture")
+        return Model(clean=True)
+
+    def test_blind_origin_is_frozen_before_research_and_never_self_certified(self):
+        self.prepare_blind_fixture()
+        model = self.blind_model()
+        _, result = self.run_model(model)
+        self.assertEqual(result["status"], "ENGINEERING_FIXTURE_ONLY_NOT_LIVE", result)
+        self.assertEqual(model.calls[0], "insight_origin")
+        self.assertEqual(model.calls[1], "research")
+        self.assertTrue((self.root / "insight/blind_origin_model_proposals.json").exists())
+        audit = json.loads((self.root / "insight/blind_origin_structural_audit.json").read_text())
+        self.assertEqual(audit["semantic_novelty"], "UNVERIFIED")
+        self.assertEqual(audit["human_blind_review"], "NOT_RUN")
+        self.assertTrue((self.root / "calls/blind_origin.request.json").exists())
+        research = json.loads((self.root / "calls/research.request.json").read_text())
+        self.assertIn("blind_origin_frozen", research["payload"])
+        self.assertTrue((self.root / "book.md").exists())
+
+    def test_fabricated_blind_candidate_blocks_before_writing(self):
+        self.prepare_blind_fixture()
+        model = self.blind_model(faulty=True)
+        _, result = self.run_model(model)
+        self.assertEqual(result["status"], "BLOCKED", result)
+        self.assertIn("BLIND_ORIGIN_INVALID_MODEL_PROPOSALS", result["failure"]["message"])
+        self.assertEqual(model.calls, ["insight_origin"])
+        self.assertFalse((self.root / "research.md").exists())
+        self.assertFalse((self.root / "book.md").exists())
+        self.assertTrue((self.root / "insight/blind_origin_model_proposals.json").exists())
+        audit = json.loads((self.root / "insight/blind_origin_structural_audit.json").read_text())
+        self.assertIn("UNVERIFIED_SOURCE_ANCHOR_1", audit["errors"])
+
+    def test_blind_declared_leak_fails_before_model_initialization(self):
+        self.prepare_blind_fixture()
+        self.cfg["insight_origin"]["source_roles"][0]["role"] = "AUTHOR_THESIS"
+        with self.assertRaisesRegex(ValueError, "BLIND_ORIGIN_SOURCE_ROLE_DISALLOWED"):
+            loop.WritingLoop(self.root, self.cfg, model=self.blind_model())
+
     def test_real_file_rewrite_diff_package_and_checkpoint(self):
         obj, result = self.run_model()
         self.assertEqual(result["status"], "ENGINEERING_FIXTURE_ONLY_NOT_LIVE", result)
