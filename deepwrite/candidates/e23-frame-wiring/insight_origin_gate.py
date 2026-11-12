@@ -135,3 +135,40 @@ def inspect_proposals(candidate, source_text):
         "human_blind_review": "NOT_RUN",
         "source_cleanliness": "DECLARATIVE_ONLY_NOT_PROVEN",
     }
+
+
+def check_author_guided_contract(cfg):
+    """Opt-in attribution for author-framed research. NEVER blind-origination evidence.
+
+    A valid contract binds exactly one declared author-provided framing source to
+    the original frozen source manifest. File byte validation remains the
+    responsibility of E18's source SHA preflight. This does NOT prove whether
+    undisclosed author hints are absent elsewhere.
+    """
+    if cfg.get("insight_origin"):
+        raise ValueError("AUTHOR_GUIDED_CANNOT_CLAIM_BLIND_ORIGIN")
+    spec = cfg.get("author_guidance")
+    if not isinstance(spec, dict) or spec.get("schema") != "deepwrite/author-guided-frame/v0.1":
+        raise ValueError("AUTHOR_GUIDED_SCHEMA_REQUIRED")
+    if spec.get("mode") != "AUTHOR_GUIDED" or spec.get("origin") != "USER_SUPPLIED_PERSPECTIVE":
+        raise ValueError("AUTHOR_GUIDED_ORIGIN_EXPLICIT_REQUIRED")
+    if spec.get("count_as_autonomous") is not False:
+        raise ValueError("AUTHOR_GUIDED_AUTONOMOUS_MUST_BE_FALSE")
+    source = spec.get("source_path")
+    if not isinstance(source, str) or not source:
+        raise ValueError("AUTHOR_GUIDED_SOURCE_REQUIRED")
+    matches = [x for x in cfg.get("sources", []) if x.get("path") == source]
+    if len(matches) != 1 or not isinstance(matches[0].get("sha256"), str):
+        raise ValueError("AUTHOR_GUIDED_SOURCE_MUST_BE_HASH_PINNED")
+    if not isinstance(spec.get("experiment_or_project_id"), str) or len(spec["experiment_or_project_id"]) < 4:
+        raise ValueError("AUTHOR_GUIDED_PROJECT_ID_REQUIRED")
+    return {
+        "schema": "deepwrite/insight-provenance/v0.1",
+        "origin": "USER_SUPPLIED_PERSPECTIVE",
+        "status": "AUTHOR_GUIDED_NOT_BLIND",
+        "source_path": source,
+        "source_sha256": matches[0]["sha256"],
+        "independent_insight_claim": "NOT_TESTED",
+        "model_synthesis_quality": "UNVERIFIED",
+        "human_acceptance": "NOT_RUN",
+    }
