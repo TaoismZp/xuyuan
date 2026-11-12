@@ -126,6 +126,7 @@ class WritingLoop:
         self.cfg_sha = digest(json_bytes(config))
         self.stop_after, self.steps_this_turn = stop_after, 0
         self.guard = module("e18_closeout", DEEPWRITE / "candidates/e15-review-closure/review_closure_guard.py")
+        self.insight_gate = module("e18_insight_origin", DEEPWRITE / "candidates/e23-frame-wiring/insight_origin_gate.py")
         self._validate_config()
         state_path = self.root / "run_state.json"
         if state_path.exists():
@@ -199,6 +200,8 @@ class WritingLoop:
         if c.get("channel") not in ("CANDIDATE_OPT_IN", "SHADOW"):
             raise Blocked("EXPERIMENTAL_RUNNER_REQUIRES_CANDIDATE_CHANNEL")
         checkpoint.validate_pins(json_bytes(c["pins"]), c["project_id"])
+        if "insight_origin" in c:
+            self.insight_gate.check_run_config(c)
 
     def path(self, relative):
         p = checkpoint.no_symlinks(self.root / checkpoint.relative_path(relative))
@@ -574,13 +577,39 @@ class WritingLoop:
                         "book_sha256": self.state["files"]["book.md"], "resume": "ALREADY_COMPLETE_NO_MODEL_CALL",
                         "quality": "UNVERIFIED", "fair_B0_B1": "UNVERIFIED"}
             sources = {s["path"]: self.path(s["path"]).read_text() for s in self.config["sources"]}
+            # Optional clean-input origin study, before research, direction and prose.
+            # Source-role labels are not semantic proof that the author thesis is absent.
+            origin_frozen = None
+            if "insight_origin" in self.config:
+                def originate():
+                    result = self.call("blind_origin", "insight_origin",
+                        {"wish": self.config["wish"], "sources": sources,
+                         "task": "Before reading any author's interpretation, independently propose at least three "
+                                 "rival research QUESTIONS grounded in the supplied domain sources. "
+                                 "Reply with a JSON object: origin_status=MODEL_PROPOSAL_UNVERIFIED; "
+                                 "lenses=[{id,default_question,alternative_question,decision_before,"
+                                 "decision_after,source_falsifier,source_anchor:{path,quote}}]. "
+                                 "Every cited quote must be exact, each question must lead to a different "
+                                 "testable decision, and every proposal is an unverified hypothesis. "
+                                 "Never claim to be the first inventor or that a human approved it."})
+                    proposed = parse_object(result["text"])
+                    audit = self.insight_gate.inspect_proposals(proposed, sources)
+                    self.write("insight/blind_origin_model_proposals.json", json_bytes(proposed))
+                    self.write("insight/blind_origin_structural_audit.json", json_bytes(audit))
+                    if audit["status"] != "PASS_STRUCTURAL_ORIGIN_FROZEN_SEMANTICS_UNVERIFIED":
+                        raise Blocked("BLIND_ORIGIN_INVALID_MODEL_PROPOSALS:" +
+                                      ",".join(audit["errors"])[:240])
+                    return "insight/blind_origin_model_proposals.json"
+                origin_frozen = self.stage("blind_origin", originate)
             policy = "\n".join((DEEPWRITE / "candidates" / name).read_text()
                                for name in ("RESEARCH_LOOP.md", "EDITORIAL_LOOP.md"))
             replay = self.config.get("run_mode") == "replay_frozen_drafts"
             if not replay:
                 research = self.stage("research", lambda: self.save_text_call(
                     "research", "research", {"wish": self.config["wish"], "sources": sources,
-                                             "workflow": policy}, "research.md"))
+                                             "workflow": policy,
+                                             **({"blind_origin_frozen": self.path(origin_frozen).read_text()}
+                                                if origin_frozen else {})}, "research.md"))
                 plan = self.stage("direction", lambda: self.save_text_call(
                     "direction", "select_direction", {"research": self.path(research).read_text(),
                     "topics": self.config["chapters"], "task": "Compare genuinely different directions, select chapter-specific "
