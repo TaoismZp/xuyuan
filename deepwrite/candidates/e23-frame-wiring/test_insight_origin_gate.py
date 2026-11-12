@@ -4,7 +4,7 @@ import copy
 import hashlib
 import unittest
 
-from insight_origin_gate import check_run_config, inspect_proposals, sha256, SCHEMA
+from insight_origin_gate import check_run_config, check_author_guided_contract, inspect_proposals, sha256, SCHEMA
 
 
 SOURCE = "Public elementary source: an actor can wait, but the opportunity to act can also disappear."
@@ -36,6 +36,46 @@ def fixture():
 
 
 class BlindOriginGuardTests(unittest.TestCase):
+    def test_author_guided_is_attributed_not_independent(self):
+        cfg, _ = fixture()
+        cfg.pop("insight_origin")
+        cfg["author_guidance"] = {
+            "schema": "deepwrite/author-guided-frame/v0.1",
+            "mode": "AUTHOR_GUIDED", "origin": "USER_SUPPLIED_PERSPECTIVE",
+            "count_as_autonomous": False,
+            "experiment_or_project_id": "mock_project_0001",
+            "source_path": "sources/public.md",
+        }
+        result = check_author_guided_contract(cfg)
+        self.assertEqual(result["independent_insight_claim"], "NOT_TESTED")
+        self.assertEqual(result["origin"], "USER_SUPPLIED_PERSPECTIVE")
+        self.assertEqual(result["source_sha256"], sha256(SOURCE.encode()))
+
+    def test_author_guidance_cannot_claim_autonomous(self):
+        cfg, _ = fixture()
+        cfg.pop("insight_origin")
+        cfg["author_guidance"] = {
+            "schema": "deepwrite/author-guided-frame/v0.1",
+            "mode": "AUTHOR_GUIDED", "origin": "USER_SUPPLIED_PERSPECTIVE",
+            "count_as_autonomous": True,
+            "experiment_or_project_id": "mock_project_0001",
+            "source_path": "sources/public.md",
+        }
+        with self.assertRaisesRegex(ValueError, "AUTONOMOUS_MUST_BE_FALSE"):
+            check_author_guided_contract(cfg)
+
+    def test_mixed_blind_and_guided_contract_fails(self):
+        cfg, _ = fixture()
+        cfg["author_guidance"] = {
+            "schema": "deepwrite/author-guided-frame/v0.1",
+            "mode": "AUTHOR_GUIDED", "origin": "USER_SUPPLIED_PERSPECTIVE",
+            "count_as_autonomous": False,
+            "experiment_or_project_id": "mock_project_0001",
+            "source_path": "sources/public.md",
+        }
+        with self.assertRaisesRegex(ValueError, "CANNOT_CLAIM_BLIND"):
+            check_author_guided_contract(cfg)
+
     def test_positive_control_is_not_semantic_success(self):
         cfg, candidate = fixture()
         a = check_run_config(cfg)
