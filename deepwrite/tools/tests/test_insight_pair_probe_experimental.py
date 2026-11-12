@@ -139,6 +139,28 @@ class PairProbeFixtureTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "INVALID_EQUAL_OUTPUT_BUDGET"):
             self.run_probe(preflight_only=True)
 
+    def test_model_placeholder_rejected_before_call(self):
+        self.cfg["model"] = "VERIFY_API_MODEL_ID_BEFORE_REAL_CALL"
+        with self.assertRaisesRegex(ValueError, "MODEL_ID_MUST_BE_VERIFIED"):
+            self.run_probe(preflight_only=True)
+        self.assertFalse(self.out.exists())
+
+    def test_served_model_identity_mismatch_is_held(self):
+        class RoutedModel:
+            def __init__(self, arm):
+                self.arm = arm
+            def generate(self, instructions, prompt, max_output_tokens):
+                return SimpleNamespace(text='{"origin_status":"MODEL_PROPOSAL_UNVERIFIED","lenses":[]}',
+                    response_id="id-"+self.arm,
+                    model="fixture-model" if self.arm == "A0_NEUTRAL" else "other-model",
+                    provider_kind="scripted_fixture",
+                    usage={"input_tokens":10,"output_tokens":10})
+        r = self.run_probe(model_factory=lambda arm: RoutedModel(arm))
+        self.assertEqual(r["status"], "BLOCKED_SERVED_MODEL_MISMATCH")
+        self.assertFalse(r["served_model_identity_equal"])
+        self.assertTrue((self.out / "A0_NEUTRAL.response.json").exists())
+        self.assertTrue((self.out / "A1_ASSUMPTION_CHALLENGE.response.json").exists())
+
     def test_malformed_proposal_does_not_fake_insight_pass(self):
         class BadModel:
             def generate(self, instructions, prompt, max_output_tokens):
