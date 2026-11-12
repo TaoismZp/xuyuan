@@ -14,7 +14,7 @@ import re
 SCHEMA = "deepwrite/insight-origin-blind/v0.1"
 ROLES = {"SOURCE_DOMAIN", "PUBLIC_BACKGROUND"}
 REQUIRED = (
-    "id", "default_question", "alternative_question", "decision_before",
+    "default_question", "alternative_question", "decision_before",
     "decision_after", "source_falsifier", "source_anchor",
 )
 
