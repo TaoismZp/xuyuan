@@ -88,3 +88,22 @@ The command prints its receipt path. Archive the fixture directory and sibling r
 All scripted tests are explicit ENGINEERING_FIXTURE_ONLY, use public arithmetic text, and make no provider call. They test actual file rewrite/diff, false CLOSED, whitespace fake fixes, correct KEEP, cross-chapter model-review binding, token accounting, unknown usage, identity switches, tool contamination, missing auth, interrupted-call nonrepeat, real snapshot/restore, tamper detection and packaged output SHA. A test suite only counts as PASS after actual CI execution; the source commit alone is not a receipt.
 
 Even a successful live run ends CANDIDATE_PENDING_HUMAN with quality UNVERIFIED, human acceptance NOT_RUN and fair_B0_B1 UNVERIFIED. E1 autonomous whole-book delivery, E2 independent fair full-work reading, original NO FOLD B0/B1 representative chapters, manuscript improvement and author acceptance remain open unless separately evidenced. No existing Sunzi editing achievement is attributed to this runner.
+
+
+## 2026-11-13: frozen author mode and reader/source execution
+
+This remains a candidate. CURRENT is unchanged and neither a source-learning report nor a fixture PASS activates it. See deepwrite/release/STATE.json for the actual code, CI, private evidence and open gates.
+
+The existing writer now requires run_id, an execution_contract and a reader_prior_knowledge_contract. The author contract freezes ASSISTED_AUTHOR_GATED or AUTONOMOUS_FULL_DRAFT. Its authorization reference must point to an actual SHA-pinned source JSON with schema deepwrite/author-project-authorization/v1, the same project_id and mode, and chapter_scope. Autonomous scope is ALL_CANDIDATE_CHAPTERS; assisted scope is an explicit list. Such a file is an external operator attestation, not proof that the model authenticated a human. Preserve the original wish/authorization evidence privately; never create author acceptance from a model response.
+
+Assisted contracts name sample_chapters. A one-chapter exception has its own frozen scope_authorization reference and allowed_unapproved_candidate_chapters; it does not approve the sample or allow the remaining book. Resuming with real approval uses --author-approval-receipt and --author-approval-sha256, bound to project, contract and exact sample hashes. The program cannot independently authenticate the operator's external identity evidence.
+
+The reader contract uses schema deepwrite/reader-prior-contract/v1 with known, unknown and concepts. Each concept identifies first_explained_in, first_used_in and prerequisites. These are declared knowledge dependencies, not a machine certificate of pedagogical truth. The source/reader reviewer must return actual paragraph quotes and artifact identity; correct prose needs no special headings, keywords or artificial rewrite.
+
+Each core chapter performs discovery, native source learning, source-evidence review, drafting, adversarial review, actual revision when needed, and recheck. A source error stops target-domain drafting. A major unresolved reader or reasoning issue blocks later chapters and packaging; a substantial shortening triggers a located content-loss review, not a word-count verdict. Confirmed independent-value loss must be restored. Real body files, diffs, responses and stopped states are retained. Whole-book review and recheck remain internal model review; AUTHOR_ACCEPTANCE and HUMAN_BLIND_EVALUATION stay separate.
+
+Requested module flags are separate from actually_loaded file/SHA identities. E23 preprocessing is verified as external prepared bytes and is not falsely recorded as invoked in the current run. STABLE is refused unless CURRENT truly selects this writer, the release record declares a WRITING profile with mandatory gates and the full declared runtime dependencies match. No such formal activation has been authorized here.
+
+Knowledge-compounding factors are heuristic editorial lenses, never six scores, fixed chapter titles or scientific laws. Internal review metadata is not a required prose template.
+
+The real model endpoint was probed and returned HTTP401. Public scripted tests prove execution/STOP wiring only. Actual full-book autonomous quality, fair B0/B1/B2 and human reader results remain unverified.

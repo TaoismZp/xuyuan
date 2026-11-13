@@ -1,8 +1,8 @@
 {
   "schema": "deepwrite/release-work-state/v1",
-  "updated_date": "2026-11-12",
-  "task": "OFFICIAL_ACTIVATION_AND_AUTHORIZED_ENGINEERING_RELEASE",
-  "status": "ENGINEERING_IMPLEMENTED_PENDING_REMOTE_CI_AND_OWNER_ADMIN_AUTHORITY",
+  "updated_date": "2026-11-13",
+  "task": "ACTIVATION_BLACKBOX_READER_SOURCE_EXECUTION_REPAIR",
+  "status": "CANDIDATE_TESTING",
   "repository": "TaoismZp/xuyuan",
   "intake_main_commit": "6b81a45d8576aa0636d29950f9a2d86f2a5cf8b1",
   "intake_pr14_commit": "d2ef373c5e0dcb7736c56a00e0aefb32d63b0b1a",
@@ -73,7 +73,17 @@
     },
     "actual_github_failure_and_repair": "deepwrite/release/evidence/2026-11-12/NEGATIVE_CONTROL_RECEIPT.json",
     "runtime_integration": "deepwrite/release/evidence/2026-11-12/runtime-integration/RECEIPT.json",
-    "local_release_tests_last_observed": 72
+    "local_release_tests_last_observed": 72,
+    "latest_integrated_local_tests": {
+      "release": 73,
+      "guard": 42,
+      "packager": 15,
+      "E23_reader": 51,
+      "writer_execution": 47,
+      "meaning": "ENGINEERING_FIXTURES_NOT_MODEL_OR_READER_QUALITY"
+    },
+    "quality_increment": "deepwrite/release/evidence/2026-11-13/QUALITY_INCREMENT.json",
+    "current_callchain": "deepwrite/release/evidence/2026-11-13/CALLCHAIN_AUDIT.md"
   },
   "open_gates": {
     "required_ci_enforced_on_all_main_prs": "PENDING_REAL_CONFIGURATION_AND_RECHECK",
@@ -85,13 +95,38 @@
     "official_release_rollback": "TEMPORARY_GIT_FAULT_CHECKOUT_AND_13_FILES_RESTORE_PASS_NOT_FORMAL_MAIN_RELEASE",
     "E1_autonomous_full_book": "NOT_PROVEN",
     "E2_fair_complete_work_reader_validation": "NOT_RUN",
-    "cognitive_candidate_promotion": "NOT_AUTHORIZED_BY_ENGINEERING_TESTS"
+    "cognitive_candidate_promotion": "NOT_AUTHORIZED_BY_ENGINEERING_TESTS",
+    "live_new_model_loop": "BLOCKED_ACTUAL_HTTP_401",
+    "fair_B0_B1_B2": "BLOCKED_MODEL_AND_HISTORICAL_BUDGET_IDENTITY",
+    "quality_candidate_remote_ci": "PENDING_COMMIT_AND_RUN",
+    "positive_formal_stable_writing_profile": "NOT_EXECUTED",
+    "source_learning_semantic_truth": "MODEL_JUDGMENT_REQUIRES_EXTERNAL_VALIDATION",
+    "author_raw_approval_evidence": "NOT_REVERIFIED_DO_NOT_INFER_FROM_OTHER_PROJECT"
   },
   "privacy": {
     "private_manuscripts_published": false,
     "original_manuscripts_overwritten": false,
     "bridge_state_modified": false
   },
-  "next_actor": "CODEX_ROOT",
-  "next_action": "Read actual CI of the integrated implementation, then construct immutable engineering-only release proposal. Administration API remains 403; exact-head owner authorization and formal main merge remain required."
+  "next_actor": "CHATGPT",
+  "next_action": "Review the final PR14 code and fixed private evidence. Author decisions are required before controlled live model use, repository-protection changes, merge or formal activation. Do not reopen closed local thought-card experiments.",
+  "acceptance_layers": {
+    "ENGINEERING_VERIFIED": "LOCAL_FULL_SUITES_PASS_REMOTE_QUALITY_CI_PENDING",
+    "RUNNER_ACTIVE_VERIFIED": "NOT_ACTIVE",
+    "MODEL_INTERNAL_QUALITY_REVIEW": "PRIVATE_CASE_D_AI_SCOPED_NO_LIVE_WRITER",
+    "AUTHOR_ACCEPTANCE": "NOT_RUN_BY_THIS_SYSTEM",
+    "HUMAN_BLIND_EVALUATION": "NOT_RUN",
+    "PUBLISHED": false
+  },
+  "AUTONOMOUS_FULL_DRAFT_SUPPORTED": "PARTIAL",
+  "READER_SOURCE_TRANSFER_GATE": "ENGINEERING_ONLY",
+  "private_text_reader_assessment": "AI_SCOPED_PRIVATE_CH01_REPLAY_NOT_GENERAL_EFFECTIVENESS",
+  "BLACKBOX_QUALITY_NONINFERIORITY": "UNVERIFIED",
+  "private_recovery": {
+    "repository": "TaoismZp/deepwrite-work-0006-private",
+    "branch": "codex/full-execution-recovery-20261113",
+    "entry": "workbench/EXECUTION_REPAIR_20261113/RECOVERY.md",
+    "source_contract_archive_commit": "6b698435c2aaae82a9749dd77b22066315c5b43f",
+    "D_replay_commit": "f8561d5cecedc5f1c4609ea7345f3b4805cb3b5b"
+  }
 }

@@ -1,0 +1,70 @@
+{
+  "schema": "deepwrite/reader-blackbox-increment/v1",
+  "classification": "ENGINEERING_VERIFIED_NOT_ACTIVE",
+  "formal_versions": {
+    "deepwrite": "v0.1",
+    "wish_delivery": "v7.6"
+  },
+  "formal_current_changed": false,
+  "source_files": [
+    {
+      "path": "deepwrite/tools/writing_loop_experimental.py",
+      "sha256": "88b22382713ed0600ae66bcb4ab644dc3797dd0d5a132be957dc79bee8f0adc3"
+    },
+    {
+      "path": "deepwrite/candidates/e23-frame-wiring/reader_source_gate.py",
+      "sha256": "002c58a09d74c67d455ac2009ede6cede0e84bdd28fd8c8cbe87b955b835e46f"
+    },
+    {
+      "path": "deepwrite/candidates/e23-frame-wiring/prewrite_entry.py",
+      "sha256": "115ba5899f39092dd668885fedeed3c1bf92b4a1714561b11e4d79e4efa7016c"
+    }
+  ],
+  "autonomous_full_draft_supported": "PARTIAL",
+  "reader_source_transfer_gate": "ENGINEERING_ONLY",
+  "private_case_reader_review": "AI_SCOPED_WITH_ACTUAL_PRIVATE_TEXT_HELPER_REPLAY_NOT_HUMAN",
+  "actual_live_model_probe": "BLOCKED_HTTP_401",
+  "actual_model_id": null,
+  "actual_token_usage": null,
+  "B0_B1_B2_fair_comparison": "BLOCKED_AUTHENTICATION_AND_HISTORICAL_BUDGET_IDENTITIES",
+  "BLACKBOX_QUALITY_NONINFERIORITY": "UNVERIFIED",
+  "AUTHOR_ACCEPTANCE": "NOT_RUN_BY_THIS_CODE",
+  "HUMAN_BLIND_EVALUATION": "NOT_RUN",
+  "PUBLISHED": false,
+  "private_recovery": {
+    "repository": "TaoismZp/deepwrite-work-0006-private",
+    "branch": "codex/full-execution-recovery-20261113",
+    "entry": "workbench/EXECUTION_REPAIR_20261113/RECOVERY.md",
+    "case_D_replay_commit": "f8561d5cecedc5f1c4609ea7345f3b4805cb3b5b"
+  },
+  "cases": {
+    "A": {
+      "private_sources": "FROZEN_HISTORICAL_FAILURE_AND_ALREADY_EXISTING_REPAIR_PAIR",
+      "new_provider_rewrite": "NOT_RUN",
+      "public_control": "SOURCE_DOMAIN_FAILURE_STOPS_OR_RESEARCHES"
+    },
+    "B": {
+      "private_contract": "FROZEN_CURRENT_SCOPE_NO_BULK_AUTHORIZATION",
+      "raw_author_identity": "NOT_REVERIFIED_FROM_ORIGINAL_MESSAGES",
+      "public_control": "AWAIT_AUTHOR_REVIEW_SCOPE_EXCEPTION_NO_MODE_SUBSTITUTION"
+    },
+    "C": {
+      "private_comparison": "LOCATED_TEXT_REVIEW_RECORDED_PRIVATE_ONLY",
+      "controlled_new_B1_B2": "BLOCKED",
+      "public_control": "CONTENT_LOSS_CLASSIFIED_AND_BODY_RESTORED_NOT_WORDCOUNT_PASS"
+    },
+    "D": {
+      "private_gate_replay": "ACTUAL_PRIVATE_TEXTS_AND_ACTUAL_HELPER_WITH_SCOPED_COLLABORATION_AI_REPORT",
+      "public_controls": "GLOSSARY_ONLY_WRONG_SOURCE_REPETITION_LATER_WRONG_PRIOR_AND_TEMPLATE_FREE_POSITIVE"
+    }
+  },
+  "unverified": [
+    "Live provider execution of the new loop",
+    "Positive formally activated stable writing profile",
+    "Independent reader comprehension",
+    "General quality gain",
+    "Fair complete-work comparison"
+  ],
+  "next_actor": "CHATGPT",
+  "unique_next_step": "Review PR14 and the fixed private recovery evidence; obtain author decisions before a live controlled quality experiment or formal activation."
+}

@@ -30,7 +30,7 @@ jobs:
       - name: Verify E23 source-frame wiring cannot mislabel old discoveries
         run: python3 -B -m unittest discover -s deepwrite/candidates/e23-frame-wiring -p 'test_*.py' -v
       - name: Preserve E18 true-file writing/checkpoint behavior
-        run: python3 -B -m unittest discover -s deepwrite/tools/tests -p 'test_writing_loop_experimental.py' -v
+        run: python3 -B -m unittest discover -s deepwrite/tools/tests -p 'test_*.py' -v
       - name: Actually invoke checked-out candidate declaration without claiming formal activation
         if: github.event_name != 'push' || github.ref != 'refs/heads/main'
         run: |

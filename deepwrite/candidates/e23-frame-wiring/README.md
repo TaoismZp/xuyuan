@@ -12,7 +12,7 @@
 3. 由外部选择文件指定一个**尚待反方评审的**实验视角，拒绝用“RECOVERED/已获作者认可”等自封标签跳门；
 4. 实际写入三个新材料文件到私有项目的 sources/，逐个 SHA256 冻结；
 5. 生成新的独立 E18 config，追加三个 source 引用，并修改 **wish** 要求后续 research 和 direction 将其作为受检验假设，而不是当成已被证明的命题；
-6. 默认只**准备输入，不调用模型，不运行写书器**。只有显式 `--execute --runner <existing E18 writing_loop_experimental.py>` 才继续调用 E18。需要可用的模型API/登录、预算和所有既有E18安全条件。
+6. 默认只**准备输入，不调用模型，不运行写书器**。只有显式 `--execute --runner <existing E18 writing_loop_experimental.py> --runner-sha256 <实际预期SHA>` 才继续调用本仓库同一份 E18，拒绝任意脚本替代。需要可用的模型API/登录、预算和所有既有E18安全条件。
 
 ### 正面与负面工程结果
 
@@ -40,3 +40,11 @@ python3 deepwrite/candidates/e23-frame-wiring/prewrite_entry.py \
 候选输出 `PASS_PREWRITE_IDENTITY_AND_PROMPT_WIRING_ONLY` 不是 `PASS_QUALITY`。有三个已知限制：**E18原CLI仍可被直接绕过**；SOURCE_FRAME的语义优劣仍由模型/作者审稿（非自动识别）；自动执行完整书的真实生产与发布仍没有通过验收。要让它成为“默认必经门”，必须单独把验证调用并入正式 E18 的最早入口，并通过真实失败复现、回归、权限和作者受保护发布。不能把一个可选wrapper冒充完成集成。
 
 DeepWrite `CURRENT.json` 仍正式 `v0.1`，许愿式交付 `CURRENT.json` 仍正式 `v7.6`。本候选以E18实有runner `experiment/deepwrite-e18-closure-runner-20261111` 为基座，不覆盖其分支或PR12/13。正式升版需独立授权与作者验收。
+
+## 2026-11-13 读者先修与源领域评审接线
+
+`reader_source_gate.py`是供同一 E18 调用的执行检查。它冻结读者已知/未知、概念首次解释/使用和先修图；模型的源领域评审必须绑定实际正文、源材料位置与合同SHA。源错误或负知识复利报告返回 `STOP_RESEARCH_MORE`；读者先修/价值缺陷报告返回 `CONTENT_REWORK`；缺真实评审、错版SHA或只在QA里写证据返回 `HOLD_REVIEW_EVIDENCE`。E15继续负责冻结问题、正文真返工和重新关闭，没有另外建立写作器。
+
+这段代码只核验已提供的模型观察与字节身份。词典代替因果、错误规则、初学介绍无研究增量、机械三层重复、后章复用旧错等负控的语义报告由fixture预先给出，不能据此宣称模型已自动识别真实缺陷。正向控制不要求指定词语、三层标题或六评分；完整严谨的叙事允许零实质问题通过，真人/作者验收始终未由代码建立。
+
+配置提供 `reader_prior_knowledge_contract` 时，prewrite会把同一合同写成实际冻结source并传给后续runner。`e23_preprocess_receipt`记录代码与输出SHA；不在当前Git提交中的源码commit为null。下游只能称“预处理回执字节匹配”，不能把可写JSON当成独立调用证明、当前run里加载了E23或正式激活。正式状态仍从main CURRENT与真实调用证据判断。

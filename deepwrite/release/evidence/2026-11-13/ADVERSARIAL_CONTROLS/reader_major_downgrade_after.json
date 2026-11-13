@@ -1,0 +1,7 @@
+{
+  "status": "BLOCKED_AFTER_PATCH",
+  "exception": "Blocked",
+  "message": "BLOCKED_QUALITY_UNRESOLVED_NEW_READER_MAJOR_beta",
+  "beta_reader_calls": 2,
+  "evidence_kind": "ACTUAL_ENGINEERING_FIXTURE_NOT_MODEL_OR_READER_QUALITY"
+}

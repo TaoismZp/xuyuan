@@ -1,0 +1,1027 @@
+{
+  "schema": "deepwrite/callchain-audit/v1",
+  "observed_utc": "2026-11-13T00:10:34.621448+00:00",
+  "scope": "PUBLIC_SANITIZED_CODE_AND_GITHUB_ONLY_NO_PRIVATE_TEXT",
+  "repository": "TaoismZp/xuyuan",
+  "main_commit": "6b81a45d8576aa0636d29950f9a2d86f2a5cf8b1",
+  "candidate_commit_snapshot": "fcdacc1f20f74f706323c251336ae5db74992fd7",
+  "worktree_status": "IN_PROGRESS_OTHER_AGENTS_MUTATING_NOT_EQUIVALENT_TO_REMOTE",
+  "formal_state": {
+    "deepwrite": "v0.1",
+    "wish_delivery": "v7.6",
+    "automatic_full_book_generation": "NOT_IMPLEMENTED",
+    "active_engine": null,
+    "active_runner": null,
+    "formal_entry": "DOCUMENTED_WORKBENCH_ONLY",
+    "E1": "NOT_IMPLEMENTED",
+    "E2": "NOT_RUN"
+  },
+  "documents_actually_read": [
+    {
+      "path": "deepwrite/CURRENT.json",
+      "ref": "6b81a45d8576aa0636d29950f9a2d86f2a5cf8b1",
+      "exists": true,
+      "git_blob": "f57402a510e051d53d04a59d17e6f09720130650",
+      "sha256": "7f5d463f99bce2e7922ea9068ca07e10dfc07e1a631f1ba4dfbc24f25f3efe03",
+      "bytes": 1358
+    },
+    {
+      "path": "wish-delivery/CURRENT.json",
+      "ref": "6b81a45d8576aa0636d29950f9a2d86f2a5cf8b1",
+      "exists": true,
+      "git_blob": "2a253140bbd097b05b273a1a4634669991c2fde9",
+      "sha256": "27737a92a01d36c4c7765712e6f158044480763a470a4229d91f0eada7b8591a",
+      "bytes": 483
+    },
+    {
+      "path": "deepwrite/versions/v0.1.md",
+      "ref": "6b81a45d8576aa0636d29950f9a2d86f2a5cf8b1",
+      "exists": true,
+      "git_blob": "f7ce01622df733bc59982854e37d4ac44a79ec99",
+      "sha256": "59e458cc0a1ccfc7f2a85a007737662ff13218cf839b658b1172b1deda23dc90",
+      "bytes": 3199
+    },
+    {
+      "path": "wish-delivery/versions/v7.6.md",
+      "ref": "6b81a45d8576aa0636d29950f9a2d86f2a5cf8b1",
+      "exists": true,
+      "git_blob": "955bdde3d332283ff6ccc89f943555824f741d59",
+      "sha256": "b59e0d47e4ad62056dce7207c2946cf82bbe2bb13fb5e0f6403f3973578441cc",
+      "bytes": 9776
+    },
+    {
+      "path": "deepwrite/AGENT_COLLABORATION.md",
+      "ref": "6b81a45d8576aa0636d29950f9a2d86f2a5cf8b1",
+      "exists": true,
+      "git_blob": "180751b43e0fb8e05820524d5a50ae17a5f1767c",
+      "sha256": "d83f2d01879ab7016ee1df7f077bb06965dfd65e62f1b4674a8e2157824d3114",
+      "bytes": 5271
+    },
+    {
+      "path": "deepwrite/GUARDED_EVOLUTION.md",
+      "ref": "6b81a45d8576aa0636d29950f9a2d86f2a5cf8b1",
+      "exists": true,
+      "git_blob": "33a9cc3ffa1324089b5fdb2779de35047fcf54f1",
+      "sha256": "b5bb0ec1dfcb8d3a213f6b42f728067540f2361246779a54f8c5ac4d13d64a8e",
+      "bytes": 7631
+    },
+    {
+      "path": "deepwrite/EVALUATION.md",
+      "ref": "6b81a45d8576aa0636d29950f9a2d86f2a5cf8b1",
+      "exists": true,
+      "git_blob": "9aad1a1452b96ea1d9f698af4a3e05ddf65ab879",
+      "sha256": "1839e4d4b03572aa7b360e42c8ada044dac6d1dda21baf96a9b39d4b347c96e8",
+      "bytes": 2523
+    },
+    {
+      "path": "deepwrite/discovery-gate/agent-bridge/STATE.json",
+      "ref": "6b81a45d8576aa0636d29950f9a2d86f2a5cf8b1",
+      "exists": true,
+      "git_blob": "33cdd5cfabfd5a8112e617fd6510c017311883c0",
+      "sha256": "351710a8ab1b87304f023fd62b4f06ddf994ce0cf5b6f8c5a7355a4f2d9acc7a",
+      "bytes": 25739
+    }
+  ],
+  "bridge": {
+    "state": "E20_FORENSIC_PASS_CH01_DISCOVERY_IN_PROGRESS",
+    "last_message": {
+      "id": "0027",
+      "sender": "CHATGPT",
+      "path": "deepwrite/discovery-gate/agent-bridge/messages/0027-chatgpt.md"
+    },
+    "next_actor": "CODEX",
+    "next_action": "Codex 0028: E15 guard false-pass and concrete end-to-end E12 known-defect replay on real writer/review loop, or BLOCKED_NO_RUNNER. Independent book-side CH01 work continues, E19 unapproved, CH02 blocked, NO FOLD unrelated."
+  },
+  "pull_requests": [
+    {
+      "number": 12,
+      "url": "https://github.com/TaoismZp/xuyuan/pull/12",
+      "title": "DeepWrite：恢复研究、发现与整书判断的候选循环",
+      "state": "open",
+      "draft": true,
+      "merged": false,
+      "head_sha": "e5a1c9f0b057f5483022bd196a53790e905b0896",
+      "base_sha": "4c277410e892e0200584392097e00b2899627162",
+      "updated_at": "2026-11-09T01:26:18Z",
+      "changed_files": [
+        "deepwrite/CHANGELOG.md",
+        "deepwrite/CURRENT.json",
+        "deepwrite/EVALUATION.md",
+        "deepwrite/EVIDENCE.md",
+        "deepwrite/PROJECT_INIT.md",
+        "deepwrite/README.md",
+        "deepwrite/RECOVERY.md",
+        "deepwrite/START_HERE.md",
+        "deepwrite/candidates/EDITORIAL_LOOP.md",
+        "deepwrite/candidates/RESEARCH_LOOP.md",
+        "deepwrite/candidates/v0.2.md",
+        "deepwrite/iterations/2026-11-09-quality/ACCEPTANCE.md",
+        "deepwrite/iterations/2026-11-09-quality/ARTIFACTS.json",
+        "deepwrite/iterations/2026-11-09-quality/BLUEPRINT.md",
+        "deepwrite/iterations/2026-11-09-quality/EDITORIAL_SPIKE.md",
+        "deepwrite/iterations/2026-11-09-quality/ORIGIN_REASSESSMENT.md",
+        "deepwrite/iterations/2026-11-09-quality/RECOVERY.md",
+        "deepwrite/iterations/2026-11-09-quality/STATE.json",
+        "deepwrite/iterations/2026-11-09-quality/SUPERVISION.md",
+        "deepwrite/iterations/2026-11-09-quality/TEST_RESULTS.txt",
+        "deepwrite/iterations/2026-11-09-quality/VISION.md",
+        "deepwrite/templates/v0.2/CHAPTER_REVIEW.md",
+        "deepwrite/templates/v0.2/CLAIMS.json",
+        "deepwrite/templates/v0.2/EDITORIAL_BRIEF.md",
+        "deepwrite/tests/test_packager.py",
+        "deepwrite/tools/book_packager_v0.1.py"
+      ],
+      "checks": []
+    },
+    {
+      "number": 13,
+      "url": "https://github.com/TaoismZp/xuyuan/pull/13",
+      "title": "[DeepWrite candidate] E15 review findings must govern revision (not active)",
+      "state": "open",
+      "draft": true,
+      "merged": false,
+      "head_sha": "d7dadf80aaef3963d0784787219e2b5e6e12b59f",
+      "base_sha": "6cc0321afd594861a87bb9911c0e697a9b9a208c",
+      "updated_at": "2026-11-11T03:22:57Z",
+      "changed_files": [
+        "deepwrite/candidates/e15-review-closure/README.md",
+        "deepwrite/candidates/e15-review-closure/review_closure_guard.py",
+        "deepwrite/candidates/e15-review-closure/test_review_closure_guard.py"
+      ],
+      "checks": []
+    },
+    {
+      "number": 14,
+      "url": "https://github.com/TaoismZp/xuyuan/pull/14",
+      "title": "[Draft] DeepWrite activation rail + E18/E23 integrated engineering candidate (not active)",
+      "state": "open",
+      "draft": false,
+      "merged": false,
+      "head_sha": "fcdacc1f20f74f706323c251336ae5db74992fd7",
+      "base_sha": "6b81a45d8576aa0636d29950f9a2d86f2a5cf8b1",
+      "updated_at": "2026-11-13T00:07:42Z",
+      "changed_files": [
+        ".github/workflows/deepwrite-activation.yml",
+        ".github/workflows/deepwrite-owner-release.yml",
+        ".github/workflows/e18-guard-check.yml",
+        ".github/workflows/e23-frame-prewrite.yml",
+        "deepwrite/HISTORY.md",
+        "deepwrite/RECOVERY.md",
+        "deepwrite/START_HERE.md",
+        "deepwrite/candidates/EDITORIAL_LOOP.md",
+        "deepwrite/candidates/RESEARCH_LOOP.md",
+        "deepwrite/candidates/e15-review-closure/CI_RECEIPT.json",
+        "deepwrite/candidates/e15-review-closure/README.md",
+        "deepwrite/candidates/e15-review-closure/review_closure_guard.py",
+        "deepwrite/candidates/e15-review-closure/test_review_closure_guard.py",
+        "deepwrite/candidates/e15-review-closure/tests/fixtures/review_closure_guard_pr13.py",
+        "deepwrite/candidates/e18-writing-loop/README.md",
+        "deepwrite/candidates/e23-frame-wiring/README.md",
+        "deepwrite/candidates/e23-frame-wiring/perspective_gate.py",
+        "deepwrite/candidates/e23-frame-wiring/prewrite_entry.py",
+        "deepwrite/candidates/e23-frame-wiring/test_perspective_gate.py",
+        "deepwrite/candidates/e23-frame-wiring/test_prewrite_entry.py",
+        "deepwrite/candidates/v0.2.md",
+        "deepwrite/release/RELEASE_PROCESS.md",
+        "deepwrite/release/STATE.json",
+        "deepwrite/release/activation.py",
+        "deepwrite/release/evidence/2026-11-12/INVENTORY.md",
+        "deepwrite/release/evidence/2026-11-12/NEGATIVE_CONTROL_RECEIPT.json",
+        "deepwrite/release/evidence/2026-11-12/REPOSITORY_TARGET_REQUEST.json",
+        "deepwrite/release/evidence/2026-11-12/RULESET_TARGET_REQUEST.json",
+        "deepwrite/release/evidence/2026-11-12/RULESET_WRITE_RESULT.json",
+        "deepwrite/release/evidence/2026-11-12/SETTINGS_READBACK.json",
+        "deepwrite/release/evidence/2026-11-12/runtime-integration/ARCHIVE_SHA256.json",
+        "deepwrite/release/evidence/2026-11-12/runtime-integration/COMMANDS.json",
+        "deepwrite/release/evidence/2026-11-12/runtime-integration/RECEIPT.json",
+        "deepwrite/release/evidence/2026-11-12/runtime-integration/REPLAY.md",
+        "deepwrite/release/evidence/2026-11-12/runtime-integration/checkpoint/files/PROJECT_LOCK.json",
+        "deepwrite/release/evidence/2026-11-12/runtime-integration/checkpoint/files/STATE.json",
+        "deepwrite/release/evidence/2026-11-12/runtime-integration/checkpoint/files/chapters/01.md",
+        "deepwrite/release/evidence/2026-11-12/runtime-integration/checkpoint/files/config.json",
+        "deepwrite/release/evidence/2026-11-12/runtime-integration/checkpoint/files/derived/book-0001.json",
+        "deepwrite/release/evidence/2026-11-12/runtime-integration/checkpoint/files/derived/book-0001.md",
+        "deepwrite/release/evidence/2026-11-12/runtime-integration/checkpoint/files/front.md",
+        "deepwrite/release/evidence/2026-11-12/runtime-integration/checkpoint/files/frozen.json",
+        "deepwrite/release/evidence/2026-11-12/runtime-integration/checkpoint/files/manifest.json",
+        "deepwrite/release/evidence/2026-11-12/runtime-integration/checkpoint/files/pins.json",
+        "deepwrite/release/evidence/2026-11-12/runtime-integration/checkpoint/files/review.json",
+        "deepwrite/release/evidence/2026-11-12/runtime-integration/checkpoint/files/sources/0001.md",
+        "deepwrite/release/evidence/2026-11-12/runtime-integration/checkpoint/files/tail.md",
+        "deepwrite/release/evidence/2026-11-12/runtime-integration/checkpoint/manifest.json",
+        "deepwrite/release/evidence/2026-11-12/runtime-integration/fault-and-restore.bundle",
+        "deepwrite/release/evidence/2026-11-12/runtime-integration/fixture-source.bundle",
+        "deepwrite/release/evidence/2026-11-12/runtime-integration/fresh-project/.engine.lock",
+        "deepwrite/release/evidence/2026-11-12/runtime-integration/fresh-project/PROJECT_LOCK.json",
+        "deepwrite/release/evidence/2026-11-12/runtime-integration/fresh-project/STATE.json",
+        "deepwrite/release/evidence/2026-11-12/runtime-integration/fresh-project/config.json",
+        "deepwrite/release/evidence/2026-11-12/runtime-integration/fresh-project/pins.json",
+        "deepwrite/release/evidence/2026-11-12/runtime-integration/fresh-project/sources/0001.md",
+        "deepwrite/release/evidence/2026-11-12/runtime-integration/restored/PROJECT_LOCK.json",
+        "deepwrite/release/evidence/2026-11-12/runtime-integration/restored/RESTORE_RECEIPT.json",
+        "deepwrite/release/evidence/2026-11-12/runtime-integration/restored/STATE.json",
+        "deepwrite/release/evidence/2026-11-12/runtime-integration/restored/chapters/01.md",
+        "deepwrite/release/evidence/2026-11-12/runtime-integration/restored/config.json",
+        "deepwrite/release/evidence/2026-11-12/runtime-integration/restored/derived/book-0001.json",
+        "deepwrite/release/evidence/2026-11-12/runtime-integration/restored/derived/book-0001.md",
+        "deepwrite/release/evidence/2026-11-12/runtime-integration/restored/front.md",
+        "deepwrite/release/evidence/2026-11-12/runtime-integration/restored/frozen.json",
+        "deepwrite/release/evidence/2026-11-12/runtime-integration/restored/manifest.json",
+        "deepwrite/release/evidence/2026-11-12/runtime-integration/restored/pins.json",
+        "deepwrite/release/evidence/2026-11-12/runtime-integration/restored/review.json",
+        "deepwrite/release/evidence/2026-11-12/runtime-integration/restored/sources/0001.md",
+        "deepwrite/release/evidence/2026-11-12/runtime-integration/restored/tail.md",
+        "deepwrite/release/github_authorization.py",
+        "deepwrite/release/release_verify.py",
+        "deepwrite/release/runtime.py",
+        "deepwrite/release/test_activation.py",
+        "deepwrite/release/test_github_authorization.py",
+        "deepwrite/release/test_identity.py",
+        "deepwrite/release/test_runtime.py",
+        "deepwrite/tests/test_packager.py",
+        "deepwrite/tools/book_packager_v0.1.py",
+        "deepwrite/tools/model_adapter_openai_responses_experimental_v0_1.py",
+        "deepwrite/tools/tests/test_writing_loop_experimental.py",
+        "deepwrite/tools/writing_loop_experimental.py"
+      ],
+      "checks": [
+        {
+          "id": 131587307341,
+          "name": "activation-and-runtime-regressions",
+          "head_sha": "fcdacc1f20f74f706323c251336ae5db74992fd7",
+          "status": "completed",
+          "conclusion": "success",
+          "app_id": 15368,
+          "details_url": "https://github.com/TaoismZp/xuyuan/actions/runs/43334548262/job/131587307341"
+        },
+        {
+          "id": 131587280064,
+          "name": "activation-and-runtime-regressions",
+          "head_sha": "fcdacc1f20f74f706323c251336ae5db74992fd7",
+          "status": "completed",
+          "conclusion": "success",
+          "app_id": 15368,
+          "details_url": "https://github.com/TaoismZp/xuyuan/actions/runs/43334540050/job/131587280064"
+        }
+      ]
+    },
+    {
+      "number": 15,
+      "url": "https://github.com/TaoismZp/xuyuan/pull/15",
+      "title": "[DO NOT MERGE] DeepWrite release CI failure and repair control",
+      "state": "open",
+      "draft": true,
+      "merged": false,
+      "head_sha": "d691b133427223cdb81c67e882b6b3d06fa3777e",
+      "base_sha": "6b81a45d8576aa0636d29950f9a2d86f2a5cf8b1",
+      "updated_at": "2026-11-12T00:21:52Z",
+      "changed_files": [
+        ".github/workflows/deepwrite-activation.yml",
+        ".github/workflows/e18-guard-check.yml",
+        ".github/workflows/e23-frame-prewrite.yml",
+        "deepwrite/START_HERE.md",
+        "deepwrite/candidates/EDITORIAL_LOOP.md",
+        "deepwrite/candidates/RESEARCH_LOOP.md",
+        "deepwrite/candidates/e15-review-closure/CI_RECEIPT.json",
+        "deepwrite/candidates/e15-review-closure/README.md",
+        "deepwrite/candidates/e15-review-closure/review_closure_guard.py",
+        "deepwrite/candidates/e15-review-closure/test_review_closure_guard.py",
+        "deepwrite/candidates/e15-review-closure/tests/fixtures/review_closure_guard_pr13.py",
+        "deepwrite/candidates/e18-writing-loop/README.md",
+        "deepwrite/candidates/e23-frame-wiring/README.md",
+        "deepwrite/candidates/e23-frame-wiring/perspective_gate.py",
+        "deepwrite/candidates/e23-frame-wiring/prewrite_entry.py",
+        "deepwrite/candidates/e23-frame-wiring/test_perspective_gate.py",
+        "deepwrite/candidates/e23-frame-wiring/test_prewrite_entry.py",
+        "deepwrite/candidates/v0.2.md",
+        "deepwrite/release/RELEASE_PROCESS.md",
+        "deepwrite/release/activation.py",
+        "deepwrite/release/release_verify.py",
+        "deepwrite/release/test_activation.py",
+        "deepwrite/release/test_ci_negative_control.py",
+        "deepwrite/tools/book_packager_v0.1.py",
+        "deepwrite/tools/model_adapter_openai_responses_experimental_v0_1.py",
+        "deepwrite/tools/tests/test_writing_loop_experimental.py",
+        "deepwrite/tools/writing_loop_experimental.py"
+      ],
+      "checks": [
+        {
+          "id": 130880623452,
+          "name": "activation-and-runtime-regressions",
+          "head_sha": "d691b133427223cdb81c67e882b6b3d06fa3777e",
+          "status": "completed",
+          "conclusion": "success",
+          "app_id": 15368,
+          "details_url": "https://github.com/TaoismZp/xuyuan/actions/runs/43126739736/job/130880623452"
+        }
+      ]
+    },
+    {
+      "number": 16,
+      "url": "https://github.com/TaoismZp/xuyuan/pull/16",
+      "title": "DeepWrite candidate: reader prerequisites before cross-domain transfer (Codex review)",
+      "state": "open",
+      "draft": true,
+      "merged": false,
+      "head_sha": "cf0beacac016066156df0ede81540a18b9d59589",
+      "base_sha": "6b81a45d8576aa0636d29950f9a2d86f2a5cf8b1",
+      "updated_at": "2026-11-12T13:29:23Z",
+      "changed_files": [
+        "deepwrite/AGENT_COLLABORATION.md",
+        "deepwrite/research/READER_SOURCE_TRANSFER_GATE_CANDIDATE_20261112.md"
+      ],
+      "checks": []
+    }
+  ],
+  "nodes": [
+    {
+      "id": "formal_start",
+      "path": "deepwrite/START_HERE.md",
+      "description": "Main dialogue instructions; not an executable scheduler",
+      "main": {
+        "path": "deepwrite/START_HERE.md",
+        "ref": "6b81a45d8576aa0636d29950f9a2d86f2a5cf8b1",
+        "exists": true,
+        "git_blob": "0728f0eb418873ae722480e6d9d4407dccdb53a9",
+        "sha256": "969246c57c94ed48648ef11fd47d3f37b239e432892f30260dbb67b2f64facfd",
+        "bytes": 3615
+      },
+      "candidate": {
+        "path": "deepwrite/START_HERE.md",
+        "ref": "fcdacc1f20f74f706323c251336ae5db74992fd7",
+        "exists": true,
+        "git_blob": "3f519fe17afc4a3cb25429f5266b1299f45a312f",
+        "sha256": "01def0453c760fdd8cd11f4789c4cf214b28d71bdcd1d3cceebb0a9531063196",
+        "bytes": 4985
+      },
+      "worktree": {
+        "sha256": "01def0453c760fdd8cd11f4789c4cf214b28d71bdcd1d3cceebb0a9531063196",
+        "bytes": 4985,
+        "status": "CURRENT_QUALITY_CANDIDATE_SOURCE_NOT_FORMAL_MAIN"
+      }
+    },
+    {
+      "id": "formal_current",
+      "path": "deepwrite/CURRENT.json",
+      "description": "Only formal active workbench pointer; no active_engine/active_runner",
+      "main": {
+        "path": "deepwrite/CURRENT.json",
+        "ref": "6b81a45d8576aa0636d29950f9a2d86f2a5cf8b1",
+        "exists": true,
+        "git_blob": "f57402a510e051d53d04a59d17e6f09720130650",
+        "sha256": "7f5d463f99bce2e7922ea9068ca07e10dfc07e1a631f1ba4dfbc24f25f3efe03",
+        "bytes": 1358
+      },
+      "candidate": {
+        "path": "deepwrite/CURRENT.json",
+        "ref": "fcdacc1f20f74f706323c251336ae5db74992fd7",
+        "exists": true,
+        "git_blob": "f57402a510e051d53d04a59d17e6f09720130650",
+        "sha256": "7f5d463f99bce2e7922ea9068ca07e10dfc07e1a631f1ba4dfbc24f25f3efe03",
+        "bytes": 1358
+      },
+      "worktree": {
+        "sha256": "7f5d463f99bce2e7922ea9068ca07e10dfc07e1a631f1ba4dfbc24f25f3efe03",
+        "bytes": 1358,
+        "status": "CURRENT_QUALITY_CANDIDATE_SOURCE_NOT_FORMAL_MAIN"
+      }
+    },
+    {
+      "id": "formal_spec",
+      "path": "deepwrite/versions/v0.1.md",
+      "description": "Documented G0-G7 and chapter/book loops",
+      "main": {
+        "path": "deepwrite/versions/v0.1.md",
+        "ref": "6b81a45d8576aa0636d29950f9a2d86f2a5cf8b1",
+        "exists": true,
+        "git_blob": "f7ce01622df733bc59982854e37d4ac44a79ec99",
+        "sha256": "59e458cc0a1ccfc7f2a85a007737662ff13218cf839b658b1172b1deda23dc90",
+        "bytes": 3199
+      },
+      "candidate": {
+        "path": "deepwrite/versions/v0.1.md",
+        "ref": "fcdacc1f20f74f706323c251336ae5db74992fd7",
+        "exists": true,
+        "git_blob": "f7ce01622df733bc59982854e37d4ac44a79ec99",
+        "sha256": "59e458cc0a1ccfc7f2a85a007737662ff13218cf839b658b1172b1deda23dc90",
+        "bytes": 3199
+      },
+      "worktree": {
+        "sha256": "59e458cc0a1ccfc7f2a85a007737662ff13218cf839b658b1172b1deda23dc90",
+        "bytes": 3199,
+        "status": "CURRENT_QUALITY_CANDIDATE_SOURCE_NOT_FORMAL_MAIN"
+      }
+    },
+    {
+      "id": "parent_current",
+      "path": "wish-delivery/CURRENT.json",
+      "description": "Formal parent pointer",
+      "main": {
+        "path": "wish-delivery/CURRENT.json",
+        "ref": "6b81a45d8576aa0636d29950f9a2d86f2a5cf8b1",
+        "exists": true,
+        "git_blob": "2a253140bbd097b05b273a1a4634669991c2fde9",
+        "sha256": "27737a92a01d36c4c7765712e6f158044480763a470a4229d91f0eada7b8591a",
+        "bytes": 483
+      },
+      "candidate": {
+        "path": "wish-delivery/CURRENT.json",
+        "ref": "fcdacc1f20f74f706323c251336ae5db74992fd7",
+        "exists": true,
+        "git_blob": "2a253140bbd097b05b273a1a4634669991c2fde9",
+        "sha256": "27737a92a01d36c4c7765712e6f158044480763a470a4229d91f0eada7b8591a",
+        "bytes": 483
+      },
+      "worktree": {
+        "sha256": "27737a92a01d36c4c7765712e6f158044480763a470a4229d91f0eada7b8591a",
+        "bytes": 483,
+        "status": "CURRENT_QUALITY_CANDIDATE_SOURCE_NOT_FORMAL_MAIN"
+      }
+    },
+    {
+      "id": "parent_spec",
+      "path": "wish-delivery/versions/v7.6.md",
+      "description": "Formal continuity and acceptance rules",
+      "main": {
+        "path": "wish-delivery/versions/v7.6.md",
+        "ref": "6b81a45d8576aa0636d29950f9a2d86f2a5cf8b1",
+        "exists": true,
+        "git_blob": "955bdde3d332283ff6ccc89f943555824f741d59",
+        "sha256": "b59e0d47e4ad62056dce7207c2946cf82bbe2bb13fb5e0f6403f3973578441cc",
+        "bytes": 9776
+      },
+      "candidate": {
+        "path": "wish-delivery/versions/v7.6.md",
+        "ref": "fcdacc1f20f74f706323c251336ae5db74992fd7",
+        "exists": true,
+        "git_blob": "955bdde3d332283ff6ccc89f943555824f741d59",
+        "sha256": "b59e0d47e4ad62056dce7207c2946cf82bbe2bb13fb5e0f6403f3973578441cc",
+        "bytes": 9776
+      },
+      "worktree": {
+        "sha256": "b59e0d47e4ad62056dce7207c2946cf82bbe2bb13fb5e0f6403f3973578441cc",
+        "bytes": 9776,
+        "status": "CURRENT_QUALITY_CANDIDATE_SOURCE_NOT_FORMAL_MAIN"
+      }
+    },
+    {
+      "id": "activation",
+      "path": "deepwrite/release/activation.py",
+      "description": "Candidate exact identity resolver",
+      "main": {
+        "path": "deepwrite/release/activation.py",
+        "ref": "6b81a45d8576aa0636d29950f9a2d86f2a5cf8b1",
+        "exists": false
+      },
+      "candidate": {
+        "path": "deepwrite/release/activation.py",
+        "ref": "fcdacc1f20f74f706323c251336ae5db74992fd7",
+        "exists": true,
+        "git_blob": "d32f664a0d56290b922e746666691dd6c7b5ed5a",
+        "sha256": "e105b7e5d1aee186418c226a1abfeda0461f88b666d0fbf0a58e7a41e47152ef",
+        "bytes": 13438
+      },
+      "worktree": {
+        "sha256": "e105b7e5d1aee186418c226a1abfeda0461f88b666d0fbf0a58e7a41e47152ef",
+        "bytes": 13438,
+        "status": "CURRENT_QUALITY_CANDIDATE_SOURCE_NOT_FORMAL_MAIN"
+      }
+    },
+    {
+      "id": "engineering_runtime",
+      "path": "deepwrite/release/runtime.py",
+      "description": "Candidate engineering init/assemble/checkpoint/restore; deliberately does not call cognitive writer",
+      "main": {
+        "path": "deepwrite/release/runtime.py",
+        "ref": "6b81a45d8576aa0636d29950f9a2d86f2a5cf8b1",
+        "exists": false
+      },
+      "candidate": {
+        "path": "deepwrite/release/runtime.py",
+        "ref": "fcdacc1f20f74f706323c251336ae5db74992fd7",
+        "exists": true,
+        "git_blob": "9b2e21ba3347e2fdbf5d8a0669b8b01682d7b2e3",
+        "sha256": "dc59955b613ea9d86dd2458b63fc322210803b7b65e0ae4346b14a5e74ed10fa",
+        "bytes": 11636
+      },
+      "worktree": {
+        "sha256": "dc59955b613ea9d86dd2458b63fc322210803b7b65e0ae4346b14a5e74ed10fa",
+        "bytes": 11636,
+        "status": "CURRENT_QUALITY_CANDIDATE_SOURCE_NOT_FORMAL_MAIN"
+      }
+    },
+    {
+      "id": "writer_loop",
+      "path": "deepwrite/tools/writing_loop_experimental.py",
+      "description": "Candidate E18 pipeline; chapter draft/review/revise/recheck, cross close, packaging",
+      "main": {
+        "path": "deepwrite/tools/writing_loop_experimental.py",
+        "ref": "6b81a45d8576aa0636d29950f9a2d86f2a5cf8b1",
+        "exists": false
+      },
+      "candidate": {
+        "path": "deepwrite/tools/writing_loop_experimental.py",
+        "ref": "fcdacc1f20f74f706323c251336ae5db74992fd7",
+        "exists": true,
+        "git_blob": "7507871a424d2f3ba1943c691fc8a4da60785b4a",
+        "sha256": "46f00bca56cbaff3db88c00cdbe5b3b196bd86f78c725ab7bc2490c2b98c02c8",
+        "bytes": 38497
+      },
+      "worktree": {
+        "sha256": "88b22382713ed0600ae66bcb4ab644dc3797dd0d5a132be957dc79bee8f0adc3",
+        "bytes": 72889,
+        "status": "CURRENT_QUALITY_CANDIDATE_SOURCE_NOT_FORMAL_MAIN"
+      }
+    },
+    {
+      "id": "model_adapter",
+      "path": "deepwrite/tools/model_adapter_openai_responses_experimental_v0_1.py",
+      "description": "Single Responses transport; presence does not prove live model execution",
+      "main": {
+        "path": "deepwrite/tools/model_adapter_openai_responses_experimental_v0_1.py",
+        "ref": "6b81a45d8576aa0636d29950f9a2d86f2a5cf8b1",
+        "exists": true,
+        "git_blob": "465252933615e8205f9d227fd3a142814932bc52",
+        "sha256": "b04521c240e44f538924594120e81083311374287e9db6f6a1d4f45ca347267f",
+        "bytes": 3966
+      },
+      "candidate": {
+        "path": "deepwrite/tools/model_adapter_openai_responses_experimental_v0_1.py",
+        "ref": "fcdacc1f20f74f706323c251336ae5db74992fd7",
+        "exists": true,
+        "git_blob": "c16453efca69b25ef697562352399e47ac922b46",
+        "sha256": "07d4a1af4209b947998b8690e5d9e556aa0302aa57ec6580c989d20fbea5cdce",
+        "bytes": 4198
+      },
+      "worktree": {
+        "sha256": "07d4a1af4209b947998b8690e5d9e556aa0302aa57ec6580c989d20fbea5cdce",
+        "bytes": 4198,
+        "status": "CURRENT_QUALITY_CANDIDATE_SOURCE_NOT_FORMAL_MAIN"
+      }
+    },
+    {
+      "id": "e15_guard",
+      "path": "deepwrite/candidates/e15-review-closure/review_closure_guard.py",
+      "description": "Actual-file structural/computable closeout guard",
+      "main": {
+        "path": "deepwrite/candidates/e15-review-closure/review_closure_guard.py",
+        "ref": "6b81a45d8576aa0636d29950f9a2d86f2a5cf8b1",
+        "exists": false
+      },
+      "candidate": {
+        "path": "deepwrite/candidates/e15-review-closure/review_closure_guard.py",
+        "ref": "fcdacc1f20f74f706323c251336ae5db74992fd7",
+        "exists": true,
+        "git_blob": "1ef044813e856d8990986ae2d757abb8d95411dd",
+        "sha256": "b2be877c9ca7ff63b0adec5ec56c3c65f1274ac69e4b2056bdaf39c5cd6851d7",
+        "bytes": 12133
+      },
+      "worktree": {
+        "sha256": "b2be877c9ca7ff63b0adec5ec56c3c65f1274ac69e4b2056bdaf39c5cd6851d7",
+        "bytes": 12133,
+        "status": "CURRENT_QUALITY_CANDIDATE_SOURCE_NOT_FORMAL_MAIN"
+      }
+    },
+    {
+      "id": "e23_prewrite",
+      "path": "deepwrite/candidates/e23-frame-wiring/prewrite_entry.py",
+      "description": "SHADOW-only prepare; optional explicit --execute enters supplied E18 path",
+      "main": {
+        "path": "deepwrite/candidates/e23-frame-wiring/prewrite_entry.py",
+        "ref": "6b81a45d8576aa0636d29950f9a2d86f2a5cf8b1",
+        "exists": false
+      },
+      "candidate": {
+        "path": "deepwrite/candidates/e23-frame-wiring/prewrite_entry.py",
+        "ref": "fcdacc1f20f74f706323c251336ae5db74992fd7",
+        "exists": true,
+        "git_blob": "53eb658ca26c36d45732f279cb35c80d82108928",
+        "sha256": "f4ae8b6bce4df6da7d20b8681d7885ce0065c8b02e353f8fbf0b72b4d22464bd",
+        "bytes": 6687
+      },
+      "worktree": {
+        "sha256": "115ba5899f39092dd668885fedeed3c1bf92b4a1714561b11e4d79e4efa7016c",
+        "bytes": 12079,
+        "status": "CURRENT_QUALITY_CANDIDATE_SOURCE_NOT_FORMAL_MAIN"
+      }
+    },
+    {
+      "id": "e23_perspective",
+      "path": "deepwrite/candidates/e23-frame-wiring/perspective_gate.py",
+      "description": "Source/prior-art evidence identity aid; no semantic novelty auto-pass",
+      "main": {
+        "path": "deepwrite/candidates/e23-frame-wiring/perspective_gate.py",
+        "ref": "6b81a45d8576aa0636d29950f9a2d86f2a5cf8b1",
+        "exists": false
+      },
+      "candidate": {
+        "path": "deepwrite/candidates/e23-frame-wiring/perspective_gate.py",
+        "ref": "fcdacc1f20f74f706323c251336ae5db74992fd7",
+        "exists": true,
+        "git_blob": "b021765b3231295fc818dcef6f05d631cb85c76a",
+        "sha256": "d902d989f17fbc870480fd890868da33cc185eaaf7149294c587a764a4bde8ce",
+        "bytes": 6454
+      },
+      "worktree": {
+        "sha256": "d902d989f17fbc870480fd890868da33cc185eaaf7149294c587a764a4bde8ce",
+        "bytes": 6454,
+        "status": "CURRENT_QUALITY_CANDIDATE_SOURCE_NOT_FORMAL_MAIN"
+      }
+    },
+    {
+      "id": "packager",
+      "path": "deepwrite/tools/book_packager_v0.1.py",
+      "description": "Main standalone older packager; candidate safer PR12 implementation",
+      "main": {
+        "path": "deepwrite/tools/book_packager_v0.1.py",
+        "ref": "6b81a45d8576aa0636d29950f9a2d86f2a5cf8b1",
+        "exists": true,
+        "git_blob": "d4d1b0b575c8df90ed5d8448d6bc0afe8f72b481",
+        "sha256": "0c00a29c7f0746c41095c39f3d548a5239a3ee2cf96dc173a98428b8cae132bd",
+        "bytes": 3630
+      },
+      "candidate": {
+        "path": "deepwrite/tools/book_packager_v0.1.py",
+        "ref": "fcdacc1f20f74f706323c251336ae5db74992fd7",
+        "exists": true,
+        "git_blob": "cc5654d3a2ee112b3bd640dc1f64a8021ddb95ea",
+        "sha256": "716cbedfe60ab7096f19b6de266b929cb81c0f8b8668c8ea322dd5e4286023e6",
+        "bytes": 8145
+      },
+      "worktree": {
+        "sha256": "716cbedfe60ab7096f19b6de266b929cb81c0f8b8668c8ea322dd5e4286023e6",
+        "bytes": 8145,
+        "status": "CURRENT_QUALITY_CANDIDATE_SOURCE_NOT_FORMAL_MAIN"
+      }
+    },
+    {
+      "id": "checkpoint",
+      "path": "deepwrite/qa/checkpoint.py",
+      "description": "Declared-file byte snapshot/restore",
+      "main": {
+        "path": "deepwrite/qa/checkpoint.py",
+        "ref": "6b81a45d8576aa0636d29950f9a2d86f2a5cf8b1",
+        "exists": true,
+        "git_blob": "c97a9e0a6f7fe2642a818ac4e5f0e9e354840f9b",
+        "sha256": "f40633cfdde27c47778841092e1ede8ab3604ee4608559d42ff0b735ce01257d",
+        "bytes": 10314
+      },
+      "candidate": {
+        "path": "deepwrite/qa/checkpoint.py",
+        "ref": "fcdacc1f20f74f706323c251336ae5db74992fd7",
+        "exists": true,
+        "git_blob": "c97a9e0a6f7fe2642a818ac4e5f0e9e354840f9b",
+        "sha256": "f40633cfdde27c47778841092e1ede8ab3604ee4608559d42ff0b735ce01257d",
+        "bytes": 10314
+      },
+      "worktree": {
+        "sha256": "f40633cfdde27c47778841092e1ede8ab3604ee4608559d42ff0b735ce01257d",
+        "bytes": 10314,
+        "status": "CURRENT_QUALITY_CANDIDATE_SOURCE_NOT_FORMAL_MAIN"
+      }
+    },
+    {
+      "id": "resume",
+      "path": "deepwrite/qa/resume_check.py",
+      "description": "Declared policy/inventory checks",
+      "main": {
+        "path": "deepwrite/qa/resume_check.py",
+        "ref": "6b81a45d8576aa0636d29950f9a2d86f2a5cf8b1",
+        "exists": true,
+        "git_blob": "0e8600fbc12e8bee53c19498dfedfebf1540e768",
+        "sha256": "d71d8aba9965206d68f0ee9e936cfa3a7a13d125a64662aa149df3b97510bbaa",
+        "bytes": 6339
+      },
+      "candidate": {
+        "path": "deepwrite/qa/resume_check.py",
+        "ref": "fcdacc1f20f74f706323c251336ae5db74992fd7",
+        "exists": true,
+        "git_blob": "0e8600fbc12e8bee53c19498dfedfebf1540e768",
+        "sha256": "d71d8aba9965206d68f0ee9e936cfa3a7a13d125a64662aa149df3b97510bbaa",
+        "bytes": 6339
+      },
+      "worktree": {
+        "sha256": "d71d8aba9965206d68f0ee9e936cfa3a7a13d125a64662aa149df3b97510bbaa",
+        "bytes": 6339,
+        "status": "CURRENT_QUALITY_CANDIDATE_SOURCE_NOT_FORMAL_MAIN"
+      }
+    },
+    {
+      "id": "release_preflight",
+      "path": "deepwrite/release/release_verify.py",
+      "description": "Candidate actual transition verification; not owner authentication",
+      "main": {
+        "path": "deepwrite/release/release_verify.py",
+        "ref": "6b81a45d8576aa0636d29950f9a2d86f2a5cf8b1",
+        "exists": false
+      },
+      "candidate": {
+        "path": "deepwrite/release/release_verify.py",
+        "ref": "fcdacc1f20f74f706323c251336ae5db74992fd7",
+        "exists": true,
+        "git_blob": "26e48797ff34262b4bc8359a04a963ef946dc0ff",
+        "sha256": "2b7cc32843edcd8defc4f9eac068236f29b8b65342003ae9537739034682d14a",
+        "bytes": 15458
+      },
+      "worktree": {
+        "sha256": "2b7cc32843edcd8defc4f9eac068236f29b8b65342003ae9537739034682d14a",
+        "bytes": 15458,
+        "status": "CURRENT_QUALITY_CANDIDATE_SOURCE_NOT_FORMAL_MAIN"
+      }
+    },
+    {
+      "id": "owner_controller",
+      "path": "deepwrite/release/github_authorization.py",
+      "description": "Candidate protected-main API controller; not installed in formal main",
+      "main": {
+        "path": "deepwrite/release/github_authorization.py",
+        "ref": "6b81a45d8576aa0636d29950f9a2d86f2a5cf8b1",
+        "exists": false
+      },
+      "candidate": {
+        "path": "deepwrite/release/github_authorization.py",
+        "ref": "fcdacc1f20f74f706323c251336ae5db74992fd7",
+        "exists": true,
+        "git_blob": "b9569e56142a0c5e4805e89734198fa96a6f7f2e",
+        "sha256": "3925174e09815f3a016fd37ab5f7d4130fff1c0035b6904a78bf854a0ad173db",
+        "bytes": 15406
+      },
+      "worktree": {
+        "sha256": "3925174e09815f3a016fd37ab5f7d4130fff1c0035b6904a78bf854a0ad173db",
+        "bytes": 15406,
+        "status": "CURRENT_QUALITY_CANDIDATE_SOURCE_NOT_FORMAL_MAIN"
+      }
+    },
+    {
+      "id": "runtime_ci",
+      "path": ".github/workflows/deepwrite-activation.yml",
+      "description": "Candidate PR/main regression workflow",
+      "main": {
+        "path": ".github/workflows/deepwrite-activation.yml",
+        "ref": "6b81a45d8576aa0636d29950f9a2d86f2a5cf8b1",
+        "exists": false
+      },
+      "candidate": {
+        "path": ".github/workflows/deepwrite-activation.yml",
+        "ref": "fcdacc1f20f74f706323c251336ae5db74992fd7",
+        "exists": true,
+        "git_blob": "c6baffcf1392e17f2142b2e4c3e26581b9fc0309",
+        "sha256": "e2701adcf240bfeaa627d2ae47ff65c47931703f76912bc58a4b352606f5c907",
+        "bytes": 3057
+      },
+      "worktree": {
+        "sha256": "47b1060cf3e36c200eeaeb0f98fdee0b9885a8f182381df7a5e9cf820e330527",
+        "bytes": 3033,
+        "status": "CURRENT_QUALITY_CANDIDATE_SOURCE_NOT_FORMAL_MAIN"
+      }
+    },
+    {
+      "id": "owner_ci",
+      "path": ".github/workflows/deepwrite-owner-release.yml",
+      "description": "Candidate owner exact-head check/auto-merge controller workflow",
+      "main": {
+        "path": ".github/workflows/deepwrite-owner-release.yml",
+        "ref": "6b81a45d8576aa0636d29950f9a2d86f2a5cf8b1",
+        "exists": false
+      },
+      "candidate": {
+        "path": ".github/workflows/deepwrite-owner-release.yml",
+        "ref": "fcdacc1f20f74f706323c251336ae5db74992fd7",
+        "exists": true,
+        "git_blob": "f8aaedf6b63edf713722157734b1eefde21d70ea",
+        "sha256": "177a7743da7c5eef5fbaeb2e097601201dab97e5d554a6596c3796a01656f581",
+        "bytes": 1527
+      },
+      "worktree": {
+        "sha256": "177a7743da7c5eef5fbaeb2e097601201dab97e5d554a6596c3796a01656f581",
+        "bytes": 1527,
+        "status": "CURRENT_QUALITY_CANDIDATE_SOURCE_NOT_FORMAL_MAIN"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "formal_start",
+      "to": "formal_current",
+      "status": "DOCUMENTED_ACTIVE",
+      "code": "START_HERE execution instructions",
+      "runtime": "dialogue reading only"
+    },
+    {
+      "from": "formal_current",
+      "to": "formal_spec",
+      "status": "ACTIVE_DOCUMENTED_SPEC",
+      "code": "CURRENT.active_workbench_spec",
+      "runtime": "not a Python writer"
+    },
+    {
+      "from": "formal_current",
+      "to": "activation",
+      "status": "NOT_CONNECTED_FORMAL_MAIN",
+      "reason": "activation.py absent in main; CURRENT has neither active_engine nor active_runner"
+    },
+    {
+      "from": "activation",
+      "to": "engineering_runtime",
+      "status": "CONDITIONAL_CODE_READY_NOT_ACTIVE",
+      "code": "activation.main --run subprocess; resolve requires committed active_engine and full release identity",
+      "runtime": "actual --run identity exits2 for current v0.1"
+    },
+    {
+      "from": "engineering_runtime",
+      "to": "writer_loop",
+      "status": "INTENTIONALLY_NOT_CONNECTED",
+      "reason": "Engineering runtime excludes unaccepted cognitive prompts; only init/guarded assemble/recovery"
+    },
+    {
+      "from": "e23_prewrite",
+      "to": "e23_perspective",
+      "status": "CANDIDATE_CODE_WIRED",
+      "code": "prepare -> evaluate(manifest, frame_path.parent)",
+      "limit": "provenance/structure only"
+    },
+    {
+      "from": "e23_prewrite",
+      "to": "writer_loop",
+      "status": "CANDIDATE_EXPLICIT_OPT_IN_ONLY",
+      "code": "main --execute --runner -> subprocess supplied runner prepared-config project-root",
+      "limit": "committed PR14 only checks runner.is_file; no active runtime registration; no default main invocation"
+    },
+    {
+      "from": "writer_loop",
+      "to": "model_adapter",
+      "status": "CANDIDATE_CODE_WIRED_NOT_LIVE_VERIFIED_BY_THIS_AUDIT",
+      "code": "WritingLoop.call -> self.model.generate; CodexExec alternatively parses CLI events",
+      "limit": "source wiring and fixture runs do not prove a real model or quality"
+    },
+    {
+      "from": "writer_loop",
+      "to": "reviewer",
+      "status": "CANDIDATE_CODE_WIRED",
+      "code": "review_cycle -> call(key+_review, role=review) -> frozen findings"
+    },
+    {
+      "from": "reviewer",
+      "to": "rewriter",
+      "status": "CANDIDATE_CODE_WIRED",
+      "code": "review_cycle unresolved -> save_text_call(role=revise) -> actual new file and difflib -> role=recheck"
+    },
+    {
+      "from": "rewriter",
+      "to": "e15_guard",
+      "status": "CANDIDATE_CODE_WIRED",
+      "code": "check_record -> guard.check(actual files, expected_findings)",
+      "limit": "model_review remains model judgment; literal checks do not establish semantics"
+    },
+    {
+      "from": "writer_loop",
+      "to": "bookwide_review",
+      "status": "CANDIDATE_PARTIAL",
+      "code": "run cross_close -> review_cycle(cross, chapters); historical_findings before package",
+      "limit": "committed runner lacks the new explicit per-chapter source-learning/reader contract/mode contract/full-book recheck state machine; worktree being edited separately"
+    },
+    {
+      "from": "writer_loop",
+      "to": "packager",
+      "status": "CANDIDATE_CODE_WIRED",
+      "code": "run package stage -> packager.assemble(manifest, root, book, package, manifestfile)"
+    },
+    {
+      "from": "writer_loop",
+      "to": "checkpoint",
+      "status": "CANDIDATE_CODE_WIRED",
+      "code": "checkpoint_now -> checkpoint.snapshot + resume_checker.check",
+      "limit": "declared bytes and policy only"
+    },
+    {
+      "from": "release_preflight",
+      "to": "owner_controller",
+      "status": "CANDIDATE_CODE_WIRED_NOT_INSTALLED_MAIN",
+      "code": "controller imports verify_transition, reads real PR/owner/CI/rules; does not execute candidate Python"
+    },
+    {
+      "from": "owner_controller",
+      "to": "formal_current",
+      "status": "BLOCKED_NOT_RELEASED",
+      "reason": "No main controller, allow_auto_merge=false, rules required checks empty/review1, no authenticated exact-head release approval established by this audit"
+    }
+  ],
+  "actual_resolver_invocations": [
+    {
+      "argv": [
+        "python3",
+        "-B",
+        "deepwrite/release/activation.py",
+        "--root",
+        "."
+      ],
+      "cwd": "/workspace/deepwrite-release",
+      "exit_code": 0,
+      "stdout": "{\n  \"schema\": \"deepwrite/activated-resolution/v1\",\n  \"active_version\": \"v0.1\",\n  \"active_spec\": \"deepwrite/versions/v0.1.md\",\n  \"active_spec_sha256\": \"59e458cc0a1ccfc7f2a85a007737662ff13218cf839b658b1172b1deda23dc90\",\n  \"parent_wish_version\": \"v7.6\",\n  \"status\": \"WORKBENCH_ONLY_NO_LIVE_AUTONOMOUS_RUNNER\",\n  \"runner\": null,\n  \"project_pin_policy\": \"NEW_PROJECT_USES_ACTIVE_EXISTING_PROJECT_PIN_PRESERVED\",\n  \"project_alignment\": \"NEW_PROJECT\",\n  \"human_approval_verified_by_resolver\": false,\n  \"book_quality_verified_by_resolver\": false\n}\n",
+      "stderr": "",
+      "scope": "COMMITTED_CANDIDATE_RESOLVER_NOT_FORMAL_MAIN_EXECUTION"
+    },
+    {
+      "argv": [
+        "python3",
+        "-B",
+        "deepwrite/release/activation.py",
+        "--root",
+        ".",
+        "--run",
+        "--",
+        "identity"
+      ],
+      "cwd": "/workspace/deepwrite-release",
+      "exit_code": 2,
+      "stdout": "{\n  \"schema\": \"deepwrite/activated-resolution/v1\",\n  \"active_version\": \"v0.1\",\n  \"active_spec\": \"deepwrite/versions/v0.1.md\",\n  \"active_spec_sha256\": \"59e458cc0a1ccfc7f2a85a007737662ff13218cf839b658b1172b1deda23dc90\",\n  \"parent_wish_version\": \"v7.6\",\n  \"status\": \"WORKBENCH_ONLY_NO_LIVE_AUTONOMOUS_RUNNER\",\n  \"runner\": null,\n  \"project_pin_policy\": \"NEW_PROJECT_USES_ACTIVE_EXISTING_PROJECT_PIN_PRESERVED\",\n  \"project_alignment\": \"NEW_PROJECT\",\n  \"human_approval_verified_by_resolver\": false,\n  \"book_quality_verified_by_resolver\": false\n}\n",
+      "stderr": "DEEPWRITE_ACTIVATION_BLOCKED: NO_VERIFIED_ACTIVE_RUNNER_NOT_CALLING_EXPERIMENT\n",
+      "scope": "COMMITTED_CANDIDATE_RESOLVER_NOT_FORMAL_MAIN_EXECUTION"
+    }
+  ],
+  "configuration_readback": {
+    "allow_auto_merge": false,
+    "allow_merge_commit": true,
+    "ruleset": {
+      "id": 27040989,
+      "name": "Deepwrite",
+      "target": "branch",
+      "enforcement": "active",
+      "conditions": {
+        "ref_name": {
+          "exclude": [],
+          "include": [
+            "~DEFAULT_BRANCH"
+          ]
+        }
+      },
+      "bypass_actors": [],
+      "rules": [
+        {
+          "type": "deletion"
+        },
+        {
+          "type": "non_fast_forward"
+        },
+        {
+          "type": "pull_request",
+          "parameters": {
+            "required_approving_review_count": 1,
+            "dismiss_stale_reviews_on_push": false,
+            "required_reviewers": [],
+            "require_code_owner_review": false,
+            "require_last_push_approval": false,
+            "required_review_thread_resolution": false,
+            "require_extra_approval_for_unattributed_changes": false,
+            "allowed_merge_methods": [
+              "merge",
+              "squash",
+              "rebase"
+            ]
+          }
+        },
+        {
+          "type": "required_status_checks",
+          "parameters": {
+            "strict_required_status_checks_policy": false,
+            "do_not_enforce_on_create": false,
+            "required_status_checks": []
+          }
+        }
+      ]
+    }
+  },
+  "findings": [
+    "ACTIVATION_GAP_CONFIRMED_MAIN_HAS_NO_EXECUTABLE_ENTRY",
+    "E18_CANDIDATE_WRITER_REVIEW_REWRITE_PACKAGE_ARE_WIRED_BUT_NOT_FORMAL",
+    "E23_PREWRITE_EXPLICIT_EXECUTE_IS_NOT_FORMAL_REGISTRATION",
+    "E15_MACHINE_STRUCTURAL_PASS_IS_NOT_SEMANTIC_QUALITY",
+    "PR15_DO_NOT_MERGE_NEGATIVE_CONTROL_ONLY",
+    "PR16_DOCS_ONLY_NOT_RUNTIME_FIX",
+    "E1_NOT_IMPLEMENTED_E2_NOT_RUN_IN_FORMAL_RECORD",
+    "CURRENT_SOURCE_READER_MODE_STATES_ARE_NEW_WORKTREE_IMPLEMENTATION_NOT_YET_AUDITED_AS_REMOTE"
+  ],
+  "quality_execution_chain": {
+    "formal_entry": "main CURRENT v0.1 has no executable runner; STOP is actual",
+    "candidate_entry": "E23 prepare with canonical E18 path+SHA, or existing E18 CLI",
+    "ordered_calls": [
+      "WritingLoop.author_scope",
+      "WritingLoop.prepare_chapter/discover",
+      "source_learning",
+      "reader_review/SOURCE_LEARNING and reader_source_gate.evaluate",
+      "DRAFT",
+      "reader_source_review and adversarial review_cycle",
+      "real complete body revision + content_retention_review",
+      "reader recheck + E15 actual file check",
+      "cross_close all chapters",
+      "front and afterword",
+      "full_book_recheck all parts + actual repairs",
+      "check_historical_findings",
+      "packager.assemble",
+      "checkpoint.snapshot"
+    ],
+    "executed_evidence": "47 writer and 51 reader engineering controls; actual private D helper replay; no new live writer due 401",
+    "status": "ENGINEERING_VERIFIED_NOT_ACTIVE",
+    "live_model": "BLOCKED_HTTP_401"
+  }
+}

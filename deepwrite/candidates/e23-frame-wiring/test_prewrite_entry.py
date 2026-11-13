@@ -4,7 +4,7 @@ import json
 import tempfile
 import unittest
 from pathlib import Path
-from prewrite_entry import prepare
+from prewrite_entry import prepare, verified_runner
 
 
 def h(x): return hashlib.sha256(x.encode()).hexdigest()
@@ -80,5 +80,64 @@ class PrewriteEntrypointTest(unittest.TestCase):
   (self.proj/'sources').mkdir(parents=True)
   (self.proj/'sources/e23_frame_manifest.json').write_text('pretend accepted','utf-8')
   with self.assertRaisesRegex(ValueError,'COLLISION'):self.call()
+ def test_reader_contract_is_frozen_as_real_downstream_source(self):
+  self.config['reader_prior_knowledge_contract']={
+   'schema':'deepwrite/reader-prior-contract/v1','known':['ordinary arithmetic'],
+   'unknown':['the source rules'],
+   'concepts':[{'id':'settlement','first_explained_in':'A','first_used_in':'A','prerequisites':[]}]}
+  self.save_config();result=self.call();amended=json.loads(self.out.read_text())
+  reader=(self.proj/'sources/e23_reader_prior_contract.json').read_bytes()
+  self.assertEqual(result['reader_contract']['contract_sha256'],hashlib.sha256(reader).hexdigest())
+  self.assertTrue(any(row['path']=='sources/e23_reader_prior_contract.json' and row['sha256']==hashlib.sha256(reader).hexdigest() for row in amended['sources']))
+  self.assertEqual(amended['reader_prior_knowledge_contract'],self.config['reader_prior_knowledge_contract'])
+  self.assertIn('downstream runner must call',amended['wish'])
+  self.assertIn('not a semantic or human-reader PASS',amended['wish'])
+ def test_invalid_declared_reader_dependencies_cannot_be_wired(self):
+  self.config['reader_prior_knowledge_contract']={
+   'schema':'deepwrite/reader-prior-contract/v1','known':[],'unknown':['the source rules'],
+   'concepts':[{'id':'settlement','first_explained_in':'missing','first_used_in':'A','prerequisites':[]}]}
+  self.save_config()
+  with self.assertRaisesRegex(ValueError,'FIRST_LOCATION_REQUIRED'):self.call()
+ def test_preprocess_receipt_records_actual_source_output_identities(self):
+  result=self.call();amended=json.loads(self.out.read_text())
+  receipt=amended['e23_preprocess_receipt']
+  self.assertFalse(receipt['invocation_authenticated'])
+  self.assertEqual(receipt['frame_manifest_sha256'],hashlib.sha256(self.manifest_path.read_bytes()).hexdigest())
+  self.assertEqual(receipt['context_sha256'],hashlib.sha256((self.proj/'sources/e23_frame_context.md').read_bytes()).hexdigest())
+  self.assertEqual(receipt['input_config_sha256'],hashlib.sha256(self.config_path.read_bytes()).hexdigest())
+  self.assertEqual(receipt,result['preprocess_receipt'])
+  repo=Path(__file__).resolve().parents[3]
+  self.assertEqual(len(receipt['module_files']),3)
+  for identity in receipt['module_files']:
+   self.assertEqual(identity['sha256'],hashlib.sha256((repo/identity['path']).read_bytes()).hexdigest())
+   if identity['commit'] is None:self.assertEqual(identity['commit_status'],'UNCOMMITTED_SOURCE_SHA_RECORDED')
+ def test_execute_cannot_replace_e18_with_an_arbitrary_script(self):
+  arbitrary=self.root/'different_runner.py';arbitrary.write_text('raise SystemExit(0)','utf-8')
+  with self.assertRaisesRegex(ValueError,'CANONICAL_E18'):
+   verified_runner(arbitrary,hashlib.sha256(arbitrary.read_bytes()).hexdigest())
+ def test_execute_requires_actual_e18_expected_source_sha(self):
+  canonical=Path(__file__).resolve().parents[2]/'tools/writing_loop_experimental.py'
+  with self.assertRaisesRegex(ValueError,'EXPECTED_SHA_REQUIRED'):
+   verified_runner(canonical,None)
+  with self.assertRaisesRegex(ValueError,'EXPECTED_SHA_REQUIRED'):
+   verified_runner(canonical,'0'*64)
+  actual=verified_runner(canonical,hashlib.sha256(canonical.read_bytes()).hexdigest())
+  self.assertEqual(actual['path'],'deepwrite/tools/writing_loop_experimental.py')
+ def test_prewrite_cannot_publish_context_into_code_checkout(self):
+  self.proj=Path(__file__).resolve().parents[3]/'prewrite-private-output-must-not-be-created'
+  with self.assertRaisesRegex(ValueError,'OUTSIDE_PUBLIC_CODE'):
+   self.call()
+  self.assertFalse(self.proj.exists())
+ def test_prepared_private_config_cannot_be_written_in_public_code_checkout(self):
+  self.out=Path(__file__).resolve().parents[3]/'prewrite-private-config-must-not-be-created.json'
+  with self.assertRaisesRegex(ValueError,'OUTSIDE_PUBLIC_CODE'):
+   self.call()
+  self.assertFalse(self.out.exists())
+ def test_symlinked_sources_cannot_leak_prewrite_output(self):
+  self.proj.mkdir();other=self.root/'elsewhere';other.mkdir()
+  (self.proj/'sources').symlink_to(other,target_is_directory=True)
+  with self.assertRaisesRegex(ValueError,'SYMLINK_REJECTED'):
+   self.call()
+  self.assertEqual(list(other.iterdir()),[])
 
 if __name__=='__main__':unittest.main()

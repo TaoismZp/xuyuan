@@ -30,7 +30,17 @@ class ScriptedModel:
         req = json.loads(prompt)
         role, p = req["role"], req["payload"]
         self.calls.append(role)
-        if role in ("research", "select_direction"):
+        if role in ("source_evidence_review", "reader_source_review"):
+            text = json.dumps(reader_report(p))
+        elif role in ("discover", "source_learning", "source_learning_revise"):
+            text = "# Native source reasoning fixture\n\nTwo actors each bring two objects. Count both pairs to establish four before transferring the method."
+        elif role == "historical_recheck":
+            text = json.dumps({"status": "KEEP", "paragraph": 2, "evidence": "Scripted explicit rereading of final bytes.",
+                "reason": "Engineering control only, not a semantic judgment.", "new_findings": []})
+        elif role == "content_loss_review":
+            text = json.dumps({"units": [{"baseline_quote": p["baseline"].split("\n\n")[1],
+                "classification": "REDUNDANT", "rationale": "Scripted engineering classification only; not quality evidence."}]})
+        elif role in ("research", "select_direction"):
             text = "# Engineering fixture\n\nCompare calculation errors against actual prose."
         elif role == "draft":
             text = CORRECT if self.clean else DRAFT
@@ -71,18 +81,50 @@ class ScriptedModel:
                                           usage, "scripted_fixture")
 
 
+def reader_report(payload):
+    """Public scripted transport record, never a genuine model/reader judgment."""
+    text = payload["manuscript"]
+    paragraph = loop.reader_paragraphs(text) if hasattr(loop, "reader_paragraphs") else [p for p in text.split("\n\n") if p.strip()]
+    number = 2 if len(paragraph) > 1 else 1
+    quote = paragraph[number-1]
+    report = {"schema": "deepwrite/reader-source-review/v1", "artifact_sha256": payload["artifact_sha256"],
+        "contract_sha256": payload["contract_sha256"], "source_correctness": {"verdict": "SUPPORTED",
+            "rationale": "Scripted fixture checks engineering routing, not source truth."},
+        "source_evidence": [{"concept_id": ident, "dimension": dim, "paragraph": number, "quote": quote}
+            for ident in payload["task"]["required_source_concepts"] for dim in payload["task"]["source_dimensions"]],
+        "findings": [], "author_acceptance": "NOT_RUN", "human_blind_evaluation": "NOT_RUN"}
+    if payload["stage"] == "SOURCE_LEARNING":
+        key, source = next(iter(payload["source_texts"].items()))
+        report["source_material_evidence"] = [{"source_id": key, "paragraph": 1, "quote": source.split("\n\n")[0]}]
+    else:
+        report["reader_checks"] = [{"audience": audience, "verdict": "SUPPORTED", "rationale": "Scripted fixture only.",
+            "paragraph": number, "quote": quote} for audience in ("NOVICE", "PRACTITIONER", "EXPERT")]
+    return report
+
+
 def config(root, guard="on"):
     source = root / "sources/material.md"
     source.parent.mkdir(parents=True)
     source.write_text("Public engineering fixture only: two pairs contain four objects.\n", encoding="utf-8")
+    auth = root / "sources/author-contract.txt"
+    auth.write_bytes(loop.json_bytes({"schema": "deepwrite/author-project-authorization/v1", "project_id": "e18-engineering-fixture",
+        "mode": "AUTONOMOUS_FULL_DRAFT", "chapter_scope": "ALL_CANDIDATE_CHAPTERS",
+        "author_identity_verification": "ENGINEERING_FIXTURE_NOT_REAL_AUTHOR"}))
     protocols = {name: {"version": version, "commit": "1"*40, "spec_sha": "2"*40}
                  for name, version in (("deepwrite", "v0.1"), ("wish_delivery", "v7.6"))}
-    return {"project_id": "e18-engineering-fixture", "model": "fixture-model",
+    return {"project_id": "e18-engineering-fixture", "run_id": "engineering-fixture-run", "model": "fixture-model",
+        "execution_contract": {"mode": "AUTONOMOUS_FULL_DRAFT", "authorization": {
+            "path": "sources/author-contract.txt", "sha256": loop.digest(auth.read_bytes()),
+            "provenance": "ENGINEERING_FIXTURE_NOT_REAL_AUTHOR"}},
+        "reader_prior_knowledge_contract": {"schema": "deepwrite/reader-prior-contract/v1", "known": ["simple counting"],
+            "unknown": ["why pairs combine"], "concepts": [{"id": "pairs", "first_explained_in": "alpha",
+                "first_used_in": "alpha", "prerequisites": []}]},
         "working_title": "Engineering fixture", "wish": "Explain a verifiable arithmetic decision.",
         "adapter": "fixture", "guard": guard, "token_budget": 10000,
         "per_call_output_tokens": 1000, "max_revision_rounds": 1,
         "chapters": [{"artifact_id": "alpha", "title": "Arithmetic"}],
-        "sources": [{"path": "sources/material.md", "sha256": loop.digest(source.read_bytes())}],
+        "sources": [{"path": "sources/material.md", "sha256": loop.digest(source.read_bytes())},
+                    {"path": "sources/author-contract.txt", "sha256": loop.digest(auth.read_bytes())}],
         "pins": {"project_id": "e18-engineering-fixture", "protocols": protocols,
             "channel": "CANDIDATE_OPT_IN", "modules": [{"id": "e18_loop", "commit": "3"*40}]},
         "channel": "CANDIDATE_OPT_IN", "module_policy": {"e18_loop": "CANDIDATE"},
@@ -127,7 +169,7 @@ class WritingLoopTests(unittest.TestCase):
 
     def test_false_closed_unchanged_prose_is_blocked(self):
         _, result = self.run_model(ScriptedModel(repair="unchanged"))
-        self.assertEqual(result["status"], "BLOCKED")
+        self.assertEqual(result["status"], "BLOCKED_QUALITY_UNRESOLVED")
         self.assertIn("REVIEW_STILL_OPEN", result["failure"]["message"])
         self.assertFalse((self.root/"book.md").exists())
         self.assertTrue((self.root/"calls/alpha_recheck_1.response.json").exists())
@@ -136,7 +178,7 @@ class WritingLoopTests(unittest.TestCase):
 
     def test_whitespace_only_fake_repair_is_blocked(self):
         _, result = self.run_model(ScriptedModel(repair="whitespace"))
-        self.assertEqual(result["status"], "BLOCKED")
+        self.assertEqual(result["status"], "BLOCKED_QUALITY_UNRESOLVED")
         self.assertFalse((self.root/"book.md").exists())
         self.assertNotEqual((self.root/"chapters/alpha.draft.md").read_bytes(),
                             (self.root/"chapters/alpha.alpha.r1.md").read_bytes())
@@ -164,7 +206,7 @@ class WritingLoopTests(unittest.TestCase):
             def generate(self, instructions, prompt, max_output_tokens=6000):
                 req = json.loads(prompt)
                 p = req["payload"]
-                if req["role"] == "review" and len(p["manuscripts"]) > 1:
+                if req["role"] == "review" and p.get("review_scope") == "cross" and "Check the assumptions" not in p["manuscripts"]["beta"]:
                     self.calls.append("cross_review")
                     text = json.dumps({"findings": [
                         {"id": "cross_alpha", "artifact_id": "alpha", "kind": "model_review",
@@ -241,7 +283,7 @@ class WritingLoopTests(unittest.TestCase):
                 return loop.transport.ModelResult(result.response_id, result.model, json.dumps(obj),
                                                    result.usage, result.provider_kind)
         _, result = self.run_model(NewMajor())
-        self.assertEqual(result["status"], "BLOCKED")
+        self.assertEqual(result["status"], "BLOCKED_QUALITY_UNRESOLVED")
         self.assertIn("NEW_MAJOR_FINDINGS_HOLD", result["failure"]["message"])
         self.assertTrue((self.root/"reviews/alpha.new_findings.1.json").exists())
         self.assertFalse((self.root/"book.md").exists())
@@ -304,6 +346,15 @@ class WritingLoopTests(unittest.TestCase):
                 req = json.loads(prompt)
                 if req["role"] == "review":
                     self.review_turn += 1
+                    if self.review_turn >= 3:
+                        self.calls.append("false_full_book_keep")
+                        text = json.dumps({"findings": [{"id": "unrelated_keep_" + art, "artifact_id": art,
+                            "kind": "computable", "severity": "NOTE", "status": "KEEP", "issue": "Unrelated claim",
+                            "evidence": "Scripted weak full-book reviewer", "reason": "Does not test the old known error.",
+                            "paragraph": 2, "assertion": {"op": "not_contains", "value": "UNRELATED_LITERAL"}}
+                            for art in req["payload"]["manuscripts"]]})
+                        return loop.transport.ModelResult("weak-full-review", "fixture-model", text,
+                            {"input_tokens":10,"output_tokens":10}, "scripted_fixture")
                     if self.review_turn == 2:
                         self.calls.append("cross_review")
                         text = json.dumps({"findings": [{"id": "cross_change", "artifact_id": "alpha",
@@ -318,7 +369,7 @@ class WritingLoopTests(unittest.TestCase):
                         {"input_tokens":10,"output_tokens":10}, "scripted_fixture")
                 return super().generate(instructions, prompt, max_output_tokens)
         _, result = self.run_model(Regression())
-        self.assertEqual(result["status"], "BLOCKED")
+        self.assertEqual(result["status"], "BLOCKED_QUALITY_UNRESOLVED")
         self.assertIn("HISTORICAL_FINDING_REGRESSION", result["failure"]["message"])
         record = json.loads((self.root/"reviews/final_historical_findings.json").read_text())
         self.assertIn("COMPUTABLE_REGRESSION", {f["reason"] for f in record["failures"]})
@@ -348,7 +399,7 @@ class WritingLoopTests(unittest.TestCase):
 
     def test_resume_restores_old_files_without_repeating_successful_calls(self):
         first = ScriptedModel()
-        paused = loop.WritingLoop(self.root, self.cfg, model=first, stop_after=4).run()
+        paused = loop.WritingLoop(self.root, self.cfg, model=first, stop_after=8).run()
         self.assertEqual(paused["status"], "PAUSED", paused)
         receipt = paused["checkpoint"]
         restored = self.base / "restored"
@@ -372,7 +423,7 @@ class WritingLoopTests(unittest.TestCase):
             loop.WritingLoop(self.root, self.cfg, model=ScriptedModel())
 
     def test_resume_rejects_tampered_actual_file(self):
-        paused = loop.WritingLoop(self.root, self.cfg, model=ScriptedModel(), stop_after=3).run()
+        paused = loop.WritingLoop(self.root, self.cfg, model=ScriptedModel(), stop_after=7).run()
         (self.root/"chapters/alpha.draft.md").write_text("tamper")
         with self.assertRaisesRegex(loop.Blocked, "RESUME_FILE_SHA_MISMATCH"):
             loop.WritingLoop(self.root, self.cfg, model=ScriptedModel(),
@@ -441,7 +492,7 @@ class WritingLoopTests(unittest.TestCase):
         self.assertIn("OUTPUT_CAP_EXCEEDED", result["failure"]["message"])
 
     def test_corrupt_restore_source_is_rejected(self):
-        paused = loop.WritingLoop(self.root, self.cfg, model=ScriptedModel(), stop_after=3).run()
+        paused = loop.WritingLoop(self.root, self.cfg, model=ScriptedModel(), stop_after=7).run()
         receipt = paused["checkpoint"]
         # Corrupt one actual saved file, preserving the external expected manifest SHA.
         target = Path(receipt["path"])/"files/chapters/alpha.draft.md"
