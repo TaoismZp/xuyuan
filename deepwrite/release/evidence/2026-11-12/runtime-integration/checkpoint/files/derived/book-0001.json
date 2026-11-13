@@ -1,0 +1,39 @@
+{
+  "schema": "verified-markdown-book/v0.1",
+  "generated_at_utc": "2026-11-12T00:28:08+00:00",
+  "title": "Public engineering fixture only",
+  "chapters": 1,
+  "sha256": "a52657539f1a39cfaeabdc3e8660001f76d5c46a15a978bb665092090aaeb9c7",
+  "bytes": 426,
+  "chapter_source_digests": [
+    {
+      "number": 1,
+      "relative_path": "chapters/01.md",
+      "sha256": "8effd1a8b4b6c36b06c8b2b019a754322eacadb0201a49721da9215c484e95ac",
+      "bytes": 76
+    }
+  ],
+  "front_sha256": "184119e5c905b72396321c372e07e83bb4111edfcc5655a6026f1fc1d0142944",
+  "tail_sha256": "622620191b71adf4ceb9fb928de5c352b666b291eee9504b681751ef4afec552",
+  "front_source": {
+    "relative_path": "front.md",
+    "sha256": "184119e5c905b72396321c372e07e83bb4111edfcc5655a6026f1fc1d0142944",
+    "bytes": 64
+  },
+  "tail_source": {
+    "relative_path": "tail.md",
+    "sha256": "622620191b71adf4ceb9fb928de5c352b666b291eee9504b681751ef4afec552",
+    "bytes": 70
+  },
+  "gates": {
+    "source_files": "PASS_EXACT_DIGEST",
+    "book_draft": "CANDIDATE",
+    "human_edit": "PENDING",
+    "appendices": "PENDING"
+  },
+  "note": "Source chapter bodies copied into a new derivative; original files untouched",
+  "manifest_source": {
+    "path": "/tmp/deepwrite-public-integration-xm8vncr8/project/manifest.json",
+    "sha256": "8c7d41ad748d43f2e23672d5369484f22e488e634c3a9ae1453d7cc2f2c3ff22"
+  }
+}

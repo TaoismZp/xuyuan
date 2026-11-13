@@ -1,0 +1,97 @@
+{
+  "schema": "deepwrite/release-work-state/v1",
+  "updated_date": "2026-11-12",
+  "task": "OFFICIAL_ACTIVATION_AND_AUTHORIZED_ENGINEERING_RELEASE",
+  "status": "ENGINEERING_IMPLEMENTED_PENDING_REMOTE_CI_AND_OWNER_ADMIN_AUTHORITY",
+  "repository": "TaoismZp/xuyuan",
+  "intake_main_commit": "6b81a45d8576aa0636d29950f9a2d86f2a5cf8b1",
+  "intake_pr14_commit": "d2ef373c5e0dcb7736c56a00e0aefb32d63b0b1a",
+  "latest_effective_versions_observed": {
+    "deepwrite": "v0.1",
+    "wish_delivery": "v7.6"
+  },
+  "current_modified": false,
+  "formal_release_completed": false,
+  "repository_configuration": {
+    "status": "BLOCKED_ADMINISTRATION_API_403",
+    "permissions_metadata": "ADMIN_TRUE_DOES_NOT_ESTABLISH_TOKEN_ADMINISTRATION_SCOPE",
+    "actual_failures": [
+      {
+        "method": "GET",
+        "endpoint": "repos/TaoismZp/xuyuan/branches/main/protection",
+        "http_status": 403,
+        "reason": "Resource not accessible by integration"
+      },
+      {
+        "method": "PATCH",
+        "endpoint": "repos/TaoismZp/xuyuan",
+        "intent": "allow_auto_merge=true",
+        "http_status": 403,
+        "reason": "Resource not accessible by integration"
+      },
+      {
+        "method": "PUT",
+        "endpoint": "repos/TaoismZp/xuyuan/rulesets/27040989",
+        "time_utc": "2026-11-12T00:18:02.730649+00:00",
+        "http_status": 403,
+        "reason": "Resource not accessible by integration"
+      }
+    ],
+    "required_check_target": "activation-and-runtime-regressions",
+    "configuration_write_and_readback": "NOT_ESTABLISHED",
+    "required_checks_target": [
+      "activation-and-runtime-regressions",
+      "owner-release-authorization"
+    ],
+    "owner_approval_plan": "zero independent reviews; exact-head owner release check; no simulated independent approval"
+  },
+  "evidence": {
+    "inventory": "deepwrite/release/evidence/2026-11-12/INVENTORY.md",
+    "baseline_local_unittests": {
+      "release": 15,
+      "review_closeout": 42,
+      "source_frame_candidate": 17,
+      "writing_runner": 27,
+      "status": "PASS_ENGINEERING_FIXTURES_ONLY"
+    },
+    "restored_packager_tests": {
+      "source_commit": "e5a1c9f0b057f5483022bd196a53790e905b0896",
+      "source_git_blob": "4f04fe618c0d08b33460c2c578b3db1f2e2e4f6a",
+      "sha256": "5e56fb7d850f64cb51eaf1d77be9cf819c7f451a25f516f6df5f94651a380013",
+      "bytes": 10810,
+      "exact_source_match": true,
+      "actual_local_test_count": 15,
+      "status": "PASS_ENGINEERING_ONLY"
+    },
+    "existing_pr14_ci": {
+      "head_commit": "d2ef373c5e0dcb7736c56a00e0aefb32d63b0b1a",
+      "pull_request_run": 43042185352,
+      "push_run": 43042177261,
+      "check_name": "activation-and-runtime-regressions",
+      "app_id": 15368,
+      "api_conclusion": "success"
+    },
+    "actual_github_failure_and_repair": "deepwrite/release/evidence/2026-11-12/NEGATIVE_CONTROL_RECEIPT.json",
+    "runtime_integration": "deepwrite/release/evidence/2026-11-12/runtime-integration/RECEIPT.json",
+    "local_release_tests_last_observed": 72
+  },
+  "open_gates": {
+    "required_ci_enforced_on_all_main_prs": "PENDING_REAL_CONFIGURATION_AND_RECHECK",
+    "owner_release_authorization_verified": "PENDING_AUTHENTICATED_IMPLEMENTATION",
+    "auto_merge_enabled_and_exercised": "PENDING_REAL_CONFIGURATION",
+    "failed_candidate_merge_blocked": "CI_ACTUALLY_FAILED_AND_REPAIRED_REQUIRED_POLICY_NOT_YET_ENFORCED",
+    "official_current_and_program_identity": "IMPLEMENTED_AND_TEMPORARY_GIT_INTEGRATION_PASS_MAIN_NOT_ACTIVATED",
+    "fresh_environment_official_invocation": "TEMPORARY_GIT_CLONE_ACTUAL_PASS_NOT_FORMAL_MAIN_RELEASE",
+    "official_release_rollback": "TEMPORARY_GIT_FAULT_CHECKOUT_AND_13_FILES_RESTORE_PASS_NOT_FORMAL_MAIN_RELEASE",
+    "E1_autonomous_full_book": "NOT_PROVEN",
+    "E2_fair_complete_work_reader_validation": "NOT_RUN",
+    "cognitive_candidate_promotion": "NOT_AUTHORIZED_BY_ENGINEERING_TESTS"
+  },
+  "privacy": {
+    "private_manuscripts_published": false,
+    "original_manuscripts_overwritten": false,
+    "bridge_state_modified": false
+  },
+  "next_actor": "CODEX_ROOT",
+  "next_action": "Read actual CI of the integrated implementation, then construct immutable engineering-only release proposal. Administration API remains 403; exact-head owner authorization and formal main merge remain required."
+}

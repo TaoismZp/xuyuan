@@ -1,0 +1,14 @@
+{
+  "schema": "deepwrite/project-engine-lock/v1",
+  "resolved_deepwrite_version": "v0.1",
+  "engine_version": "e24.1",
+  "implementation_commit": "e3d3e2ae8af46ba703db15f1ba7a78fe4db2aad5",
+  "release_record_sha256": "78d4e3f06277d8b1f0a95acbd16f2b8e1dec5654cf5c4fd2b11ee367cc8a28a5",
+  "activation_commit": "a4ea7fd8c1e68be9a78d7a9ebe73de19f8c157f0",
+  "parent": {
+    "version": "v7.6",
+    "current_sha256": "b874dec9bfb59871c01e463868b9303a31bd0d829f02e99b1def8aaf12f9975e",
+    "spec_sha256": "71e380cd8fc07e38562c180b0b754f38b3efe0f5ee9fd2034159a8373118c248"
+  },
+  "module_identities": []
+}

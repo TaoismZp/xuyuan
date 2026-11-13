@@ -1,0 +1,45 @@
+name: DeepWrite trusted owner release controller
+on:
+  issue_comment:
+    types: [created, edited, deleted]
+  workflow_run:
+    workflows: ['DeepWrite activation rail and E18/E23 regressions']
+    types: [completed]
+  workflow_dispatch:
+    inputs:
+      pull_request:
+        description: Exact PR number to recheck against real owner authorization
+        required: true
+        type: string
+permissions:
+  contents: read
+concurrency:
+  group: deepwrite-owner-release-controller
+  cancel-in-progress: false
+jobs:
+  protected-main-controller:
+    if: >-
+      (github.event_name == 'issue_comment' && github.event.issue.pull_request &&
+       github.event.comment.user.login == github.repository_owner) ||
+      (github.event_name == 'workflow_run' && github.event.workflow_run.event == 'pull_request') ||
+      github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+      pull-requests: write
+      checks: write
+    steps:
+      - name: Load only protected main controller code
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: main
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Verify owner, exact head, actual CI, changed bytes and release scope
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: >-
+          python3 -B deepwrite/release/github_authorization.py
+          --event "$GITHUB_EVENT_PATH"
+          --publish-check --auto-merge

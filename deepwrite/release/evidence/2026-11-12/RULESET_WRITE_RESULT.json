@@ -1,0 +1,8 @@
+{
+  "time_utc": "2026-11-12T00:18:02.730649+00:00",
+  "method": "PUT",
+  "endpoint": "repos/TaoismZp/xuyuan/rulesets/27040989",
+  "exit_code": 1,
+  "response": "{\"message\":\"Resource not accessible by integration\",\"documentation_url\":\"https://docs.github.com/rest/repos/rules#update-a-repository-ruleset\",\"status\":\"403\"}",
+  "stderr": "gh: Resource not accessible by integration (HTTP 403)\n"
+}

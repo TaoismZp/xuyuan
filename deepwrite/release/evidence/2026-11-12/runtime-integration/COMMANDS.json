@@ -1,0 +1,265 @@
+[
+  {
+    "command": [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+      "-B",
+      "/tmp/tmpltxt4xke/deepwrite/release/activation.py",
+      "--root",
+      "/tmp/tmpltxt4xke",
+      "--run",
+      "--",
+      "init",
+      "/tmp/deepwrite-public-integration-xm8vncr8/config.json",
+      "/tmp/deepwrite-public-integration-xm8vncr8/project"
+    ],
+    "returncode": 0,
+    "stdout": "{\n  \"schema\": \"deepwrite/activated-resolution/v1\",\n  \"active_version\": \"v0.1\",\n  \"active_spec\": \"deepwrite/versions/v0.1.md\",\n  \"active_spec_sha256\": \"ad068376a1182a6e1ba2f1e8dd73b723689813b93881067756d7b9d4ab0f554c\",\n  \"parent_wish_version\": \"v7.6\",\n  \"status\": \"ACTIVE_ENGINE_IDENTITY_VERIFIED_QUALITY_NOT_IMPLIED\",\n  \"runner\": \"deepwrite/release/runtime.py\",\n  \"project_pin_policy\": \"NEW_PROJECT_USES_ACTIVE_EXISTING_PROJECT_PIN_PRESERVED\",\n  \"project_alignment\": \"NEW_PROJECT\",\n  \"human_approval_verified_by_resolver\": false,\n  \"book_quality_verified_by_resolver\": false,\n  \"runner_sha256\": \"dc59955b613ea9d86dd2458b63fc322210803b7b65e0ae4346b14a5e74ed10fa\",\n  \"engine_version\": \"e24.1\",\n  \"implementation_commit\": \"e3d3e2ae8af46ba703db15f1ba7a78fe4db2aad5\",\n  \"release_record\": \"deepwrite/releases/e24.1.json\",\n  \"release_record_sha256\": \"78d4e3f06277d8b1f0a95acbd16f2b8e1dec5654cf5c4fd2b11ee367cc8a28a5\",\n  \"runtime_files\": {\n    \"deepwrite/release/runtime.py\": \"dc59955b613ea9d86dd2458b63fc322210803b7b65e0ae4346b14a5e74ed10fa\",\n    \"deepwrite/release/activation.py\": \"e105b7e5d1aee186418c226a1abfeda0461f88b666d0fbf0a58e7a41e47152ef\",\n    \"deepwrite/qa/checkpoint.py\": \"f40633cfdde27c47778841092e1ede8ab3604ee4608559d42ff0b735ce01257d\",\n    \"deepwrite/qa/resume_check.py\": \"d71d8aba9965206d68f0ee9e936cfa3a7a13d125a64662aa149df3b97510bbaa\",\n    \"deepwrite/tools/book_packager_v0.1.py\": \"716cbedfe60ab7096f19b6de266b929cb81c0f8b8668c8ea322dd5e4286023e6\",\n    \"deepwrite/candidates/e15-review-closure/review_closure_guard.py\": \"b2be877c9ca7ff63b0adec5ec56c3c65f1274ac69e4b2056bdaf39c5cd6851d7\"\n  },\n  \"project_lock\": {\n    \"schema\": \"deepwrite/project-engine-lock/v1\",\n    \"resolved_deepwrite_version\": \"v0.1\",\n    \"engine_version\": \"e24.1\",\n    \"implementation_commit\": \"e3d3e2ae8af46ba703db15f1ba7a78fe4db2aad5\",\n    \"release_record_sha256\": \"78d4e3f06277d8b1f0a95acbd16f2b8e1dec5654cf5c4fd2b11ee367cc8a28a5\",\n    \"activation_commit\": \"a4ea7fd8c1e68be9a78d7a9ebe73de19f8c157f0\",\n    \"parent\": {\n      \"version\": \"v7.6\",\n      \"current_sha256\": \"b874dec9bfb59871c01e463868b9303a31bd0d829f02e99b1def8aaf12f9975e\",\n      \"spec_sha256\": \"71e380cd8fc07e38562c180b0b754f38b3efe0f5ee9fd2034159a8373118c248\"\n    },\n    \"module_identities\": []\n  },\n  \"module_identities\": [],\n  \"runtime_inventory_scope\": \"DECLARED_FILES_NOT_AUTOMATIC_DEPENDENCY_DISCOVERY\"\n}\n{\n  \"status\": \"PROJECT_INITIALIZED_WITH_RELEASED_ENGINE\",\n  \"project\": \"/tmp/deepwrite-public-integration-xm8vncr8/project\",\n  \"identity\": {\n    \"schema\": \"deepwrite/project-engine-lock/v1\",\n    \"resolved_deepwrite_version\": \"v0.1\",\n    \"engine_version\": \"e24.1\",\n    \"implementation_commit\": \"e3d3e2ae8af46ba703db15f1ba7a78fe4db2aad5\",\n    \"release_record_sha256\": \"78d4e3f06277d8b1f0a95acbd16f2b8e1dec5654cf5c4fd2b11ee367cc8a28a5\",\n    \"activation_commit\": \"a4ea7fd8c1e68be9a78d7a9ebe73de19f8c157f0\",\n    \"parent\": {\n      \"version\": \"v7.6\",\n      \"current_sha256\": \"b874dec9bfb59871c01e463868b9303a31bd0d829f02e99b1def8aaf12f9975e\",\n      \"spec_sha256\": \"71e380cd8fc07e38562c180b0b754f38b3efe0f5ee9fd2034159a8373118c248\"\n    },\n    \"module_identities\": []\n  },\n  \"state_sha256\": \"2559dcd8943ad49029102ea93c9a0dccae3b8a71ecefed0525f9419aea39410a\",\n  \"automatic_book_generation\": \"EXPERIMENTAL_NOT_ACTIVATED\"\n}\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+      "-B",
+      "/tmp/tmpltxt4xke/deepwrite/release/activation.py",
+      "--root",
+      "/tmp/tmpltxt4xke",
+      "--run",
+      "--",
+      "assemble",
+      "/tmp/deepwrite-public-integration-xm8vncr8/project",
+      "--state-sha256",
+      "2559dcd8943ad49029102ea93c9a0dccae3b8a71ecefed0525f9419aea39410a",
+      "--manifest",
+      "manifest.json",
+      "--review",
+      "review-fake.json",
+      "--frozen-findings",
+      "frozen.json",
+      "--frozen-sha256",
+      "af4071e0be253696942fd932aecd2ecfc48ef1ce7709b07340e9b9159a899bdc"
+    ],
+    "returncode": 2,
+    "stdout": "{\n  \"schema\": \"deepwrite/activated-resolution/v1\",\n  \"active_version\": \"v0.1\",\n  \"active_spec\": \"deepwrite/versions/v0.1.md\",\n  \"active_spec_sha256\": \"ad068376a1182a6e1ba2f1e8dd73b723689813b93881067756d7b9d4ab0f554c\",\n  \"parent_wish_version\": \"v7.6\",\n  \"status\": \"ACTIVE_ENGINE_IDENTITY_VERIFIED_QUALITY_NOT_IMPLIED\",\n  \"runner\": \"deepwrite/release/runtime.py\",\n  \"project_pin_policy\": \"NEW_PROJECT_USES_ACTIVE_EXISTING_PROJECT_PIN_PRESERVED\",\n  \"project_alignment\": \"NEW_PROJECT\",\n  \"human_approval_verified_by_resolver\": false,\n  \"book_quality_verified_by_resolver\": false,\n  \"runner_sha256\": \"dc59955b613ea9d86dd2458b63fc322210803b7b65e0ae4346b14a5e74ed10fa\",\n  \"engine_version\": \"e24.1\",\n  \"implementation_commit\": \"e3d3e2ae8af46ba703db15f1ba7a78fe4db2aad5\",\n  \"release_record\": \"deepwrite/releases/e24.1.json\",\n  \"release_record_sha256\": \"78d4e3f06277d8b1f0a95acbd16f2b8e1dec5654cf5c4fd2b11ee367cc8a28a5\",\n  \"runtime_files\": {\n    \"deepwrite/release/runtime.py\": \"dc59955b613ea9d86dd2458b63fc322210803b7b65e0ae4346b14a5e74ed10fa\",\n    \"deepwrite/release/activation.py\": \"e105b7e5d1aee186418c226a1abfeda0461f88b666d0fbf0a58e7a41e47152ef\",\n    \"deepwrite/qa/checkpoint.py\": \"f40633cfdde27c47778841092e1ede8ab3604ee4608559d42ff0b735ce01257d\",\n    \"deepwrite/qa/resume_check.py\": \"d71d8aba9965206d68f0ee9e936cfa3a7a13d125a64662aa149df3b97510bbaa\",\n    \"deepwrite/tools/book_packager_v0.1.py\": \"716cbedfe60ab7096f19b6de266b929cb81c0f8b8668c8ea322dd5e4286023e6\",\n    \"deepwrite/candidates/e15-review-closure/review_closure_guard.py\": \"b2be877c9ca7ff63b0adec5ec56c3c65f1274ac69e4b2056bdaf39c5cd6851d7\"\n  },\n  \"project_lock\": {\n    \"schema\": \"deepwrite/project-engine-lock/v1\",\n    \"resolved_deepwrite_version\": \"v0.1\",\n    \"engine_version\": \"e24.1\",\n    \"implementation_commit\": \"e3d3e2ae8af46ba703db15f1ba7a78fe4db2aad5\",\n    \"release_record_sha256\": \"78d4e3f06277d8b1f0a95acbd16f2b8e1dec5654cf5c4fd2b11ee367cc8a28a5\",\n    \"activation_commit\": \"a4ea7fd8c1e68be9a78d7a9ebe73de19f8c157f0\",\n    \"parent\": {\n      \"version\": \"v7.6\",\n      \"current_sha256\": \"b874dec9bfb59871c01e463868b9303a31bd0d829f02e99b1def8aaf12f9975e\",\n      \"spec_sha256\": \"71e380cd8fc07e38562c180b0b754f38b3efe0f5ee9fd2034159a8373118c248\"\n    },\n    \"module_identities\": []\n  },\n  \"module_identities\": [],\n  \"runtime_inventory_scope\": \"DECLARED_FILES_NOT_AUTOMATIC_DEPENDENCY_DISCOVERY\"\n}\n{\n  \"status\": \"HOLD\",\n  \"gate\": {\n    \"status\": \"HOLD\",\n    \"errors\": [\n      \"CLOSED requires non-whitespace artifact change\"\n    ],\n    \"warnings\": [],\n    \"actual_artifacts\": {\n      \"artifact_0\": {\n        \"baseline\": \"184119e5c905b72396321c372e07e83bb4111edfcc5655a6026f1fc1d0142944\",\n        \"candidate\": \"184119e5c905b72396321c372e07e83bb4111edfcc5655a6026f1fc1d0142944\"\n      },\n      \"artifact_1\": {\n        \"baseline\": \"8effd1a8b4b6c36b06c8b2b019a754322eacadb0201a49721da9215c484e95ac\",\n        \"candidate\": \"8effd1a8b4b6c36b06c8b2b019a754322eacadb0201a49721da9215c484e95ac\"\n      },\n      \"artifact_2\": {\n        \"baseline\": \"622620191b71adf4ceb9fb928de5c352b666b291eee9504b681751ef4afec552\",\n        \"candidate\": \"622620191b71adf4ceb9fb928de5c352b666b291eee9504b681751ef4afec552\"\n      }\n    },\n    \"findings\": [\n      {\n        \"id\": \"keep_0\",\n        \"artifact_id\": \"artifact_0\",\n        \"kind\": \"computable\",\n        \"status\": \"KEEP\",\n        \"baseline_paragraph_sha256\": \"e8860d598ef61da3f412f0420fc0b88dd88f5905af4fb731fae1f9aaf73296ab\",\n        \"candidate_paragraph_sha256\": \"e8860d598ef61da3f412f0420fc0b88dd88f5905af4fb731fae1f9aaf73296ab\",\n        \"assertion\": {\n          \"baseline\": {\n            \"op\": \"contains\",\n            \"observed_count\": 1,\n            \"passed\": true\n          },\n          \"candidate\": {\n            \"op\": \"contains\",\n            \"observed_count\": 1,\n            \"passed\": true\n          },\n          \"scope\": \"ENTIRE_ARTIFACT_WHITESPACE_INSENSITIVE\"\n        }\n      }\n    ],\n    \"model_review_required\": [],\n    \"semantic_status\": \"NOT_CERTIFIED\",\n    \"human_acceptance\": \"NOT_ESTABLISHED\",\n    \"unreported_defect_discovery\": \"NOT_ESTABLISHED\"\n  },\n  \"state_sha256\": \"2559dcd8943ad49029102ea93c9a0dccae3b8a71ecefed0525f9419aea39410a\"\n}\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+      "-B",
+      "/tmp/tmpltxt4xke/deepwrite/release/activation.py",
+      "--root",
+      "/tmp/tmpltxt4xke",
+      "--run",
+      "--",
+      "assemble",
+      "/tmp/deepwrite-public-integration-xm8vncr8/project",
+      "--state-sha256",
+      "2559dcd8943ad49029102ea93c9a0dccae3b8a71ecefed0525f9419aea39410a",
+      "--manifest",
+      "manifest.json",
+      "--review",
+      "review.json",
+      "--frozen-findings",
+      "frozen.json",
+      "--frozen-sha256",
+      "af4071e0be253696942fd932aecd2ecfc48ef1ce7709b07340e9b9159a899bdc"
+    ],
+    "returncode": 0,
+    "stdout": "{\n  \"schema\": \"deepwrite/activated-resolution/v1\",\n  \"active_version\": \"v0.1\",\n  \"active_spec\": \"deepwrite/versions/v0.1.md\",\n  \"active_spec_sha256\": \"ad068376a1182a6e1ba2f1e8dd73b723689813b93881067756d7b9d4ab0f554c\",\n  \"parent_wish_version\": \"v7.6\",\n  \"status\": \"ACTIVE_ENGINE_IDENTITY_VERIFIED_QUALITY_NOT_IMPLIED\",\n  \"runner\": \"deepwrite/release/runtime.py\",\n  \"project_pin_policy\": \"NEW_PROJECT_USES_ACTIVE_EXISTING_PROJECT_PIN_PRESERVED\",\n  \"project_alignment\": \"NEW_PROJECT\",\n  \"human_approval_verified_by_resolver\": false,\n  \"book_quality_verified_by_resolver\": false,\n  \"runner_sha256\": \"dc59955b613ea9d86dd2458b63fc322210803b7b65e0ae4346b14a5e74ed10fa\",\n  \"engine_version\": \"e24.1\",\n  \"implementation_commit\": \"e3d3e2ae8af46ba703db15f1ba7a78fe4db2aad5\",\n  \"release_record\": \"deepwrite/releases/e24.1.json\",\n  \"release_record_sha256\": \"78d4e3f06277d8b1f0a95acbd16f2b8e1dec5654cf5c4fd2b11ee367cc8a28a5\",\n  \"runtime_files\": {\n    \"deepwrite/release/runtime.py\": \"dc59955b613ea9d86dd2458b63fc322210803b7b65e0ae4346b14a5e74ed10fa\",\n    \"deepwrite/release/activation.py\": \"e105b7e5d1aee186418c226a1abfeda0461f88b666d0fbf0a58e7a41e47152ef\",\n    \"deepwrite/qa/checkpoint.py\": \"f40633cfdde27c47778841092e1ede8ab3604ee4608559d42ff0b735ce01257d\",\n    \"deepwrite/qa/resume_check.py\": \"d71d8aba9965206d68f0ee9e936cfa3a7a13d125a64662aa149df3b97510bbaa\",\n    \"deepwrite/tools/book_packager_v0.1.py\": \"716cbedfe60ab7096f19b6de266b929cb81c0f8b8668c8ea322dd5e4286023e6\",\n    \"deepwrite/candidates/e15-review-closure/review_closure_guard.py\": \"b2be877c9ca7ff63b0adec5ec56c3c65f1274ac69e4b2056bdaf39c5cd6851d7\"\n  },\n  \"project_lock\": {\n    \"schema\": \"deepwrite/project-engine-lock/v1\",\n    \"resolved_deepwrite_version\": \"v0.1\",\n    \"engine_version\": \"e24.1\",\n    \"implementation_commit\": \"e3d3e2ae8af46ba703db15f1ba7a78fe4db2aad5\",\n    \"release_record_sha256\": \"78d4e3f06277d8b1f0a95acbd16f2b8e1dec5654cf5c4fd2b11ee367cc8a28a5\",\n    \"activation_commit\": \"a4ea7fd8c1e68be9a78d7a9ebe73de19f8c157f0\",\n    \"parent\": {\n      \"version\": \"v7.6\",\n      \"current_sha256\": \"b874dec9bfb59871c01e463868b9303a31bd0d829f02e99b1def8aaf12f9975e\",\n      \"spec_sha256\": \"71e380cd8fc07e38562c180b0b754f38b3efe0f5ee9fd2034159a8373118c248\"\n    },\n    \"module_identities\": []\n  },\n  \"module_identities\": [],\n  \"runtime_inventory_scope\": \"DECLARED_FILES_NOT_AUTOMATIC_DEPENDENCY_DISCOVERY\"\n}\n{\"status\": \"PASS_SOURCES\", \"book_path\": \"/tmp/deepwrite-public-integration-xm8vncr8/project/derived/book-0001.md\", \"sha256\": \"a52657539f1a39cfaeabdc3e8660001f76d5c46a15a978bb665092090aaeb9c7\", \"bytes\": 426, \"chapters\": 1}\n{\n  \"status\": \"ASSEMBLED_PENDING_HUMAN\",\n  \"artifact\": \"/tmp/deepwrite-public-integration-xm8vncr8/project/derived/book-0001.md\",\n  \"artifact_sha256\": \"a52657539f1a39cfaeabdc3e8660001f76d5c46a15a978bb665092090aaeb9c7\",\n  \"gate\": {\n    \"status\": \"PASS_STRUCTURAL_ONLY\",\n    \"errors\": [],\n    \"warnings\": [],\n    \"actual_artifacts\": {\n      \"artifact_0\": {\n        \"baseline\": \"184119e5c905b72396321c372e07e83bb4111edfcc5655a6026f1fc1d0142944\",\n        \"candidate\": \"184119e5c905b72396321c372e07e83bb4111edfcc5655a6026f1fc1d0142944\"\n      },\n      \"artifact_1\": {\n        \"baseline\": \"8effd1a8b4b6c36b06c8b2b019a754322eacadb0201a49721da9215c484e95ac\",\n        \"candidate\": \"8effd1a8b4b6c36b06c8b2b019a754322eacadb0201a49721da9215c484e95ac\"\n      },\n      \"artifact_2\": {\n        \"baseline\": \"622620191b71adf4ceb9fb928de5c352b666b291eee9504b681751ef4afec552\",\n        \"candidate\": \"622620191b71adf4ceb9fb928de5c352b666b291eee9504b681751ef4afec552\"\n      }\n    },\n    \"findings\": [\n      {\n        \"id\": \"keep_0\",\n        \"artifact_id\": \"artifact_0\",\n        \"kind\": \"computable\",\n        \"status\": \"KEEP\",\n        \"baseline_paragraph_sha256\": \"e8860d598ef61da3f412f0420fc0b88dd88f5905af4fb731fae1f9aaf73296ab\",\n        \"candidate_paragraph_sha256\": \"e8860d598ef61da3f412f0420fc0b88dd88f5905af4fb731fae1f9aaf73296ab\",\n        \"assertion\": {\n          \"baseline\": {\n            \"op\": \"contains\",\n            \"observed_count\": 1,\n            \"passed\": true\n          },\n          \"candidate\": {\n            \"op\": \"contains\",\n            \"observed_count\": 1,\n            \"passed\": true\n          },\n          \"scope\": \"ENTIRE_ARTIFACT_WHITESPACE_INSENSITIVE\"\n        }\n      },\n      {\n        \"id\": \"keep_1\",\n        \"artifact_id\": \"artifact_1\",\n        \"kind\": \"computable\",\n        \"status\": \"KEEP\",\n        \"baseline_paragraph_sha256\": \"8c0f616b06eeb280112f7f4d52c186ffecb4ec30611c8f4b09e47d0fe2146e75\",\n        \"candidate_paragraph_sha256\": \"8c0f616b06eeb280112f7f4d52c186ffecb4ec30611c8f4b09e47d0fe2146e75\",\n        \"assertion\": {\n          \"baseline\": {\n            \"op\": \"contains\",\n            \"observed_count\": 1,\n            \"passed\": true\n          },\n          \"candidate\": {\n            \"op\": \"contains\",\n            \"observed_count\": 1,\n            \"passed\": true\n          },\n          \"scope\": \"ENTIRE_ARTIFACT_WHITESPACE_INSENSITIVE\"\n        }\n      },\n      {\n        \"id\": \"keep_2\",\n        \"artifact_id\": \"artifact_2\",\n        \"kind\": \"computable\",\n        \"status\": \"KEEP\",\n        \"baseline_paragraph_sha256\": \"20e223071f9c6283d687878a76ad1b545e9be440995e53531a4fc2550fb47c26\",\n        \"candidate_paragraph_sha256\": \"20e223071f9c6283d687878a76ad1b545e9be440995e53531a4fc2550fb47c26\",\n        \"assertion\": {\n          \"baseline\": {\n            \"op\": \"contains\",\n            \"observed_count\": 1,\n            \"passed\": true\n          },\n          \"candidate\": {\n            \"op\": \"contains\",\n            \"observed_count\": 1,\n            \"passed\": true\n          },\n          \"scope\": \"ENTIRE_ARTIFACT_WHITESPACE_INSENSITIVE\"\n        }\n      }\n    ],\n    \"model_review_required\": [],\n    \"semantic_status\": \"NOT_CERTIFIED\",\n    \"human_acceptance\": \"NOT_ESTABLISHED\",\n    \"unreported_defect_discovery\": \"NOT_ESTABLISHED\"\n  },\n  \"state_sha256\": \"3e8d9afe5b2731195d138a86d2651e1b2cf4ad22516454ceae00fc591b785c2b\",\n  \"literary_quality\": \"NOT_CERTIFIED\"\n}\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+      "-B",
+      "/tmp/tmpltxt4xke/deepwrite/release/activation.py",
+      "--root",
+      "/tmp/tmpltxt4xke",
+      "--run",
+      "--",
+      "checkpoint",
+      "/tmp/deepwrite-public-integration-xm8vncr8/project",
+      "/tmp/deepwrite-public-integration-xm8vncr8/checkpoint",
+      "--state-sha256",
+      "3e8d9afe5b2731195d138a86d2651e1b2cf4ad22516454ceae00fc591b785c2b"
+    ],
+    "returncode": 0,
+    "stdout": "{\n  \"schema\": \"deepwrite/activated-resolution/v1\",\n  \"active_version\": \"v0.1\",\n  \"active_spec\": \"deepwrite/versions/v0.1.md\",\n  \"active_spec_sha256\": \"ad068376a1182a6e1ba2f1e8dd73b723689813b93881067756d7b9d4ab0f554c\",\n  \"parent_wish_version\": \"v7.6\",\n  \"status\": \"ACTIVE_ENGINE_IDENTITY_VERIFIED_QUALITY_NOT_IMPLIED\",\n  \"runner\": \"deepwrite/release/runtime.py\",\n  \"project_pin_policy\": \"NEW_PROJECT_USES_ACTIVE_EXISTING_PROJECT_PIN_PRESERVED\",\n  \"project_alignment\": \"NEW_PROJECT\",\n  \"human_approval_verified_by_resolver\": false,\n  \"book_quality_verified_by_resolver\": false,\n  \"runner_sha256\": \"dc59955b613ea9d86dd2458b63fc322210803b7b65e0ae4346b14a5e74ed10fa\",\n  \"engine_version\": \"e24.1\",\n  \"implementation_commit\": \"e3d3e2ae8af46ba703db15f1ba7a78fe4db2aad5\",\n  \"release_record\": \"deepwrite/releases/e24.1.json\",\n  \"release_record_sha256\": \"78d4e3f06277d8b1f0a95acbd16f2b8e1dec5654cf5c4fd2b11ee367cc8a28a5\",\n  \"runtime_files\": {\n    \"deepwrite/release/runtime.py\": \"dc59955b613ea9d86dd2458b63fc322210803b7b65e0ae4346b14a5e74ed10fa\",\n    \"deepwrite/release/activation.py\": \"e105b7e5d1aee186418c226a1abfeda0461f88b666d0fbf0a58e7a41e47152ef\",\n    \"deepwrite/qa/checkpoint.py\": \"f40633cfdde27c47778841092e1ede8ab3604ee4608559d42ff0b735ce01257d\",\n    \"deepwrite/qa/resume_check.py\": \"d71d8aba9965206d68f0ee9e936cfa3a7a13d125a64662aa149df3b97510bbaa\",\n    \"deepwrite/tools/book_packager_v0.1.py\": \"716cbedfe60ab7096f19b6de266b929cb81c0f8b8668c8ea322dd5e4286023e6\",\n    \"deepwrite/candidates/e15-review-closure/review_closure_guard.py\": \"b2be877c9ca7ff63b0adec5ec56c3c65f1274ac69e4b2056bdaf39c5cd6851d7\"\n  },\n  \"project_lock\": {\n    \"schema\": \"deepwrite/project-engine-lock/v1\",\n    \"resolved_deepwrite_version\": \"v0.1\",\n    \"engine_version\": \"e24.1\",\n    \"implementation_commit\": \"e3d3e2ae8af46ba703db15f1ba7a78fe4db2aad5\",\n    \"release_record_sha256\": \"78d4e3f06277d8b1f0a95acbd16f2b8e1dec5654cf5c4fd2b11ee367cc8a28a5\",\n    \"activation_commit\": \"a4ea7fd8c1e68be9a78d7a9ebe73de19f8c157f0\",\n    \"parent\": {\n      \"version\": \"v7.6\",\n      \"current_sha256\": \"b874dec9bfb59871c01e463868b9303a31bd0d829f02e99b1def8aaf12f9975e\",\n      \"spec_sha256\": \"71e380cd8fc07e38562c180b0b754f38b3efe0f5ee9fd2034159a8373118c248\"\n    },\n    \"module_identities\": []\n  },\n  \"module_identities\": [],\n  \"runtime_inventory_scope\": \"DECLARED_FILES_NOT_AUTOMATIC_DEPENDENCY_DISCOVERY\"\n}\n{\n  \"project_resume_gate\": \"NOT_RUN\",\n  \"complete_project_recovery\": \"UNVERIFIED\",\n  \"status\": \"PASS_BYTES_ONLY\",\n  \"manifest_sha256\": \"d039ccff89f858cb1526df39538beb3161d5902de5fa6355843f08fe2a4b8d7f\",\n  \"project_id\": \"PUBLIC_ENGINEERING_FIXTURE\",\n  \"files\": 13,\n  \"state_sha256\": \"3e8d9afe5b2731195d138a86d2651e1b2cf4ad22516454ceae00fc591b785c2b\",\n  \"project_lock_sha256\": \"242af91754c3febaadbe5d7738f868cb7da1b62c5f01dc55fe8361966b39a26a\"\n}\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+      "-B",
+      "/tmp/tmpltxt4xke/deepwrite/release/activation.py",
+      "--root",
+      "/tmp/tmpltxt4xke",
+      "--run",
+      "--",
+      "restore",
+      "/tmp/deepwrite-public-integration-xm8vncr8/checkpoint",
+      "/tmp/deepwrite-public-integration-xm8vncr8/restored",
+      "--manifest-sha256",
+      "d039ccff89f858cb1526df39538beb3161d5902de5fa6355843f08fe2a4b8d7f"
+    ],
+    "returncode": 0,
+    "stdout": "{\n  \"schema\": \"deepwrite/activated-resolution/v1\",\n  \"active_version\": \"v0.1\",\n  \"active_spec\": \"deepwrite/versions/v0.1.md\",\n  \"active_spec_sha256\": \"ad068376a1182a6e1ba2f1e8dd73b723689813b93881067756d7b9d4ab0f554c\",\n  \"parent_wish_version\": \"v7.6\",\n  \"status\": \"ACTIVE_ENGINE_IDENTITY_VERIFIED_QUALITY_NOT_IMPLIED\",\n  \"runner\": \"deepwrite/release/runtime.py\",\n  \"project_pin_policy\": \"NEW_PROJECT_USES_ACTIVE_EXISTING_PROJECT_PIN_PRESERVED\",\n  \"project_alignment\": \"NEW_PROJECT\",\n  \"human_approval_verified_by_resolver\": false,\n  \"book_quality_verified_by_resolver\": false,\n  \"runner_sha256\": \"dc59955b613ea9d86dd2458b63fc322210803b7b65e0ae4346b14a5e74ed10fa\",\n  \"engine_version\": \"e24.1\",\n  \"implementation_commit\": \"e3d3e2ae8af46ba703db15f1ba7a78fe4db2aad5\",\n  \"release_record\": \"deepwrite/releases/e24.1.json\",\n  \"release_record_sha256\": \"78d4e3f06277d8b1f0a95acbd16f2b8e1dec5654cf5c4fd2b11ee367cc8a28a5\",\n  \"runtime_files\": {\n    \"deepwrite/release/runtime.py\": \"dc59955b613ea9d86dd2458b63fc322210803b7b65e0ae4346b14a5e74ed10fa\",\n    \"deepwrite/release/activation.py\": \"e105b7e5d1aee186418c226a1abfeda0461f88b666d0fbf0a58e7a41e47152ef\",\n    \"deepwrite/qa/checkpoint.py\": \"f40633cfdde27c47778841092e1ede8ab3604ee4608559d42ff0b735ce01257d\",\n    \"deepwrite/qa/resume_check.py\": \"d71d8aba9965206d68f0ee9e936cfa3a7a13d125a64662aa149df3b97510bbaa\",\n    \"deepwrite/tools/book_packager_v0.1.py\": \"716cbedfe60ab7096f19b6de266b929cb81c0f8b8668c8ea322dd5e4286023e6\",\n    \"deepwrite/candidates/e15-review-closure/review_closure_guard.py\": \"b2be877c9ca7ff63b0adec5ec56c3c65f1274ac69e4b2056bdaf39c5cd6851d7\"\n  },\n  \"project_lock\": {\n    \"schema\": \"deepwrite/project-engine-lock/v1\",\n    \"resolved_deepwrite_version\": \"v0.1\",\n    \"engine_version\": \"e24.1\",\n    \"implementation_commit\": \"e3d3e2ae8af46ba703db15f1ba7a78fe4db2aad5\",\n    \"release_record_sha256\": \"78d4e3f06277d8b1f0a95acbd16f2b8e1dec5654cf5c4fd2b11ee367cc8a28a5\",\n    \"activation_commit\": \"a4ea7fd8c1e68be9a78d7a9ebe73de19f8c157f0\",\n    \"parent\": {\n      \"version\": \"v7.6\",\n      \"current_sha256\": \"b874dec9bfb59871c01e463868b9303a31bd0d829f02e99b1def8aaf12f9975e\",\n      \"spec_sha256\": \"71e380cd8fc07e38562c180b0b754f38b3efe0f5ee9fd2034159a8373118c248\"\n    },\n    \"module_identities\": []\n  },\n  \"module_identities\": [],\n  \"runtime_inventory_scope\": \"DECLARED_FILES_NOT_AUTOMATIC_DEPENDENCY_DISCOVERY\"\n}\n{\n  \"project_resume_gate\": \"NOT_RUN\",\n  \"complete_project_recovery\": \"UNVERIFIED\",\n  \"schema\": \"deepwrite/restore-receipt/v0.1\",\n  \"project_id\": \"PUBLIC_ENGINEERING_FIXTURE\",\n  \"manifest_sha256\": \"d039ccff89f858cb1526df39538beb3161d5902de5fa6355843f08fe2a4b8d7f\",\n  \"restored_at\": \"2026-11-12T00:28:08.454236+00:00\",\n  \"status\": \"PASS_BYTES_ONLY\",\n  \"existing_files_overwritten\": false\n}\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+      "-B",
+      "/tmp/deepwrite-public-integration-xm8vncr8/fresh-code/deepwrite/release/activation.py",
+      "--root",
+      "/tmp/deepwrite-public-integration-xm8vncr8/fresh-code",
+      "--run",
+      "--",
+      "init",
+      "/tmp/deepwrite-public-integration-xm8vncr8/config.json",
+      "/tmp/deepwrite-public-integration-xm8vncr8/fresh-project"
+    ],
+    "returncode": 0,
+    "stdout": "{\n  \"schema\": \"deepwrite/activated-resolution/v1\",\n  \"active_version\": \"v0.1\",\n  \"active_spec\": \"deepwrite/versions/v0.1.md\",\n  \"active_spec_sha256\": \"ad068376a1182a6e1ba2f1e8dd73b723689813b93881067756d7b9d4ab0f554c\",\n  \"parent_wish_version\": \"v7.6\",\n  \"status\": \"ACTIVE_ENGINE_IDENTITY_VERIFIED_QUALITY_NOT_IMPLIED\",\n  \"runner\": \"deepwrite/release/runtime.py\",\n  \"project_pin_policy\": \"NEW_PROJECT_USES_ACTIVE_EXISTING_PROJECT_PIN_PRESERVED\",\n  \"project_alignment\": \"NEW_PROJECT\",\n  \"human_approval_verified_by_resolver\": false,\n  \"book_quality_verified_by_resolver\": false,\n  \"runner_sha256\": \"dc59955b613ea9d86dd2458b63fc322210803b7b65e0ae4346b14a5e74ed10fa\",\n  \"engine_version\": \"e24.1\",\n  \"implementation_commit\": \"e3d3e2ae8af46ba703db15f1ba7a78fe4db2aad5\",\n  \"release_record\": \"deepwrite/releases/e24.1.json\",\n  \"release_record_sha256\": \"78d4e3f06277d8b1f0a95acbd16f2b8e1dec5654cf5c4fd2b11ee367cc8a28a5\",\n  \"runtime_files\": {\n    \"deepwrite/release/runtime.py\": \"dc59955b613ea9d86dd2458b63fc322210803b7b65e0ae4346b14a5e74ed10fa\",\n    \"deepwrite/release/activation.py\": \"e105b7e5d1aee186418c226a1abfeda0461f88b666d0fbf0a58e7a41e47152ef\",\n    \"deepwrite/qa/checkpoint.py\": \"f40633cfdde27c47778841092e1ede8ab3604ee4608559d42ff0b735ce01257d\",\n    \"deepwrite/qa/resume_check.py\": \"d71d8aba9965206d68f0ee9e936cfa3a7a13d125a64662aa149df3b97510bbaa\",\n    \"deepwrite/tools/book_packager_v0.1.py\": \"716cbedfe60ab7096f19b6de266b929cb81c0f8b8668c8ea322dd5e4286023e6\",\n    \"deepwrite/candidates/e15-review-closure/review_closure_guard.py\": \"b2be877c9ca7ff63b0adec5ec56c3c65f1274ac69e4b2056bdaf39c5cd6851d7\"\n  },\n  \"project_lock\": {\n    \"schema\": \"deepwrite/project-engine-lock/v1\",\n    \"resolved_deepwrite_version\": \"v0.1\",\n    \"engine_version\": \"e24.1\",\n    \"implementation_commit\": \"e3d3e2ae8af46ba703db15f1ba7a78fe4db2aad5\",\n    \"release_record_sha256\": \"78d4e3f06277d8b1f0a95acbd16f2b8e1dec5654cf5c4fd2b11ee367cc8a28a5\",\n    \"activation_commit\": \"a4ea7fd8c1e68be9a78d7a9ebe73de19f8c157f0\",\n    \"parent\": {\n      \"version\": \"v7.6\",\n      \"current_sha256\": \"b874dec9bfb59871c01e463868b9303a31bd0d829f02e99b1def8aaf12f9975e\",\n      \"spec_sha256\": \"71e380cd8fc07e38562c180b0b754f38b3efe0f5ee9fd2034159a8373118c248\"\n    },\n    \"module_identities\": []\n  },\n  \"module_identities\": [],\n  \"runtime_inventory_scope\": \"DECLARED_FILES_NOT_AUTOMATIC_DEPENDENCY_DISCOVERY\"\n}\n{\n  \"status\": \"PROJECT_INITIALIZED_WITH_RELEASED_ENGINE\",\n  \"project\": \"/tmp/deepwrite-public-integration-xm8vncr8/fresh-project\",\n  \"identity\": {\n    \"schema\": \"deepwrite/project-engine-lock/v1\",\n    \"resolved_deepwrite_version\": \"v0.1\",\n    \"engine_version\": \"e24.1\",\n    \"implementation_commit\": \"e3d3e2ae8af46ba703db15f1ba7a78fe4db2aad5\",\n    \"release_record_sha256\": \"78d4e3f06277d8b1f0a95acbd16f2b8e1dec5654cf5c4fd2b11ee367cc8a28a5\",\n    \"activation_commit\": \"a4ea7fd8c1e68be9a78d7a9ebe73de19f8c157f0\",\n    \"parent\": {\n      \"version\": \"v7.6\",\n      \"current_sha256\": \"b874dec9bfb59871c01e463868b9303a31bd0d829f02e99b1def8aaf12f9975e\",\n      \"spec_sha256\": \"71e380cd8fc07e38562c180b0b754f38b3efe0f5ee9fd2034159a8373118c248\"\n    },\n    \"module_identities\": []\n  },\n  \"state_sha256\": \"2559dcd8943ad49029102ea93c9a0dccae3b8a71ecefed0525f9419aea39410a\",\n  \"automatic_book_generation\": \"EXPERIMENTAL_NOT_ACTIVATED\"\n}\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+      "-B",
+      "/tmp/deepwrite-public-integration-xm8vncr8/fresh-code/deepwrite/release/activation.py",
+      "--root",
+      "/tmp/deepwrite-public-integration-xm8vncr8/fresh-code",
+      "--run",
+      "--",
+      "identity"
+    ],
+    "returncode": 0,
+    "stdout": "{\n  \"schema\": \"deepwrite/activated-resolution/v1\",\n  \"active_version\": \"v0.1\",\n  \"active_spec\": \"deepwrite/versions/v0.1.md\",\n  \"active_spec_sha256\": \"ad068376a1182a6e1ba2f1e8dd73b723689813b93881067756d7b9d4ab0f554c\",\n  \"parent_wish_version\": \"v7.6\",\n  \"status\": \"ACTIVE_ENGINE_IDENTITY_VERIFIED_QUALITY_NOT_IMPLIED\",\n  \"runner\": \"deepwrite/release/runtime.py\",\n  \"project_pin_policy\": \"NEW_PROJECT_USES_ACTIVE_EXISTING_PROJECT_PIN_PRESERVED\",\n  \"project_alignment\": \"NEW_PROJECT\",\n  \"human_approval_verified_by_resolver\": false,\n  \"book_quality_verified_by_resolver\": false,\n  \"runner_sha256\": \"dc59955b613ea9d86dd2458b63fc322210803b7b65e0ae4346b14a5e74ed10fa\",\n  \"engine_version\": \"e24.1\",\n  \"implementation_commit\": \"e3d3e2ae8af46ba703db15f1ba7a78fe4db2aad5\",\n  \"release_record\": \"deepwrite/releases/e24.1.json\",\n  \"release_record_sha256\": \"78d4e3f06277d8b1f0a95acbd16f2b8e1dec5654cf5c4fd2b11ee367cc8a28a5\",\n  \"runtime_files\": {\n    \"deepwrite/release/runtime.py\": \"dc59955b613ea9d86dd2458b63fc322210803b7b65e0ae4346b14a5e74ed10fa\",\n    \"deepwrite/release/activation.py\": \"e105b7e5d1aee186418c226a1abfeda0461f88b666d0fbf0a58e7a41e47152ef\",\n    \"deepwrite/qa/checkpoint.py\": \"f40633cfdde27c47778841092e1ede8ab3604ee4608559d42ff0b735ce01257d\",\n    \"deepwrite/qa/resume_check.py\": \"d71d8aba9965206d68f0ee9e936cfa3a7a13d125a64662aa149df3b97510bbaa\",\n    \"deepwrite/tools/book_packager_v0.1.py\": \"716cbedfe60ab7096f19b6de266b929cb81c0f8b8668c8ea322dd5e4286023e6\",\n    \"deepwrite/candidates/e15-review-closure/review_closure_guard.py\": \"b2be877c9ca7ff63b0adec5ec56c3c65f1274ac69e4b2056bdaf39c5cd6851d7\"\n  },\n  \"project_lock\": {\n    \"schema\": \"deepwrite/project-engine-lock/v1\",\n    \"resolved_deepwrite_version\": \"v0.1\",\n    \"engine_version\": \"e24.1\",\n    \"implementation_commit\": \"e3d3e2ae8af46ba703db15f1ba7a78fe4db2aad5\",\n    \"release_record_sha256\": \"78d4e3f06277d8b1f0a95acbd16f2b8e1dec5654cf5c4fd2b11ee367cc8a28a5\",\n    \"activation_commit\": \"a4ea7fd8c1e68be9a78d7a9ebe73de19f8c157f0\",\n    \"parent\": {\n      \"version\": \"v7.6\",\n      \"current_sha256\": \"b874dec9bfb59871c01e463868b9303a31bd0d829f02e99b1def8aaf12f9975e\",\n      \"spec_sha256\": \"71e380cd8fc07e38562c180b0b754f38b3efe0f5ee9fd2034159a8373118c248\"\n    },\n    \"module_identities\": []\n  },\n  \"module_identities\": [],\n  \"runtime_inventory_scope\": \"DECLARED_FILES_NOT_AUTOMATIC_DEPENDENCY_DISCOVERY\"\n}\n{\n  \"schema\": \"deepwrite/activated-resolution/v1\",\n  \"active_version\": \"v0.1\",\n  \"active_spec\": \"deepwrite/versions/v0.1.md\",\n  \"active_spec_sha256\": \"ad068376a1182a6e1ba2f1e8dd73b723689813b93881067756d7b9d4ab0f554c\",\n  \"parent_wish_version\": \"v7.6\",\n  \"status\": \"ACTIVE_ENGINE_IDENTITY_VERIFIED_QUALITY_NOT_IMPLIED\",\n  \"runner\": \"deepwrite/release/runtime.py\",\n  \"project_pin_policy\": \"NEW_PROJECT_USES_ACTIVE_EXISTING_PROJECT_PIN_PRESERVED\",\n  \"project_alignment\": \"NEW_PROJECT\",\n  \"human_approval_verified_by_resolver\": false,\n  \"book_quality_verified_by_resolver\": false,\n  \"runner_sha256\": \"dc59955b613ea9d86dd2458b63fc322210803b7b65e0ae4346b14a5e74ed10fa\",\n  \"engine_version\": \"e24.1\",\n  \"implementation_commit\": \"e3d3e2ae8af46ba703db15f1ba7a78fe4db2aad5\",\n  \"release_record\": \"deepwrite/releases/e24.1.json\",\n  \"release_record_sha256\": \"78d4e3f06277d8b1f0a95acbd16f2b8e1dec5654cf5c4fd2b11ee367cc8a28a5\",\n  \"runtime_files\": {\n    \"deepwrite/release/runtime.py\": \"dc59955b613ea9d86dd2458b63fc322210803b7b65e0ae4346b14a5e74ed10fa\",\n    \"deepwrite/release/activation.py\": \"e105b7e5d1aee186418c226a1abfeda0461f88b666d0fbf0a58e7a41e47152ef\",\n    \"deepwrite/qa/checkpoint.py\": \"f40633cfdde27c47778841092e1ede8ab3604ee4608559d42ff0b735ce01257d\",\n    \"deepwrite/qa/resume_check.py\": \"d71d8aba9965206d68f0ee9e936cfa3a7a13d125a64662aa149df3b97510bbaa\",\n    \"deepwrite/tools/book_packager_v0.1.py\": \"716cbedfe60ab7096f19b6de266b929cb81c0f8b8668c8ea322dd5e4286023e6\",\n    \"deepwrite/candidates/e15-review-closure/review_closure_guard.py\": \"b2be877c9ca7ff63b0adec5ec56c3c65f1274ac69e4b2056bdaf39c5cd6851d7\"\n  },\n  \"project_lock\": {\n    \"schema\": \"deepwrite/project-engine-lock/v1\",\n    \"resolved_deepwrite_version\": \"v0.1\",\n    \"engine_version\": \"e24.1\",\n    \"implementation_commit\": \"e3d3e2ae8af46ba703db15f1ba7a78fe4db2aad5\",\n    \"release_record_sha256\": \"78d4e3f06277d8b1f0a95acbd16f2b8e1dec5654cf5c4fd2b11ee367cc8a28a5\",\n    \"activation_commit\": \"a4ea7fd8c1e68be9a78d7a9ebe73de19f8c157f0\",\n    \"parent\": {\n      \"version\": \"v7.6\",\n      \"current_sha256\": \"b874dec9bfb59871c01e463868b9303a31bd0d829f02e99b1def8aaf12f9975e\",\n      \"spec_sha256\": \"71e380cd8fc07e38562c180b0b754f38b3efe0f5ee9fd2034159a8373118c248\"\n    },\n    \"module_identities\": []\n  },\n  \"module_identities\": [],\n  \"runtime_inventory_scope\": \"DECLARED_FILES_NOT_AUTOMATIC_DEPENDENCY_DISCOVERY\"\n}\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "git",
+      "-C",
+      "/tmp/deepwrite-public-integration-xm8vncr8/fresh-code",
+      "config",
+      "user.name",
+      "Local integration fixture"
+    ],
+    "returncode": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "git",
+      "-C",
+      "/tmp/deepwrite-public-integration-xm8vncr8/fresh-code",
+      "config",
+      "user.email",
+      "fixture@example.invalid"
+    ],
+    "returncode": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "git",
+      "-C",
+      "/tmp/deepwrite-public-integration-xm8vncr8/fresh-code",
+      "add",
+      "deepwrite/release/runtime.py"
+    ],
+    "returncode": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "git",
+      "-C",
+      "/tmp/deepwrite-public-integration-xm8vncr8/fresh-code",
+      "commit",
+      "-qm",
+      "Known-bad runtime fixture; not a release"
+    ],
+    "returncode": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "git",
+      "-C",
+      "/tmp/deepwrite-public-integration-xm8vncr8/fresh-code",
+      "rev-parse",
+      "HEAD"
+    ],
+    "returncode": 0,
+    "stdout": "bb9f7b42b8621d13b5e55c5ed090b99471317b0b\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+      "-B",
+      "/tmp/deepwrite-public-integration-xm8vncr8/fresh-code/deepwrite/release/activation.py",
+      "--root",
+      "/tmp/deepwrite-public-integration-xm8vncr8/fresh-code",
+      "--run",
+      "--",
+      "identity"
+    ],
+    "returncode": 2,
+    "stdout": "",
+    "stderr": "DEEPWRITE_ACTIVATION_BLOCKED: ACTIVE_RUNNER_BYTES_MISMATCH\n"
+  },
+  {
+    "command": [
+      "git",
+      "-C",
+      "/tmp/deepwrite-public-integration-xm8vncr8/fresh-code",
+      "checkout",
+      "--detach",
+      "a4ea7fd8c1e68be9a78d7a9ebe73de19f8c157f0"
+    ],
+    "returncode": 0,
+    "stdout": "",
+    "stderr": "HEAD is now at a4ea7fd Fixture activation; no real release or approval claim\n"
+  },
+  {
+    "command": [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+      "-B",
+      "/tmp/deepwrite-public-integration-xm8vncr8/fresh-code/deepwrite/release/activation.py",
+      "--root",
+      "/tmp/deepwrite-public-integration-xm8vncr8/fresh-code",
+      "--run",
+      "--",
+      "identity"
+    ],
+    "returncode": 0,
+    "stdout": "{\n  \"schema\": \"deepwrite/activated-resolution/v1\",\n  \"active_version\": \"v0.1\",\n  \"active_spec\": \"deepwrite/versions/v0.1.md\",\n  \"active_spec_sha256\": \"ad068376a1182a6e1ba2f1e8dd73b723689813b93881067756d7b9d4ab0f554c\",\n  \"parent_wish_version\": \"v7.6\",\n  \"status\": \"ACTIVE_ENGINE_IDENTITY_VERIFIED_QUALITY_NOT_IMPLIED\",\n  \"runner\": \"deepwrite/release/runtime.py\",\n  \"project_pin_policy\": \"NEW_PROJECT_USES_ACTIVE_EXISTING_PROJECT_PIN_PRESERVED\",\n  \"project_alignment\": \"NEW_PROJECT\",\n  \"human_approval_verified_by_resolver\": false,\n  \"book_quality_verified_by_resolver\": false,\n  \"runner_sha256\": \"dc59955b613ea9d86dd2458b63fc322210803b7b65e0ae4346b14a5e74ed10fa\",\n  \"engine_version\": \"e24.1\",\n  \"implementation_commit\": \"e3d3e2ae8af46ba703db15f1ba7a78fe4db2aad5\",\n  \"release_record\": \"deepwrite/releases/e24.1.json\",\n  \"release_record_sha256\": \"78d4e3f06277d8b1f0a95acbd16f2b8e1dec5654cf5c4fd2b11ee367cc8a28a5\",\n  \"runtime_files\": {\n    \"deepwrite/release/runtime.py\": \"dc59955b613ea9d86dd2458b63fc322210803b7b65e0ae4346b14a5e74ed10fa\",\n    \"deepwrite/release/activation.py\": \"e105b7e5d1aee186418c226a1abfeda0461f88b666d0fbf0a58e7a41e47152ef\",\n    \"deepwrite/qa/checkpoint.py\": \"f40633cfdde27c47778841092e1ede8ab3604ee4608559d42ff0b735ce01257d\",\n    \"deepwrite/qa/resume_check.py\": \"d71d8aba9965206d68f0ee9e936cfa3a7a13d125a64662aa149df3b97510bbaa\",\n    \"deepwrite/tools/book_packager_v0.1.py\": \"716cbedfe60ab7096f19b6de266b929cb81c0f8b8668c8ea322dd5e4286023e6\",\n    \"deepwrite/candidates/e15-review-closure/review_closure_guard.py\": \"b2be877c9ca7ff63b0adec5ec56c3c65f1274ac69e4b2056bdaf39c5cd6851d7\"\n  },\n  \"project_lock\": {\n    \"schema\": \"deepwrite/project-engine-lock/v1\",\n    \"resolved_deepwrite_version\": \"v0.1\",\n    \"engine_version\": \"e24.1\",\n    \"implementation_commit\": \"e3d3e2ae8af46ba703db15f1ba7a78fe4db2aad5\",\n    \"release_record_sha256\": \"78d4e3f06277d8b1f0a95acbd16f2b8e1dec5654cf5c4fd2b11ee367cc8a28a5\",\n    \"activation_commit\": \"a4ea7fd8c1e68be9a78d7a9ebe73de19f8c157f0\",\n    \"parent\": {\n      \"version\": \"v7.6\",\n      \"current_sha256\": \"b874dec9bfb59871c01e463868b9303a31bd0d829f02e99b1def8aaf12f9975e\",\n      \"spec_sha256\": \"71e380cd8fc07e38562c180b0b754f38b3efe0f5ee9fd2034159a8373118c248\"\n    },\n    \"module_identities\": []\n  },\n  \"module_identities\": [],\n  \"runtime_inventory_scope\": \"DECLARED_FILES_NOT_AUTOMATIC_DEPENDENCY_DISCOVERY\"\n}\n{\n  \"schema\": \"deepwrite/activated-resolution/v1\",\n  \"active_version\": \"v0.1\",\n  \"active_spec\": \"deepwrite/versions/v0.1.md\",\n  \"active_spec_sha256\": \"ad068376a1182a6e1ba2f1e8dd73b723689813b93881067756d7b9d4ab0f554c\",\n  \"parent_wish_version\": \"v7.6\",\n  \"status\": \"ACTIVE_ENGINE_IDENTITY_VERIFIED_QUALITY_NOT_IMPLIED\",\n  \"runner\": \"deepwrite/release/runtime.py\",\n  \"project_pin_policy\": \"NEW_PROJECT_USES_ACTIVE_EXISTING_PROJECT_PIN_PRESERVED\",\n  \"project_alignment\": \"NEW_PROJECT\",\n  \"human_approval_verified_by_resolver\": false,\n  \"book_quality_verified_by_resolver\": false,\n  \"runner_sha256\": \"dc59955b613ea9d86dd2458b63fc322210803b7b65e0ae4346b14a5e74ed10fa\",\n  \"engine_version\": \"e24.1\",\n  \"implementation_commit\": \"e3d3e2ae8af46ba703db15f1ba7a78fe4db2aad5\",\n  \"release_record\": \"deepwrite/releases/e24.1.json\",\n  \"release_record_sha256\": \"78d4e3f06277d8b1f0a95acbd16f2b8e1dec5654cf5c4fd2b11ee367cc8a28a5\",\n  \"runtime_files\": {\n    \"deepwrite/release/runtime.py\": \"dc59955b613ea9d86dd2458b63fc322210803b7b65e0ae4346b14a5e74ed10fa\",\n    \"deepwrite/release/activation.py\": \"e105b7e5d1aee186418c226a1abfeda0461f88b666d0fbf0a58e7a41e47152ef\",\n    \"deepwrite/qa/checkpoint.py\": \"f40633cfdde27c47778841092e1ede8ab3604ee4608559d42ff0b735ce01257d\",\n    \"deepwrite/qa/resume_check.py\": \"d71d8aba9965206d68f0ee9e936cfa3a7a13d125a64662aa149df3b97510bbaa\",\n    \"deepwrite/tools/book_packager_v0.1.py\": \"716cbedfe60ab7096f19b6de266b929cb81c0f8b8668c8ea322dd5e4286023e6\",\n    \"deepwrite/candidates/e15-review-closure/review_closure_guard.py\": \"b2be877c9ca7ff63b0adec5ec56c3c65f1274ac69e4b2056bdaf39c5cd6851d7\"\n  },\n  \"project_lock\": {\n    \"schema\": \"deepwrite/project-engine-lock/v1\",\n    \"resolved_deepwrite_version\": \"v0.1\",\n    \"engine_version\": \"e24.1\",\n    \"implementation_commit\": \"e3d3e2ae8af46ba703db15f1ba7a78fe4db2aad5\",\n    \"release_record_sha256\": \"78d4e3f06277d8b1f0a95acbd16f2b8e1dec5654cf5c4fd2b11ee367cc8a28a5\",\n    \"activation_commit\": \"a4ea7fd8c1e68be9a78d7a9ebe73de19f8c157f0\",\n    \"parent\": {\n      \"version\": \"v7.6\",\n      \"current_sha256\": \"b874dec9bfb59871c01e463868b9303a31bd0d829f02e99b1def8aaf12f9975e\",\n      \"spec_sha256\": \"71e380cd8fc07e38562c180b0b754f38b3efe0f5ee9fd2034159a8373118c248\"\n    },\n    \"module_identities\": []\n  },\n  \"module_identities\": [],\n  \"runtime_inventory_scope\": \"DECLARED_FILES_NOT_AUTOMATIC_DEPENDENCY_DISCOVERY\"\n}\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+      "-B",
+      "/tmp/deepwrite-public-integration-xm8vncr8/fresh-code/deepwrite/release/activation.py",
+      "--root",
+      "/tmp/deepwrite-public-integration-xm8vncr8/fresh-code",
+      "--run",
+      "--",
+      "resume",
+      "/tmp/deepwrite-public-integration-xm8vncr8/fresh-project",
+      "--state-sha256",
+      "2559dcd8943ad49029102ea93c9a0dccae3b8a71ecefed0525f9419aea39410a"
+    ],
+    "returncode": 0,
+    "stdout": "{\n  \"schema\": \"deepwrite/activated-resolution/v1\",\n  \"active_version\": \"v0.1\",\n  \"active_spec\": \"deepwrite/versions/v0.1.md\",\n  \"active_spec_sha256\": \"ad068376a1182a6e1ba2f1e8dd73b723689813b93881067756d7b9d4ab0f554c\",\n  \"parent_wish_version\": \"v7.6\",\n  \"status\": \"ACTIVE_ENGINE_IDENTITY_VERIFIED_QUALITY_NOT_IMPLIED\",\n  \"runner\": \"deepwrite/release/runtime.py\",\n  \"project_pin_policy\": \"NEW_PROJECT_USES_ACTIVE_EXISTING_PROJECT_PIN_PRESERVED\",\n  \"project_alignment\": \"NEW_PROJECT\",\n  \"human_approval_verified_by_resolver\": false,\n  \"book_quality_verified_by_resolver\": false,\n  \"runner_sha256\": \"dc59955b613ea9d86dd2458b63fc322210803b7b65e0ae4346b14a5e74ed10fa\",\n  \"engine_version\": \"e24.1\",\n  \"implementation_commit\": \"e3d3e2ae8af46ba703db15f1ba7a78fe4db2aad5\",\n  \"release_record\": \"deepwrite/releases/e24.1.json\",\n  \"release_record_sha256\": \"78d4e3f06277d8b1f0a95acbd16f2b8e1dec5654cf5c4fd2b11ee367cc8a28a5\",\n  \"runtime_files\": {\n    \"deepwrite/release/runtime.py\": \"dc59955b613ea9d86dd2458b63fc322210803b7b65e0ae4346b14a5e74ed10fa\",\n    \"deepwrite/release/activation.py\": \"e105b7e5d1aee186418c226a1abfeda0461f88b666d0fbf0a58e7a41e47152ef\",\n    \"deepwrite/qa/checkpoint.py\": \"f40633cfdde27c47778841092e1ede8ab3604ee4608559d42ff0b735ce01257d\",\n    \"deepwrite/qa/resume_check.py\": \"d71d8aba9965206d68f0ee9e936cfa3a7a13d125a64662aa149df3b97510bbaa\",\n    \"deepwrite/tools/book_packager_v0.1.py\": \"716cbedfe60ab7096f19b6de266b929cb81c0f8b8668c8ea322dd5e4286023e6\",\n    \"deepwrite/candidates/e15-review-closure/review_closure_guard.py\": \"b2be877c9ca7ff63b0adec5ec56c3c65f1274ac69e4b2056bdaf39c5cd6851d7\"\n  },\n  \"project_lock\": {\n    \"schema\": \"deepwrite/project-engine-lock/v1\",\n    \"resolved_deepwrite_version\": \"v0.1\",\n    \"engine_version\": \"e24.1\",\n    \"implementation_commit\": \"e3d3e2ae8af46ba703db15f1ba7a78fe4db2aad5\",\n    \"release_record_sha256\": \"78d4e3f06277d8b1f0a95acbd16f2b8e1dec5654cf5c4fd2b11ee367cc8a28a5\",\n    \"activation_commit\": \"a4ea7fd8c1e68be9a78d7a9ebe73de19f8c157f0\",\n    \"parent\": {\n      \"version\": \"v7.6\",\n      \"current_sha256\": \"b874dec9bfb59871c01e463868b9303a31bd0d829f02e99b1def8aaf12f9975e\",\n      \"spec_sha256\": \"71e380cd8fc07e38562c180b0b754f38b3efe0f5ee9fd2034159a8373118c248\"\n    },\n    \"module_identities\": []\n  },\n  \"module_identities\": [],\n  \"runtime_inventory_scope\": \"DECLARED_FILES_NOT_AUTOMATIC_DEPENDENCY_DISCOVERY\"\n}\n{\n  \"status\": \"PROJECT_LOCK_AND_DECLARED_FILES_VERIFIED\",\n  \"phase\": \"INITIALIZED\",\n  \"state_sha256\": \"2559dcd8943ad49029102ea93c9a0dccae3b8a71ecefed0525f9419aea39410a\"\n}\n",
+    "stderr": ""
+  }
+]

@@ -10,6 +10,7 @@ import argparse
 import hashlib
 import json
 import re
+import subprocess
 from pathlib import Path
 
 HEX40 = re.compile(r"^[a-f0-9]{40}$")
@@ -22,18 +23,25 @@ def digest(p): return hashlib.sha256(p.read_bytes()).hexdigest()
 def safe_path(root, s):
     if not isinstance(s, str) or not s or s.startswith(("/", "~")):
         raise ValueError("INVALID_FILE_PATH")
+    if any(part in ("", ".", "..") for part in s.split("/")):
+        raise ValueError("NONCANONICAL_FILE_PATH")
+    source=root / s
+    if any(p.is_symlink() for p in [source,*source.parents] if p!=root.parent):
+        raise ValueError("SYMLINK_RELEASE_PATH")
     target = (root / s).resolve()
     if not target.is_relative_to(root.resolve()) or not target.is_file():
         raise ValueError("MISSING_OR_OUTSIDE_FILE")
     return target
 
 
-def verify(root, manifest):
+def verify(root, manifest, base_root=None):
     reasons=[]
-    current_path=root / "deepwrite/CURRENT.json"
+    root = Path(root).resolve()
+    base_root = Path(base_root).resolve() if base_root else root
+    current_path=base_root / "deepwrite/CURRENT.json"
     try:
         current = json.loads(current_path.read_text("utf-8"))
-        parent = json.loads((root / "wish-delivery/CURRENT.json").read_text("utf-8"))
+        parent = json.loads((base_root / "wish-delivery/CURRENT.json").read_text("utf-8"))
     except (OSError, ValueError) as exc:
         return {"status":"BLOCKED","reasons":["CANNOT_READ_ACTIVE_POINTERS: "+str(exc)]}
     if manifest.get("schema") != "deepwrite/promotion-request/v1": reasons.append("BAD_MANIFEST_SCHEMA")
@@ -47,7 +55,10 @@ def verify(root, manifest):
     scope = manifest.get("change_scope")
     if scope not in ("ENGINEERING_PATCH", "QUALITY_BEHAVIOR_CHANGE"):
         reasons.append("INVALID_CHANGE_SCOPE")
-    if not manifest.get("new_version") or manifest.get("new_version") == manifest.get("base_version"):
+    engineering_version = manifest.get("engine_version")
+    if (not manifest.get("new_version") or
+        (manifest.get("new_version") == manifest.get("base_version") and
+         not (scope == "ENGINEERING_PATCH" and isinstance(engineering_version,str) and engineering_version))):
         reasons.append("VERSION_NOT_ADVANCED")
     if not HEX40.fullmatch(str(manifest.get("candidate_commit", ""))):
         reasons.append("CANDIDATE_COMMIT_NOT_PINNED")
@@ -97,13 +108,143 @@ def verify(root, manifest):
         reasons.append("NO_HUMAN_RELEASE_AUTHORITY")
     else:
         auth=manifest["human_authorization_evidence"]
-        if not isinstance(auth,dict) or auth.get("verification") != "GITHUB_PROTECTED_PR_APPROVAL_REQUIRED":
+        if not isinstance(auth,dict) or auth.get("verification") not in (
+                "GITHUB_PROTECTED_PR_APPROVAL_REQUIRED", "GITHUB_OWNER_EXACT_HEAD_COMMAND_REQUIRED"):
             reasons.append("HUMAN_AUTHORIZATION_MUST_BE_GITHUB_REVIEWED")
     return {"status":"BLOCKED" if reasons else "STRUCTURAL_READY_NEEDS_GITHUB_AUTHENTICATED_REVIEW",
             "reasons":reasons,
             "semantic_quality_verified_by_script":False,
             "author_identity_verified_by_script":False,
             "can_edit_current_without_PR":False}
+
+
+def git(root, *args):
+    return subprocess.check_output(["git", "-C", str(root), *args], stderr=subprocess.DEVNULL)
+
+
+def verify_transition(base_root, head_root, changed_paths, manifest_path=None):
+    """Trusted base-code check of candidate data; never imports candidate Python.
+
+    This verifies bytes/Git objects and conservative activation scope. Real CI
+    and owner authority are checked separately against GitHub by the controller.
+    Existing v1 preflight declarations alone never authorize a merge.
+    """
+    base_root, head_root = Path(base_root).resolve(), Path(head_root).resolve()
+    paths = set(changed_paths)
+    reasons = []
+    try:
+        before_path = safe_path(base_root, "deepwrite/CURRENT.json")
+        after_path = safe_path(head_root, "deepwrite/CURRENT.json")
+        before, after = json.loads(before_path.read_bytes()), json.loads(after_path.read_bytes())
+        old_engine = before.get("active_engine") or {}
+        old_record = (json.loads(safe_path(base_root, old_engine["release_record"]).read_bytes())
+                      if old_engine else {})
+        protected_runtime = {f["path"] for f in old_record.get("runtime_files", [])}
+        parent=json.loads(safe_path(base_root,"wish-delivery/CURRENT.json").read_bytes())
+        protected_runtime.update({before["active_workbench_spec"],"wish-delivery/CURRENT.json"})
+        if parent.get("active_spec"): protected_runtime.add(parent["active_spec"])
+        changed = before_path.read_bytes() != after_path.read_bytes() or bool(paths & protected_runtime)
+        if not changed:
+            return {"status":"NO_ACTIVATION_CHANGE", "reasons":[], "semantic_quality_verified_by_script":False}
+        if manifest_path is None:
+            choices=[]
+            for name in sorted(paths):
+                if name.startswith("deepwrite/releases/") and name.endswith(".json"):
+                    try:
+                        obj=json.loads(safe_path(head_root,name).read_bytes())
+                        if obj.get("schema")=="deepwrite/promotion-request/v1": choices.append(name)
+                    except (ValueError, OSError): pass
+            if len(choices)!=1: raise ValueError("EXACTLY_ONE_PROMOTION_REQUEST_REQUIRED")
+            manifest_path=choices[0]
+        request=json.loads(safe_path(head_root,manifest_path).read_bytes())
+        structural=verify(head_root,request,base_root=base_root)
+        reasons.extend(structural["reasons"])
+        required_evidence=("engineering","rollback_test","non_regression")
+        if request.get("change_scope")=="QUALITY_BEHAVIOR_CHANGE":
+            required_evidence+=("content_quality","author_acceptance","independent_validation")
+        artifacts=request.get("evidence_artifacts",{})
+        for key in required_evidence:
+            obj=artifacts.get(key) if isinstance(artifacts,dict) else None
+            if not isinstance(obj,dict) or not obj.get("path") or not obj.get("sha256"):
+                reasons.append("MISSING_ACTUAL_EVIDENCE_ARTIFACT:"+key)
+            elif digest(safe_path(head_root,obj["path"]))!=obj["sha256"]:
+                reasons.append("EVIDENCE_ARTIFACT_HASH_MISMATCH:"+key)
+        engine=after.get("active_engine")
+        if not isinstance(engine,dict): raise ValueError("PROMOTION_REQUIRES_PINNED_ACTIVE_ENGINE")
+        record_path=engine["release_record"]
+        record_raw=safe_path(head_root,record_path).read_bytes()
+        record=json.loads(record_raw)
+        scope=request.get("change_scope")
+        if record_path not in paths: reasons.append("RELEASE_RECORD_NOT_IN_THIS_PR")
+        if (record.get("schema")!="deepwrite/release-record/v1" or record.get("status")!="ACTIVE_RELEASE" or
+            record.get("version")!=engine.get("version") or record.get("workbench_version")!=after.get("active_workbench_version") or
+            digest(safe_path(head_root,record_path))!=engine.get("release_record_sha256")):
+            reasons.append("CURRENT_RELEASE_RECORD_IDENTITY_MISMATCH")
+        if request.get("engine_version")!=engine.get("version"):
+            reasons.append("REQUEST_ENGINE_VERSION_MISMATCH")
+        if engine.get("version")==old_engine.get("version"):
+            reasons.append("ENGINE_VERSION_NOT_ADVANCED")
+        if request.get("spec")!=record.get("spec"):
+            reasons.append("REQUEST_RECORD_SPEC_MISMATCH")
+        if record.get("spec",{}).get("path")!=after.get("active_workbench_spec"):
+            reasons.append("RECORD_CURRENT_SPEC_PATH_MISMATCH")
+        parent_record=record.get("parent",{})
+        parent_head=safe_path(head_root,"wish-delivery/CURRENT.json")
+        actual_parent=json.loads(parent_head.read_bytes())
+        if (parent_record.get("version")!=actual_parent.get("active_version") or
+            parent_record.get("current_sha256")!=digest(parent_head) or
+            parent_record.get("spec",{}).get("path")!=actual_parent.get("active_spec") or
+            parent_record.get("spec",{}).get("sha256")!=digest(safe_path(head_root,actual_parent["active_spec"]))):
+            reasons.append("PARENT_RELEASE_IDENTITY_MISMATCH")
+        implementation=engine.get("implementation_commit","")
+        if (not HEX40.fullmatch(implementation) or implementation!=record.get("implementation_commit") or
+            implementation!=request.get("candidate_commit")):
+            raise ValueError("IMPLEMENTATION_COMMIT_NOT_BOUND")
+        git(head_root,"cat-file","-e",implementation+"^{commit}")
+        git(head_root,"merge-base","--is-ancestor",implementation,"HEAD")
+        for f in record.get("runtime_files",[]):
+            actual=safe_path(head_root,f["path"])
+            if actual.is_symlink() or digest(actual)!=f["sha256"]:
+                reasons.append("RELEASE_RUNTIME_FILE_MISMATCH:"+f["path"])
+            if hashlib.sha256(git(head_root,"show",implementation+":"+f["path"])).hexdigest()!=f["sha256"]:
+                reasons.append("IMPLEMENTATION_GIT_BYTES_MISMATCH:"+f["path"])
+        if not record.get("runtime_files") or engine.get("path") not in {f["path"] for f in record["runtime_files"]}:
+            reasons.append("ACTIVE_ENGINE_NOT_IN_RUNTIME_INVENTORY")
+        if (request.get("runner",{}).get("path")!=engine.get("path") or
+            request.get("runner",{}).get("sha256")!=engine.get("sha256") or
+            digest(safe_path(head_root,engine["path"]))!=engine.get("sha256")):
+            reasons.append("REQUEST_RUNNER_IDENTITY_MISMATCH")
+        if engine.get("release_channel")!="STABLE": reasons.append("ENGINE_NOT_STABLE")
+        rollback=request.get("rollback_commit","")
+        git(base_root,"merge-base","--is-ancestor",rollback,"HEAD")
+        if hashlib.sha256(git(base_root,"show",rollback+":deepwrite/CURRENT.json")).hexdigest()!=request.get("base_current_sha256"):
+            reasons.append("ROLLBACK_CURRENT_IDENTITY_MISMATCH")
+        for name in paths:
+            if name.startswith("deepwrite/releases/") and (base_root/name).exists() and (head_root/name).read_bytes()!=(base_root/name).read_bytes():
+                reasons.append("IMMUTABLE_RELEASE_RECORD_CHANGED:"+name)
+        if request.get("change_scope")=="ENGINEERING_PATCH":
+            if safe_path(base_root,"wish-delivery/CURRENT.json").read_bytes()!=parent_head.read_bytes():
+                reasons.append("ENGINEERING_CANNOT_CHANGE_PARENT_PROTOCOL")
+            if (after.get("active_workbench_version")!=before.get("active_workbench_version") or
+                after.get("active_workbench_spec")!=before.get("active_workbench_spec") or
+                safe_path(head_root,after["active_workbench_spec"]).read_bytes()!=safe_path(base_root,before["active_workbench_spec"]).read_bytes()):
+                reasons.append("ENGINEERING_CANNOT_CHANGE_COGNITIVE_SPEC")
+            if record.get("module_identities"):
+                reasons.append("ENGINEERING_CANNOT_ACTIVATE_CANDIDATE_MODULES")
+            # Engineering fast path is deliberately narrow. Prompt/discovery/
+            # writer policy changes cannot be relabelled as a hash repair.
+            allowed=("deepwrite/release/","deepwrite/qa/")
+            engineering_tools={"deepwrite/tools/book_packager_v0.1.py",
+                "deepwrite/candidates/e15-review-closure/review_closure_guard.py"}
+            for f in record.get("runtime_files",[]):
+                if not f["path"].startswith(allowed) and f["path"] not in engineering_tools:
+                    reasons.append("ENGINEERING_RUNTIME_OUTSIDE_REVIEWED_BOUNDARY:"+f["path"])
+    except (OSError, ValueError, KeyError, TypeError, subprocess.CalledProcessError) as error:
+        reasons.append("TRANSITION_CHECK_FAILED:"+str(error))
+    return {"status":"BLOCKED" if reasons else "ACTIVATION_BYTES_READY_NEEDS_LIVE_GITHUB_AUTHORITY",
+            "reasons":reasons,"semantic_quality_verified_by_script":False,
+            "author_identity_verified_by_script":False,
+            "change_scope":locals().get("scope")}
 
 
 def main():

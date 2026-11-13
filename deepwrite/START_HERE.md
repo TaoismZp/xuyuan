@@ -32,10 +32,18 @@
 **默认可继续调用现有稳定工作台，不必等待下一版研发完成。** 每个真实新书项目读取并固定当次 `deepwrite/CURRENT.json` + `wish-delivery/CURRENT.json` 的有效版本，旧项目不因GitHub更新静默升级。若用户明确要求试用候选模块，则按 `deepwrite/GUARDED_EVOLUTION.md` 的 `CANDIDATE_OPT_IN` 固定具体候选commit、原稿哈希和回滚点。怀疑变差时选择 `ROLLBACK` 恢复旧的已核稿件及配置，保留试验失败记录，绝不覆盖原稿。候选功能质量未经独立实测，不冒称已改善作品。
 
 
-## Canonical executable entry point (activation-rail candidate, contingent on merge)
+## 真正执行入口与版本锁
 
-When this section exists in the **main branch**, resolve the actual runtime using `python3 deepwrite/release/activation.py --root .` in a checked-out repository. `CURRENT.json` remains the only formal version authority. A returned `WORKBENCH_ONLY_NO_LIVE_AUTONOMOUS_RUNNER` must NOT be treated as a launched book-writing engine. A candidacy branch and passing tests do not update the stable pointer.
+每次新建书先从 **main** 获取真实 CURRENT，在有 Git 与 Python 的环境执行：
 
-To promote future capabilities follow `deepwrite/release/RELEASE_PROCESS.md`: candidate tests → real content+reader acceptance → author approval through GitHub PR → atomic active pointer+runner+release record → post-merge runtime verification. If the running environment cannot invoke the CLI or access the repo, describe the limitation rather than quietly replacing the official engine with remembered prompts.
+```sh
+python3 deepwrite/release/activation.py --root .
+python3 deepwrite/release/activation.py --root . --run -- identity
+python3 deepwrite/release/activation.py --root . --run -- init /private/project-config.json /private/new-project
+```
 
-Existing projects use their pinned version. This release rail must never auto-migrate or rewrite historical book drafts.
+第一条解析规范和工程引擎身份；后两条只有正式 active_engine 已合并、实际提交与全部声明文件核对通过才运行。若 main 仍返回 WORKBENCH_ONLY_NO_LIVE_AUTONOMOUS_RUNNER，必须如实报告没有已激活的工程入口。候选 PR 的 CURRENT 提案不是正式状态。
+
+工程 runtime 负责自动锁定版本、原素材身份、阶段状态、强制实际文件审稿关闭检查、装订与检查点恢复，不默认执行 E18/E23 候选认知提示，也不证明自动成书质量。普通 GPT 对话若不能执行命令，应交由连接了执行环境的 Codex/Work 真正调用；阅读本页不能冒充运行。
+
+旧项目读取 PROJECT_LOCK 的 engine、父协议和 activation_commit；不同身份时阻断，不能静默覆盖旧稿。详细命令、两类发布与真实授权见 [RELEASE_PROCESS.md](release/RELEASE_PROCESS.md)，未关闭的门见 [release/STATE.json](release/STATE.json)。工程补丁与认知升级分别验收。

@@ -1,0 +1,12 @@
+{
+  "project_id": "PUBLIC_ENGINEERING_FIXTURE",
+  "wish": "Preserve a concrete public engineering example.",
+  "channel": "STABLE",
+  "modules": {},
+  "sources": [
+    {
+      "path": "original.md",
+      "sha256": "9cedb80f04f2a4a7f6b85c58bafdf000c359f9d2a1778ac4377e54b6789f21f3"
+    }
+  ]
+}

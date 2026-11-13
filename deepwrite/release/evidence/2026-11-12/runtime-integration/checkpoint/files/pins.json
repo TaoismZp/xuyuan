@@ -1,0 +1,17 @@
+{
+  "project_id": "PUBLIC_ENGINEERING_FIXTURE",
+  "protocols": {
+    "deepwrite": {
+      "version": "v0.1",
+      "commit": "a4ea7fd8c1e68be9a78d7a9ebe73de19f8c157f0",
+      "spec_sha": "e20c12d6a05613fc56526f87888a8eb64a06d4ec"
+    },
+    "wish_delivery": {
+      "version": "v7.6",
+      "commit": "a4ea7fd8c1e68be9a78d7a9ebe73de19f8c157f0",
+      "spec_sha": "219b2f49537b36772a5204f35c21e57fbd18bea6"
+    }
+  },
+  "channel": "STABLE",
+  "modules": []
+}

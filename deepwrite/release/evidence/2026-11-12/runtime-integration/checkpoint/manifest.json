@@ -1,0 +1,84 @@
+{
+  "schema": "deepwrite/checkpoint/v0.1",
+  "project_id": "PUBLIC_ENGINEERING_FIXTURE",
+  "files": [
+    {
+      "path": "STATE.json",
+      "role": "artifact",
+      "sha256": "3e8d9afe5b2731195d138a86d2651e1b2cf4ad22516454ceae00fc591b785c2b",
+      "size": 1390
+    },
+    {
+      "path": "pins.json",
+      "role": "pins",
+      "sha256": "ef5a35ef46a1d16892895e26e0062b3c7a1edb47f28dc7ba6adb8673756e8ac3",
+      "size": 458
+    },
+    {
+      "path": "config.json",
+      "role": "config",
+      "sha256": "1e908761eeeed267b8f95b12bbd6c192a32f466229fe8753a3f7484e7ad44fd7",
+      "size": 294
+    },
+    {
+      "path": "PROJECT_LOCK.json",
+      "role": "file",
+      "sha256": "242af91754c3febaadbe5d7738f868cb7da1b62c5f01dc55fe8361966b39a26a",
+      "size": 598
+    },
+    {
+      "path": "chapters/01.md",
+      "role": "file",
+      "sha256": "8effd1a8b4b6c36b06c8b2b019a754322eacadb0201a49721da9215c484e95ac",
+      "size": 76
+    },
+    {
+      "path": "derived/book-0001.json",
+      "role": "file",
+      "sha256": "05fcb2f508492676ee76c34809f3cb88872e569b956e607814dea14a4882e24f",
+      "size": 1372
+    },
+    {
+      "path": "derived/book-0001.md",
+      "role": "file",
+      "sha256": "a52657539f1a39cfaeabdc3e8660001f76d5c46a15a978bb665092090aaeb9c7",
+      "size": 426
+    },
+    {
+      "path": "front.md",
+      "role": "file",
+      "sha256": "184119e5c905b72396321c372e07e83bb4111edfcc5655a6026f1fc1d0142944",
+      "size": 64
+    },
+    {
+      "path": "frozen.json",
+      "role": "file",
+      "sha256": "af4071e0be253696942fd932aecd2ecfc48ef1ce7709b07340e9b9159a899bdc",
+      "size": 2193
+    },
+    {
+      "path": "manifest.json",
+      "role": "file",
+      "sha256": "8c7d41ad748d43f2e23672d5369484f22e488e634c3a9ae1453d7cc2f2c3ff22",
+      "size": 610
+    },
+    {
+      "path": "review.json",
+      "role": "file",
+      "sha256": "34f14a875951a2a4296ce691eec8e8f499d8ab610490cb35fa09150cffa614c5",
+      "size": 3502
+    },
+    {
+      "path": "sources/0001.md",
+      "role": "file",
+      "sha256": "9cedb80f04f2a4a7f6b85c58bafdf000c359f9d2a1778ac4377e54b6789f21f3",
+      "size": 71
+    },
+    {
+      "path": "tail.md",
+      "role": "file",
+      "sha256": "622620191b71adf4ceb9fb928de5c352b666b291eee9504b681751ef4afec552",
+      "size": 70
+    }
+  ]
+}

@@ -61,14 +61,15 @@ class TestActivation(unittest.TestCase):
         self._current()
         with self.assertRaisesRegex(ValueError,'RECORD_MISMATCH'): resolve(self.root)
 
-    def test_approved_active_path_can_resolve_without_claiming_book_quality(self):
+    def test_self_declared_active_record_is_not_complete_release_identity(self):
         payload='print(1)\n';(self.root/'deepwrite/tools/run.py').write_text(payload)
         (self.root/'deepwrite/releases/record.json').write_text(json.dumps({'status':'ACTIVE_RELEASE','version':'v0.2','runner_sha256':h(payload)}))
         self.current['active_workbench_version']='v0.2'
         self.current['active_runner']={'path':'deepwrite/tools/run.py','sha256':h(payload),
                 'release_channel':'STABLE','release_record':'deepwrite/releases/record.json'}
         self._current()
-        self.assertEqual(resolve(self.root)['status'],'ACTIVE_RUNNER_BYTES_VERIFIED_CONTENT_QUALITY_NOT_IMPLIED')
+        with self.assertRaisesRegex(ValueError, 'IDENTITY_SCHEMA_REQUIRED'):
+            resolve(self.root)
 
     def _promotion(self):
         spec='New specification\n'; runner='print("new")\n'
