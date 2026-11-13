@@ -35,7 +35,8 @@
     "repository": "TaoismZp/deepwrite-work-0006-private",
     "branch": "codex/full-execution-recovery-20261113",
     "entry": "workbench/EXECUTION_REPAIR_20261113/RECOVERY.md",
-    "case_D_replay_commit": "f8561d5cecedc5f1c4609ea7345f3b4805cb3b5b"
+    "case_D_replay_commit": "f8561d5cecedc5f1c4609ea7345f3b4805cb3b5b",
+    "fixed_archive_commit": "b791ec173638ba3eb94cec2f9e5e27524c580487"
   },
   "cases": {
     "A": {
@@ -66,5 +67,27 @@
     "Fair complete-work comparison"
   ],
   "next_actor": "CHATGPT",
-  "unique_next_step": "Review PR14 and the fixed private recovery evidence; obtain author decisions before a live controlled quality experiment or formal activation."
+  "unique_next_step": "Review PR14 and the fixed private recovery evidence; obtain author decisions before a live controlled quality experiment or formal activation.",
+  "verified_code_commit": "6356c8ca879cfef1e9e7210427b7c27f4782cb80",
+  "actual_ci": {
+    "schema": "deepwrite/actual-quality-ci/v1",
+    "commit": "6356c8ca879cfef1e9e7210427b7c27f4782cb80",
+    "run_id": 43403926705,
+    "job_id": 131813410492,
+    "app_id": 15368,
+    "context": "activation-and-runtime-regressions",
+    "event": "pull_request",
+    "conclusion": "success",
+    "actual_connector_job_log_read": true,
+    "actual_tests": {
+      "release": 73,
+      "guard": 42,
+      "packager": 15,
+      "E23_reader": 51,
+      "writer": 47
+    },
+    "formal_resolver": "WORKBENCH_ONLY_NO_LIVE_AUTONOMOUS_RUNNER",
+    "formal_main_reality_gate": "NOT_EXECUTED_NO_MERGE",
+    "model_quality_proven": false
+  }
 }

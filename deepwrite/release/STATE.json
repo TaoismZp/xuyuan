@@ -2,7 +2,7 @@
   "schema": "deepwrite/release-work-state/v1",
   "updated_date": "2026-11-13",
   "task": "ACTIVATION_BLACKBOX_READER_SOURCE_EXECUTION_REPAIR",
-  "status": "CANDIDATE_TESTING",
+  "status": "ENGINEERING_VERIFIED_NOT_ACTIVE",
   "repository": "TaoismZp/xuyuan",
   "intake_main_commit": "6b81a45d8576aa0636d29950f9a2d86f2a5cf8b1",
   "intake_pr14_commit": "d2ef373c5e0dcb7736c56a00e0aefb32d63b0b1a",
@@ -83,7 +83,10 @@
       "meaning": "ENGINEERING_FIXTURES_NOT_MODEL_OR_READER_QUALITY"
     },
     "quality_increment": "deepwrite/release/evidence/2026-11-13/QUALITY_INCREMENT.json",
-    "current_callchain": "deepwrite/release/evidence/2026-11-13/CALLCHAIN_AUDIT.md"
+    "current_callchain": "deepwrite/release/evidence/2026-11-13/CALLCHAIN_AUDIT.md",
+    "quality_ci": "deepwrite/release/evidence/2026-11-13/QUALITY_CI_RECEIPT.json",
+    "committed_fixture": "deepwrite/release/evidence/2026-11-13/COMMITTED_FIXTURE_RECEIPT.json",
+    "new_checkpoint_actual_restore": "81_DECLARED_FILES_BYTE_EQUAL_NO_REPEAT_MODEL_CALLS"
   },
   "open_gates": {
     "required_ci_enforced_on_all_main_prs": "PENDING_REAL_CONFIGURATION_AND_RECHECK",
@@ -98,7 +101,7 @@
     "cognitive_candidate_promotion": "NOT_AUTHORIZED_BY_ENGINEERING_TESTS",
     "live_new_model_loop": "BLOCKED_ACTUAL_HTTP_401",
     "fair_B0_B1_B2": "BLOCKED_MODEL_AND_HISTORICAL_BUDGET_IDENTITY",
-    "quality_candidate_remote_ci": "PENDING_COMMIT_AND_RUN",
+    "quality_candidate_remote_ci": "PASS_43403926705_NOT_WRITING_QUALITY",
     "positive_formal_stable_writing_profile": "NOT_EXECUTED",
     "source_learning_semantic_truth": "MODEL_JUDGMENT_REQUIRES_EXTERNAL_VALIDATION",
     "author_raw_approval_evidence": "NOT_REVERIFIED_DO_NOT_INFER_FROM_OTHER_PROJECT"
@@ -111,7 +114,7 @@
   "next_actor": "CHATGPT",
   "next_action": "Review the final PR14 code and fixed private evidence. Author decisions are required before controlled live model use, repository-protection changes, merge or formal activation. Do not reopen closed local thought-card experiments.",
   "acceptance_layers": {
-    "ENGINEERING_VERIFIED": "LOCAL_FULL_SUITES_PASS_REMOTE_QUALITY_CI_PENDING",
+    "ENGINEERING_VERIFIED": "ACTUAL_LOCAL_AND_GITHUB_CI_PASS_NOT_QUALITY",
     "RUNNER_ACTIVE_VERIFIED": "NOT_ACTIVE",
     "MODEL_INTERNAL_QUALITY_REVIEW": "PRIVATE_CASE_D_AI_SCOPED_NO_LIVE_WRITER",
     "AUTHOR_ACCEPTANCE": "NOT_RUN_BY_THIS_SYSTEM",
@@ -127,6 +130,10 @@
     "branch": "codex/full-execution-recovery-20261113",
     "entry": "workbench/EXECUTION_REPAIR_20261113/RECOVERY.md",
     "source_contract_archive_commit": "6b698435c2aaae82a9749dd77b22066315c5b43f",
-    "D_replay_commit": "f8561d5cecedc5f1c4609ea7345f3b4805cb3b5b"
-  }
+    "D_replay_commit": "f8561d5cecedc5f1c4609ea7345f3b4805cb3b5b",
+    "fixed_archive_commit": "b791ec173638ba3eb94cec2f9e5e27524c580487"
+  },
+  "verified_quality_code_commit": "6356c8ca879cfef1e9e7210427b7c27f4782cb80",
+  "private_reader_gate_replay": "AI_SCOPED_ACTUAL_PRIVATE_TEXTS_AND_HELPER_NOT_HUMAN",
+  "reader_source_gate_runtime": "ENGINEERING_VERIFIED_CANDIDATE_ONLY"
 }
