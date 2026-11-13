@@ -107,3 +107,5 @@ Requested module flags are separate from actually_loaded file/SHA identities. E2
 Knowledge-compounding factors are heuristic editorial lenses, never six scores, fixed chapter titles or scientific laws. Internal review metadata is not a required prose template.
 
 The real model endpoint was probed and returned HTTP401. Public scripted tests prove execution/STOP wiring only. Actual full-book autonomous quality, fair B0/B1/B2 and human reader results remain unverified.
+
+A positive temporary-Git WRITING-profile probe is now recorded under release/evidence/2026-11-13/stable-profile-probe/. It selected this existing writer through actual Git-bound activation and completed a STABLE engineering fixture plus restore/resume. STABLE config uses real protocol commit/spec blobs, module_policy for the published engine as STABLE, and empty candidate-only pins.modules/module_commits. This is not a formal main release, provider run or human approval.

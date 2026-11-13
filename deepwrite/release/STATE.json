@@ -79,14 +79,15 @@
       "guard": 42,
       "packager": 15,
       "E23_reader": 51,
-      "writer_execution": 47,
+      "writer_execution": 49,
       "meaning": "ENGINEERING_FIXTURES_NOT_MODEL_OR_READER_QUALITY"
     },
     "quality_increment": "deepwrite/release/evidence/2026-11-13/QUALITY_INCREMENT.json",
     "current_callchain": "deepwrite/release/evidence/2026-11-13/CALLCHAIN_AUDIT.md",
     "quality_ci": "deepwrite/release/evidence/2026-11-13/QUALITY_CI_RECEIPT.json",
     "committed_fixture": "deepwrite/release/evidence/2026-11-13/COMMITTED_FIXTURE_RECEIPT.json",
-    "new_checkpoint_actual_restore": "81_DECLARED_FILES_BYTE_EQUAL_NO_REPEAT_MODEL_CALLS"
+    "new_checkpoint_actual_restore": "81_DECLARED_FILES_BYTE_EQUAL_NO_REPEAT_MODEL_CALLS",
+    "positive_stable_profile_fixture": "deepwrite/release/evidence/2026-11-13/stable-profile-probe/RECEIPT.json"
   },
   "open_gates": {
     "required_ci_enforced_on_all_main_prs": "PENDING_REAL_CONFIGURATION_AND_RECHECK",
@@ -102,7 +103,7 @@
     "live_new_model_loop": "BLOCKED_ACTUAL_HTTP_401",
     "fair_B0_B1_B2": "BLOCKED_MODEL_AND_HISTORICAL_BUDGET_IDENTITY",
     "quality_candidate_remote_ci": "PASS_43403926705_NOT_WRITING_QUALITY",
-    "positive_formal_stable_writing_profile": "NOT_EXECUTED",
+    "positive_formal_stable_writing_profile": "TEMP_GIT_IDENTITY_SELECTED_WRITING_PROFILE_ENGINEERING_PASS_FORMAL_MAIN_NOT_ACTIVATED",
     "source_learning_semantic_truth": "MODEL_JUDGMENT_REQUIRES_EXTERNAL_VALIDATION",
     "author_raw_approval_evidence": "NOT_REVERIFIED_DO_NOT_INFER_FROM_OTHER_PROJECT"
   },
