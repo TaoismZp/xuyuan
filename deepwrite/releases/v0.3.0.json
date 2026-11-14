@@ -3,7 +3,7 @@
   "status": "ACTIVE_RELEASE",
   "version": "v0.3.0",
   "workbench_version": "v0.3",
-  "implementation_commit": "1b255c1d44e2d5fbd719cefd35fde48f6bf97a60",
+  "implementation_commit": "f5c2d5a6d93cb958c07db08ec1b00596a9b20087",
   "rollback_commit": "6b81a45d8576aa0636d29950f9a2d86f2a5cf8b1",
   "spec": {
     "path": "deepwrite/versions/v0.3.md",
@@ -20,7 +20,7 @@
   "runtime_files": [
     {
       "path": "deepwrite/deepwrite.py",
-      "sha256": "1fab8c0a50e24dc692c953b48c05564c0690cb90207de693129e48c66bf74287"
+      "sha256": "c0a167bd20c0eb43e3e217255da113f833faee16682642ae85cbeccfd7f4f295"
     },
     {
       "path": "deepwrite/tools/writing_loop_experimental.py",
@@ -114,39 +114,39 @@
   "module_identities": [
     {
       "id": "e15_review_closure",
-      "commit": "1b255c1d44e2d5fbd719cefd35fde48f6bf97a60"
+      "commit": "f5c2d5a6d93cb958c07db08ec1b00596a9b20087"
     },
     {
       "id": "e18_loop",
-      "commit": "1b255c1d44e2d5fbd719cefd35fde48f6bf97a60"
+      "commit": "f5c2d5a6d93cb958c07db08ec1b00596a9b20087"
     },
     {
       "id": "reader_source_transfer",
-      "commit": "1b255c1d44e2d5fbd719cefd35fde48f6bf97a60"
+      "commit": "f5c2d5a6d93cb958c07db08ec1b00596a9b20087"
     },
     {
       "id": "source_first_architecture",
-      "commit": "1b255c1d44e2d5fbd719cefd35fde48f6bf97a60"
+      "commit": "f5c2d5a6d93cb958c07db08ec1b00596a9b20087"
     },
     {
       "id": "two_phase_discovery",
-      "commit": "1b255c1d44e2d5fbd719cefd35fde48f6bf97a60"
+      "commit": "f5c2d5a6d93cb958c07db08ec1b00596a9b20087"
     },
     {
       "id": "insight_origin",
-      "commit": "1b255c1d44e2d5fbd719cefd35fde48f6bf97a60"
+      "commit": "f5c2d5a6d93cb958c07db08ec1b00596a9b20087"
     },
     {
       "id": "knowledge_compounding",
-      "commit": "1b255c1d44e2d5fbd719cefd35fde48f6bf97a60"
+      "commit": "f5c2d5a6d93cb958c07db08ec1b00596a9b20087"
     },
     {
       "id": "bookwide_restructure",
-      "commit": "1b255c1d44e2d5fbd719cefd35fde48f6bf97a60"
+      "commit": "f5c2d5a6d93cb958c07db08ec1b00596a9b20087"
     },
     {
       "id": "blind_reader_trial",
-      "commit": "1b255c1d44e2d5fbd719cefd35fde48f6bf97a60"
+      "commit": "f5c2d5a6d93cb958c07db08ec1b00596a9b20087"
     }
   ],
   "execution_profile": {
@@ -173,7 +173,8 @@
     "author_draft_acceptance": "NOT_RUN",
     "github_protected_review": "PENDING",
     "publication_of_private_content": "FORBIDDEN",
-    "record_is_effective_only_after_main_current_merge": true
+    "record_is_effective_only_after_main_current_merge": true,
+    "stable_pin_checkpoint_bug": "FIXED_BEFORE_RELEASE_IDENTITY"
   },
   "recorded_date": "2026-11-14"
 }
