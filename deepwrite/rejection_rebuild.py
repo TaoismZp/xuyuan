@@ -202,9 +202,9 @@ def prepare(original_root, author_receipt, expected_receipt_sha,
     provenance.write_bytes(canonical({**lineage,
         "new_request_sha256": digest(new_request_path.read_bytes()),
         "private_new_project_root": str(new_root)}))
-    return {"status": "REJECTED_SAMPLE_RESET_PREPARED_MODEL_NOT_RUN",
+    return {**lineage, "status": "REJECTED_SAMPLE_RESET_PREPARED_MODEL_NOT_RUN",
             "request_file": str(new_request_path), "provenance_file": str(provenance),
-            "project_root": str(new_root), **lineage}
+            "project_root": str(new_root)}
 
 
 def assess_new_run(prepared, result):
