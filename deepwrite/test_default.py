@@ -92,7 +92,10 @@ class StudyModel:
         req=json.loads(prompt)
         self.roles.append(req["role"])
         result=study() if req["role"] == "source_domain_study" else book()
-        if self.prepared is not None and req["role"] == "book_architecture_discovery":
+        if req["role"] == "bookwide_topology_recheck":
+            result={"schema":"deepwrite/bookwide-topology-audit/v1", "decision":"KEEP",
+                    "reason":"No independently evidenced need to change chapter topology after full book review."}
+        elif self.prepared is not None and req["role"] == "book_architecture_discovery":
             result=self.prepared
         return SimpleNamespace(model="synthetic-study-model", provider_kind="fixture",
                                response_id="demo-" + str(len(self.roles)),
@@ -136,10 +139,11 @@ class DefaultInvocationTests(unittest.TestCase):
     def test_one_command_autoselects_all_gates_to_actual_book(self):
         result,model=self.invoke()
         self.assertEqual(result["status"],"ENGINEERING_FIXTURE_ONLY_NOT_LIVE",result)
-        self.assertEqual(model.roles,["source_domain_study","book_architecture_discovery"])
+        self.assertEqual(model.roles,["source_domain_study","book_architecture_discovery","bookwide_topology_recheck"])
         self.assertEqual(result["chapter_count_proposed"],1)
         self.assertFalse(result["chapter_count_author_approved"])
         self.assertFalse(result["default_formal_main_pointer_changed"])
+        self.assertEqual(result["bookwide_topology_recheck"]["status"],"STRUCTURE_KEPT_MODEL_INTERNAL_ONLY")
         self.assertEqual(result["independent_reader_quality"],"NOT_RUN")
         self.assertTrue((self.destination/"writer_project/book.md").is_file())
         config=json.loads((self.destination/"discovery_evidence/research/writer_config.json").read_text())
