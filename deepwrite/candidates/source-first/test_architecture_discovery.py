@@ -193,7 +193,7 @@ class TwoPhaseDiscoveryTests(unittest.TestCase):
             discovery.discover(self.cfg, self.project, self.out, model=ScriptedDiscovery())
         self.cfg["channel"] = "CANDIDATE_OPT_IN"
         self.cfg["execution_contract"]["mode"] = "ASSISTED_AUTHOR_GATED"
-        with self.assertRaisesRegex(discovery.Blocked, "ASSISTED_SCOPE_NOT_IMPLEMENTED"):
+        with self.assertRaisesRegex(discovery.Blocked, "AUTHOR_PROJECT_SCOPE_INVALID"):
             discovery.discover(self.cfg, self.project, self.out, model=ScriptedDiscovery())
 
     def test_source_sha_tamper_stops_before_invocation(self):
