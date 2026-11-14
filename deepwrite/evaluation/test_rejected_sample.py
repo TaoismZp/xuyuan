@@ -148,6 +148,19 @@ class RejectedSampleTests(unittest.TestCase):
         with self.assertRaisesRegex(rewrite.Blocked,"NOT_MATCHED"):
             self.prepare()
 
+    def test_real_user_brief_rejection_is_accepted_not_forced_to_write_an_essay(self):
+        self.receipt["reason"]="写得不好，很普通"
+        self.record()
+        out=self.prepare()
+        self.assertEqual(out["status"],"REJECTED_SAMPLE_RESET_PREPARED_MODEL_NOT_RUN")
+        self.assertFalse(self.newroot.exists())
+
+    def test_empty_non_decision_is_not_valid_author_feedback(self):
+        self.receipt["reason"]="不"
+        self.record()
+        with self.assertRaisesRegex(rewrite.Blocked,"SUBSTANTIVE_AUTHOR_FEEDBACK_REQUIRED"):
+            self.prepare()
+
     def test_external_state_sha_and_receipt_hash_must_match(self):
         with self.assertRaisesRegex(rewrite.Blocked,"SHA_MISMATCH_AUTHOR_RECEIPT"):
             rewrite.prepare(self.original,self.receipt_path,"f"*64,
@@ -158,7 +171,7 @@ class RejectedSampleTests(unittest.TestCase):
 
     def test_manual_chapter_is_not_a_v03_engine_sample(self):
         self.orig_state_file.unlink()
-        with self.assertRaises(FileNotFoundError):
+        with self.assertRaisesRegex(rewrite.Blocked,"OLD_ENGINE_RUN_STATE_REQUIRED"):
             self.prepare()
         self.assertFalse(self.newreq.exists())
 
