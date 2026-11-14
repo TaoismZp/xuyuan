@@ -420,6 +420,7 @@ def resume(path: Path, expected_state_sha: str, author_approval_receipt=None, au
 def main():
     parser = argparse.ArgumentParser(description="DeepWrite single command: research→plan→write→review→archive")
     sub = parser.add_subparsers(dest="cmd", required=True)
+    sub.add_parser("identity")
     go = sub.add_parser("run")
     go.add_argument("user_request", type=Path)
     go.add_argument("private_project_root", type=Path)
@@ -432,7 +433,9 @@ def main():
     rs.add_argument("--author-approval-sha256")
     args = parser.parse_args()
     try:
-        if args.cmd == "run":
+        if args.cmd == "identity":
+            result = {"status": "IDENTITY_ONLY_NOT_BOOK_QUALITY", **official_identity()}
+        elif args.cmd == "run":
             result = run(args.user_request, args.private_project_root)
         elif args.cmd == "resume":
             result = resume(args.private_project_root, args.expected_state_sha256,
@@ -444,7 +447,8 @@ def main():
                   "formal": official_identity()}
     print(json.dumps(result, ensure_ascii=False, indent=2))
     return 0 if result.get("status") in ("CANDIDATE_PENDING_HUMAN",
-                                        "ENGINEERING_FIXTURE_ONLY_NOT_LIVE", "AWAIT_AUTHOR_REVIEW") else 2
+                                        "ENGINEERING_FIXTURE_ONLY_NOT_LIVE", "AWAIT_AUTHOR_REVIEW",
+                                        "IDENTITY_ONLY_NOT_BOOK_QUALITY") else 2
 
 
 if __name__ == "__main__":
