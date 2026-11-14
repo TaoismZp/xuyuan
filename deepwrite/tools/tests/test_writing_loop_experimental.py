@@ -99,6 +99,14 @@ def reader_report(payload):
     else:
         report["reader_checks"] = [{"audience": audience, "verdict": "SUPPORTED", "rationale": "Scripted fixture only.",
             "paragraph": number, "quote": quote} for audience in ("NOVICE", "PRACTITIONER", "EXPERT")]
+    if payload["stage"] != "SOURCE_LEARNING" and payload["reader_contract"].get("knowledge_compounding", {}).get("enabled"):
+        report["knowledge_compounding_probe"] = {
+            "prerequisite_concept_id": payload["reader_contract"]["concepts"][0]["id"],
+            "new_situation": "A new engineering fixture uses a different source but the same logical decision.",
+            "expected_inference": "Determine what can and cannot be concluded under changed conditions.",
+            "failure_boundary": "The original source result is not a universal rule.",
+            "rationale": "Scripted bounded model review only; no actual reader was tested.",
+            "verdict": "SUPPORTED", "paragraph": number, "quote": quote}
     return report
 
 
@@ -145,6 +153,62 @@ class WritingLoopTests(unittest.TestCase):
         obj = loop.WritingLoop(self.root, self.cfg, model=model or ScriptedModel())
         result = obj.run()
         return obj, result
+
+
+    def test_source_first_requested_without_study_cannot_enter_drafting(self):
+        self.cfg["modules"]["source_first_architecture"] = True
+        self.cfg["reader_prior_knowledge_contract"]["knowledge_compounding"] = {
+            "enabled": True, "transfer_goal": "Use a learned fact on a new and previously unseen problem."}
+        with self.assertRaisesRegex(loop.Blocked, "SOURCE_FIRST_ARCHITECTURE_BLOCKED"):
+            self.run_model()
+
+    def test_source_first_and_knowledge_compounding_real_runner_wiring(self):
+        study = self.root/"sources/source-first-study.md"
+        study.write_text("Study the native concept independently before designing a book outline.\\n", encoding="utf-8")
+        self.cfg["sources"].append({"path": "sources/source-first-study.md",
+                                   "sha256": loop.digest(study.read_bytes())})
+        self.cfg["modules"]["source_first_architecture"] = True
+        self.cfg["reader_prior_knowledge_contract"]["knowledge_compounding"] = {
+            "enabled": True, "transfer_goal": "Use the source insight to solve a novel independent decision."}
+        self.cfg["source_first_architecture"] = {
+            "schema": "deepwrite/source-first-architecture/v1",
+            "project_id": self.cfg["project_id"],
+            "status": "PROVISIONAL_NOT_AUTHOR_APPROVED",
+            "source_study": {"path": "sources/source-first-study.md",
+                             "sha256": loop.digest(study.read_bytes())},
+            "source_concepts": [{
+                "id": "native_pairs", "source_path": "sources/material.md",
+                "quote": "two pairs contain four objects",
+                "causal_mechanism": "Two separate groups of two each add to four, not five.",
+                "counterinterpretation": "Counting one group twice creates a false sum.",
+                "transfer_limit": "This arithmetic alone cannot certify social judgments."
+            }],
+            "rival_directions": [
+                {"id": "reasoning_first", "source_question": "How is a sum actually justified?",
+                 "reader_problem": "Readers confuse a claim with its demonstrated mechanism.",
+                 "tradeoff": "This approach remains a relatively elementary first chapter."},
+                {"id": "comparison_first", "source_question": "Why can a wrong sum sound credible?",
+                 "reader_problem": "Readers should learn to check the counted objects.",
+                 "tradeoff": "The narrative may distract from the source mathematics."}
+            ],
+            "selected_direction_id": "reasoning_first",
+            "why_selected_over_rivals": "The first direction gives a more verifiable reader change.",
+            "book_design": {
+                "status": "PROVISIONAL",
+                "why_these_chapters_not_source_outline": "The reader needs a coherent reasoning path, not one chapter per source.",
+                "chapter_contributions": [{"chapter_id": "alpha",
+                    "source_concept_ids": ["native_pairs"],
+                    "distinct_reader_change": "Verify a total by reconstructing the original objects."}]
+            }
+        }
+        model = ScriptedModel()
+        obj, outcome = self.run_model(model)
+        self.assertEqual(outcome["status"], "ENGINEERING_FIXTURE_ONLY_NOT_LIVE", outcome)
+        self.assertEqual(obj.state["source_first_intake"]["status"],
+                         "PASS_ENGINEERING_ONLY_PROVISIONAL_SOURCE_ARCHITECTURE")
+        self.assertIn("source_first_architecture", obj.state["module_receipt"]["actually_loaded"])
+        self.assertIn("reader_source_review", model.calls)
+        self.assertEqual(obj.state["acceptance"]["AUTHOR_ACCEPTANCE"], "NOT_RUN")
 
     def test_real_file_rewrite_diff_package_and_checkpoint(self):
         obj, result = self.run_model()
