@@ -295,7 +295,7 @@ def status(path: Path):
     return {"status": "NO_VERIFIED_PRIVATE_CHECKPOINT", **identity}
 
 
-def resume(path: Path, expected_state_sha: str):
+def resume(path: Path, expected_state_sha: str, author_approval_receipt=None, author_approval_sha256=None):
     path = private_path(path)
     project = path / "writer_project"
     frozen = path / "discovery_evidence" / "research" / "writer_config.json"
@@ -305,7 +305,9 @@ def resume(path: Path, expected_state_sha: str):
     if not re.fullmatch(r"[0-9a-f]{64}", str(expected_state_sha)):
         raise Blocked("DEEPWRITE_EXTERNAL_EXPECTED_STATE_SHA_REQUIRED")
     result = writer.WritingLoop(project, json.loads(frozen.read_text("utf-8")),
-                                expected_state_sha=expected_state_sha).run()
+                                expected_state_sha=expected_state_sha,
+                                author_approval_receipt=author_approval_receipt,
+                                expected_author_approval_sha=author_approval_sha256).run()
     (path / "discovery_evidence" / "RESUME_RESULT.json").write_bytes(canonical(result))
     return result
 
@@ -321,12 +323,15 @@ def main():
     rs = sub.add_parser("resume")
     rs.add_argument("private_project_root", type=Path)
     rs.add_argument("--expected-state-sha256", required=True)
+    rs.add_argument("--author-approval-receipt", type=Path)
+    rs.add_argument("--author-approval-sha256")
     args = parser.parse_args()
     try:
         if args.cmd == "run":
             result = run(args.user_request, args.private_project_root)
         elif args.cmd == "resume":
-            result = resume(args.private_project_root, args.expected_state_sha256)
+            result = resume(args.private_project_root, args.expected_state_sha256,
+                            args.author_approval_receipt, args.author_approval_sha256)
         else:
             result = status(args.private_project_root)
     except Exception as error:
