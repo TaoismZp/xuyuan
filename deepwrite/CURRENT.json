@@ -42,11 +42,11 @@
   "updated_date": "2026-11-14",
   "active_engine": {
     "version": "v0.3.0",
-    "implementation_commit": "1b255c1d44e2d5fbd719cefd35fde48f6bf97a60",
+    "implementation_commit": "f5c2d5a6d93cb958c07db08ec1b00596a9b20087",
     "path": "deepwrite/deepwrite.py",
-    "sha256": "1fab8c0a50e24dc692c953b48c05564c0690cb90207de693129e48c66bf74287",
+    "sha256": "c0a167bd20c0eb43e3e217255da113f833faee16682642ae85cbeccfd7f4f295",
     "release_channel": "STABLE",
     "release_record": "deepwrite/releases/v0.3.0.json",
-    "release_record_sha256": "4e233834187e3e028991e5a31b43b8e8bc0587ad58dc3bd7f7c3a353c6841d6f"
+    "release_record_sha256": "aca2ae3b0924270a9bc7d736850969c568b264117f5f44ff29720a16f4619d91"
   }
 }
