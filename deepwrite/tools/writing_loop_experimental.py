@@ -299,11 +299,16 @@ class WritingLoop:
             if contract["mode"] == "AUTONOMOUS_FULL_DRAFT":
                 if scope != "ALL_CANDIDATE_CHAPTERS":
                     raise Blocked("AUTONOMOUS_PROJECT_AUTHORIZATION_SCOPE_REQUIRED")
+            elif scope == "FIRST_SAMPLE_AFTER_DISCOVERY":
+                if (ref is not references[0] or contract.get("sample_chapters") != [ids[0]] or
+                        contract.get("allowed_unapproved_candidate_chapters", [])):
+                    raise Blocked("ASSISTED_DYNAMIC_FIRST_SAMPLE_SCOPE_INVALID")
             elif not isinstance(scope, list) or not set(scope) <= set(ids):
                 raise Blocked("ASSISTED_PROJECT_AUTHORIZATION_SCOPE_INVALID")
             expected_scope = (set(contract["sample_chapters"]) if ref is references[0] else
                               set(contract.get("allowed_unapproved_candidate_chapters", []))) if contract["mode"] == "ASSISTED_AUTHOR_GATED" else set()
-            if contract["mode"] == "ASSISTED_AUTHOR_GATED" and not expected_scope <= set(scope):
+            if (contract["mode"] == "ASSISTED_AUTHOR_GATED" and
+                    scope != "FIRST_SAMPLE_AFTER_DISCOVERY" and not expected_scope <= set(scope)):
                 raise Blocked("AUTHOR_SCOPE_EXCEPTION_NOT_ACTUALLY_AUTHORIZED")
         self.contract_sha = digest(json_bytes(contract))
         self.reader_guard.validate_contract(c.get("reader_prior_knowledge_contract"), c["chapters"])
