@@ -253,6 +253,11 @@ def discover(config: dict, project: Path, out: Path, model=None):
     project, out = Path(project).absolute(), Path(out).absolute()
     sources, authority = validate_intake(config, project, out)
     out.mkdir(parents=True, exist_ok=True)
+    origin_receipt = {"status": "NOT_REQUESTED", "independent_novelty": "UNVERIFIED"}
+    if config.get("author_guidance") is not None:
+        gate = module("deepwrite_author_guidance", DEEPWRITE / "candidates/e23-frame-wiring/insight_origin_gate.py")
+        origin_receipt = gate.check_author_guided_contract(config)
+        origin_receipt["semantic_independence"] = "NOT_CLAIMED_USER_GUIDED"
     if model is None:
         writer = module("deepwrite_discovery_writer", DEEPWRITE / "tools/writing_loop_experimental.py")
         if config["adapter"] == "codex":
@@ -283,12 +288,24 @@ def discover(config: dict, project: Path, out: Path, model=None):
             raise Blocked("DISCOVERY_NO_NATIVE_SOURCE")
         first = call("source_domain_study", {
             "wish": config["wish"], "sources": readable,
+            "origin_requirement": ("ALSO_PROPOSE_THREE_SOURCE_GROUNDED_RIVAL_DECISION_FRAMES_UNVERIFIED" if config.get("insight_origin_scan") else "SOURCE_FIRST_ONLY"),
             "task": "Independently study the source BEFORE proposing any chapters. Return JSON with "
                     "study_markdown (full native reasoning and contradictions), source_concepts "
                     "(id,source_path,quote exact verbatim,causal_mechanism,counterinterpretation,transfer_limit), "
                     "rival_directions (at least two objects: id,source_question,reader_problem,tradeoff). "
+                    "If origin_requirement requests frames, ALSO include origin_status=MODEL_PROPOSAL_UNVERIFIED and "
+                    "lenses (at least three): id,default_question,alternative_question,decision_before,decision_after,"
+                    "source_falsifier,source_anchor:{path,quote}; each quote must appear in source bytes. "
                     "No chapter outline in this phase; do not borrow an older book's chapter map."})
         _study(first, sources, authority)
+        if config.get("insight_origin_scan"):
+            gate = module("deepwrite_source_question_origin", DEEPWRITE / "candidates/e23-frame-wiring/insight_origin_gate.py")
+            scan = gate.inspect_proposals(first, readable)
+            if scan["status"] != "PASS_STRUCTURAL_ORIGIN_FROZEN_SEMANTICS_UNVERIFIED":
+                raise Blocked("DISCOVERY_ORIGIN_QUESTION_COMPETITION_INVALID: " + str(scan["errors"])[:140])
+            origin_receipt = {**scan, "mode": ("AUTHOR_GUIDED" if config.get("author_guidance") else "SOURCE_FIRST_PROPOSAL_NOT_ATTESTED_BLIND"),
+                              "true_blind_origin_claim": "NOT_VERIFIED", "human_quality": "NOT_RUN"}
+            (out / "source_question_origination.json").write_bytes(encoded(origin_receipt))
         study_path = "sources/discovery_native_study.md"
         study_file = secure_path(project, study_path)
         if study_file.exists() or study_path in sources:
@@ -322,6 +339,7 @@ def discover(config: dict, project: Path, out: Path, model=None):
                     "writer_config_sha256": digest((out / "writer_config.json").read_bytes()),
                     "author_acceptance": "NOT_RUN", "human_blind_evaluation": "NOT_RUN",
                     "source_correctness": "MODEL_REVIEW_NOT_INDEPENDENTLY_VALIDATED",
+                    "insight_origin_provenance": origin_receipt,
                     "live_provider_verified": bool(getattr(model, "is_live", False)),
                     "actual_writer_run": "NOT_RUN",
                     "next_step": "Invoke E18 writer with exact writer_config.json and private project root; preserve hashes."}
