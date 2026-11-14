@@ -139,6 +139,9 @@ class WritingLoop:
         self.stop_after, self.steps_this_turn = stop_after, 0
         self.guard = module("e18_closeout", DEEPWRITE / "candidates/e15-review-closure/review_closure_guard.py")
         self.reader_guard = module("e18_reader_source", DEEPWRITE / "candidates/e23-frame-wiring/reader_source_gate.py")
+        self.source_first_guard = (module("e18_source_first", DEEPWRITE / "candidates/source-first/source_first_gate.py")
+                                   if config.get("modules", {}).get("source_first_architecture") else None)
+        self.source_first_receipt = None
         self._validate_config()
         self.author_receipt = None
         if author_approval_receipt is not None:
@@ -174,6 +177,7 @@ class WritingLoop:
                           "execution_mode": config["execution_contract"]["mode"],
                           "execution_contract_sha256": self.contract_sha,
                           "reader_contract_sha256": self.reader_contract_sha,
+                          "source_first_intake": self.source_first_receipt or {"status": "NOT_REQUESTED"},
                           "run_id": config["run_id"], "gate_events": [],
                           "acceptance": {"ENGINEERING_VERIFIED": "NOT_RUN", "RUNNER_ACTIVE_VERIFIED": "CANDIDATE_ONLY",
                             "MODEL_INTERNAL_QUALITY_REVIEW": "NOT_RUN", "AUTHOR_ACCEPTANCE": "NOT_RUN",
@@ -257,7 +261,10 @@ class WritingLoop:
             raise Blocked("EXPERIMENTAL_RUNNER_REQUIRES_CANDIDATE_CHANNEL")
         if c["channel"] == "STABLE":
             self.assert_stable_entry()
-        supported = {"e18_loop", "reader_source_transfer", "e23_frame", "e23_perspective", "e23"}
+        supported = {"e18_loop", "reader_source_transfer", "e23_frame", "e23_perspective", "e23",
+                     "source_first_architecture"}
+        if c.get("modules", {}).get("source_first_architecture") and c["channel"] == "STABLE":
+            raise Blocked("SOURCE_FIRST_CANDIDATE_NOT_AUTHORIZED_FOR_STABLE")
         if any(value and name not in supported for name, value in c.get("modules", {}).items()):
             raise Blocked("BLOCKED_UNSUPPORTED_MODULE")
         checkpoint.validate_pins(json_bytes(c["pins"]), c["project_id"])
@@ -301,6 +308,12 @@ class WritingLoop:
         self.contract_sha = digest(json_bytes(contract))
         self.reader_guard.validate_contract(c.get("reader_prior_knowledge_contract"), c["chapters"])
         self.reader_contract_sha = digest(json_bytes(c["reader_prior_knowledge_contract"]))
+        if self.source_first_guard is not None:
+            try:
+                self.source_first_receipt = self.source_first_guard.validate(
+                    c, lambda relative: self.path(relative).read_bytes())
+            except (ValueError, KeyError, TypeError, OSError, UnicodeError) as error:
+                raise Blocked("SOURCE_FIRST_ARCHITECTURE_BLOCKED: " + str(error)) from error
 
     def assert_stable_entry(self):
         resolver = module("e18_formal_activation", DEEPWRITE / "release/activation.py")
@@ -366,6 +379,8 @@ class WritingLoop:
         loaded = {"e18_loop": self.file_identity("tools/writing_loop_experimental.py"),
                   "reader_source_transfer": self.file_identity("candidates/e23-frame-wiring/reader_source_gate.py"),
                   "actual_file_closeout": self.file_identity("candidates/e15-review-closure/review_closure_guard.py")}
+        if requested.get("source_first_architecture"):
+            loaded["source_first_architecture"] = self.file_identity("candidates/source-first/source_first_gate.py")
         if any(requested.get(name) for name in ("e23", "e23_frame", "e23_perspective")):
             receipt = self.config.get("e23_preprocess_receipt", {})
             expected = {"sources/e23_frame_manifest.json": receipt.get("frame_manifest_sha256"),
