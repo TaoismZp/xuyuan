@@ -264,6 +264,82 @@ def prepare(request_file: Path, private_root: Path, *, allow_fixture=False):
     return project, evidence, base
 
 
+def run_bounded_bookwide_topology_check(project, evidence, cfg, writer_result, model=None):
+    """A genuine post-book call, not a free self-certification of topology quality.
+
+    Revision preserves the original book and derives one new writer project.
+    Author-gated sample mode never enters here.
+    """
+    topology = load("deepwrite_bookwide_topology_rethink",
+                    DEEPWRITE / "candidates/source-first/bookwide_restructure.py")
+    source_bytes = (project / "book.md").read_bytes()
+    book = source_bytes.decode("utf-8")
+    request = {
+        "role": "bookwide_topology_recheck",
+        "model_requested": cfg["model"],
+        "payload": {
+            "source_domain_study": (project / cfg["source_first_architecture"]["source_study"]["path"]).read_text(),
+            "book_manuscript": book[:230000],
+            "chapter_map": cfg["chapters"],
+            "source_concepts": cfg["source_first_architecture"]["source_concepts"],
+            "reader_contract": cfg["reader_prior_knowledge_contract"],
+            "task": "Now that complete draft exists, independently consider if the book requires a different number or "
+                    "order of chapters. Do NOT force changes; KEEP is valid. Return ONLY JSON "
+                    "schema=deepwrite/bookwide-topology-audit/v1, decision KEEP/REPLAN, reason (20+ chars). "
+                    "If REPLAN, include evidence_quote exact 15+ chars from book, chapters, old_to_new all chapters "
+                    "with treatment, new reader_prior_knowledge_contract, and new book_design chapter_contributions "
+                    "bound to original source_concept_ids. No author/human signoff claims."}
+    }
+    (evidence / "bookwide_topology.request.json").write_bytes(canonical(request))
+    if model is None:
+        writer = load("deepwrite_bookwide_model_factory", DEEPWRITE / "tools/writing_loop_experimental.py")
+        model = (writer.CodexExec(cfg["model"], timeout=cfg.get("call_timeout", 600))
+                 if cfg["adapter"] == "codex" else writer.transport.OpenAIResponses(cfg["model"]))
+    try:
+        result = model.generate("Use supplied verified materials only. No tools. Return exact JSON.",
+                                json.dumps(request, ensure_ascii=False),
+                                max_output_tokens=min(cfg["per_call_output_tokens"], 12000))
+        identity = {"model": result.model, "response_id": result.response_id,
+                    "provider_kind": result.provider_kind, "usage": result.usage,
+                    "is_live": bool(getattr(model, "is_live", False)),
+                    "response_sha256": sha(result.text.encode("utf-8")),
+                    "author_acceptance": "NOT_RUN"}
+        (evidence / "bookwide_topology.response.json").write_bytes(canonical({**identity, "text": result.text}))
+        if not isinstance(result.usage,dict) or any(type(result.usage.get(k)) is not int
+                for k in ("input_tokens", "output_tokens")):
+            raise Blocked("BOOKWIDE_MODEL_USAGE_REQUIRED")
+        proposal = json.loads(result.text)
+        examined = topology.validate(proposal,cfg,book)
+        if examined["decision"] == "KEEP":
+            return {"status": "STRUCTURE_KEPT_MODEL_INTERNAL_ONLY",
+                    "original_book_sha256": sha(source_bytes), **identity}
+        rewritten_config = topology.derive_config(proposal,cfg)
+        derived = project.parent / "writer_project_topology_r2"
+        frozen = topology.make_private_derived_project(project,derived,cfg,rewritten_config)
+        (evidence / "topology_r2_writer_config.json").write_bytes(canonical(rewritten_config))
+        writer=load("deepwrite_bounded_rewrite", DEEPWRITE / "tools/writing_loop_experimental.py")
+        retry=writer.WritingLoop(derived,rewritten_config,model=model).run()
+        finish={"status":"REPLAN_DERIVATION_PENDING_HUMAN","derived_project":str(derived),
+                "original_book_sha256":sha(source_bytes),"derived_writer_result":retry,
+                "frozen_source_receipt":frozen,"model_review":identity,
+                "original_book_preserved":True,"human_quality":"NOT_RUN"}
+        if retry["status"] in ("CANDIDATE_PENDING_HUMAN","ENGINEERING_FIXTURE_ONLY_NOT_LIVE"):
+            new_bytes=(derived / "book.md").read_bytes()
+            finish["derived_book_sha256"]=sha(new_bytes)
+            finish["content_size_ratio"]=round(len(new_bytes)/len(source_bytes),3)
+            if len(new_bytes)<len(source_bytes)*.75:
+                finish["status"]="REPLAN_CONTENT_LOSS_REQUIRES_INDEPENDENT_REVIEW"
+        (evidence / "bookwide_topology_outcome.json").write_bytes(canonical(finish))
+        return finish
+    except Exception as error:
+        blocked={"status":"BOOKWIDE_STRUCTURE_RECHECK_BLOCKED",
+                 "reason":type(error).__name__ + ": " + str(error)[:180],
+                 "original_book_sha256":sha(source_bytes),
+                 "old_book_preserved":True,"next_step":"INSPECT_REVIEW_EVIDENCE_DO_NOT_PROMOTE_MODEL_JUDGMENT"}
+        (evidence / "bookwide_topology_outcome.json").write_bytes(canonical(blocked))
+        return blocked
+
+
 def run(request_file: Path, private_root: Path, *, research_model=None, writer_model=None):
     """One invocation performs discovery and E18; no manual source module flags."""
     project, evidence, base = prepare(request_file, private_root)
@@ -280,6 +356,11 @@ def run(request_file: Path, private_root: Path, *, research_model=None, writer_m
     writer = load("deepwrite_one_call_writer", DEEPWRITE / "tools/writing_loop_experimental.py")
     final = json.loads((research_evidence / "writer_config.json").read_text("utf-8"))
     result = writer.WritingLoop(project, final, model=writer_model).run()
+    replan = {"status": "NOT_RUN", "reason": "ASSISTED_AUTHOR_GATE_OR_WRITER_INCOMPLETE"}
+    if (final["execution_contract"]["mode"] == "AUTONOMOUS_FULL_DRAFT" and
+            result["status"] in ("CANDIDATE_PENDING_HUMAN", "ENGINEERING_FIXTURE_ONLY_NOT_LIVE")):
+        replan = run_bounded_bookwide_topology_check(project, evidence, final, result,
+                                                     research_model or writer_model)
     receipt = {
         "schema": "deepwrite/one-call-execution-receipt/v1",
         "status": result["status"], "project_id": final["project_id"],
@@ -287,6 +368,7 @@ def run(request_file: Path, private_root: Path, *, research_model=None, writer_m
         "chapter_count_proposed": preflight["chapter_count"],
         "chapter_count_author_approved": False,
         "module_selection": "AUTOMATIC",
+        "bookwide_topology_recheck": replan,
         "writer_result": result, "author_acceptance": "NOT_RUN",
         "independent_reader_quality": "NOT_RUN",
         "real_model_verified": bool(result["status"] == "CANDIDATE_PENDING_HUMAN"),
