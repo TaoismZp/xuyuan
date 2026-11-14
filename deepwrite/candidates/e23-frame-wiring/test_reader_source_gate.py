@@ -224,9 +224,8 @@ class LocatedReaderReviewTests(unittest.TestCase):
             "expected_inference": "Examine which move remains available when information arrives.",
             "failure_boundary": "A later move cannot be assumed to retain earlier prices.",
             "rationale": "Scripted refusal to claim real reader comprehension.",
-            "verdict": "UNVERIFIED", "paragraph": 2, "quote": TEXT.split("\\n\\n")[1]
+            "verdict": "UNVERIFIED", "paragraph": 2, "quote": TEXT.split("\n\n")[1]
         }
-        proof["knowledge_compounding_probe"]["quote"] = TEXT.split("\n\n")[1]
         output = evaluate(prior, "ch1", TEXT, proof, stage="CHAPTER")
         self.assertEqual(output["status"], "CONTENT_REWORK", output)
         self.assertEqual(output["blocking_findings"][0]["code"], "KNOWLEDGE_COMPOUNDING_NOT_DEMONSTRATED")
