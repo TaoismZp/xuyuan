@@ -128,8 +128,8 @@ def validate_intake(cfg: dict, project: Path, out: Path):
         raise Blocked("DISCOVERY_WRITER_PROJECT_ALREADY_STARTED")
     if not cfg.get("modules", {}).get("source_first_architecture") or not cfg.get("modules", {}).get("e18_loop"):
         raise Blocked("DISCOVERY_SOURCE_FIRST_WRITER_MODULES_REQUIRED")
-    if cfg.get("execution_contract", {}).get("mode") != "AUTONOMOUS_FULL_DRAFT":
-        raise Blocked("DISCOVERY_DYNAMIC_ASSISTED_SCOPE_NOT_IMPLEMENTED")
+    if cfg.get("execution_contract", {}).get("mode") not in ("AUTONOMOUS_FULL_DRAFT", "ASSISTED_AUTHOR_GATED"):
+        raise Blocked("DISCOVERY_AUTHOR_MODE_INVALID")
     source_rows = cfg.get("sources")
     if not isinstance(source_rows, list) or not source_rows:
         raise Blocked("DISCOVERY_FROZEN_SOURCES_REQUIRED")
@@ -152,10 +152,13 @@ def validate_intake(cfg: dict, project: Path, out: Path):
             not text(authority.get("provenance"))):
         raise Blocked("DISCOVERY_REAL_AUTHOR_SOURCE_REFERENCE_REQUIRED")
     auth = json.loads(sources[authority["path"]])
+    mode = cfg["execution_contract"]["mode"]
+    required_scope = ("ALL_CANDIDATE_CHAPTERS" if mode == "AUTONOMOUS_FULL_DRAFT"
+                      else "FIRST_SAMPLE_AFTER_DISCOVERY")
     if (auth.get("schema") != "deepwrite/author-project-authorization/v1" or
             auth.get("project_id") != cfg.get("project_id") or
-            auth.get("mode") != "AUTONOMOUS_FULL_DRAFT" or
-            auth.get("chapter_scope") != "ALL_CANDIDATE_CHAPTERS"):
+            auth.get("mode") != mode or
+            auth.get("chapter_scope") != required_scope):
         raise Blocked("DISCOVERY_AUTHOR_PROJECT_SCOPE_INVALID")
     if cfg.get("adapter") == "fixture" and cfg.get("allow_fixture") is not True:
         raise Blocked("DISCOVERY_FIXTURE_NOT_AUTHORIZED")
@@ -234,6 +237,9 @@ def _architecture(data, source_data, cfg, project, study_path, study_bytes):
     for key in ("discovery_token_budget", "discovery_output_cap", "min_chapters", "max_chapters", "allow_fixture"):
         frozen.pop(key, None)
     frozen["chapters"] = rows
+    if cfg["execution_contract"]["mode"] == "ASSISTED_AUTHOR_GATED":
+        frozen["execution_contract"]["sample_chapters"] = [rows[0]["artifact_id"]]
+        frozen["execution_contract"]["allowed_unapproved_candidate_chapters"] = []
     frozen["reader_prior_knowledge_contract"] = contract
     frozen["source_first_architecture"] = arch
     frozen["sources"].append(study)
