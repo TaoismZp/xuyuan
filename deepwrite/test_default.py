@@ -142,14 +142,14 @@ class DefaultInvocationTests(unittest.TestCase):
         self.assertFalse(result["default_formal_main_pointer_changed"])
         self.assertEqual(result["independent_reader_quality"],"NOT_RUN")
         self.assertTrue((self.destination/"writer_project/book.md").is_file())
-        config=json.loads((self.destination/"discovery_evidence/writer_config.json").read_text())
+        config=json.loads((self.destination/"discovery_evidence/research/writer_config.json").read_text())
         self.assertEqual(config["chapters"][0]["artifact_id"],"alpha")
         self.assertTrue(config["modules"]["source_first_architecture"])
         self.assertTrue(config["modules"]["e18_loop"])
         state=json.loads((self.destination/"writer_project/run_state.json").read_text())
         self.assertEqual(state["source_first_intake"]["status"],
                          "PASS_ENGINEERING_ONLY_PROVISIONAL_SOURCE_ARCHITECTURE")
-        provenance=json.loads((self.destination/"discovery_evidence/STATE.json").read_text())
+        provenance=json.loads((self.destination/"discovery_evidence/research/STATE.json").read_text())
         self.assertEqual(provenance["insight_origin_provenance"]["human_quality"],"NOT_RUN")
         self.assertEqual(provenance["insight_origin_provenance"]["candidate_count"],3)
 
@@ -163,7 +163,7 @@ class DefaultInvocationTests(unittest.TestCase):
         self.assertTrue((writer/"run_state.json").is_file())
         self.assertFalse((writer/"book.md").exists())
         self.assertEqual(result["author_acceptance"],"NOT_RUN")
-        cfg=json.loads((self.destination/"discovery_evidence/writer_config.json").read_text())
+        cfg=json.loads((self.destination/"discovery_evidence/research/writer_config.json").read_text())
         self.assertEqual(cfg["execution_contract"]["sample_chapters"],["alpha"])
         self.assertEqual(cfg["execution_contract"]["allowed_unapproved_candidate_chapters"],[])
 
@@ -172,9 +172,9 @@ class DefaultInvocationTests(unittest.TestCase):
         self.save_request()
         result,_=self.invoke()
         self.assertEqual(result["status"],"ENGINEERING_FIXTURE_ONLY_NOT_LIVE",result)
-        cfg=json.loads((self.destination/"discovery_evidence/writer_config.json").read_text())
+        cfg=json.loads((self.destination/"discovery_evidence/research/writer_config.json").read_text())
         self.assertEqual(cfg["author_guidance"]["origin"],"USER_SUPPLIED_PERSPECTIVE")
-        receipt=json.loads((self.destination/"discovery_evidence/STATE.json").read_text())
+        receipt=json.loads((self.destination/"discovery_evidence/research/STATE.json").read_text())
         self.assertEqual(receipt["insight_origin_provenance"]["mode"],"AUTHOR_GUIDED")
         self.assertEqual(receipt["insight_origin_provenance"]["true_blind_origin_claim"],"NOT_VERIFIED")
 
