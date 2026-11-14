@@ -148,8 +148,7 @@ class TwoPhaseDiscoveryTests(unittest.TestCase):
         self.assertTrue((self.project/"sources/discovery_native_study.md").is_file())
         self.assertTrue((self.out/"source_domain_study.response.json").is_file())
         self.assertTrue((self.out/"book_architecture_discovery.response.json").is_file())
-        self.assertIn("actual writer", "actual writer is not run")
-        self.assertIn("material.md", [r["path"] for r in conf["sources"]])
+        self.assertIn("sources/material.md", [r["path"] for r in conf["sources"]])
 
     def test_missing_budget_fails_before_model_call(self):
         del self.cfg["discovery_token_budget"]
