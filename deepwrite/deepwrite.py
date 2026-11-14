@@ -361,9 +361,15 @@ def run(request_file: Path, private_root: Path, *, research_model=None, writer_m
             result["status"] in ("CANDIDATE_PENDING_HUMAN", "ENGINEERING_FIXTURE_ONLY_NOT_LIVE")):
         replan = run_bounded_bookwide_topology_check(project, evidence, final, result,
                                                      research_model or writer_model)
+    project_status = result["status"]
+    if replan["status"] in ("BOOKWIDE_STRUCTURE_RECHECK_BLOCKED", "REPLAN_CONTENT_LOSS_REQUIRES_INDEPENDENT_REVIEW"):
+        project_status = "BLOCKED_BOOKWIDE_TOPOLOGY_QUALITY"
+    elif replan["status"] == "REPLAN_DERIVATION_PENDING_HUMAN" and replan["derived_writer_result"]["status"] not in (
+            "CANDIDATE_PENDING_HUMAN", "ENGINEERING_FIXTURE_ONLY_NOT_LIVE"):
+        project_status = "BLOCKED_DERIVED_BOOK_WRITE"
     receipt = {
         "schema": "deepwrite/one-call-execution-receipt/v1",
-        "status": result["status"], "project_id": final["project_id"],
+        "status": project_status, "project_id": final["project_id"],
         "source_study_sha256": preflight["study_sha256"],
         "chapter_count_proposed": preflight["chapter_count"],
         "chapter_count_author_approved": False,
