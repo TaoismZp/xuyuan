@@ -4,7 +4,7 @@ on:
     branches: [main]
     types: [opened, synchronize, reopened, ready_for_review]
   push:
-    branches: [main, experiment/deepwrite-activation-rail-20261111, engineering/deepwrite-official-activation-20261112]
+    branches: [main, experiment/deepwrite-activation-rail-20261111, engineering/deepwrite-official-activation-20261112, deepwrite/two-phase-source-discovery-20261114]
   workflow_dispatch:
 permissions:
   contents: read
@@ -29,7 +29,7 @@ jobs:
         run: python3 -B deepwrite/tests/test_packager.py
       - name: Verify E23 source-frame wiring cannot mislabel old discoveries
         run: python3 -B -m unittest discover -s deepwrite/candidates/e23-frame-wiring -p 'test_*.py' -v
-      - name: Verify source-first evidence and chapter-topology negative controls
+      - name: Verify source-first and two-stage discovery evidence plus negative controls
         run: python3 -B -m unittest discover -s deepwrite/candidates/source-first -p 'test_*.py' -v
       - name: Preserve E18 true-file writing/checkpoint behavior
         run: python3 -B -m unittest discover -s deepwrite/tools/tests -p 'test_*.py' -v
