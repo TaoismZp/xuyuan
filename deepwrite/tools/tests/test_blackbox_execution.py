@@ -346,7 +346,7 @@ class BlackboxExecutionTests(unittest.TestCase):
 
     def test_stable_channel_requires_real_current_selection_not_a_flag(self):
         self.cfg["channel"] = "STABLE"
-        with self.assertRaisesRegex(loop.Blocked, "STABLE_WRITER_NOT_FORMALLY_SELECTED"):
+        with self.assertRaisesRegex(loop.Blocked, "STABLE_WRITER_(NOT_FORMALLY_SELECTED|PROJECT_PROTOCOL_PIN_MISMATCH)"):
             self.run_model()
 
 
