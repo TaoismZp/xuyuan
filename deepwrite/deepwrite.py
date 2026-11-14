@@ -251,15 +251,17 @@ def run(request_file: Path, private_root: Path, *, research_model=None, writer_m
     """One invocation performs discovery and E18; no manual source module flags."""
     project, evidence, base = prepare(request_file, private_root)
     discovery = load("deepwrite_one_call_discovery", DEEPWRITE / "candidates/source-first/architecture_discovery.py")
+    research_evidence = evidence / "research"
     try:
-        preflight = discovery.discover(base, project, evidence, model=research_model)
-    except Exception:
-        return {"status": "BLOCKED_DISCOVERY", "evidence": str(evidence / "STATE.json"),
+        preflight = discovery.discover(base, project, research_evidence, model=research_model)
+    except Exception as error:
+        return {"status": "BLOCKED_DISCOVERY", "evidence": str(research_evidence / "STATE.json"),
+                "failure_code": type(error).__name__ + ": " + str(error)[:140],
                 "private_project": str(project), "next_step": "INSPECT_FROZEN_DISCOVERY_FAILURE"}
     if not preflight["status"].startswith("ENGINEERING_STRUCTURE"):
         raise Blocked("DEEPWRITE_DISCOVERY_UNFINISHED")
     writer = load("deepwrite_one_call_writer", DEEPWRITE / "tools/writing_loop_experimental.py")
-    final = json.loads((evidence / "writer_config.json").read_text("utf-8"))
+    final = json.loads((research_evidence / "writer_config.json").read_text("utf-8"))
     result = writer.WritingLoop(project, final, model=writer_model).run()
     receipt = {
         "schema": "deepwrite/one-call-execution-receipt/v1",
@@ -283,7 +285,7 @@ def status(path: Path):
     evidence = path / "discovery_evidence"
     if not path.exists():
         return {"status": "PROJECT_NOT_FOUND", **identity}
-    for name in ("RESULT.json", "STATE.json", "START_STATE.json"):
+    for name in ("RESULT.json", "research/STATE.json", "START_STATE.json"):
         file = evidence / name
         if file.is_file():
             value = json.loads(file.read_text("utf-8"))
@@ -296,7 +298,7 @@ def status(path: Path):
 def resume(path: Path, expected_state_sha: str):
     path = private_path(path)
     project = path / "writer_project"
-    frozen = path / "discovery_evidence" / "writer_config.json"
+    frozen = path / "discovery_evidence" / "research" / "writer_config.json"
     if not frozen.is_file():
         raise Blocked("DEEPWRITE_NO_FROZEN_DISCOVERY_CONFIG_TO_RESUME")
     writer = load("deepwrite_one_call_resume_writer", DEEPWRITE / "tools/writing_loop_experimental.py")
