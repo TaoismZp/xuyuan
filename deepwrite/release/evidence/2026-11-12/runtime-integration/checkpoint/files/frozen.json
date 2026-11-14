@@ -1,0 +1,74 @@
+[
+  {
+    "id": "keep_0",
+    "artifact_id": "artifact_0",
+    "kind": "computable",
+    "severity": "NOTE",
+    "status": "KEEP",
+    "issue": "Preserve the verified concrete statement",
+    "reason": "The located statement is correct in this public synthetic example.",
+    "evidence": "The exact supplied paragraph contains the retained literal.",
+    "location": {
+      "baseline": {
+        "paragraph": 2,
+        "sha256": "e8860d598ef61da3f412f0420fc0b88dd88f5905af4fb731fae1f9aaf73296ab"
+      },
+      "candidate": {
+        "paragraph": 2,
+        "sha256": "e8860d598ef61da3f412f0420fc0b88dd88f5905af4fb731fae1f9aaf73296ab"
+      }
+    },
+    "assertion": {
+      "op": "contains",
+      "value": "Concrete"
+    }
+  },
+  {
+    "id": "keep_1",
+    "artifact_id": "artifact_1",
+    "kind": "computable",
+    "severity": "NOTE",
+    "status": "KEEP",
+    "issue": "Preserve the verified concrete statement",
+    "reason": "The located statement is correct in this public synthetic example.",
+    "evidence": "The exact supplied paragraph contains the retained literal.",
+    "location": {
+      "baseline": {
+        "paragraph": 2,
+        "sha256": "8c0f616b06eeb280112f7f4d52c186ffecb4ec30611c8f4b09e47d0fe2146e75"
+      },
+      "candidate": {
+        "paragraph": 2,
+        "sha256": "8c0f616b06eeb280112f7f4d52c186ffecb4ec30611c8f4b09e47d0fe2146e75"
+      }
+    },
+    "assertion": {
+      "op": "contains",
+      "value": "Concrete"
+    }
+  },
+  {
+    "id": "keep_2",
+    "artifact_id": "artifact_2",
+    "kind": "computable",
+    "severity": "NOTE",
+    "status": "KEEP",
+    "issue": "Preserve the verified concrete statement",
+    "reason": "The located statement is correct in this public synthetic example.",
+    "evidence": "The exact supplied paragraph contains the retained literal.",
+    "location": {
+      "baseline": {
+        "paragraph": 2,
+        "sha256": "20e223071f9c6283d687878a76ad1b545e9be440995e53531a4fc2550fb47c26"
+      },
+      "candidate": {
+        "paragraph": 2,
+        "sha256": "20e223071f9c6283d687878a76ad1b545e9be440995e53531a4fc2550fb47c26"
+      }
+    },
+    "assertion": {
+      "op": "contains",
+      "value": "Concrete"
+    }
+  }
+]

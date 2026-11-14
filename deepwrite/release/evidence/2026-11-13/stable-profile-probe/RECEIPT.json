@@ -1,0 +1,48 @@
+{
+  "schema": "deepwrite/stable-writing-positive-probe/v1",
+  "evidence_kind": "ACTUAL_TEMPORARY_GIT_ENGINEERING_FIXTURE_NOT_FORMAL_MAIN_RELEASE",
+  "source_checkout_head": "cb954fb1fabd2337dd28345a9072e23584238e9f",
+  "test_path": "deepwrite/tools/tests/test_stable_writing_profile.py",
+  "test_sha256": "252598c8867f7f12555ef0e1b6226d744fabbcb25f83aca9bafb68cf207b7bf1",
+  "actual_tests_passed": 2,
+  "temporary_implementation_commit": "c8fc3a40f6c9c0e8fb63dfac6459cc92e9702c24",
+  "temporary_activation_commit": "5b79ba7ab49b112439375860af13246491ed0463",
+  "profile": {
+    "kind": "WRITING",
+    "mandatory_gates": [
+      "AUTHOR_PROJECT_MODE",
+      "READER_SOURCE_TRANSFER",
+      "ACTUAL_FILE_CLOSEOUT",
+      "BOOKWIDE_RECHECK"
+    ]
+  },
+  "config_channel": "STABLE",
+  "actual_cli_dispatch": "activation.py --run -- --help selected existing writer; exit0",
+  "pipeline_status": "ENGINEERING_FIXTURE_ONLY_NOT_LIVE",
+  "gate_phases": [
+    "ADVERSARIAL_REVIEW",
+    "BOOKWIDE_REVIEW",
+    "CHAPTER_CANDIDATE_READY",
+    "DISCOVERY",
+    "DRAFT",
+    "EVIDENCE",
+    "FULL_BOOK_RECHECK",
+    "READER_SOURCE_REVIEW",
+    "RECHECK",
+    "REVISION_IF_FAILED",
+    "SOURCE_LEARNING"
+  ],
+  "body_revision_and_diff": true,
+  "actual_file_identity": {
+    "writer_sha256": "88b22382713ed0600ae66bcb4ab644dc3797dd0d5a132be957dc79bee8f0adc3"
+  },
+  "checkpoint_deleted_project_then_byte_restore": "PASS_ALL_DECLARED_FILES",
+  "completed_resume_calls": 0,
+  "model_called": false,
+  "human_author_approval_manufactured": false,
+  "AUTHOR_ACCEPTANCE": "NOT_RUN",
+  "HUMAN_BLIND_EVALUATION": "NOT_RUN",
+  "real_repository_CURRENT_modified": false,
+  "RUNNER_ACTIVE_VERIFIED": "NOT_ESTABLISHED_FORMAL_MAIN_UNCHANGED",
+  "scope": "Proves existing writer can be selected by an identity-checked WRITING profile and complete the fixture under STABLE, including restore/resume. Does not authenticate an author, call a provider or certify literary quality."
+}

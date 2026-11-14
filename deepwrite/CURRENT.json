@@ -2,30 +2,51 @@
   "schema": "deepwrite/current/v1",
   "name": "深写｜DeepWrite",
   "slug": "deepwrite",
-  "active_workbench_version": "v0.1",
-  "active_workbench_spec": "deepwrite/versions/v0.1.md",
+  "active_workbench_version": "v0.3",
+  "active_workbench_spec": "deepwrite/versions/v0.3.md",
   "effective_parent_protocol_pointer": "wish-delivery/CURRENT.json",
   "capability_status": {
-    "workflow_spec": "PASS_DOCUMENTED",
+    "workflow_spec": "PASS_DOCUMENTED_V0_3",
     "github_public_bootstrap": "PASS_AFTER_READBACK",
-    "source_hash_book_packager": "PASS_PREVIOUS_LOCAL_TEST_REVERIFY_IN_NEW_RUNTIME",
-    "automatic_full_book_generation": "NOT_IMPLEMENTED",
-    "independent_blind_AB": "PENDING",
+    "source_hash_book_packager": "ENGINEERING_REGRESSION_PASS",
+    "automatic_full_book_generation": "ENGINEERING_IMPLEMENTED_HUMAN_QUALITY_UNVERIFIED",
+    "independent_blind_AB": "PACKAGER_IMPLEMENTED_HUMAN_TRIAL_NOT_RUN",
     "private_repo_creation_by_current_connector": "UNAVAILABLE",
     "private_project_per_repo": "REQUIRED_WHEN_CAPABILITY_AVAILABLE",
     "unpublished_content_in_public_repo": "FORBIDDEN",
-    "cross_chat_recovery": "REQUIRES_ACCESSIBLE_DURABLE_PROJECT_CHECKPOINT"
+    "cross_chat_recovery": "REQUIRES_ACCESSIBLE_DURABLE_PROJECT_CHECKPOINT",
+    "real_provider_full_book_run": "NOT_RUN",
+    "three_reader_quality": "UNVERIFIED",
+    "knowledge_compounding_readers": "UNVERIFIED",
+    "independent_origin_novelty": "UNVERIFIED",
+    "blackbox_vs_sequential_quality": "UNVERIFIED",
+    "private_manuscript_publication": "FORBIDDEN"
   },
-  "current_status": "WORKBENCH_PROTOTYPE_NOT_ONE_CLICK_AUTONOMOUS_PRODUCT",
+  "current_status": "FORMAL_UNIFIED_ENGINE_SELECTED_BY_MAIN_AFTER_GOVERNED_MERGE_QUALITY_NOT_CERTIFIED",
   "new_project_policy": "ISOLATE_ID_AND_RECOVERY_FIRST; PRIVACY_CHECK; CREATE_PRIVATE_REPO_IF_SUPPORTED; OTHERWISE PRIVATE_LIBRARY_AND_EXPLICIT_GITHUB_REPO_PENDING",
-  "human_acceptance": "REQUIRED_FOR_FINAL_SIGNOFF",
+  "human_acceptance": "REQUIRED_FOR_AUTHOR_FINAL_BOOK_SIGNOFF",
   "files": [
     "deepwrite/START_HERE.md",
     "deepwrite/PROJECT_INIT.md",
     "deepwrite/versions/v0.1.md",
     "deepwrite/HISTORY.md",
     "deepwrite/EVALUATION.md",
-    "deepwrite/SECURITY.md"
+    "deepwrite/SECURITY.md",
+    "deepwrite/versions/v0.3.md",
+    "deepwrite/deepwrite.py",
+    "deepwrite/DEFAULT_INVOCATION.md",
+    "deepwrite/AGENTS.md",
+    "deepwrite/releases/v0.3.0.json",
+    "deepwrite/release/RELEASE_PROCESS.md"
   ],
-  "updated_date": "2026-11-08"
+  "updated_date": "2026-11-14",
+  "active_engine": {
+    "version": "v0.3.0",
+    "implementation_commit": "f5c2d5a6d93cb958c07db08ec1b00596a9b20087",
+    "path": "deepwrite/deepwrite.py",
+    "sha256": "c0a167bd20c0eb43e3e217255da113f833faee16682642ae85cbeccfd7f4f295",
+    "release_channel": "STABLE",
+    "release_record": "deepwrite/releases/v0.3.0.json",
+    "release_record_sha256": "aca2ae3b0924270a9bc7d736850969c568b264117f5f44ff29720a16f4619d91"
+  }
 }

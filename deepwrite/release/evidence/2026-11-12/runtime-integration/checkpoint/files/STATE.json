@@ -1,0 +1,25 @@
+{
+  "schema": "deepwrite/engineering-project/v1",
+  "project_id": "PUBLIC_ENGINEERING_FIXTURE",
+  "phase": "ASSEMBLED_PENDING_HUMAN",
+  "files": {
+    "PROJECT_LOCK.json": "242af91754c3febaadbe5d7738f868cb7da1b62c5f01dc55fe8361966b39a26a",
+    "config.json": "1e908761eeeed267b8f95b12bbd6c192a32f466229fe8753a3f7484e7ad44fd7",
+    "pins.json": "ef5a35ef46a1d16892895e26e0062b3c7a1edb47f28dc7ba6adb8673756e8ac3",
+    "sources/0001.md": "9cedb80f04f2a4a7f6b85c58bafdf000c359f9d2a1778ac4377e54b6789f21f3",
+    "manifest.json": "8c7d41ad748d43f2e23672d5369484f22e488e634c3a9ae1453d7cc2f2c3ff22",
+    "review.json": "34f14a875951a2a4296ce691eec8e8f499d8ab610490cb35fa09150cffa614c5",
+    "frozen.json": "af4071e0be253696942fd932aecd2ecfc48ef1ce7709b07340e9b9159a899bdc",
+    "derived/book-0001.md": "a52657539f1a39cfaeabdc3e8660001f76d5c46a15a978bb665092090aaeb9c7",
+    "derived/book-0001.json": "05fcb2f508492676ee76c34809f3cb88872e569b956e607814dea14a4882e24f",
+    "front.md": "184119e5c905b72396321c372e07e83bb4111edfcc5655a6026f1fc1d0142944",
+    "chapters/01.md": "8effd1a8b4b6c36b06c8b2b019a754322eacadb0201a49721da9215c484e95ac",
+    "tail.md": "622620191b71adf4ceb9fb928de5c352b666b291eee9504b681751ef4afec552"
+  },
+  "events": 1,
+  "mandatory_gates": [
+    "e15_actual_file_closeout"
+  ],
+  "automatic_book_generation": "EXPERIMENTAL_NOT_ACTIVATED",
+  "human_acceptance": "NOT_RUN"
+}

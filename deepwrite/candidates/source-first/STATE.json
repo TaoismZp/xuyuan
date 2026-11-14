@@ -1,0 +1,69 @@
+{
+  "schema": "deepwrite/canary-recovery-state/v1",
+  "date": "2026-11-14",
+  "project": "DeepWrite full-evolution engineering upgrade",
+  "branch": "deepwrite/integration-source-first-kc-20261114",
+  "pull_request": "https://github.com/TaoismZp/xuyuan/pull/18",
+  "status": "ENGINEERING_CANDIDATE_READY_ALL_247_ACTUAL_GITHUB_ACTIONS_PASS_FORMAL_RELEASE_BLOCKED",
+  "version_labels": {
+    "formal": "v0.1",
+    "canary": "v0.2-canary.1",
+    "parent_wish": "v7.6"
+  },
+  "source_of_truth": {
+    "formal_current": "https://github.com/TaoismZp/xuyuan/blob/main/deepwrite/CURRENT.json",
+    "existing_prs": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+    ],
+    "do_not_merge_pr": 15,
+    "dependencies": [
+      14
+    ]
+  },
+  "implementation": {
+    "code_and_ci_commit": "7960364511bb003337a0257fed975bda42df0611",
+    "source_first_path": "deepwrite/candidates/source-first/source_first_gate.py",
+    "reader_gate": "deepwrite/candidates/e23-frame-wiring/reader_source_gate.py",
+    "writer": "deepwrite/tools/writing_loop_experimental.py",
+    "activation_in_main": false,
+    "automatic_book_chapter_discovery": false
+  },
+  "evidence": {
+    "github_actions_run_1": "https://github.com/TaoismZp/xuyuan/actions/runs/43558917115",
+    "github_actions_run_2": "https://github.com/TaoismZp/xuyuan/actions/runs/43559004405",
+    "github_actions_run_3": "https://github.com/TaoismZp/xuyuan/actions/runs/43559056045",
+    "checked_tests": {
+      "release": 73,
+      "guard": 42,
+      "packager": 15,
+      "reader": 55,
+      "source_first": 11,
+      "writer": 51,
+      "total": 247
+    },
+    "status": "PASS_ENGINEERING_ACTUAL_ACTIONS_FIXTURES",
+    "github_actions_run_latest_verified": "https://github.com/TaoismZp/xuyuan/actions/runs/43559244820",
+    "head_verified_green": "fa26bc592ff3ff92c728601695177711a49288e1"
+  },
+  "gates": {
+    "code_committed": "PASS",
+    "ci_latest_implementation": "PASS",
+    "remote_readback": "PASS_REREAD_REGISTER_RECOVERY_AUDIT_GUIDE_GATE_WRITER_MAIN_CURRENT",
+    "live_model_provider": "NOT_RUN_UNAUTHORIZED_OR_UNAVAILABLE",
+    "fullbook_e1": "NOT_RUN",
+    "reader_knowledge_compounding": "UNVERIFIED",
+    "independent_insight": "UNVERIFIED",
+    "three_unseen_topic_qa": "NOT_RUN",
+    "author_final_acceptance": "PENDING",
+    "quality_non_regression": "UNVERIFIED",
+    "official_current_promoted": "NO",
+    "official_merge": "BLOCKED_RULESET_ONE_REVIEW_AUTO_MERGE_FALSE_ADMIN_WRITE_403"
+  },
+  "privacy": "NO_PRIVATE_MANUSCRIPTS_OR_CHAT_CONTENT_IN_PUBLIC_REPO",
+  "unique_next_step": "Readback and pin exact candidate/code/CI; run private new-topic controlled provider canary and human reading comparison, then resolve protected PR14->PR18 merge/official release with repository owner authorized admin; no shortcut CURRENT."
+}

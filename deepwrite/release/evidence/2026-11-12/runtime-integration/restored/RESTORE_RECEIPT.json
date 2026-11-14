@@ -1,0 +1,10 @@
+{
+  "project_resume_gate": "NOT_RUN",
+  "complete_project_recovery": "UNVERIFIED",
+  "schema": "deepwrite/restore-receipt/v0.1",
+  "project_id": "PUBLIC_ENGINEERING_FIXTURE",
+  "manifest_sha256": "d039ccff89f858cb1526df39538beb3161d5902de5fa6355843f08fe2a4b8d7f",
+  "restored_at": "2026-11-12T00:28:08.454236+00:00",
+  "status": "PASS_BYTES_ONLY",
+  "existing_files_overwritten": false
+}

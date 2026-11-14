@@ -1,0 +1,66 @@
+name: DeepWrite activation rail and E18/E23 regressions
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened, ready_for_review]
+  push:
+    branches: [main, experiment/deepwrite-activation-rail-20261111, engineering/deepwrite-official-activation-20261112, deepwrite/two-phase-source-discovery-20261114, deepwrite/unified-default-engine-20261114]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  activation-and-runtime-regressions:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Python version
+        run: python3 --version
+      - name: Validate activation pointer and offline release rules
+        run: python3 -B -m unittest discover -s deepwrite/release -p 'test_*.py' -v
+      - name: Resolve CURRENT as the unique source of current engine identity
+        run: python3 -B deepwrite/release/activation.py --root .
+      - name: Recheck repaired actual-file closeout guard
+        run: python3 -B -m unittest discover -s deepwrite/candidates/e15-review-closure -p 'test_*.py' -v
+      - name: Recheck existing safe packager
+        run: python3 -B deepwrite/tests/test_packager.py
+      - name: Verify E23 source-frame wiring cannot mislabel old discoveries
+        run: python3 -B -m unittest discover -s deepwrite/candidates/e23-frame-wiring -p 'test_*.py' -v
+      - name: Verify source-first and two-stage discovery evidence plus negative controls
+        run: python3 -B -m unittest discover -s deepwrite/candidates/source-first -p 'test_*.py' -v
+      - name: Verify human blind packet construction and external response integrity
+        run: python3 -B -m unittest discover -s deepwrite/evaluation -p 'test_*.py' -v
+      - name: Verify default one-call DeepWrite includes source discovery, insight, writing, and human gates
+        run: python3 -B -m unittest discover -s deepwrite -p 'test_default.py' -v
+      - name: Preserve E18 true-file writing/checkpoint behavior
+        run: python3 -B -m unittest discover -s deepwrite/tools/tests -p 'test_*.py' -v
+      - name: Actually invoke checked-out candidate declaration without claiming formal activation
+        if: github.event_name != 'push' || github.ref != 'refs/heads/main'
+        run: |
+          python3 -B - <<'PY'
+          import json, subprocess, sys
+          from pathlib import Path
+          current=json.loads(Path('deepwrite/CURRENT.json').read_text())
+          if current.get('active_engine'):
+              print('CHECKED_OUT_CANDIDATE_DECLARATION_ONLY_NOT_FORMAL_MAIN_ACTIVATION', flush=True)
+              subprocess.run([sys.executable,'-B','deepwrite/release/activation.py','--root','.',
+                              '--run','--','identity'],check=True)
+          else:
+              print('WORKBENCH_ONLY_NO_ACTIVE_ENGINE_DECLARATION: no candidate invoked')
+          PY
+      - name: Fresh main workspace actually invokes the formally activated identity command
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          python3 -B - <<'PY'
+          import json, subprocess, sys
+          from pathlib import Path
+          current=json.loads(Path('deepwrite/CURRENT.json').read_text())
+          if current.get('active_engine'):
+              subprocess.run([sys.executable,'-B','deepwrite/release/activation.py','--root','.',
+                              '--run','--','identity'],check=True)
+          else:
+              print('WORKBENCH_ONLY_NO_FORMALLY_ACTIVATED_ENGINE: no candidate invoked')
+          PY

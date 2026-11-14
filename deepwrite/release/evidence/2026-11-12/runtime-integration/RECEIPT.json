@@ -1,0 +1,61 @@
+{
+  "evidence_kind": "INTEGRATION_FIXTURE_NOT_GITHUB_RELEASE",
+  "model_called": false,
+  "private_manuscript_read": false,
+  "implementation_commit": "e3d3e2ae8af46ba703db15f1ba7a78fe4db2aad5",
+  "activation_commit": "a4ea7fd8c1e68be9a78d7a9ebe73de19f8c157f0",
+  "runtime_files": [
+    {
+      "path": "deepwrite/release/runtime.py",
+      "sha256": "dc59955b613ea9d86dd2458b63fc322210803b7b65e0ae4346b14a5e74ed10fa"
+    },
+    {
+      "path": "deepwrite/release/activation.py",
+      "sha256": "e105b7e5d1aee186418c226a1abfeda0461f88b666d0fbf0a58e7a41e47152ef"
+    },
+    {
+      "path": "deepwrite/qa/checkpoint.py",
+      "sha256": "f40633cfdde27c47778841092e1ede8ab3604ee4608559d42ff0b735ce01257d"
+    },
+    {
+      "path": "deepwrite/qa/resume_check.py",
+      "sha256": "d71d8aba9965206d68f0ee9e936cfa3a7a13d125a64662aa149df3b97510bbaa"
+    },
+    {
+      "path": "deepwrite/tools/book_packager_v0.1.py",
+      "sha256": "716cbedfe60ab7096f19b6de266b929cb81c0f8b8668c8ea322dd5e4286023e6"
+    },
+    {
+      "path": "deepwrite/candidates/e15-review-closure/review_closure_guard.py",
+      "sha256": "b2be877c9ca7ff63b0adec5ec56c3c65f1274ac69e4b2056bdaf39c5cd6851d7"
+    }
+  ],
+  "release_record_sha256": "78d4e3f06277d8b1f0a95acbd16f2b8e1dec5654cf5c4fd2b11ee367cc8a28a5",
+  "checkpoint_manifest_sha256": "d039ccff89f858cb1526df39538beb3161d5902de5fa6355843f08fe2a4b8d7f",
+  "deleted_project_before_restore": true,
+  "restored_declared_files": {
+    "STATE.json": "3e8d9afe5b2731195d138a86d2651e1b2cf4ad22516454ceae00fc591b785c2b",
+    "PROJECT_LOCK.json": "242af91754c3febaadbe5d7738f868cb7da1b62c5f01dc55fe8361966b39a26a",
+    "config.json": "1e908761eeeed267b8f95b12bbd6c192a32f466229fe8753a3f7484e7ad44fd7",
+    "pins.json": "ef5a35ef46a1d16892895e26e0062b3c7a1edb47f28dc7ba6adb8673756e8ac3",
+    "sources/0001.md": "9cedb80f04f2a4a7f6b85c58bafdf000c359f9d2a1778ac4377e54b6789f21f3",
+    "manifest.json": "8c7d41ad748d43f2e23672d5369484f22e488e634c3a9ae1453d7cc2f2c3ff22",
+    "review.json": "34f14a875951a2a4296ce691eec8e8f499d8ab610490cb35fa09150cffa614c5",
+    "frozen.json": "af4071e0be253696942fd932aecd2ecfc48ef1ce7709b07340e9b9159a899bdc",
+    "derived/book-0001.md": "a52657539f1a39cfaeabdc3e8660001f76d5c46a15a978bb665092090aaeb9c7",
+    "derived/book-0001.json": "05fcb2f508492676ee76c34809f3cb88872e569b956e607814dea14a4882e24f",
+    "front.md": "184119e5c905b72396321c372e07e83bb4111edfcc5655a6026f1fc1d0142944",
+    "chapters/01.md": "8effd1a8b4b6c36b06c8b2b019a754322eacadb0201a49721da9215c484e95ac",
+    "tail.md": "622620191b71adf4ceb9fb928de5c352b666b291eee9504b681751ef4afec552"
+  },
+  "fresh_git_clone_identity_verified": true,
+  "fault_and_checkout_restore": {
+    "fault_commit": "bb9f7b42b8621d13b5e55c5ed090b99471317b0b",
+    "restored_activation_commit": "a4ea7fd8c1e68be9a78d7a9ebe73de19f8c157f0",
+    "fault_blocked": true,
+    "same_project_resumed_after_checkout": true,
+    "project_state_sha256": "2559dcd8943ad49029102ea93c9a0dccae3b8a71ecefed0525f9419aea39410a",
+    "source_original_unchanged": true
+  },
+  "source_original_sha256": "9cedb80f04f2a4a7f6b85c58bafdf000c359f9d2a1778ac4377e54b6789f21f3"
+}

@@ -1,0 +1,81 @@
+{
+  "schema": "deepwrite/unified-release-candidate/v1",
+  "candidate_version": "v0.3-rc.2",
+  "user_invocation": "调用 DeepWrite",
+  "intended_formal_entrypoint": "deepwrite/deepwrite.py",
+  "launch_contract": "deepwrite/DEFAULT_INVOCATION.md",
+  "current_formal_state": {
+    "branch": "main",
+    "path": "deepwrite/CURRENT.json",
+    "active_workbench_version": "v0.1",
+    "active_engine": null
+  },
+  "integration": {
+    "pr": 20,
+    "branch": "deepwrite/unified-default-engine-20261114",
+    "base": "main after review",
+    "implementation_stacks": [
+      12,
+      13,
+      14,
+      16,
+      17,
+      18,
+      19
+    ],
+    "excluded_negative_control_pr": 15
+  },
+  "automatic_pipeline": [
+    "VALIDATE_EXPLICIT_AUTHOR_SCOPE_AND_PRIVATE_SOURCE_BYTES",
+    "INDEPENDENT_SOURCE_DOMAIN_STUDY_AND_THREE_RIVAL_DECISION_FRAMES",
+    "AUTHOR_GUIDED_ORIGIN_ATTRIBUTION_OR_MODEL_IDEA_UNVERIFIED",
+    "DERIVE_PROVISIONAL_CHAPTER_COUNT_AND_KNOWLEDGE_DEPENDENCY",
+    "E18_PER_CHAPTER_SOURCE_RESEARCH_AND_EVIDENCE",
+    "E18_MANUSCRIPT_DRAFT_AND_ADVERSARIAL_REVIEW",
+    "E15_REAL_REVISION_AND_MATH_SOURCE_RECHECK",
+    "NOVICE_PRACTITIONER_EXPERT_READER_SOURCE_GATE",
+    "KNOWLEDGE_COMPOUNDING_NEW_SITUATION_MODEL_PROBE",
+    "E18_BOOKWIDE_AND_CROSS_CHAPTER_REPAIR",
+    "BOUNDED_EVIDENCE_BACKED_POST_BOOK_TOPOLOGY_KEEP_OR_DERIVED_FULL_BOOK_RERUN",
+    "CONTENT_RETENTION_AND_SOURCE_HASH_CHECK",
+    "PACKAGE_COMPLETE_MARKDOWN_AND_CHECKPOINT",
+    "OPTIONAL_HUMAN_BLIND_READER_PACKET_OUTSIDE_MODEL"
+  ],
+  "author_modes": {
+    "AUTONOMOUS_FULL_DRAFT": "Explicitly authorize all candidate chapters; candidate not publication",
+    "ASSISTED_AUTHOR_GATED": "First chapter is discovered and written, then author SHA approval is required to continue"
+  },
+  "engineering_evidence": {
+    "github_actions_url": "https://github.com/TaoismZp/xuyuan/actions/runs/43563215064",
+    "tested_head": "3d3f3878d2ceeb7bf456f3d296b8127a03d6517b",
+    "conclusion": "success",
+    "tests": {
+      "release": 73,
+      "e15_closeout": 42,
+      "packager": 15,
+      "e23_insight_reader": 71,
+      "source_first_dynamic_and_topology": 33,
+      "one_call_including_real_replan": 9,
+      "blind_reader_packet": 8,
+      "e18_writer_and_paired_probe": 61
+    },
+    "total": 312,
+    "real_provider_calls": 0,
+    "real_external_human_readers": 0,
+    "permission_to_skip_repo_pr_review": false
+  },
+  "remaining_unverified": {
+    "live_model_long_book_end_to_end": "NOT_RUN",
+    "three_reader_actual_gain": "UNVERIFIED",
+    "knowledge_compounding_actual_transfer": "UNVERIFIED",
+    "independent_origination_originality": "UNVERIFIED",
+    "full_book_not_worse_than_sequential": "UNVERIFIED",
+    "post_book_structure_topology_revision": "BOUNDED_ONE_REVIEW_AND_DERIVED_E18_RERUN_ENGINEERING_FIXTURE_PASS_HUMAN_QUALITY_UNVERIFIED",
+    "provider_authentication": "HISTORICAL_401_NOT_RESOLVED",
+    "official_main_release": "PENDING_REVIEW_AND_GOVERNED_CURRENT_PROMOTION",
+    "real_model_full_book_comparison": "NOT_RUN",
+    "all_new_chat_platform_default_tool_injection": "NOT_SUPPORTED_BY_GITHUB_CODE_ALONE"
+  },
+  "note": "Engineering component inclusion is not evidence of real manuscript quality or formal release. Private user material stays private.",
+  "next_step": "VERIFY_PROVIDER_AND_HUMAN_QUALITY_WITH_PRIVATE_SOURCE_PROJECT; RESOLVE_GITHUB_OWNER_REVIEW_AND_RELEASE; POINT MAIN CURRENT TO ONE VERIFIED DEEPWRITE ENTRY_ONLY_AFTER_APPROVAL"
+}

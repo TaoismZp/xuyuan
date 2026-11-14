@@ -1,0 +1,72 @@
+{
+  "schema": "deepwrite/two-phase-canary-registry/v1",
+  "candidate_version": "v0.2-canary.2",
+  "channel": "CANDIDATE_OPT_IN",
+  "status": "TWO_PHASE_STRUCTURAL_CI_PASS_NOT_FORMALLY_ACTIVE",
+  "provenance": {
+    "repository": "TaoismZp/xuyuan",
+    "branch": "deepwrite/two-phase-source-discovery-20261114",
+    "pull_request": 19,
+    "dependent_prs": [
+      18,
+      14
+    ],
+    "parent_candidate": "v0.2-canary.1",
+    "implementation_commit": "46e0797c015ab4c95ca77cb879d9e23402b73e98",
+    "ci_run": "https://github.com/TaoismZp/xuyuan/actions/runs/43560077890",
+    "ci_head": "46e0797c015ab4c95ca77cb879d9e23402b73e98"
+  },
+  "test_results": {
+    "ci_status": "SUCCESS",
+    "actual_logs_read": true,
+    "release": 73,
+    "e15": 42,
+    "packager": 15,
+    "e23": 55,
+    "source_first_and_discovery": 23,
+    "e18_writer": 51,
+    "total": 259,
+    "real_provider_calls": 0,
+    "human_readers": 0
+  },
+  "source_first_sequential_stages": [
+    "SOURCE_DOMAIN_STUDY",
+    "BOOK_ARCHITECTURE_DISCOVERY",
+    "FREEZE_E18_CONFIG",
+    "E18_WRITING_LOOP_SEPARATE_INVOCATION"
+  ],
+  "features": {
+    "predefined_chapters_before_research": "BLOCKED",
+    "source_quotes_sha": "ENGINEERING_VERIFIED",
+    "rival_directions": "ENGINEERING_VERIFIED",
+    "chapter_count_provisional_discovery": "ENGINEERING_VERIFIED_FIXTURE_SELECTION_1_OR_2",
+    "e18_actual_file_writer_integration": "ENGINEERING_FIXTURE_PASS",
+    "auth_scope": "AUTONOMOUS_FULL_DRAFT_ONLY",
+    "knowledge_compounding": "MODEL_INTERNAL_PROBE_NOT_HUMAN"
+  },
+  "quality": {
+    "source_semantic_correctness": "UNVERIFIED",
+    "literary_quality": "UNVERIFIED",
+    "new_comer_interest": "UNVERIFIED",
+    "practitioner_novelty": "UNVERIFIED",
+    "expert_depth": "UNVERIFIED",
+    "knowledge_compounding_reader_transfer": "NOT_RUN",
+    "full_book_noninferiority": "NOT_RUN",
+    "live_provider_authentication": "NOT_RUN_IN_THIS_ENVIRONMENT",
+    "assisted_dynamic_chapter_scope": "NOT_IMPLEMENTED",
+    "post_crosschapter_replanning": "NOT_IMPLEMENTED",
+    "author_acceptance": "PENDING"
+  },
+  "formal": {
+    "main_current_version": "v0.1",
+    "engine_active": false,
+    "github_pr_state": "DRAFT_DEPENDENT_UNMERGED",
+    "wish_delivery": "v7.6"
+  },
+  "privacy": {
+    "public_private_manuscripts": false,
+    "author_contract": "PRIVATE_PROJECT_ONLY"
+  },
+  "readme": "deepwrite/candidates/source-first/TWO_PHASE_CANARY.md",
+  "next_action": "RUN_REAL_AUTHORIZED_PRIVATE_SOURCE_PROJECT_WITH_ACTUAL_PROVIDER_AND_COMPARE_AGAINST_FROZEN_BASELINE_BEFORE_FORMAL_PROMOTION"
+}

@@ -1,0 +1,237 @@
+{
+  "schema": "deepwrite/committed-quality-fixture/v1",
+  "evidence_kind": "ACTUAL_ENGINEERING_FIXTURE_NOT_MODEL_OR_HUMAN_QUALITY",
+  "code_commit": "6356c8ca879cfef1e9e7210427b7c27f4782cb80",
+  "protocol_main_commit": "6b81a45d8576aa0636d29950f9a2d86f2a5cf8b1",
+  "result": "ENGINEERING_FIXTURE_ONLY_NOT_LIVE",
+  "project_id": "e18-engineering-fixture",
+  "run_id": "engineering-fixture-run",
+  "actual_roles_called": [
+    "research",
+    "select_direction",
+    "discover",
+    "source_learning",
+    "source_evidence_review",
+    "draft",
+    "reader_source_review",
+    "review",
+    "revise",
+    "reader_source_review",
+    "recheck",
+    "reader_source_review",
+    "review",
+    "front_matter",
+    "afterword",
+    "reader_source_review",
+    "review"
+  ],
+  "actual_gate_events": [
+    {
+      "accounted_tokens": 40,
+      "evidence": {},
+      "phase": "DISCOVERY",
+      "scope": "alpha",
+      "sequence": 1,
+      "status": "ENTERED"
+    },
+    {
+      "accounted_tokens": 60,
+      "evidence": {
+        "attempt": 0
+      },
+      "phase": "SOURCE_LEARNING",
+      "scope": "alpha",
+      "sequence": 2,
+      "status": "ENTERED"
+    },
+    {
+      "accounted_tokens": 100,
+      "evidence": {
+        "response": "calls/alpha_source_0_evidence.response.json",
+        "review": "reader_reviews/alpha_source_0_evidence.json"
+      },
+      "phase": "EVIDENCE",
+      "scope": "alpha",
+      "sequence": 3,
+      "status": "MODEL_INTERNAL_REVIEW_RECORDED"
+    },
+    {
+      "accounted_tokens": 100,
+      "evidence": {
+        "source_evidence": {
+          "discovery": "research/alpha.discovery.md",
+          "source_evidence_review": "reader_reviews/alpha_source_0_evidence.json",
+          "source_learning": "research/alpha_source_0.md"
+        }
+      },
+      "phase": "DRAFT",
+      "scope": "alpha",
+      "sequence": 4,
+      "status": "ENTERED"
+    },
+    {
+      "accounted_tokens": 120,
+      "evidence": {},
+      "phase": "ADVERSARIAL_REVIEW",
+      "scope": "alpha",
+      "sequence": 5,
+      "status": "ENTERED"
+    },
+    {
+      "accounted_tokens": 140,
+      "evidence": {
+        "response": "calls/alpha_alpha_reader_0.response.json",
+        "review": "reader_reviews/alpha_alpha_reader_0.json"
+      },
+      "phase": "READER_SOURCE_REVIEW",
+      "scope": "alpha",
+      "sequence": 6,
+      "status": "MODEL_INTERNAL_REVIEW_RECORDED"
+    },
+    {
+      "accounted_tokens": 160,
+      "evidence": {
+        "attempt": 1
+      },
+      "phase": "REVISION_IF_FAILED",
+      "scope": "alpha",
+      "sequence": 7,
+      "status": "ENTERED"
+    },
+    {
+      "accounted_tokens": 180,
+      "evidence": {
+        "attempt": 1
+      },
+      "phase": "RECHECK",
+      "scope": "alpha",
+      "sequence": 8,
+      "status": "ENTERED"
+    },
+    {
+      "accounted_tokens": 200,
+      "evidence": {
+        "response": "calls/alpha_alpha_reader_1.response.json",
+        "review": "reader_reviews/alpha_alpha_reader_1.json"
+      },
+      "phase": "READER_SOURCE_REVIEW",
+      "scope": "alpha",
+      "sequence": 9,
+      "status": "MODEL_INTERNAL_REVIEW_RECORDED"
+    },
+    {
+      "accounted_tokens": 220,
+      "evidence": {
+        "artifact": "chapters/alpha.alpha.r1.md",
+        "human_acceptance": "NOT_RUN",
+        "sha256": "863a43b0ca0b269e8638770804b46750bf0e3d71f40cde59e53e2502673f9c85"
+      },
+      "phase": "CHAPTER_CANDIDATE_READY",
+      "scope": "alpha",
+      "sequence": 10,
+      "status": "MODEL_INTERNAL_REVIEW_RECORDED"
+    },
+    {
+      "accounted_tokens": 220,
+      "evidence": {},
+      "phase": "BOOKWIDE_REVIEW",
+      "scope": "BOOK",
+      "sequence": 11,
+      "status": "ENTERED"
+    },
+    {
+      "accounted_tokens": 220,
+      "evidence": {},
+      "phase": "BOOKWIDE_REVIEW",
+      "scope": "cross",
+      "sequence": 12,
+      "status": "ENTERED"
+    },
+    {
+      "accounted_tokens": 240,
+      "evidence": {
+        "response": "calls/cross_alpha_reader_0.response.json",
+        "review": "reader_reviews/cross_alpha_reader_0.json"
+      },
+      "phase": "READER_SOURCE_REVIEW",
+      "scope": "alpha",
+      "sequence": 13,
+      "status": "MODEL_INTERNAL_REVIEW_RECORDED"
+    },
+    {
+      "accounted_tokens": 300,
+      "evidence": {},
+      "phase": "FULL_BOOK_RECHECK",
+      "scope": "BOOK",
+      "sequence": 14,
+      "status": "ENTERED"
+    },
+    {
+      "accounted_tokens": 300,
+      "evidence": {},
+      "phase": "BOOKWIDE_REVIEW",
+      "scope": "full_book_recheck",
+      "sequence": 15,
+      "status": "ENTERED"
+    },
+    {
+      "accounted_tokens": 320,
+      "evidence": {
+        "response": "calls/full_book_recheck_alpha_reader_0.response.json",
+        "review": "reader_reviews/full_book_recheck_alpha_reader_0.json"
+      },
+      "phase": "READER_SOURCE_REVIEW",
+      "scope": "alpha",
+      "sequence": 16,
+      "status": "MODEL_INTERNAL_REVIEW_RECORDED"
+    }
+  ],
+  "actually_loaded": {
+    "actually_loaded": {
+      "actual_file_closeout": {
+        "implementation_commit": "6356c8ca879cfef1e9e7210427b7c27f4782cb80",
+        "path": "deepwrite/candidates/e15-review-closure/review_closure_guard.py",
+        "repository_head": "6356c8ca879cfef1e9e7210427b7c27f4782cb80",
+        "sha256": "b2be877c9ca7ff63b0adec5ec56c3c65f1274ac69e4b2056bdaf39c5cd6851d7",
+        "source_identity": "COMMITTED_BYTES"
+      },
+      "e18_loop": {
+        "implementation_commit": "6356c8ca879cfef1e9e7210427b7c27f4782cb80",
+        "path": "deepwrite/tools/writing_loop_experimental.py",
+        "repository_head": "6356c8ca879cfef1e9e7210427b7c27f4782cb80",
+        "sha256": "88b22382713ed0600ae66bcb4ab644dc3797dd0d5a132be957dc79bee8f0adc3",
+        "source_identity": "COMMITTED_BYTES"
+      },
+      "reader_source_transfer": {
+        "implementation_commit": "6356c8ca879cfef1e9e7210427b7c27f4782cb80",
+        "path": "deepwrite/candidates/e23-frame-wiring/reader_source_gate.py",
+        "repository_head": "6356c8ca879cfef1e9e7210427b7c27f4782cb80",
+        "sha256": "002c58a09d74c67d455ac2009ede6cede0e84bdd28fd8c8cbe87b955b835e46f",
+        "source_identity": "COMMITTED_BYTES"
+      }
+    },
+    "external_preprocessing": null,
+    "formal_activation": "NOT_INFERRED_FROM_MODULE_FLAGS",
+    "requested": {
+      "e18_loop": true
+    }
+  },
+  "body_diffs": [
+    {
+      "path": "diffs/alpha.alpha.1.patch",
+      "sha256": "fc85d1f04ae1d5a649207df15aa73b0265dfb81fcde3ea530fd3875606bf2f18"
+    }
+  ],
+  "checkpoint_manifest_sha256": "dc6020b8072420d8f144805314fd31ec93fc0002349061aebbe56b1c0bd221ca",
+  "requirements_sha256": "b36fd86756496958e93a7128a46f15341e92c4a35aab5093edf28a0313f2a3ab",
+  "state_sha256": "5cbd28439c9a25009e29a75c9c0f14e736bd291b2b910eafbee2b88e681c7769",
+  "deleted_original_fixture_project": true,
+  "restored_files": 81,
+  "all_restored_byte_equal": true,
+  "resume_model_calls": 0,
+  "model_called": false,
+  "fixture_token_accounting_not_provider_usage": 340,
+  "AUTHOR_ACCEPTANCE": "NOT_RUN",
+  "HUMAN_BLIND_EVALUATION": "NOT_RUN",
+  "formal_activation": false
+}

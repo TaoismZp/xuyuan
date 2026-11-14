@@ -1,0 +1,23 @@
+{
+  "evidence_kind": "ACTUAL_ENGINEERING_FIXTURE_EXECUTION_NOT_MODEL_QUALITY",
+  "source_commit": "d2ef373c5e0dcb7736c56a00e0aefb32d63b0b1a",
+  "actual_result": "ENGINEERING_FIXTURE_ONLY_NOT_LIVE",
+  "actual_roles_called": [
+    "research",
+    "select_direction",
+    "draft",
+    "review",
+    "review",
+    "front_matter",
+    "afterword"
+  ],
+  "execution_contract_present": false,
+  "reader_prior_knowledge_contract_present": false,
+  "accepted_without_new_author_contract": true,
+  "source_learning_called": false,
+  "per_chapter_evidence_called": false,
+  "finished_candidate_sha256": "86dc92c55351d502d88440262e7e1b36544dfbda4e8a7233aa7d713901cffc22",
+  "model_called": false,
+  "human_acceptance": "NOT_RUN",
+  "scope": "Demonstrates missing enforced contract/stages before patch; does not prove semantic quality or real author violation."
+}

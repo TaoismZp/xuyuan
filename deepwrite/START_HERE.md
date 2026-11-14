@@ -1,5 +1,14 @@
 # 新对话启动｜深写 DeepWrite
 
+## 统一调用入口（工程集成待发布）
+
+作者最新目标不是“挑选一个候选模块”，而是**直接说“调用 DeepWrite”就执行全功能默认工作流**。实现和作者可读契约：[DEFAULT_INVOCATION.md](DEFAULT_INVOCATION.md)，执行程序：[`deepwrite.py`](deepwrite.py)。它在完成正式发布后成为由 `release/activation.py` 唯一校验的默认 engine，而不是要求用户手工打开E15/E18/E23和知识复利等模块。
+
+**版本防误报**：本文件存在不代表已经发布；每次先读 GitHub **main** `CURRENT.json`。只有主线指向并验证 `deepwrite/deepwrite.py` 时，才报告新默认引擎已生效。否则本分支只属于工程RC，主线仍可能是v0.1。项目原稿不覆盖、私有材料不公开、真人作者验收不由工程CI代替。
+
+---
+
+
 ## 最短调用
 
 **启动深写：** 我想写一本【主题】的书，给【核心读者】读。我的素材在【文件/连接或无】；我不想要只有目录的大纲，想要序言、完整章节、尾声、必要附录的可连续阅读候选书稿。请先立项、找真实有效的私有存储；以当前生效的《许愿式交付》及深写 CURRENT 执行。一次任务内自行研究、反驳、返工和跨章审稿；不要让我每章都回复“下一步”。遇到执行能力或持久存储限制，给出真实状态和唯一下一步，不虚报完成。
@@ -30,3 +39,20 @@
 ## 稳定版与逐项试用（防回退）
 
 **默认可继续调用现有稳定工作台，不必等待下一版研发完成。** 每个真实新书项目读取并固定当次 `deepwrite/CURRENT.json` + `wish-delivery/CURRENT.json` 的有效版本，旧项目不因GitHub更新静默升级。若用户明确要求试用候选模块，则按 `deepwrite/GUARDED_EVOLUTION.md` 的 `CANDIDATE_OPT_IN` 固定具体候选commit、原稿哈希和回滚点。怀疑变差时选择 `ROLLBACK` 恢复旧的已核稿件及配置，保留试验失败记录，绝不覆盖原稿。候选功能质量未经独立实测，不冒称已改善作品。
+
+
+## 真正执行入口与版本锁
+
+每次新建书先从 **main** 获取真实 CURRENT，在有 Git 与 Python 的环境执行：
+
+```sh
+python3 deepwrite/release/activation.py --root .
+python3 deepwrite/release/activation.py --root . --run -- identity
+python3 deepwrite/release/activation.py --root . --run -- init /private/project-config.json /private/new-project
+```
+
+第一条解析规范和工程引擎身份；后两条只有正式 active_engine 已合并、实际提交与全部声明文件核对通过才运行。若 main 仍返回 WORKBENCH_ONLY_NO_LIVE_AUTONOMOUS_RUNNER，必须如实报告没有已激活的工程入口。候选 PR 的 CURRENT 提案不是正式状态。
+
+工程 runtime 负责自动锁定版本、原素材身份、阶段状态、强制实际文件审稿关闭检查、装订与检查点恢复，不默认执行 E18/E23 候选认知提示，也不证明自动成书质量。普通 GPT 对话若不能执行命令，应交由连接了执行环境的 Codex/Work 真正调用；阅读本页不能冒充运行。
+
+旧项目读取 PROJECT_LOCK 的 engine、父协议和 activation_commit；不同身份时阻断，不能静默覆盖旧稿。详细命令、两类发布与真实授权见 [RELEASE_PROCESS.md](release/RELEASE_PROCESS.md)，未关闭的门见 [release/STATE.json](release/STATE.json)。工程补丁与认知升级分别验收。

@@ -1,0 +1,55 @@
+{
+  "schema": "deepwrite/runner-test-receipt/v1",
+  "evidence_kind": "ACTUAL_ENGINEERING_FIXTURES_NOT_MODEL_OR_HUMAN_QUALITY",
+  "command": [
+    "python3",
+    "-B",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "deepwrite/tools/tests",
+    "-p",
+    "test_*.py",
+    "-v"
+  ],
+  "exit_code": 0,
+  "test_count": 47,
+  "source_identity": "WORKTREE_SOURCE_SHA_NOT_YET_REMOTE_COMMIT",
+  "sources": [
+    {
+      "path": "deepwrite/tools/writing_loop_experimental.py",
+      "sha256": "88b22382713ed0600ae66bcb4ab644dc3797dd0d5a132be957dc79bee8f0adc3",
+      "bytes": 72889
+    },
+    {
+      "path": "deepwrite/tools/tests/test_writing_loop_experimental.py",
+      "sha256": "e3f5c29e59a142435007112b6b2efbb7a89a3393bd98ed4174f1d9037efe8242",
+      "bytes": 31464
+    },
+    {
+      "path": "deepwrite/tools/tests/test_blackbox_execution.py",
+      "sha256": "4b641200b909142484f0f0a51d368ace64b2ad1f675a90fe3d162f838d8eb328",
+      "bytes": 22644
+    }
+  ],
+  "log_sha256": "5e4e7830ba2c7dbe127538f92097b4bc3cb3bbdac5069702b092d330de33d7b0",
+  "formal_current_modified": false,
+  "model_called": false,
+  "human_acceptance": "NOT_RUN",
+  "positive_stable_writing_profile": "NOT_EXECUTED_FORMAL_MAIN_HAS_NO_ACTIVE_ENGINE",
+  "timestamp": "2026-11-13T09:39:45.776209+00:00",
+  "cross_project_authority": {
+    "status": "BLOCKED",
+    "type": "Blocked",
+    "reason": "AUTHOR_AUTHORIZATION_PROJECT_OR_MODE_MISMATCH",
+    "evidence_kind": "ACTUAL_ENGINEERING_FIXTURE_NOT_MODEL_OR_AUTHOR_VERIFICATION"
+  },
+  "reader_major_downgrade": {
+    "status": "BLOCKED_AFTER_PATCH",
+    "exception": "Blocked",
+    "message": "BLOCKED_QUALITY_UNRESOLVED_NEW_READER_MAJOR_beta",
+    "beta_reader_calls": 2,
+    "evidence_kind": "ACTUAL_ENGINEERING_FIXTURE_NOT_MODEL_OR_READER_QUALITY"
+  }
+}

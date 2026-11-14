@@ -1,0 +1,1 @@
+{"status": "PASS_SOURCES", "book_path": "/tmp/deepwrite-stable-profile-fixture-2akpfid0/project/book.md", "sha256": "86dc92c55351d502d88440262e7e1b36544dfbda4e8a7233aa7d713901cffc22", "bytes": 452, "chapters": 1}

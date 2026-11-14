@@ -1,0 +1,21 @@
+{
+  "schema": "deepwrite/actual-ci-receipt/v1",
+  "commit": "fcdacc1f20f74f706323c251336ae5db74992fd7",
+  "run_id": 43334548262,
+  "job_id": 131587307341,
+  "event": "pull_request",
+  "conclusion": "success",
+  "actual_job_log_read": true,
+  "log_transport": "GITHUB_CONNECTOR_DECODED_JOB_LOG",
+  "observed_tests": {
+    "release": 73,
+    "actual_file_guard": 42,
+    "safe_packager": 15,
+    "E23": 17,
+    "writing_loop": 27
+  },
+  "resolver": "WORKBENCH_ONLY_NO_LIVE_AUTONOMOUS_RUNNER",
+  "source_scope": "Engineering activation implementation only; later quality patch not part of this run",
+  "formal_activation": false,
+  "earlier_cli_log_fetch": "EMPTY_NOT_USED_AS_VERIFICATION"
+}

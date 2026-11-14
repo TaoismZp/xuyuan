@@ -1,0 +1,7 @@
+{
+  "status": "ACCEPTED_CROSS_PROJECT_AUTHORITY_REFERENCE",
+  "requested_project": "e18-engineering-fixture",
+  "actual_authority_artifact_project": "ANOTHER_BOOK",
+  "frozen_mode": "AUTONOMOUS_FULL_DRAFT",
+  "evidence_kind": "ACTUAL_ENGINEERING_FIXTURE_NOT_MODEL_OR_AUTHOR_VERIFICATION"
+}

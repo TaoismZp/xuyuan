@@ -1,0 +1,50 @@
+{
+  "schema": "deepwrite/release-ci-negative-control/v1",
+  "evidence_kind": "ACTUAL_GITHUB_PR_ENGINEERING_FAILURE_AND_REPAIR_NOT_WRITING_QUALITY",
+  "repository": "TaoismZp/xuyuan",
+  "pr": 15,
+  "url": "https://github.com/TaoismZp/xuyuan/pull/15",
+  "branch": "experiment/deepwrite-release-negative-20261112",
+  "base_commit": "d2ef373c5e0dcb7736c56a00e0aefb32d63b0b1a",
+  "failure": {
+    "commit": "44ecdb08e16c47c4407e57cef873db51d0ed02df",
+    "run_id": 43126635691,
+    "job_id": 130880266451,
+    "status": "completed",
+    "conclusion": "failure",
+    "context": "activation-and-runtime-regressions",
+    "app_id": 15368,
+    "observed_test_result": "16 release tests, failures=1; explicit fixture flag rejection",
+    "log_readback": true
+  },
+  "repair": {
+    "commit": "d691b133427223cdb81c67e882b6b3d06fa3777e",
+    "run_id": 43126739736,
+    "job_id": 130880623452,
+    "status": "completed",
+    "conclusion": "success",
+    "context": "activation-and-runtime-regressions",
+    "app_id": 15368,
+    "observed_test_result": "release16, E23 17, runner27 passed",
+    "log_readback": true,
+    "only_repair": "Removed the public CI_NEGATIVE_CONTROL fixture flag"
+  },
+  "final_pr": {
+    "draft": true,
+    "state": "open",
+    "merged": false,
+    "head_sha": "d691b133427223cdb81c67e882b6b3d06fa3777e",
+    "mergeable_state": "blocked"
+  },
+  "repository_settings_observation": {
+    "ruleset_id": 27040989,
+    "required_status_checks": [],
+    "required_approving_review_count": 1,
+    "note": "Current configuration does not yet enforce this CI; draft/review blocking is not proof that required CI was configured."
+  },
+  "no_independent_approval": true,
+  "no_formal_release": true,
+  "no_private_content": true,
+  "production_or_original_manuscripts_modified": false,
+  "observed_utc": "2026-11-12T00:22:52.174972+00:00"
+}
