@@ -170,6 +170,9 @@ class WritingLoopTests(unittest.TestCase):
         self.cfg["modules"]["source_first_architecture"] = True
         self.cfg["reader_prior_knowledge_contract"]["knowledge_compounding"] = {
             "enabled": True, "transfer_goal": "Use the source insight to solve a novel independent decision."}
+        self.cfg["module_policy"]["source_first_architecture"] = "CANDIDATE"
+        self.cfg["module_commits"]["source_first_architecture"] = "4" * 40
+        self.cfg["pins"]["modules"].append({"id": "source_first_architecture", "commit": "4" * 40})
         self.cfg["source_first_architecture"] = {
             "schema": "deepwrite/source-first-architecture/v1",
             "project_id": self.cfg["project_id"],
