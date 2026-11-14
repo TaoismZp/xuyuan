@@ -312,7 +312,7 @@ def status(path: Path):
     return {"status": "NO_VERIFIED_PRIVATE_CHECKPOINT", **identity}
 
 
-def resume(path: Path, expected_state_sha: str, author_approval_receipt=None, author_approval_sha256=None):
+def resume(path: Path, expected_state_sha: str, author_approval_receipt=None, author_approval_sha256=None, *, writer_model=None):
     path = private_path(path)
     project = path / "writer_project"
     frozen = path / "discovery_evidence" / "research" / "writer_config.json"
@@ -322,7 +322,7 @@ def resume(path: Path, expected_state_sha: str, author_approval_receipt=None, au
     if not re.fullmatch(r"[0-9a-f]{64}", str(expected_state_sha)):
         raise Blocked("DEEPWRITE_EXTERNAL_EXPECTED_STATE_SHA_REQUIRED")
     result = writer.WritingLoop(project, json.loads(frozen.read_text("utf-8")),
-                                expected_state_sha=expected_state_sha,
+                                model=writer_model, expected_state_sha=expected_state_sha,
                                 author_approval_receipt=author_approval_receipt,
                                 expected_author_approval_sha=author_approval_sha256).run()
     (path / "discovery_evidence" / "RESUME_RESULT.json").write_bytes(canonical(result))
