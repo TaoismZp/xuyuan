@@ -84,17 +84,46 @@ def book():
 class StudyModel:
     is_live = False
 
-    def __init__(self, prepared=None):
+    def __init__(self, prepared=None, force_replan=False):
         self.roles=[]
         self.prepared=prepared
+        self.force_replan=force_replan
 
     def generate(self, instructions, prompt, max_output_tokens=5000):
         req=json.loads(prompt)
         self.roles.append(req["role"])
         result=study() if req["role"] == "source_domain_study" else book()
         if req["role"] == "bookwide_topology_recheck":
-            result={"schema":"deepwrite/bookwide-topology-audit/v1", "decision":"KEEP",
-                    "reason":"No independently evidenced need to change chapter topology after full book review."}
+            if self.force_replan:
+                result={
+                    "schema":"deepwrite/bookwide-topology-audit/v1","decision":"REPLAN",
+                    "reason":"The actual book contains one neglected source issue that warrants a separate chapter.",
+                    "evidence_quote":req["payload"]["book_manuscript"][:50],
+                    "chapters":[{"artifact_id":"alpha","title":"First grounded mechanism"},
+                                {"artifact_id":"beta","title":"Independent source-boundary problem"}],
+                    "old_to_new":[{"old_id":"alpha","new_ids":["alpha","beta"],"treatment":"REWRITTEN"}],
+                    "reader_prior_knowledge_contract":{
+                        "schema":"deepwrite/reader-prior-contract/v1",
+                        "known":["Elementary arithmetic is familiar."],
+                        "unknown":["When two groups overlap, they cannot be counted twice."],
+                        "concepts":[
+                            {"id":"native_pairs","first_explained_in":"alpha","first_used_in":"alpha","prerequisites":[]},
+                            {"id":"new_boundaries","first_explained_in":"beta","first_used_in":"beta","prerequisites":["native_pairs"]}],
+                        "knowledge_compounding":{"enabled":True,
+                            "transfer_goal":"Apply learned source counting to a genuinely new decision problem."}
+                    },
+                    "book_design":{
+                        "why_these_chapters_not_source_outline":"Source dependencies require an independent examination of the new counterexample.",
+                        "chapter_contributions":[
+                            {"chapter_id":"alpha","source_concept_ids":["native_pairs"],
+                             "distinct_reader_change":"Construct a count from source evidence."},
+                            {"chapter_id":"beta","source_concept_ids":["native_pairs"],
+                             "distinct_reader_change":"Detect invalid extrapolation on a new example."}]
+                    }
+                }
+            else:
+                result={"schema":"deepwrite/bookwide-topology-audit/v1", "decision":"KEEP",
+                        "reason":"No independently evidenced need to change chapter topology after full book review."}
         elif self.prepared is not None and req["role"] == "book_architecture_discovery":
             result=self.prepared
         return SimpleNamespace(model="synthetic-study-model", provider_kind="fixture",
@@ -156,6 +185,25 @@ class DefaultInvocationTests(unittest.TestCase):
         provenance=json.loads((self.destination/"discovery_evidence/research/STATE.json").read_text())
         self.assertEqual(provenance["insight_origin_provenance"]["human_quality"],"NOT_RUN")
         self.assertEqual(provenance["insight_origin_provenance"]["candidate_count"],3)
+
+
+    def test_bookwide_replan_creates_new_complete_book_and_preserves_original(self):
+        reviewer=StudyModel(force_replan=True)
+        result=dw.run(self.request,self.destination,research_model=reviewer,
+                      writer_model=writer_test.ScriptedModel())
+        self.assertEqual(result["status"],"ENGINEERING_FIXTURE_ONLY_NOT_LIVE",result)
+        self.assertEqual(result["bookwide_topology_recheck"]["status"],"REPLAN_DERIVATION_PENDING_HUMAN",result)
+        original=self.destination/"writer_project/book.md"
+        derived=self.destination/"writer_project_topology_r2/book.md"
+        self.assertTrue(original.is_file())
+        self.assertTrue(derived.is_file())
+        frozen=(self.destination/"discovery_evidence/research/writer_config.json").read_bytes()
+        self.assertEqual(len(json.loads(frozen)["chapters"]),1)
+        self.assertEqual(len(json.loads((self.destination/"discovery_evidence/topology_r2_writer_config.json").read_text())["chapters"]),2)
+        self.assertEqual(result["bookwide_topology_recheck"]["original_book_sha256"],dw.sha(original.read_bytes()))
+        self.assertEqual(result["bookwide_topology_recheck"]["derived_book_sha256"],dw.sha(derived.read_bytes()))
+        self.assertNotEqual(dw.sha(original.read_bytes()),dw.sha(derived.read_bytes()))
+        self.assertEqual(result["independent_reader_quality"],"NOT_RUN")
 
     def test_assisted_mode_writes_first_sample_then_waits_for_actual_author(self):
         self.data["mode"]="ASSISTED_AUTHOR_GATED"
