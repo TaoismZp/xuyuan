@@ -189,7 +189,7 @@ class TwoPhaseDiscoveryTests(unittest.TestCase):
 
     def test_only_opt_in_and_author_full_draft_allowed(self):
         self.cfg["channel"] = "STABLE"
-        with self.assertRaisesRegex(discovery.Blocked, "CANDIDATE_OPT_IN"):
+        with self.assertRaisesRegex(discovery.Blocked, "STABLE_ONLY_FOR_ACTIVATED"):
             discovery.discover(self.cfg, self.project, self.out, model=ScriptedDiscovery())
         self.cfg["channel"] = "CANDIDATE_OPT_IN"
         self.cfg["execution_contract"]["mode"] = "ASSISTED_AUTHOR_GATED"
