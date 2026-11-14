@@ -199,6 +199,55 @@ class LocatedReaderReviewTests(unittest.TestCase):
         result = self.gate(value)
         self.assertEqual(result["status"], "HOLD_REVIEW_EVIDENCE")
 
+
+    def test_knowledge_compounding_optional_contract_must_include_transfer_goal(self):
+        prior = contract()
+        prior["knowledge_compounding"] = {"enabled": True}
+        with self.assertRaisesRegex(ValueError, "KNOWLEDGE_COMPOUNDING_CONTRACT_INVALID"):
+            validate_contract(prior, ["ch1"])
+
+    def test_knowledge_compounding_missing_model_transfer_probe_holds(self):
+        prior = contract()
+        prior["knowledge_compounding"] = {"enabled": True,
+                                         "transfer_goal": "Apply learned action order to a distinct unfamiliar decision."}
+        output = evaluate(prior, "ch1", TEXT, report(prior=prior), stage="CHAPTER")
+        self.assertEqual(output["status"], "HOLD_REVIEW_EVIDENCE")
+        self.assertIn("KNOWLEDGE_COMPOUNDING_TRANSFER_PROBE_REQUIRED", output["errors"])
+
+    def test_knowledge_compounding_unverified_transfer_blocks_actual_chapter(self):
+        prior = contract()
+        prior["knowledge_compounding"] = {"enabled": True,
+                                         "transfer_goal": "Transfer source reasoning to a new action setting."}
+        proof = report(prior=prior)
+        proof["knowledge_compounding_probe"] = {
+            "prerequisite_concept_id": "action_order", "new_situation": "An unfamiliar delayed-action market auction.",
+            "expected_inference": "Examine which move remains available when information arrives.",
+            "failure_boundary": "A later move cannot be assumed to retain earlier prices.",
+            "rationale": "Scripted refusal to claim real reader comprehension.",
+            "verdict": "UNVERIFIED", "paragraph": 2, "quote": TEXT.split("\\n\\n")[1]
+        }
+        proof["knowledge_compounding_probe"]["quote"] = TEXT.split("\n\n")[1]
+        output = evaluate(prior, "ch1", TEXT, proof, stage="CHAPTER")
+        self.assertEqual(output["status"], "CONTENT_REWORK", output)
+        self.assertEqual(output["blocking_findings"][0]["code"], "KNOWLEDGE_COMPOUNDING_NOT_DEMONSTRATED")
+
+    def test_knowledge_compounding_located_model_pass_never_claims_human_pass(self):
+        prior = contract()
+        prior["knowledge_compounding"] = {"enabled": True,
+                                         "transfer_goal": "Infer a fresh decision boundary using the previously learned mechanism."}
+        proof = report(prior=prior)
+        proof["knowledge_compounding_probe"] = {
+            "prerequisite_concept_id": "action_order", "new_situation": "A previously unseen quote-driven process.",
+            "expected_inference": "Infer when optional waiting changes feasible actions.",
+            "failure_boundary": "The previous quote is not guaranteed after the news.",
+            "rationale": "Scripted model-only test; actual readers not observed.",
+            "verdict": "SUPPORTED", "paragraph": 2, "quote": TEXT.split("\n\n")[1]
+        }
+        output = evaluate(prior, "ch1", TEXT, proof, stage="CHAPTER")
+        self.assertEqual(output["status"], "MODEL_INTERNAL_REVIEW_RECORDED", output)
+        self.assertEqual(output["human_blind_evaluation"], "NOT_RUN")
+        self.assertEqual(output["author_acceptance"], "NOT_RUN")
+
     def test_instructions_request_actual_review_not_an_audience_template(self):
         task = review_instructions(contract(), "ch1", "CHAPTER")
         self.assertIn("not established truth", task["task"])
