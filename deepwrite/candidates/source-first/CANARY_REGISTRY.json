@@ -1,0 +1,66 @@
+{
+  "schema": "deepwrite/candidate-registry/v1",
+  "candidate_version": "v0.2-canary.1",
+  "channel": "CANDIDATE_OPT_IN",
+  "activation_status": "ENGINEERING_TESTED_NOT_FORMALLY_ACTIVE",
+  "formal_current": {
+    "repository": "TaoismZp/xuyuan",
+    "branch": "main",
+    "path": "deepwrite/CURRENT.json",
+    "active_workbench_version": "v0.1",
+    "active_engine": null,
+    "main_commit": "6b81a45d8576aa0636d29950f9a2d86f2a5cf8b1"
+  },
+  "parent_current": {
+    "version": "v7.6",
+    "status": "ACTIVE"
+  },
+  "candidate": {
+    "branch": "deepwrite/integration-source-first-kc-20261114",
+    "base_candidate": "experiment/deepwrite-activation-rail-20261111",
+    "pull_request": 18,
+    "implementation_commit": "7960364511bb003337a0257fed975bda42df0611",
+    "dependencies": [
+      "PR14_E18_E23_E15",
+      "CANDIDATE_v0.2_RESEARCH_EDITORIAL",
+      "source_first_architecture",
+      "knowledge_compounding_reader_probe"
+    ],
+    "not_integrated": [
+      "PR17_BLIND_ORIGINATION_STILL_DRAFT_NOT_VALIDATED",
+      "PR15_DO_NOT_MERGE"
+    ]
+  },
+  "engineering_evidence": {
+    "github_actions_run": "https://github.com/TaoismZp/xuyuan/actions/runs/43559004405",
+    "checked_out_commit": "d4587b7c16347eac6886125dd47bd61e218dd075",
+    "result": "PASS",
+    "actual_test_counts": {
+      "release": 73,
+      "e15_closeout": 42,
+      "book_packager": 15,
+      "e23_reader": 55,
+      "source_first": 11,
+      "e18_writer": 51
+    },
+    "total_tests": 247,
+    "provider_calls": 0,
+    "human_readers": 0
+  },
+  "features": {
+    "real_writer_hook": "PASS_ENGINEERING_ONLY",
+    "source_research_provenance": "PASS_STRUCTURAL_ONLY",
+    "knowledge_compounding_transfer_probe": "PASS_STRUCTURAL_ONLY",
+    "chapter_count_auto_discovery": "NOT_IMPLEMENTED",
+    "live_model_credential": "NOT_AVAILABLE_HERE",
+    "book_quality": "UNVERIFIED",
+    "full_book_noninferiority": "UNVERIFIED",
+    "author_signoff": "PENDING",
+    "official_promotion": "BLOCKED_NOT_MERGED"
+  },
+  "privacy": {
+    "public_repository": "GENERIC_CODE_AND_SANITIZED_HISTORY_ONLY",
+    "private_user_manuscripts": "NOT_COPIED"
+  },
+  "next_step": "ENABLE_REVIEWED_PROVIDER_CANARY_ON_UNSEEN_PRIVATE_TOPIC_WITH_AUTHOR_SCOPE_AND_HUMAN_READER_EVIDENCE; RELEASE_GOVERNANCE_MUST_ALLOW_PR14_PR18_DEPENDENT_MERGE_AND_EXPLICIT_CURRENT_PROMOTION"
+}
