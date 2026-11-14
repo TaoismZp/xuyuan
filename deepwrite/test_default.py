@@ -7,9 +7,12 @@ import hashlib
 import importlib.util
 import json
 from pathlib import Path
+import subprocess
+import sys
 from types import SimpleNamespace
 import tempfile
 import unittest
+from unittest.mock import patch
 
 SPEC = importlib.util.spec_from_file_location("deepwrite_default_candidate", Path(__file__).with_name("deepwrite.py"))
 dw = importlib.util.module_from_spec(SPEC)
@@ -175,6 +178,170 @@ class DefaultInvocationTests(unittest.TestCase):
                         req, hashlib.sha256(req.read_bytes()).hexdigest())
                     if check["status"] != writer_test.loop.resume_checker.PASS:
                         print("E18_STABLE_CHECKPOINT_BLOCKER: "+json.dumps(check,ensure_ascii=False),flush=True)
+
+    def invoke_paused(self):
+        """An actual E18 checkpoint, interrupted before its first chapter."""
+        original_load = dw.load
+
+        def pause_writer(name, filename):
+            loaded = original_load(name, filename)
+            if name == "deepwrite_one_call_writer":
+                loop = loaded.WritingLoop
+                loaded.WritingLoop = lambda *a, **kw: loop(*a, **kw, stop_after=2)
+            return loaded
+
+        with patch.object(dw, "load", pause_writer):
+            result = dw.run(self.request, self.destination, research_model=StudyModel(),
+                            writer_model=writer_test.ScriptedModel())
+        self.assertEqual(result["status"], "PAUSED", result)
+        return dw.sha((self.destination / "writer_project/run_state.json").read_bytes())
+
+    def test_resume_runs_same_final_structure_gate_and_updates_status(self):
+        state_sha = self.invoke_paused()
+        previous = (self.destination / "discovery_evidence/RESULT.json").read_bytes()
+        reviewer = StudyModel()
+        result = dw.resume(self.destination, state_sha, research_model=reviewer,
+                           writer_model=writer_test.ScriptedModel())
+        self.assertEqual(result["status"], "ENGINEERING_FIXTURE_ONLY_NOT_LIVE", result)
+        self.assertEqual(reviewer.roles, ["bookwide_topology_recheck"])
+        self.assertEqual(result["bookwide_topology_recheck"]["status"], "STRUCTURE_KEPT_MODEL_INTERNAL_ONLY")
+        self.assertEqual(dw.status(self.destination)["project_status"], result["status"])
+        archived = self.destination / "discovery_evidence/history" / ("RESULT." + dw.sha(previous) + ".json")
+        self.assertEqual(archived.read_bytes(), previous)
+        self.assertFalse(result["real_model_verified"])
+        self.assertEqual(result["author_acceptance"], "NOT_RUN")
+
+    def test_resume_does_not_turn_unresolved_final_structure_into_ready(self):
+        state_sha = self.invoke_paused()
+
+        class BadTopology(StudyModel):
+            def generate(self, *args, **kwargs):
+                result = super().generate(*args, **kwargs)
+                result.text = json.dumps({"decision": "REPLAN", "reason": "Unresolved major structural defect."})
+                return result
+
+        reviewer = BadTopology()
+        result = dw.resume(self.destination, state_sha, research_model=reviewer,
+                           writer_model=writer_test.ScriptedModel())
+        self.assertTrue((self.destination / "writer_project/book.md").is_file())
+        self.assertEqual(result["status"], "BLOCKED_BOOKWIDE_TOPOLOGY_QUALITY", result)
+        self.assertEqual(dw.status(self.destination)["project_status"], result["status"])
+        # Resuming an already-completed E18 writer cannot erase the outer HOLD.
+        fresh_sha = dw.sha((self.destination / "writer_project/run_state.json").read_bytes())
+        later_reviewer = StudyModel()
+        again = dw.resume(self.destination, fresh_sha, research_model=later_reviewer,
+                          writer_model=writer_test.ScriptedModel())
+        self.assertEqual(again["status"], "BLOCKED_BOOKWIDE_TOPOLOGY_QUALITY")
+        self.assertEqual(later_reviewer.roles, [])
+        self.assertEqual(dw.status(self.destination)["project_status"], again["status"])
+
+    def test_resume_cannot_skip_the_unapproved_author_sample(self):
+        self.data["mode"] = "ASSISTED_AUTHOR_GATED"
+        self.data["authorized_scope"] = "FIRST_SAMPLE_AFTER_DISCOVERY"
+        self.save_request()
+        first, _ = self.invoke()
+        self.assertEqual(first["status"], "AWAIT_AUTHOR_REVIEW")
+        state_file = self.destination / "writer_project/run_state.json"
+        reviewer = StudyModel()
+        result = dw.resume(self.destination, dw.sha(state_file.read_bytes()),
+                           research_model=reviewer, writer_model=writer_test.ScriptedModel())
+        self.assertEqual(result["status"], "AWAIT_AUTHOR_REVIEW")
+        self.assertEqual(dw.status(self.destination)["project_status"], "AWAIT_AUTHOR_REVIEW")
+        self.assertEqual(reviewer.roles, [])
+        self.assertFalse((self.destination / "writer_project/book.md").exists())
+        self.assertEqual(json.loads(state_file.read_text())["execution_mode"], "ASSISTED_AUTHOR_GATED")
+
+    def test_changed_engine_blocks_resume_before_any_model_call(self):
+        state_sha = self.invoke_paused()
+        current = copy.deepcopy(dw.official_identity())
+        current["formal_engine"]["version"] = "fixture-next-engine"
+        current["formal_engine"]["implementation_commit"] = "a" * 40
+        writer, reviewer = writer_test.ScriptedModel(), StudyModel()
+        with patch.object(dw, "official_identity", return_value=current):
+            with self.assertRaisesRegex(dw.Blocked, "ENGINE_PIN_MISMATCH_USE_ORIGINAL_CHECKOUT"):
+                dw.resume(self.destination, state_sha, writer_model=writer, research_model=reviewer)
+            self.assertEqual(dw.status(self.destination)["project_status"],
+                             "BLOCKED_PROJECT_ENGINE_PIN_MISMATCH_OR_UNVERIFIED")
+        self.assertEqual(writer.calls, [])
+        self.assertEqual(reviewer.roles, [])
+        # Editing the unfrozen startup receipt cannot replace the historical lock.
+        start_file = self.destination / "discovery_evidence/START_STATE.json"
+        start = json.loads(start_file.read_text())
+        start["engine_lock"] = current["formal_engine"]
+        start_file.write_bytes(dw.canonical(start))
+        with patch.object(dw, "official_identity", return_value=current):
+            with self.assertRaisesRegex(dw.Blocked, "START_LOCK_CONFLICTS_WITH_FROZEN_PIN"):
+                dw.resume(self.destination, state_sha, writer_model=writer, research_model=reviewer)
+        self.assertEqual(writer.calls, [])
+
+    def test_legacy_lock_uses_historical_engine_not_the_new_git_head(self):
+        # Real temporary Git history: same released engine, a later normal merge.
+        code = self.base / "historical_code"
+        code.mkdir()
+
+        def git(*args):
+            return subprocess.check_output(["git", "-C", str(code), *args], text=True,
+                                           stderr=subprocess.DEVNULL).strip()
+
+        git("init", "-q", "--initial-branch=main")
+        git("config", "user.name", "Engineering fixture")
+        git("config", "user.email", "fixture@example.invalid")
+        for relative in ("deepwrite/CURRENT.json", "wish-delivery/CURRENT.json"):
+            target = code / relative
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_bytes((dw.ROOT / relative).read_bytes())
+        git("add", ".")
+        git("commit", "-qm", "Synthetic engine pointer fixture, not a release")
+        pinned_commit = git("rev-parse", "HEAD")
+        git("checkout", "-qb", "side")
+        (code / "side.txt").write_text("Unrelated fixture change.\n")
+        git("add", ".")
+        git("commit", "-qm", "Side fixture")
+        git("checkout", "-q", "main")
+        (code / "main.txt").write_text("Another unrelated fixture change.\n")
+        git("add", ".")
+        git("commit", "-qm", "Main fixture")
+        git("merge", "--no-ff", "-qm", "Normal synthetic merge", "side")
+        self.assertNotEqual(git("rev-parse", "HEAD"), pinned_commit)
+        evidence = self.destination / "discovery_evidence"
+        (evidence / "research").mkdir(parents=True)
+        config = {"pins": {"protocols": {"deepwrite": {"commit": pinned_commit}}}}
+        (evidence / "research/writer_config.json").write_bytes(dw.canonical(config))
+        (evidence / "START_STATE.json").write_bytes(dw.canonical({"code_commit": pinned_commit}))
+        writer = self.destination / "writer_project"
+        writer.mkdir()
+        (writer / "run_state.json").write_bytes(dw.canonical({"config_sha256": dw.sha(dw.canonical(config))}))
+        with patch.object(dw, "ROOT", code), patch.object(dw, "DEEPWRITE", code / "deepwrite"):
+            alignment = dw.project_engine_lock(self.destination)
+        self.assertEqual(alignment["status"], "MATCH")
+        self.assertEqual(alignment["original_checkout_commit"], pinned_commit)
+
+    def test_status_never_reports_stale_ready_after_state_or_body_changes(self):
+        result, _ = self.invoke()
+        self.assertEqual(dw.status(self.destination)["project_status"], result["status"])
+        state_file = self.destination / "writer_project/run_state.json"
+        raw = state_file.read_bytes()
+        state = json.loads(raw)
+        state["status"] = "BLOCKED_QUALITY_UNRESOLVED"
+        state_file.write_bytes(dw.canonical(state))
+        self.assertEqual(dw.status(self.destination)["project_status"], "BLOCKED_QUALITY_UNRESOLVED")
+        state_file.write_bytes(raw)
+        book_file = self.destination / "writer_project/book.md"
+        book_file.write_bytes(book_file.read_bytes() + b"\nChanged manuscript after final review.\n")
+        self.assertEqual(dw.status(self.destination)["project_status"], "BLOCKED_ARTIFACT_IDENTITY_MISMATCH")
+
+    def test_status_cli_query_success_is_distinct_from_manuscript_readiness(self):
+        self.invoke_paused()
+        queried = subprocess.run([sys.executable, "-B", str(dw.__file__), "status", str(self.destination)],
+                                 capture_output=True, text=True)
+        self.assertEqual(queried.returncode, 0, queried.stdout + queried.stderr)
+        data = json.loads(queried.stdout)
+        self.assertEqual(data["status"], "PROJECT_STATUS")
+        self.assertEqual(data["project_status"], "PAUSED")
+        missing = subprocess.run([sys.executable, "-B", str(dw.__file__), "status", str(self.base / "absent")],
+                                 capture_output=True, text=True)
+        self.assertEqual(missing.returncode, 2)
+        self.assertEqual(json.loads(missing.stdout)["status"], "PROJECT_NOT_FOUND")
 
     def test_one_command_autoselects_all_gates_to_actual_book(self):
         result,model=self.invoke()

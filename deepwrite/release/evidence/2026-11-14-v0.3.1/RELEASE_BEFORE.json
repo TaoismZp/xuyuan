@@ -1,0 +1,11 @@
+{
+  "utc": "2026-11-14T10:36:19.167173+00:00",
+  "frozen_main_commit": "dae2c7de1bcda8c3f511bc05d690c4269deae4c2",
+  "source_path": "deepwrite/release/release_verify.py",
+  "source_sha256": "2b7cc32843edcd8defc4f9eac068236f29b8b65342003ae9537739034682d14a",
+  "source_blob": "26e48797ff34262b4bc8359a04a963ef946dc0ff",
+  "test": "ActiveWritingPatchTests.test_existing_writing_dependencies_and_module_identities_are_preserved",
+  "tests_run": 1,
+  "expected_old_guard_failure_observed": true,
+  "fixture_scope": "ACTUAL_TEMPORARY_GIT_RELEASE_OBJECTS_PUBLIC_SYNTHETIC_CONTENT_NO_MODEL"
+}

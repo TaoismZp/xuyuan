@@ -1,0 +1,19 @@
+{
+  "status": "PASS_SCOPED_FIXTURE_REGRESSIONS_NOT_LIVE_MODEL",
+  "runtime_tests": 16,
+  "release_tests": 87,
+  "full_stable_suite_and_live_head_ci": "REQUIRED_AFTER_RELEASE_IDENTITY_BINDING",
+  "real_model_calls": 0,
+  "counterexamples": [
+    "resume generated book without final topology gate",
+    "status stale PAUSED and query exit2",
+    "old engine silently reused by new wrapper",
+    "published unchanged WRITING inventory cannot receive ENGINEERING_PATCH"
+  ],
+  "source_evidence": [
+    "RUNTIME_BEFORE.json",
+    "RUNTIME_AFTER.json",
+    "RELEASE_BEFORE.json",
+    "RELEASE_AFTER.json"
+  ]
+}

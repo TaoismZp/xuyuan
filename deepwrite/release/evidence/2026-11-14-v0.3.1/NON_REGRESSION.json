@@ -1,0 +1,38 @@
+{
+  "status": "PASS_SCOPE_ENGINEERING_NO_NEW_QUALITY_CLAIM",
+  "base_commit": "dae2c7de1bcda8c3f511bc05d690c4269deae4c2",
+  "same_runtime_files": [
+    "deepwrite/tools/writing_loop_experimental.py",
+    "deepwrite/tools/model_adapter_openai_responses_experimental_v0_1.py",
+    "deepwrite/qa/checkpoint.py",
+    "deepwrite/qa/resume_check.py",
+    "deepwrite/tools/book_packager_v0.1.py",
+    "deepwrite/candidates/e15-review-closure/review_closure_guard.py",
+    "deepwrite/candidates/e23-frame-wiring/reader_source_gate.py",
+    "deepwrite/candidates/e23-frame-wiring/insight_origin_gate.py",
+    "deepwrite/candidates/source-first/source_first_gate.py",
+    "deepwrite/candidates/source-first/architecture_discovery.py",
+    "deepwrite/candidates/source-first/bookwide_restructure.py",
+    "deepwrite/candidates/RESEARCH_LOOP.md",
+    "deepwrite/candidates/EDITORIAL_LOOP.md",
+    "deepwrite/AGENTS.md",
+    "deepwrite/release/activation.py",
+    "deepwrite/release/runtime.py",
+    "deepwrite/release/github_authorization.py",
+    "deepwrite/evaluation/blind_reader_trial.py",
+    "deepwrite/tools/insight_pair_probe_experimental.py"
+  ],
+  "changed_runtime_files": [
+    "deepwrite/deepwrite.py",
+    "deepwrite/DEFAULT_INVOCATION.md",
+    "deepwrite/UNIFIED_RELEASE_CANDIDATE.json",
+    "deepwrite/release/release_verify.py"
+  ],
+  "original_research_reader_topology_policy_ast_frozen": true,
+  "scoped_runtime_tests": 16,
+  "scoped_release_tests": 87,
+  "live_models": 0,
+  "parent_and_v03_spec_bytes_unchanged": true,
+  "module_identity_and_execution_profile": "MUST_COPY_BASE_UNCHANGED_IN_RECORD",
+  "no_quality_behavior_change_rationale": "Restore the already-active final review after resume, state and engine identity checks; correct stale invocation/status documents and inherited-release inventory handling. No research/writer/reader/discovery prompt or cognitive spec changes."
+}

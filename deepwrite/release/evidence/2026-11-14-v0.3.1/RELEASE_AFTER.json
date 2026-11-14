@@ -1,0 +1,21 @@
+{
+  "utc": "2026-11-14T10:35:43.274006+00:00",
+  "command": [
+    "python3",
+    "-B",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "deepwrite/release",
+    "-p",
+    "test_*.py",
+    "-v"
+  ],
+  "exit_code": 0,
+  "test_count": 87,
+  "semantic_quality": "UNVERIFIED",
+  "author_identity": "NOT_VERIFIED_BY_THIS_SCRIPT",
+  "actual_github_protection": "NOT_CHANGED_BY_THIS_PATCH",
+  "old_main_guard_cannot_self_authorize_its_replacement": true
+}
