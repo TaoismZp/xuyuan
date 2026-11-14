@@ -4,7 +4,7 @@ on:
     branches: [main]
     types: [opened, synchronize, reopened, ready_for_review]
   push:
-    branches: [main, experiment/deepwrite-activation-rail-20261111, engineering/deepwrite-official-activation-20261112, deepwrite/two-phase-source-discovery-20261114]
+    branches: [main, experiment/deepwrite-activation-rail-20261111, engineering/deepwrite-official-activation-20261112, deepwrite/two-phase-source-discovery-20261114, deepwrite/unified-default-engine-20261114]
   workflow_dispatch:
 permissions:
   contents: read
@@ -31,6 +31,8 @@ jobs:
         run: python3 -B -m unittest discover -s deepwrite/candidates/e23-frame-wiring -p 'test_*.py' -v
       - name: Verify source-first and two-stage discovery evidence plus negative controls
         run: python3 -B -m unittest discover -s deepwrite/candidates/source-first -p 'test_*.py' -v
+      - name: Verify default one-call DeepWrite includes source discovery, insight, writing, and human gates
+        run: python3 -B -m unittest discover -s deepwrite -p 'test_default.py' -v
       - name: Preserve E18 true-file writing/checkpoint behavior
         run: python3 -B -m unittest discover -s deepwrite/tools/tests -p 'test_*.py' -v
       - name: Actually invoke checked-out candidate declaration without claiming formal activation
