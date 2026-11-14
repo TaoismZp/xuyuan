@@ -150,6 +150,29 @@ class TwoPhaseDiscoveryTests(unittest.TestCase):
         self.assertTrue((self.out/"book_architecture_discovery.response.json").is_file())
         self.assertIn("sources/material.md", [r["path"] for r in conf["sources"]])
 
+
+    def test_chapter_count_can_change_from_one_to_two_without_preset_outline(self):
+        alternative = copy.deepcopy(BOOK)
+        alternative["chapters"].append({"artifact_id": "beta",
+                                         "title": "When counted categories overlap"})
+        alternative["book_design"]["chapter_contributions"].append({
+            "chapter_id": "beta", "source_concept_ids": ["native_pairs"],
+            "distinct_reader_change": "Recheck what appeared independent before combining evidence."})
+        alternative["reader_prior_knowledge_contract"]["concepts"].append({
+            "id": "overlapping_sets", "first_explained_in": "beta",
+            "first_used_in": "beta", "prerequisites": ["native_pairs"]})
+        model = ScriptedDiscovery(book=alternative)
+        receipt = discovery.discover(self.cfg, self.project, self.out, model=model)
+        self.assertEqual(receipt["chapter_count"], 2)
+        self.assertEqual(receipt["chapters"], ["alpha", "beta"])
+        self.assertEqual(model.roles, ["source_domain_study", "book_architecture_discovery"])
+        planned = json.loads((self.out / "writer_config.json").read_text())
+        self.assertEqual(len(planned["chapters"]), 2)
+        self.assertEqual(
+            planned["reader_prior_knowledge_contract"]["concepts"][1]["prerequisites"],
+            ["native_pairs"])
+        self.assertEqual(receipt["author_acceptance"], "NOT_RUN")
+
     def test_missing_budget_fails_before_model_call(self):
         del self.cfg["discovery_token_budget"]
         model = ScriptedDiscovery()
