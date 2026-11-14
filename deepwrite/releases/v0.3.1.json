@@ -1,0 +1,182 @@
+{
+  "schema": "deepwrite/release-record/v1",
+  "status": "ACTIVE_RELEASE",
+  "version": "v0.3.1",
+  "workbench_version": "v0.3",
+  "implementation_commit": "64e94b518f7b2454d2629d900f787f0a29d84938",
+  "rollback_commit": "dae2c7de1bcda8c3f511bc05d690c4269deae4c2",
+  "spec": {
+    "path": "deepwrite/versions/v0.3.md",
+    "sha256": "415cffb97ffba31464e52c96c0201345867f81b9e33f14e6e529fafba61f08f4"
+  },
+  "parent": {
+    "version": "v7.6",
+    "current_sha256": "27737a92a01d36c4c7765712e6f158044480763a470a4229d91f0eada7b8591a",
+    "spec": {
+      "path": "wish-delivery/versions/v7.6.md",
+      "sha256": "b59e0d47e4ad62056dce7207c2946cf82bbe2bb13fb5e0f6403f3973578441cc"
+    }
+  },
+  "runtime_files": [
+    {
+      "path": "deepwrite/deepwrite.py",
+      "sha256": "38b9f4aae7730d4c52dee6e6bfdacf6d9d8499f0405073c27030540b9e6894df"
+    },
+    {
+      "path": "deepwrite/tools/writing_loop_experimental.py",
+      "sha256": "c265eaba1f0096b12f06ddf5919cb3cdeb3e56adf0649bfde7849f2411f6c3b7"
+    },
+    {
+      "path": "deepwrite/tools/model_adapter_openai_responses_experimental_v0_1.py",
+      "sha256": "07d4a1af4209b947998b8690e5d9e556aa0302aa57ec6580c989d20fbea5cdce"
+    },
+    {
+      "path": "deepwrite/qa/checkpoint.py",
+      "sha256": "f40633cfdde27c47778841092e1ede8ab3604ee4608559d42ff0b735ce01257d"
+    },
+    {
+      "path": "deepwrite/qa/resume_check.py",
+      "sha256": "d71d8aba9965206d68f0ee9e936cfa3a7a13d125a64662aa149df3b97510bbaa"
+    },
+    {
+      "path": "deepwrite/tools/book_packager_v0.1.py",
+      "sha256": "716cbedfe60ab7096f19b6de266b929cb81c0f8b8668c8ea322dd5e4286023e6"
+    },
+    {
+      "path": "deepwrite/candidates/e15-review-closure/review_closure_guard.py",
+      "sha256": "b2be877c9ca7ff63b0adec5ec56c3c65f1274ac69e4b2056bdaf39c5cd6851d7"
+    },
+    {
+      "path": "deepwrite/candidates/e23-frame-wiring/reader_source_gate.py",
+      "sha256": "aa8be1c7d7da3a2ca4d5860ba879cc0f8b8998f7f34410dc8c1b270ef81df3e9"
+    },
+    {
+      "path": "deepwrite/candidates/e23-frame-wiring/insight_origin_gate.py",
+      "sha256": "6679950ca6ed538fa2a93adf9f9a1e6d2987a5a4197c09d94eddce8693109aec"
+    },
+    {
+      "path": "deepwrite/candidates/source-first/source_first_gate.py",
+      "sha256": "c07a9cef4b5b20cddab587f616ce6057b1eec48a8ffb00ed78a161892140f85c"
+    },
+    {
+      "path": "deepwrite/candidates/source-first/architecture_discovery.py",
+      "sha256": "5f91034228da3b290ae2ff5df0084f7cc8cd5e564b96389db2cd485cef5e9cc6"
+    },
+    {
+      "path": "deepwrite/candidates/source-first/bookwide_restructure.py",
+      "sha256": "615f3a86c8e110591a4eac93c5684355776d425a87d7a01df6a6cb00a9b4cf93"
+    },
+    {
+      "path": "deepwrite/candidates/RESEARCH_LOOP.md",
+      "sha256": "b12e638b5bdb436cc84d5a1851fea0c37d1f91c22b4742af10fc8cae6eb879e9"
+    },
+    {
+      "path": "deepwrite/candidates/EDITORIAL_LOOP.md",
+      "sha256": "a5684b984a4af1cccf993264701f1e3cb1e6c2b61d96ca118541b8fff9eac684"
+    },
+    {
+      "path": "deepwrite/DEFAULT_INVOCATION.md",
+      "sha256": "2889a9c8eb03de2e3adfae851a95981b00ad7c9ea45b843f838a2038928c5cf4"
+    },
+    {
+      "path": "deepwrite/AGENTS.md",
+      "sha256": "4ee4d9dd0312aecd27276dc4dc31a2b2f520666299e805ba97a18c07729510a3"
+    },
+    {
+      "path": "deepwrite/UNIFIED_RELEASE_CANDIDATE.json",
+      "sha256": "c5bf43eea4a4ed314049db9770dfb452a1c0a52a3cd68c19388e4c83ae0b2ba1"
+    },
+    {
+      "path": "deepwrite/release/activation.py",
+      "sha256": "e105b7e5d1aee186418c226a1abfeda0461f88b666d0fbf0a58e7a41e47152ef"
+    },
+    {
+      "path": "deepwrite/release/runtime.py",
+      "sha256": "dc59955b613ea9d86dd2458b63fc322210803b7b65e0ae4346b14a5e74ed10fa"
+    },
+    {
+      "path": "deepwrite/release/release_verify.py",
+      "sha256": "adbd76180eaad32a0967f8814bcc749328d3e57de1b531ab4feab849f3570db3"
+    },
+    {
+      "path": "deepwrite/release/github_authorization.py",
+      "sha256": "3925174e09815f3a016fd37ab5f7d4130fff1c0035b6904a78bf854a0ad173db"
+    },
+    {
+      "path": "deepwrite/evaluation/blind_reader_trial.py",
+      "sha256": "2ec35ef09bf1f222a177153aca926c6b982347e921b4b3eaf30dcbd81242faa0"
+    },
+    {
+      "path": "deepwrite/tools/insight_pair_probe_experimental.py",
+      "sha256": "f2b77c566a25358190d4ae6932cd26807056b5016fa77c9eea0f9f5d6745716a"
+    }
+  ],
+  "module_identities": [
+    {
+      "id": "e15_review_closure",
+      "commit": "f5c2d5a6d93cb958c07db08ec1b00596a9b20087"
+    },
+    {
+      "id": "e18_loop",
+      "commit": "f5c2d5a6d93cb958c07db08ec1b00596a9b20087"
+    },
+    {
+      "id": "reader_source_transfer",
+      "commit": "f5c2d5a6d93cb958c07db08ec1b00596a9b20087"
+    },
+    {
+      "id": "source_first_architecture",
+      "commit": "f5c2d5a6d93cb958c07db08ec1b00596a9b20087"
+    },
+    {
+      "id": "two_phase_discovery",
+      "commit": "f5c2d5a6d93cb958c07db08ec1b00596a9b20087"
+    },
+    {
+      "id": "insight_origin",
+      "commit": "f5c2d5a6d93cb958c07db08ec1b00596a9b20087"
+    },
+    {
+      "id": "knowledge_compounding",
+      "commit": "f5c2d5a6d93cb958c07db08ec1b00596a9b20087"
+    },
+    {
+      "id": "bookwide_restructure",
+      "commit": "f5c2d5a6d93cb958c07db08ec1b00596a9b20087"
+    },
+    {
+      "id": "blind_reader_trial",
+      "commit": "f5c2d5a6d93cb958c07db08ec1b00596a9b20087"
+    }
+  ],
+  "execution_profile": {
+    "kind": "WRITING",
+    "mandatory_gates": [
+      "AUTHOR_PROJECT_MODE",
+      "READER_SOURCE_TRANSFER",
+      "ACTUAL_FILE_CLOSEOUT",
+      "BOOKWIDE_RECHECK",
+      "SOURCE_FIRST_ARCHITECTURE",
+      "TWO_PHASE_DISCOVERY",
+      "KNOWLEDGE_COMPOUNDING",
+      "INSIGHT_ORIGIN_PROVENANCE"
+    ]
+  },
+  "release_gate_metadata": {
+    "change_scope": "ENGINEERING_PATCH",
+    "source": "AUTHOR_REQUESTED_EVOLUTION_REVIEW_FIX_AND_PUBLISH",
+    "engineering_evidence": "deepwrite/release/evidence/2026-11-14-v0.3.1/ENGINEERING.json",
+    "actual_exact_head_runtime_ci": "MUST_BE_READ_FROM_GITHUB_BEFORE_MERGE",
+    "human_release_authority": "REAL_OWNER_EXACT_HEAD_COMMAND_REQUIRED",
+    "release_method": "MANUAL_OWNER_AUTHORIZED_NORMAL_MERGE_NO_ADMIN_BYPASS",
+    "automatic_protection_status": "BLOCKED_ADMINISTRATION_CONFIGURATION_NOT_CERTIFIED",
+    "legacy_trusted_controller_scope_bug": "FIXED_HERE_REPLACEMENT_NOT_SELF_AUTHORIZED_BY_CANDIDATE",
+    "content_quality": "UNVERIFIED",
+    "live_full_book": "NOT_RUN",
+    "independent_human_review": "NOT_RUN",
+    "author_draft_acceptance": "NOT_RUN",
+    "private_content_publication": "FORBIDDEN",
+    "record_is_effective_only_after_main_current_merge": true
+  },
+  "recorded_date": "2026-11-14"
+}
