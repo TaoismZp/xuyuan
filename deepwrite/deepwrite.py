@@ -111,6 +111,9 @@ def validate_request(request):
         raise Blocked("DEEPWRITE_READER_GOAL_REQUIRED")
     if request.get("chapter_titles") or request.get("fixed_outline") or request.get("modules"):
         raise Blocked("DEEPWRITE_NO_PRESET_OUTLINE_OR_MANUAL_MODULE_SELECTION")
+    guide = request.get("author_guidance_source_index")
+    if guide is not None and (type(guide) is not int or guide < 0 or guide >= len(request["source_files"])):
+        raise Blocked("DEEPWRITE_AUTHOR_GUIDANCE_INDEX_INVALID")
     return mode
 
 
@@ -187,7 +190,7 @@ def prepare(request_file: Path, private_root: Path, *, allow_fixture=False):
         "chapter_scope": request["authorized_scope"],
         "author_identity_verification": "UNVERIFIED_EXTERNAL_REQUEST_FILE",
         "original_request_sha256": sha(raw_request),
-        "model_generated": False, "private_original_request_archived": "../discovery_evidence/USER_REQUEST.json",
+        "model_generated": "UNKNOWN", "private_original_request_archived": "../discovery_evidence/USER_REQUEST.json",
         "model_may_create_drafts": True,
         "public_release_authorized": False
     }
@@ -210,6 +213,7 @@ def prepare(request_file: Path, private_root: Path, *, allow_fixture=False):
         "per_call_output_tokens": request["per_call_output_tokens"],
         "max_revision_rounds": request["max_revision_rounds"],
         "min_chapters": request["min_chapters"], "max_chapters": request["max_chapters"],
+        "insight_origin_scan": True,
         "modules": {"e18_loop": True, "source_first_architecture": True},
         "module_policy": {"e18_loop": "CANDIDATE", "source_first_architecture": "CANDIDATE"},
         "module_commits": {"e18_loop": commit, "source_first_architecture": commit},
@@ -221,6 +225,15 @@ def prepare(request_file: Path, private_root: Path, *, allow_fixture=False):
                 "provenance": "USER_REQUEST_EXPLICIT_SCOPE_SHA256:" + sha(raw_request)}
         }
     }
+    if request.get("author_guidance_source_index") is not None:
+        index = request["author_guidance_source_index"] + 1
+        base["author_guidance"] = {
+            "schema": "deepwrite/author-guided-frame/v0.1",
+            "mode": "AUTHOR_GUIDED", "origin": "USER_SUPPLIED_PERSPECTIVE",
+            "count_as_autonomous": False,
+            "experiment_or_project_id": request["project_id"],
+            "source_path": f"sources/native_{index:03d}.md"
+        }
     (evidence / "base_config.json").write_bytes(canonical(base))
     (evidence / "START_STATE.json").write_bytes(canonical({
         "schema": "deepwrite/one-call-start/v1",
