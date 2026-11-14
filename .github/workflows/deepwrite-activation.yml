@@ -31,6 +31,8 @@ jobs:
         run: python3 -B -m unittest discover -s deepwrite/candidates/e23-frame-wiring -p 'test_*.py' -v
       - name: Verify source-first and two-stage discovery evidence plus negative controls
         run: python3 -B -m unittest discover -s deepwrite/candidates/source-first -p 'test_*.py' -v
+      - name: Verify human blind packet construction and external response integrity
+        run: python3 -B -m unittest discover -s deepwrite/evaluation -p 'test_*.py' -v
       - name: Verify default one-call DeepWrite includes source discovery, insight, writing, and human gates
         run: python3 -B -m unittest discover -s deepwrite -p 'test_default.py' -v
       - name: Preserve E18 true-file writing/checkpoint behavior
