@@ -83,7 +83,7 @@ class RejectedSampleTests(unittest.TestCase):
 
     def prepare(self):
         return rewrite.prepare(self.original,self.receipt_path,
-            sha(self.receipt_path.read_bytes()),sha(self.orig_state_file.read_bytes()),
+            sha(self.receipt_path.read_bytes()),sha(self.orig_state_raw),
             self.newreq,self.newroot)
 
     def test_frozen_original_sample_rejected_then_research_restart_prepared(self):
