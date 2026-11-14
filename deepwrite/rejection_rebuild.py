@@ -90,6 +90,8 @@ def prepare(original_root, author_receipt, expected_receipt_sha,
         raise Blocked("REJECTION_REQUEST_MUST_BE_OUTSIDE_NEW_PROJECT")
     writer = original_root / "writer_project"
     evidence = original_root / "discovery_evidence"
+    if not (writer / "run_state.json").is_file():
+        raise Blocked("REJECTION_OLD_ENGINE_RUN_STATE_REQUIRED_MANUAL_DRAFT_IS_NOT_ENGINE_SAMPLE")
     state_raw = document(writer / "run_state.json", expected_old_state_sha, "STATE")
     state = json.loads(state_raw)
     config = json.loads((evidence / "research" / "writer_config.json").read_bytes())
@@ -125,7 +127,7 @@ def prepare(original_root, author_receipt, expected_receipt_sha,
             not method["evidence_reference"].strip()):
         raise Blocked("REJECTION_NOT_MATCHED_TO_ACTUAL_AUTHOR_AND_FROZEN_ARTIFACT")
     reason = rejection.get("reason")
-    if not isinstance(reason, str) or not 20 <= len(reason.strip()) <= 3000:
+    if not isinstance(reason, str) or not 4 <= len(reason.strip()) <= 3000:
         raise Blocked("REJECTION_SUBSTANTIVE_AUTHOR_FEEDBACK_REQUIRED")
     new_id = rejection.get("new_project_id")
     if not isinstance(new_id, str) or not ID.fullmatch(new_id) or new_id == config["project_id"]:
