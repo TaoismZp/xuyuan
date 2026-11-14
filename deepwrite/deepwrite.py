@@ -264,7 +264,7 @@ def prepare(request_file: Path, private_root: Path, *, allow_fixture=False):
     return project, evidence, base
 
 
-def run_bounded_bookwide_topology_check(project, evidence, cfg, writer_result, model=None):
+def run_bounded_bookwide_topology_check(project, evidence, cfg, writer_result, model=None, *, derived_writer_model=None):
     """A genuine post-book call, not a free self-certification of topology quality.
 
     Revision preserves the original book and derives one new writer project.
@@ -318,7 +318,7 @@ def run_bounded_bookwide_topology_check(project, evidence, cfg, writer_result, m
         frozen = topology.make_private_derived_project(project,derived,cfg,rewritten_config)
         (evidence / "topology_r2_writer_config.json").write_bytes(canonical(rewritten_config))
         writer=load("deepwrite_bounded_rewrite", DEEPWRITE / "tools/writing_loop_experimental.py")
-        retry=writer.WritingLoop(derived,rewritten_config,model=model).run()
+        retry=writer.WritingLoop(derived,rewritten_config,model=derived_writer_model).run()
         finish={"status":"REPLAN_DERIVATION_PENDING_HUMAN","derived_project":str(derived),
                 "original_book_sha256":sha(source_bytes),"derived_writer_result":retry,
                 "frozen_source_receipt":frozen,"model_review":identity,
@@ -360,7 +360,7 @@ def run(request_file: Path, private_root: Path, *, research_model=None, writer_m
     if (final["execution_contract"]["mode"] == "AUTONOMOUS_FULL_DRAFT" and
             result["status"] in ("CANDIDATE_PENDING_HUMAN", "ENGINEERING_FIXTURE_ONLY_NOT_LIVE")):
         replan = run_bounded_bookwide_topology_check(project, evidence, final, result,
-                                                     research_model or writer_model)
+                                                     research_model or writer_model, derived_writer_model=writer_model)
     project_status = result["status"]
     if replan["status"] in ("BOOKWIDE_STRUCTURE_RECHECK_BLOCKED", "REPLAN_CONTENT_LOSS_REQUIRES_INDEPENDENT_REVIEW"):
         project_status = "BLOCKED_BOOKWIDE_TOPOLOGY_QUALITY"
