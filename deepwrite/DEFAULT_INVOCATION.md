@@ -89,7 +89,7 @@ python3 -B deepwrite/deepwrite.py resume /private/deepwrite-project \
 |读者三层和六维知识复利|真实章节审稿门/新情境探针PASS（结构）|真实新手/熟手/高手的增益和迁移UNVERIFIED|
 |独立洞见 vs 作者指导|PR17候选函数集已集成；默认源问题竞争与作者来源归类|“真正原创”/盲揭示仍不能靠模型自己证明|
 |跨章深审/整书修订/失误闭环|合成文件、原稿保护与检查点PASS|实战一次成书不劣于逐章UNVERIFIED|
-|盲评A/B与外部人类评分|可单独用对照工具准备素材；正式真人实验未做|不能用AI自评分数替代真人|
+|盲评A/B与外部人类评分|`deepwrite/evaluation/blind_reader_trial.py` 实际封存作品A/B、分离映射密钥并采集真实读者答卷；工程测试PASS|真人样本/公平等预算对照未做，不能用AI评分代替真人|
 |统一入口与版本恢复|本文件对应 `deepwrite/deepwrite.py`，集成工程测试以当前最新run为准|正式main CURRENT仍v0.1，PR未合并，不得声称全局生效|
 
 ## 版本语义
