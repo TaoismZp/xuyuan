@@ -161,9 +161,20 @@ class DefaultInvocationTests(unittest.TestCase):
 
     def invoke(self):
         study_model=StudyModel()
-        result=dw.run(self.request,self.destination,research_model=study_model,
-                      writer_model=writer_test.ScriptedModel())
-        return result,study_model
+        try:
+            result=dw.run(self.request,self.destination,research_model=study_model,
+                          writer_model=writer_test.ScriptedModel())
+            return result,study_model
+        finally:
+            checkpoints=list(self.destination.glob("writer_project.checkpoint.*"))
+            req=self.destination/"writer_project.requirements.json"
+            for cp in checkpoints[:2]:
+                if (cp/"manifest.json").is_file() and req.is_file():
+                    check=writer_test.loop.resume_checker.check(
+                        cp, hashlib.sha256((cp/"manifest.json").read_bytes()).hexdigest(),
+                        req, hashlib.sha256(req.read_bytes()).hexdigest())
+                    if check["status"] != writer_test.loop.resume_checker.PASS:
+                        print("E18_STABLE_CHECKPOINT_BLOCKER: "+json.dumps(check,ensure_ascii=False),flush=True)
 
     def test_one_command_autoselects_all_gates_to_actual_book(self):
         result,model=self.invoke()
