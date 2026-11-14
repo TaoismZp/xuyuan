@@ -51,6 +51,11 @@ def validate_contract(contract, chapters):
             raise ValueError("READER_CONTRACT_" + key.upper() + "_REQUIRED")
     if not contract["unknown"] or set(contract["known"]) & set(contract["unknown"]):
         raise ValueError("READER_CONTRACT_UNKNOWN_OR_CONTRADICTORY_PRIORS")
+    compound = contract.get("knowledge_compounding", {})
+    if compound:
+        if (not isinstance(compound, dict) or compound.get("enabled") is not True or
+                not nonempty(compound.get("transfer_goal"))):
+            raise ValueError("KNOWLEDGE_COMPOUNDING_CONTRACT_INVALID")
     concepts = contract.get("concepts")
     if not isinstance(concepts, list) or not concepts:
         raise ValueError("READER_CONCEPT_DEPENDENCY_MAP_REQUIRED")
@@ -189,6 +194,24 @@ def evaluate(contract, chapter_id, text, review, stage="SOURCE_LEARNING", source
                                  "reason": item.get("rationale"), "audience": item["audience"]})
         if seen != set(AUDIENCES):
             errors.append("ALL_READER_PERSPECTIVES_REQUIRE_LOCATED_INTERNAL_REVIEW")
+        if contract.get("knowledge_compounding", {}).get("enabled") is True:
+            probe = review.get("knowledge_compounding_probe")
+            if not isinstance(probe, dict):
+                errors.append("KNOWLEDGE_COMPOUNDING_TRANSFER_PROBE_REQUIRED")
+            else:
+                for field in ("new_situation", "expected_inference", "failure_boundary", "rationale"):
+                    if not nonempty(probe.get(field)):
+                        errors.append("KNOWLEDGE_COMPOUNDING_PROBE_INCOMPLETE_" + field)
+                if probe.get("prerequisite_concept_id") not in concept_ids:
+                    errors.append("KNOWLEDGE_COMPOUNDING_UNKNOWN_PREREQUISITE")
+                if probe.get("verdict") not in ("SUPPORTED", "REWORK", "UNVERIFIED"):
+                    errors.append("KNOWLEDGE_COMPOUNDING_PROBE_VERDICT_REQUIRED")
+                _location(text, probe, "KNOWLEDGE_COMPOUNDING_PROBE", errors)
+                if probe.get("verdict") != "SUPPORTED":
+                    blocking.append({"code": "KNOWLEDGE_COMPOUNDING_NOT_DEMONSTRATED",
+                                     "severity": "MAJOR", "status": "OPEN",
+                                     "reason": probe.get("rationale", "Transfer ability unverified"),
+                                     "origin": "MODEL_TRANSFER_PROBE_NOT_HUMAN_EVIDENCE"})
     findings = review.get("findings")
     if not isinstance(findings, list):
         findings = []; errors.append("ACTUAL_READER_FINDINGS_LIST_REQUIRED")
@@ -228,6 +251,12 @@ def review_instructions(contract, chapter_id, stage="SOURCE_LEARNING"):
                 "source_material_evidence:[{source_id,paragraph,quote}], findings:[{code,severity,status:OPEN or KEEP,paragraph,quote,reason}]. "
                 "In CHAPTER/BOOKWIDE also return reader_checks with one located MODEL observation for NOVICE, PRACTITIONER, EXPERT: "
                 "{audience,verdict:SUPPORTED/REWORK/UNVERIFIED,rationale,paragraph,quote}. "
+                "When reader_contract.knowledge_compounding.enabled is true, add knowledge_compounding_probe: "
+                "{prerequisite_concept_id,new_situation,expected_inference,failure_boundary,verdict:SUPPORTED/REWORK/UNVERIFIED,rationale,paragraph,quote}. "
+                "Use a genuinely unseen situation and ask whether the chapter supports transfer beyond its own illustration. "
+                "Review six lenses without six artificial sections or scores: structural linkage, obsolescence, "
+                "learning threshold, compression, spillover and negative compounding of mistaken premises. "
+                "Mark UNVERIFIED if you cannot honestly judge; model impressions never certify real reader transfer. "
                 "Do not pretend a human read it. SUPPORTED is your bounded review, not established truth. "
                 "No mandatory chapter headings, keywords, six scores or artificial defects. Correct rigorous prose may have findings:[]. "
                 "A source-domain error or unsupported source-to-target mapping needs RESEARCH_MORE; reader prerequisite or value collapse needs REWORK. "
