@@ -7,6 +7,7 @@ human approval, or CI authenticity merely from fields in a JSON file.
 """
 from __future__ import annotations
 import argparse
+import ast
 import hashlib
 import json
 import re
@@ -122,6 +123,64 @@ def git(root, *args):
     return subprocess.check_output(["git", "-C", str(root), *args], stderr=subprocess.DEVNULL)
 
 
+def orchestration_patch_only(before_raw, after_raw):
+    """Bound the existing entry's engineering exception; never execute its code.
+
+    This is a scope check, not proof of program semantics. Exact-head owner
+    review and regressions must still assess the changed scheduling functions.
+    Native research, request/source policy, imports and protocol constants stay
+    frozen. A future cognitive change needs the separate promotion channel.
+    """
+    allowed={"run", "resume", "status", "main", "archive_execution_evidence",
+             "save_execution_evidence", "finalize_execution", "project_engine_lock"}
+
+    def start_dict(tree):
+        found=[]
+        for function in tree.body:
+            if not isinstance(function,ast.FunctionDef) or function.name!="prepare": continue
+            for node in ast.walk(function):
+                if isinstance(node,ast.Dict) and any(
+                        isinstance(key,ast.Constant) and key.value=="schema" and
+                        isinstance(value,ast.Constant) and value.value=="deepwrite/one-call-start/v1"
+                        for key,value in zip(node.keys,node.values)):
+                    found.append(node)
+        return found
+
+    def frozen(tree):
+        functions=[node for node in tree.body if isinstance(node,ast.FunctionDef)]
+        names=[node.name for node in functions]
+        if len(names)!=len(set(names)):
+            raise ValueError("DUPLICATE_ENTRY_FUNCTION")
+        for node in functions:
+            if node.name in allowed and (node.decorator_list or any(
+                    isinstance(child,ast.Call) for value in (node.args,node.returns)
+                    if value is not None for child in ast.walk(value))):
+                raise ValueError("ENTRY_PATCH_EXECUTABLE_FUNCTION_HEADER")
+        frozen_nodes=[node for node in tree.body
+                      if not (isinstance(node,ast.FunctionDef) and node.name in allowed)]
+        return ast.dump(ast.Module(body=frozen_nodes,type_ignores=[]),include_attributes=False),set(names)
+
+    try:
+        before_tree,after_tree=ast.parse(before_raw),ast.parse(after_raw)
+        before_start,after_start=start_dict(before_tree),start_dict(after_tree)
+        if len(before_start)==len(after_start)==1:
+            old_node,new_node=before_start[0],after_start[0]
+            old_keys=[key.value if isinstance(key,ast.Constant) else None for key in old_node.keys]
+            new_keys=[key.value if isinstance(key,ast.Constant) else None for key in new_node.keys]
+            # Permit only the first addition of the explicit engine lock to the
+            # existing START_STATE. Once present, removal/change is frozen too.
+            if "engine_lock" not in old_keys and new_keys.count("engine_lock")==1:
+                position=new_keys.index("engine_lock")
+                expected=ast.parse('ident["formal_engine"]',mode="eval").body
+                if ast.dump(new_node.values[position])==ast.dump(expected):
+                    del new_node.keys[position];del new_node.values[position]
+        old,old_names=frozen(before_tree)
+        new,new_names=frozen(after_tree)
+    except (SyntaxError,ValueError,TypeError):
+        return False
+    return old==new and (old_names & allowed)<=new_names
+
+
 def verify_transition(base_root, head_root, changed_paths, manifest_path=None):
     """Trusted base-code check of candidate data; never imports candidate Python.
 
@@ -229,16 +288,46 @@ def verify_transition(base_root, head_root, changed_paths, manifest_path=None):
                 after.get("active_workbench_spec")!=before.get("active_workbench_spec") or
                 safe_path(head_root,after["active_workbench_spec"]).read_bytes()!=safe_path(base_root,before["active_workbench_spec"]).read_bytes()):
                 reasons.append("ENGINEERING_CANNOT_CHANGE_COGNITIVE_SPEC")
-            if record.get("module_identities"):
-                reasons.append("ENGINEERING_CANNOT_ACTIVATE_CANDIDATE_MODULES")
+            if record.get("module_identities",[])!=old_record.get("module_identities",[]):
+                reasons.append("ENGINEERING_CANNOT_CHANGE_MODULE_IDENTITIES")
+                if record.get("module_identities"):
+                    reasons.append("ENGINEERING_CANNOT_ACTIVATE_CANDIDATE_MODULES")
+            if record.get("execution_profile")!=old_record.get("execution_profile"):
+                reasons.append("ENGINEERING_CANNOT_CHANGE_EXECUTION_PROFILE")
             # Engineering fast path is deliberately narrow. Prompt/discovery/
             # writer policy changes cannot be relabelled as a hash repair.
+            # The old rule rejected every inherited WRITING dependency, even
+            # byte-identical ones. Preserve its real base inventory and inspect
+            # only changed dependencies; do not silently drop an old identity.
+            old_runtime={item["path"]:item["sha256"] for item in old_record.get("runtime_files",[])}
+            new_runtime={item["path"]:item["sha256"] for item in record.get("runtime_files",[])}
+            for name in old_runtime.keys()-new_runtime.keys():
+                reasons.append("ENGINEERING_CANNOT_REMOVE_RUNTIME_DEPENDENCY:"+name)
             allowed=("deepwrite/release/","deepwrite/qa/")
             engineering_tools={"deepwrite/tools/book_packager_v0.1.py",
                 "deepwrite/candidates/e15-review-closure/review_closure_guard.py"}
+            invocation_docs={"deepwrite/DEFAULT_INVOCATION.md","deepwrite/UNIFIED_RELEASE_CANDIDATE.json"}
             for f in record.get("runtime_files",[]):
-                if not f["path"].startswith(allowed) and f["path"] not in engineering_tools:
-                    reasons.append("ENGINEERING_RUNTIME_OUTSIDE_REVIEWED_BOUNDARY:"+f["path"])
+                name=f["path"]
+                if name in old_runtime:
+                    old_file=safe_path(base_root,name)
+                    if digest(old_file)!=old_runtime[name]:
+                        reasons.append("BASE_RUNTIME_FILE_MISMATCH:"+name)
+                    elif old_file.read_bytes()==safe_path(head_root,name).read_bytes():
+                        continue
+                if name.startswith(allowed) or name in engineering_tools:
+                    continue
+                if name in invocation_docs and name in old_runtime:
+                    # These existing documents route users to the same pinned
+                    # engine; their actual diff remains part of owner review.
+                    continue
+                if (name=="deepwrite/deepwrite.py" and name in old_runtime and
+                    old_record.get("execution_profile",{}).get("kind")=="WRITING"):
+                    if not orchestration_patch_only(safe_path(base_root,name).read_bytes(),
+                                                    safe_path(head_root,name).read_bytes()):
+                        reasons.append("ENGINEERING_ENTRY_POLICY_AST_CHANGED")
+                    continue
+                reasons.append("ENGINEERING_RUNTIME_OUTSIDE_REVIEWED_BOUNDARY:"+name)
     except (OSError, ValueError, KeyError, TypeError, subprocess.CalledProcessError) as error:
         reasons.append("TRANSITION_CHECK_FAILED:"+str(error))
     return {"status":"BLOCKED" if reasons else "ACTIVATION_BYTES_READY_NEEDS_LIVE_GITHUB_AUTHORITY",

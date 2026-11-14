@@ -22,7 +22,7 @@
     "blackbox_vs_sequential_quality": "UNVERIFIED",
     "private_manuscript_publication": "FORBIDDEN"
   },
-  "current_status": "FORMAL_UNIFIED_ENGINE_SELECTED_BY_MAIN_AFTER_GOVERNED_MERGE_QUALITY_NOT_CERTIFIED",
+  "current_status": "FORMAL_ENGINE_SELECTED_BY_MAIN_ENGINEERING_VERIFIED_BOOK_QUALITY_UNVERIFIED",
   "new_project_policy": "ISOLATE_ID_AND_RECOVERY_FIRST; PRIVACY_CHECK; CREATE_PRIVATE_REPO_IF_SUPPORTED; OTHERWISE PRIVATE_LIBRARY_AND_EXPLICIT_GITHUB_REPO_PENDING",
   "human_acceptance": "REQUIRED_FOR_AUTHOR_FINAL_BOOK_SIGNOFF",
   "files": [
@@ -37,16 +37,18 @@
     "deepwrite/DEFAULT_INVOCATION.md",
     "deepwrite/AGENTS.md",
     "deepwrite/releases/v0.3.0.json",
-    "deepwrite/release/RELEASE_PROCESS.md"
+    "deepwrite/release/RELEASE_PROCESS.md",
+    "deepwrite/releases/v0.3.1.json",
+    "deepwrite/releases/v0.3.1-promotion.json"
   ],
   "updated_date": "2026-11-14",
   "active_engine": {
-    "version": "v0.3.0",
-    "implementation_commit": "f5c2d5a6d93cb958c07db08ec1b00596a9b20087",
+    "version": "v0.3.1",
+    "implementation_commit": "64e94b518f7b2454d2629d900f787f0a29d84938",
     "path": "deepwrite/deepwrite.py",
-    "sha256": "c0a167bd20c0eb43e3e217255da113f833faee16682642ae85cbeccfd7f4f295",
+    "sha256": "38b9f4aae7730d4c52dee6e6bfdacf6d9d8499f0405073c27030540b9e6894df",
     "release_channel": "STABLE",
-    "release_record": "deepwrite/releases/v0.3.0.json",
-    "release_record_sha256": "aca2ae3b0924270a9bc7d736850969c568b264117f5f44ff29720a16f4619d91"
+    "release_record": "deepwrite/releases/v0.3.1.json",
+    "release_record_sha256": "71fe64acc60f03efeb00178286fcf7c039ba487f1ac9f784eba70b9a62768619"
   }
 }

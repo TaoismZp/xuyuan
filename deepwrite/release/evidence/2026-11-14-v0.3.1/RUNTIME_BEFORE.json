@@ -1,0 +1,16 @@
+{
+  "utc": "2026-11-14T10:28:53.558593+00:00",
+  "source_commit": "dae2c7de1bcda8c3f511bc05d690c4269deae4c2",
+  "scope": "ACTUAL_EXISTING_PUBLIC_FIXTURE_NOT_LIVE_MODEL",
+  "initial_status": "PAUSED",
+  "resume_status": "ENGINEERING_FIXTURE_ONLY_NOT_LIVE",
+  "status_command_reports": "PAUSED",
+  "status_command_exit": 2,
+  "book_created": true,
+  "topology_request_exists": false,
+  "research_model_roles": [
+    "source_domain_study",
+    "book_architecture_discovery"
+  ],
+  "state_sha256_after_resume": "7c43ecbe34ed3bd32040741469dd58df578600ced22e051086e1c0757a706c14"
+}

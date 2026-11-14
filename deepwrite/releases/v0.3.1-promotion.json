@@ -1,0 +1,53 @@
+{
+  "schema": "deepwrite/promotion-request/v1",
+  "base_version": "v0.3",
+  "new_version": "v0.3",
+  "engine_version": "v0.3.1",
+  "base_current_sha256": "8f6664d66aa867dd7c6b64216546dd539db150b09015ff98acc9046501a6c9ad",
+  "parent_wish_version": "v7.6",
+  "release_channel": "STABLE",
+  "change_scope": "ENGINEERING_PATCH",
+  "candidate_commit": "64e94b518f7b2454d2629d900f787f0a29d84938",
+  "rollback_commit": "dae2c7de1bcda8c3f511bc05d690c4269deae4c2",
+  "old_artifact_preserved": true,
+  "spec": {
+    "path": "deepwrite/versions/v0.3.md",
+    "sha256": "415cffb97ffba31464e52c96c0201345867f81b9e33f14e6e529fafba61f08f4"
+  },
+  "runner": {
+    "path": "deepwrite/deepwrite.py",
+    "sha256": "38b9f4aae7730d4c52dee6e6bfdacf6d9d8499f0405073c27030540b9e6894df"
+  },
+  "gates": {
+    "engineering": "PASS",
+    "rollback_test": "PASS",
+    "non_regression": "PASS",
+    "content_quality": "UNVERIFIED",
+    "author_acceptance": "PENDING",
+    "independent_validation": "NOT_RUN"
+  },
+  "evidence": {
+    "engineering": "deepwrite/release/evidence/2026-11-14-v0.3.1/ENGINEERING.json",
+    "rollback_test": "deepwrite/release/evidence/2026-11-14-v0.3.1/ROLLBACK.json",
+    "non_regression": "deepwrite/release/evidence/2026-11-14-v0.3.1/NON_REGRESSION.json",
+    "no_quality_behavior_change_rationale": "Restore the already-active final review after resume, state and engine identity checks; correct stale invocation/status documents and inherited-release inventory handling. No research/writer/reader/discovery prompt or cognitive spec changes."
+  },
+  "evidence_artifacts": {
+    "engineering": {
+      "path": "deepwrite/release/evidence/2026-11-14-v0.3.1/ENGINEERING.json",
+      "sha256": "0aaf0ec8108d30fbd6cc30ce23dc215c020ef9a7cb03dfa6df5a41d469e77cf4"
+    },
+    "rollback_test": {
+      "path": "deepwrite/release/evidence/2026-11-14-v0.3.1/ROLLBACK.json",
+      "sha256": "50bdc8a78ffca4a9f2d0e55fcdf28b832ed4fdf63eb144c3c16f2b81b8c0955a"
+    },
+    "non_regression": {
+      "path": "deepwrite/release/evidence/2026-11-14-v0.3.1/NON_REGRESSION.json",
+      "sha256": "17eb2fa42535444a83daeec51d34e3c11d966ac43d2b5bd583fdbf20e7b0e355"
+    }
+  },
+  "human_authorization_evidence": {
+    "verification": "GITHUB_OWNER_EXACT_HEAD_COMMAND_REQUIRED",
+    "note": "User authorized this engineering repair and publication; real GitHub owner exact-head receipt and live CI must be checked separately. This JSON is not human or independent review."
+  }
+}

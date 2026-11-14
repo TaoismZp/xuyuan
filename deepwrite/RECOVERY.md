@@ -1,41 +1,22 @@
-# 深写｜DeepWrite 跨对话恢复入口
+# DeepWrite 跨对话恢复入口
 
-先读取实际 [CURRENT.json](CURRENT.json) 与[父框架 CURRENT](../wish-delivery/CURRENT.json)，不要凭聊天记忆、候选分支或本页历史版本判断正式身份。未发表正文与私有审稿只从已授权项目恢复档案读取，不进入公开仓库。
+**正式身份只由 GitHub main 的 [CURRENT.json](CURRENT.json) 与[父协议 CURRENT](../wish-delivery/CURRENT.json)决定。** 先核对远端提交及实际文件，再运行 `release/activation.py --run -- identity`。本页与候选历史不替代版本指针。
 
-## 当前工程任务
+## 当前可恢复事实
 
-2026-11-12接续现有E18/E23/E24，打通工程验证、发布授权、正式激活、实际调用与回退。不是重新开发，也不代表认知能力或整书质量验收通过。
+- 正式统一入口在 PR #21 合并后已实际验证；固定工程证据为 main `dae2c7de1bcda8c3f511bc05d690c4269deae4c2`、[main CI 43583578870](https://github.com/TaoismZp/xuyuan/actions/runs/43583578870)。该次工程测试和全新 main 身份调用成功，不证明作品质量。
+- 当前发布/配置、工程迭代及唯一下一步见 [release/STATE.json](release/STATE.json)。其中日期与提交绑定的观察是历史证据；新对话仍须重新读取实际 CURRENT、PR、CI 和规则。
+- 用户调用和真实命令见 [START_HERE.md](START_HERE.md)、[DEFAULT_INVOCATION.md](DEFAULT_INVOCATION.md)。当前入口支持 `identity/run/status/resume`，不要复用旧工程 runtime 的 `init` 示例。
+- 已有源领域学习、思想来源归因、研究后架构、读者审查、E15/E18真实返工、整书审查及检查点执行链。E1 真实模型整书、E2公平完整作品试验、真实三层读者、知识迁移与黑箱质量仍未验证。
 
-- 状态、未关闭Gate、唯一下一步：[release/STATE.json](release/STATE.json)。
-- PR关系、实读身份和测试来源：[本轮盘点](release/evidence/2026-11-12/INVENTORY.md)。
-- 现有发布机制：[release/RELEASE_PROCESS.md](release/RELEASE_PROCESS.md)、[release/activation.py](release/activation.py)。
-- 开始时正式DeepWrite v0.1、父规范v7.6；PR14尚未合并或激活。后续版本重新读取main CURRENT、发布记录与API。
+## 恢复真实项目
 
-在具备Python、Git和仓库读取能力的真实执行环境运行：
+书稿只从已授权的私有项目入口读取。核验该项目 `RECOVERY.md`、状态 SHA、版本锁、来源与原稿身份；从最近可靠检查点继续。既有作者模式和批准范围保持冻结，不能静默升级版本、覆盖原稿或把别的书的批准移用过来。
 
-```sh
-python3 deepwrite/release/activation.py --root .
-```
+系统发布的最近私有证据入口：`TaoismZp/deepwrite-work-0006-private`，分支 `codex/v03-publication-takeover-20261114`，`workbench/RELEASE_V03_20261114/RECOVERY.md`。该档记录合并前失败、正式 main 调用、隔离回退及管理 API 403，不包含对整书质量通过的声明。新的工程迭代须追加实际证据并回读 Git Blob，不能覆盖失败历史。
 
-该命令解析正式身份；返回WORKBENCH_ONLY_NO_LIVE_AUTONOMOUS_RUNNER时不能说自动写书已启动。普通GPT对话读提示词不等于调用Python引擎。旧项目继续固定私有STATE中的版本，禁止静默升级或覆盖旧稿。
+## 恢复研发
 
-## 未关闭的门
+先读取 [AGENT_COLLABORATION.md](AGENT_COLLABORATION.md) 和实际最新[协作桥 STATE](discovery-gate/agent-bridge/STATE.json)。桥接台保留书籍侧接力任务；工程发布状态独立，不能据此替作者批准试读、外发或修改书稿。历史 PR14、旧“正式 v0.1”与 0002/0028 指令是当时状态，不能覆盖今天的 CURRENT 和本轮授权。
 
-本轮配置写入实际出现403 Resource not accessible by integration；admin:true不是写权限证明。必需CI、自动合并、所有者发布授权、新环境正式运行及正式回退均须真实核验，准确状态见release/STATE.json。
-
-E1自主整书、E2完整作品公平盲评、认知升级的作者和独立读者验收继续开放。工程样例、字节恢复、局部勘误及AI复核不能替代这些门。
-
-## 原协作与真实创作
-
-原联合审查入口仍为[协作桥STATE](discovery-gate/agent-bridge/STATE.json)，本轮工程状态独立；没有覆盖书稿进度、读者范围或作者外发决定。
-
-新书/旧书按[START_HERE.md](START_HERE.md)、[PROJECT_INIT.md](PROJECT_INIT.md)及该项目私有RECOVERY/STATE立项或恢复。原稿保护、隐私隔离和持久检查点先于正文落盘。形成史见[HISTORY.md](HISTORY.md)，隐私见[SECURITY.md](SECURITY.md)。
-
-唯一下一步：root按release/STATE.json完成真实发布链与失败回退验证，回读正式文件、提交和配置后更新；不足权限的步骤明确BLOCKED。
-
-
-## 2026-11-13 三故障执行级修复
-
-复用现有E18写作器接入冻结作者模式、逐章源学习与证据、读者审查、真实返工及最终包含前言/尾声的整书复核。PR14仍候选，正式CURRENT/仓库保护不变。实际代码身份、四组私有证据分级、模型401和未通过门见release/STATE.json；私有总恢复入口也钉在该状态，不需要用户转发正文。
-
-没有真人试读或公平B0/B1/B2，不能声称一次授权已被证明稳定写出更好全书。下一位ChatGPT从PR14及固定私有入口独立反驳代码与证据；未获作者决定不激活、合并或改保护。
+演化概览见 [HISTORY.md](HISTORY.md)。研发继续围绕实际使用失败收敛：修执行、验证真实结果、保存恢复点；不因新增文档、模块或测试数量宣称作品变好。

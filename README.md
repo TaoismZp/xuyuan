@@ -47,12 +47,21 @@ GitHub Actions 会在每次更新后：
 
 - 当前规范：[`wish-delivery/README.md`](./wish-delivery/README.md)
 - 版本历史：[`wish-delivery/CHANGELOG.md`](./wish-delivery/CHANGELOG.md)
-- 当前不可变版本：[`wish-delivery/versions/v7.5.md`](./wish-delivery/versions/v7.5.md)
+- 当前生效版本指针：[`wish-delivery/CURRENT.json`](./wish-delivery/CURRENT.json)
 - 建房式交付模板：[`wish-delivery/templates/`](./wish-delivery/templates/)
 
 从 v7.1 起，每一次对“许愿式交付”的实质迭代都必须写入新的不可变版本并提交 GitHub，旧版本不覆盖。
 
-当前 v7.5 强制采用：**效果图 → 施工图 → 按图施工 → 独立监理 → 验收 → 交付**，并增加 Binding Chain Gate：效果图、唯一有效施工图、候选构建、监理证据与最终公网构建必须绑定到同一可追溯身份链。复杂项目必须真实存在 Vision Fixture、Build Blueprint、Supervision Report、Acceptance Report 四件套；Reference 只能作为裁判，禁止混入成品制造 Fake Convergence。
+v7.5 的历史增量包括：**效果图 → 施工图 → 按图施工 → 独立监理 → 验收 → 交付**，以及 Binding Chain Gate：效果图、唯一有效施工图、候选构建、监理证据与最终公网构建必须绑定到同一可追溯身份链。当前完整规范以 CURRENT 指向的不可变版本为准。
+
+## DeepWrite 研究与写作工作台
+
+- [启动与恢复](deepwrite/START_HERE.md)：新书读取正式 CURRENT，旧项目保持版本锁。
+- [正式版本指针](deepwrite/CURRENT.json)：工作台与引擎身份的唯一来源，候选 PR 不自动生效。
+- [演化概览](deepwrite/HISTORY.md#h12从演化积累回到可调用可恢复的同一系统2026-11-14)：已接线能力和未完成的作品验证分开记录。
+- [真实执行命令](deepwrite/DEFAULT_INVOCATION.md)：需要 Git、Python、模型授权及私有存储；普通聊天读取规范不等于执行引擎。
+
+三层读者价值、整书质量和真实人类验收不能由工程 CI 代替。未发表书稿与私人评审保持私有。
 
 ## 源码
 

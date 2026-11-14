@@ -1,47 +1,24 @@
-# 深写：每本新书独立立项（不得跳过）
+# 每本书独立立项
 
-## 项目命名
-- 为每本书生成稳定ASCII slug \`book-<short-slug>\`，另记录中文工作名；不得用新对话/新版本换项目ID。
-- 最好为每本书创建独立的**私有**GitHub仓库 \`<owner>/deepwrite-<slug>\`；如已有已核实的私有项目仓库，可将项目存其隔离目录。公开仓库只放非私人演示/通用模板。
-- 创建后立即将可读的 \`RECOVERY.md\` 与机器可读 \`STATE.json\` 提交到项目库。不要以“已经制定目录”冒充立项成功。
+## 作者只需给出的内容
 
-## 冷启动按序执行
+主题与目的、核心读者及其已知/未知、授权素材、不可突破的隐私边界，以及“样章先审”或“一次授权整书候选”。已有信息不再逐项询问。执行者将这些内容冻结为 [统一请求](DEFAULT_INVOCATION.md)，并选择真实可用的模型和预算；作者不必填写工程配置或选择模块。
 
-1. 读 \`deepwrite/CURRENT.json\` 和 \`wish-delivery/CURRENT.json\` 实际生效规范。
-2. 检查 GitHub 当前权限及项目仓库的 \`visibility\`，明确私密等级。
-3. **先建档**：\`PROJECT_ID\`、书名候选、目标读者、交付物、现有原稿清单、隐私、禁止项、质量样本、唯一下一步、时间戳。
-4. 写入四件套：\`VISION.md\`（读者/可感知结果）、\`BLUEPRINT.md\`（概念与全书能力图）、\`SUPERVISION.md\`（质量证据）、\`ACCEPTANCE.md\`（各门状态）。没有证据就标 \`PENDING\`。
-5. 每次写成章节或重大决策后，保存派生稿、原稿哈希、审稿、出处及当前 \`STATE.json\`；重新读取文件和提交身份再判 PASS。
-6. 更新项目索引但仅存**不敏感的最小指针**；私有内容和审稿全文都留在可授权的私有存储。
-7. 发生超时/中断：标 \`INTERRUPTED\`，下一次执行 \`RECOVERY.md\` 内唯一 \`next_executable_action\`，不要重头问作者。
+## 执行者立项检查
 
-## 当前 GitHub 工具能力边界
+1. 从远端 main 读取两套 CURRENT 及实际规范，在独立检出核验引擎身份。旧项目先恢复版本锁，不重新立项。
+2. 固定稳定 ASCII `project_id` 和中文工作名。原稿与来源保持只读；来源须真实可读、获授权，当前统一入口接收有效 UTF-8 文本。没有素材时先完成可追溯研究获取，不能捏造来源来满足字段。
+3. 确认可写的私有存储。请求、来源和输出目录须位于公开代码仓库之外；上传前实读仓库 `private` 属性和实际权限。公开仓库触发 `STOP_WORK_PRIVACY`。
+4. 使用全新的私有项目目录执行 `activation.py --run -- run <request> <project>`。执行器保存请求原字节和 SHA、来源副本和 SHA、版本及模块身份、研究配置、正文、审稿、返工和状态。不手工重建执行器已有产物。
+5. 目标、概念图、监督和验收信息保存在统一请求及实际研究/审稿证据中。已有项目的 VISION/BLUEPRINT/SUPERVISION/ACCEPTANCE 文件继续保留；不为启动新项目重复填写一套相同清单。
+6. 每次实质进展后保存私有 `RECOVERY.md`、状态和来源/正文身份，并从持久存储重新读取验证。项目索引只放不敏感的最小指针。没有耐久回读证据，就不能宣称可跨对话恢复。
 
-截至2026-11-08，本次连接可读写已有仓库，但**没有可调用的新建仓库动作**。因此不能声称“每次都自动建新的私有仓库”已经实现。
+## 中断后继续
 
-如果新仓库不能创建：**在 ChatGPT 私有文件库建立项目专用独立文件夹并归档原稿、审稿、STATE与RECOVERY，使用 \`GITHUB_PRIVATE_REPO_PENDING\` 状态，绝不上传到公开仓库**。有能力或用户创建并连接私有项目仓库以后，再迁移并按SHA验收。不要因为欠缺私有GitHub仓库就推断私人文件已公开或丢失。
+先查询项目状态，再根据外部保存的 `writer_project/run_state.json` SHA 运行 `resume`，详见 [START_HERE.md](START_HERE.md)。样章续写需真实作者回执；失败和旧稿全部保留，不用新的项目 ID 掩盖失败。现有项目目录不能再次 `run` 覆盖。
 
-## 项目建议目录（仅在确认私有后用于实际项目）
+## 存储能力边界
 
-\`\`\`text
-README.md
-RECOVERY.md
-STATE.json
-vision/VISION.md
-blueprint/CONCEPT_MAP.md
-blueprint/BOOK_BLUEPRINT.md
-chapters/01/v1.md
-chapters/01/audit-v1.md
-chapters/01/ledger.json
-book/assembled-v1.md
-references/SOURCES.json
-qa/CROSS_CHAPTER.md
-qa/ACCEPTANCE.json
-history/DECISION_LOG.md
-\`\`\`
+私有仓库创建、模型登录及外部文件库能力必须当场核验；2026-11-08 的工具限制是历史观察，不是所有新环境的永久结论。可用时优先使用已确认私有的项目仓库或隔离目录。不能创建仓库时可用经过授权的私有持久存储，记录 `GITHUB_PRIVATE_REPO_PENDING`；若连私有持久存储都不可用，明确 BLOCKED，不上传公开 GitHub，也不虚报自动备份。
 
-模板：[RECOVERY](templates/RECOVERY.md) · [STATE](templates/STATE.json) · [ACCEPTANCE](templates/ACCEPTANCE.json)。
-
-## 私有仓库确认
-
-读取仓库元数据 \`visibility=private\` 并核对写入权限后，方可上传原稿。仓库公开→ \`STOP_WORK_PRIVACY\`。新建私有仓库本身也不能保证外部系统数据不出意外，应有独立私有备份。
+可复用模板：[RECOVERY](templates/RECOVERY.md) · [STATE](templates/STATE.json) · [ACCEPTANCE](templates/ACCEPTANCE.json)。模板只补足执行器未记录的恢复信息，不代替实际运行。
