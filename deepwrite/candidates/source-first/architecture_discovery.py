@@ -100,8 +100,19 @@ def validate_intake(cfg: dict, project: Path, out: Path):
     if any(key in cfg for key in ("chapters", "source_first_architecture",
                                  "reader_prior_knowledge_contract", "replay_drafts", "known_findings")):
         raise Blocked("DISCOVERY_PRESET_CHAPTERS_OR_OUTLINE_FORBIDDEN")
-    if cfg.get("channel") != "CANDIDATE_OPT_IN":
-        raise Blocked("DISCOVERY_REQUIRES_EXPLICIT_CANDIDATE_OPT_IN")
+    if cfg.get("channel") not in ("CANDIDATE_OPT_IN", "STABLE"):
+        raise Blocked("DISCOVERY_REQUIRES_VERIFIED_STABLE_OR_EXPLICIT_OPT_IN")
+    if cfg["channel"] == "STABLE":
+        activation = module("deepwrite_discovery_release", DEEPWRITE / "release/activation.py")
+        current = activation.resolve(CODE_ROOT)
+        required = {"deepwrite/deepwrite.py", "deepwrite/candidates/source-first/architecture_discovery.py",
+                    "deepwrite/candidates/source-first/source_first_gate.py",
+                    "deepwrite/candidates/e23-frame-wiring/insight_origin_gate.py",
+                    "deepwrite/tools/writing_loop_experimental.py"}
+        if (current.get("status") != "ACTIVE_ENGINE_IDENTITY_VERIFIED_QUALITY_NOT_IMPLIED" or
+                current.get("runner") != "deepwrite/deepwrite.py" or
+                not required <= set(current.get("runtime_files", {}))):
+            raise Blocked("DISCOVERY_STABLE_ONLY_FOR_ACTIVATED_UNIFIED_DEEPWRITE")
     if cfg.get("run_mode", "fresh") != "fresh":
         raise Blocked("DISCOVERY_REPLAY_NOT_FRESH_DISCOVERY")
     if not text(cfg.get("wish")) or not text(cfg.get("working_title")):
