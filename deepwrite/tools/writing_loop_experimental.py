@@ -308,6 +308,8 @@ class WritingLoop:
         self.contract_sha = digest(json_bytes(contract))
         self.reader_guard.validate_contract(c.get("reader_prior_knowledge_contract"), c["chapters"])
         self.reader_contract_sha = digest(json_bytes(c["reader_prior_knowledge_contract"]))
+        if self.source_first_guard is not None and not c["reader_prior_knowledge_contract"].get("knowledge_compounding", {}).get("enabled"):
+            raise Blocked("SOURCE_FIRST_REQUIRES_KNOWLEDGE_COMPOUNDING_TRANSFER_REVIEW")
         if self.source_first_guard is not None:
             try:
                 self.source_first_receipt = self.source_first_guard.validate(
