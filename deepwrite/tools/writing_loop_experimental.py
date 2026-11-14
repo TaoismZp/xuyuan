@@ -264,7 +264,13 @@ class WritingLoop:
         supported = {"e18_loop", "reader_source_transfer", "e23_frame", "e23_perspective", "e23",
                      "source_first_architecture"}
         if c.get("modules", {}).get("source_first_architecture") and c["channel"] == "STABLE":
-            raise Blocked("SOURCE_FIRST_CANDIDATE_NOT_AUTHORIZED_FOR_STABLE")
+            resolved = module("e18_released_source_first", DEEPWRITE / "release/activation.py").resolve(DEEPWRITE.parent)
+            required = {"deepwrite/deepwrite.py",
+                        "deepwrite/candidates/source-first/source_first_gate.py",
+                        "deepwrite/candidates/source-first/architecture_discovery.py",
+                        "deepwrite/candidates/e23-frame-wiring/insight_origin_gate.py"}
+            if resolved.get("runner") != "deepwrite/deepwrite.py" or not required <= set(resolved.get("runtime_files", {})):
+                raise Blocked("SOURCE_FIRST_STABLE_NEEDS_FORMAL_UNIFIED_RUNNER")
         if any(value and name not in supported for name, value in c.get("modules", {}).items()):
             raise Blocked("BLOCKED_UNSUPPORTED_MODULE")
         checkpoint.validate_pins(json_bytes(c["pins"]), c["project_id"])
@@ -326,7 +332,7 @@ class WritingLoop:
         resolver = module("e18_formal_activation", DEEPWRITE / "release/activation.py")
         resolved = resolver.resolve(DEEPWRITE.parent)
         if (resolved.get("status") != "ACTIVE_ENGINE_IDENTITY_VERIFIED_QUALITY_NOT_IMPLIED" or
-                resolved.get("runner") != "deepwrite/tools/writing_loop_experimental.py" or
+                resolved.get("runner") not in ("deepwrite/tools/writing_loop_experimental.py", "deepwrite/deepwrite.py") or
                 self.config.get("guard") != "on"):
             raise Blocked("STABLE_WRITER_NOT_FORMALLY_SELECTED_BY_CURRENT")
         record = json.loads((DEEPWRITE.parent / resolved["release_record"]).read_text())
@@ -339,6 +345,12 @@ class WritingLoop:
                     "deepwrite/candidates/e15-review-closure/review_closure_guard.py",
                     "deepwrite/candidates/e23-frame-wiring/reader_source_gate.py",
                     "deepwrite/candidates/RESEARCH_LOOP.md", "deepwrite/candidates/EDITORIAL_LOOP.md"}
+        if resolved.get("runner") == "deepwrite/deepwrite.py":
+            gates |= {"SOURCE_FIRST_ARCHITECTURE", "TWO_PHASE_DISCOVERY", "KNOWLEDGE_COMPOUNDING",
+                      "INSIGHT_ORIGIN_PROVENANCE"}
+            required |= {"deepwrite/deepwrite.py", "deepwrite/candidates/source-first/architecture_discovery.py",
+                         "deepwrite/candidates/source-first/source_first_gate.py",
+                         "deepwrite/candidates/e23-frame-wiring/insight_origin_gate.py"}
         if profile.get("kind") != "WRITING" or not gates <= set(profile.get("mandatory_gates", [])) or not required <= set(resolved["runtime_files"]):
             raise Blocked("STABLE_WRITER_RELEASE_PROFILE_OR_DEPENDENCY_INVENTORY_INCOMPLETE")
         if (self.config["pins"]["protocols"]["deepwrite"]["version"] != resolved["active_version"] or
