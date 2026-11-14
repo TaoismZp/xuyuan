@@ -43,9 +43,10 @@ class StableWritingProfileTests(unittest.TestCase):
         self.git("init", "-q", "--initial-branch=main")
         self.git("config", "user.name", "Engineering fixture")
         self.git("config", "user.email", "fixture@example.invalid")
+        active_spec = json.loads((REPO / "deepwrite/CURRENT.json").read_text())["active_workbench_spec"]
         for relative in RUNTIME + [
             "deepwrite/CURRENT.json", "wish-delivery/CURRENT.json",
-            "deepwrite/versions/v0.1.md", "wish-delivery/versions/v7.6.md",
+            active_spec, "wish-delivery/versions/v7.6.md",
             "deepwrite/tools/tests/test_writing_loop_experimental.py",
         ]:
             target = self.code / relative
@@ -58,7 +59,7 @@ class StableWritingProfileTests(unittest.TestCase):
         parent = json.loads((self.code / "wish-delivery/CURRENT.json").read_text())
         record = {
             "schema": "deepwrite/release-record/v1", "status": "ACTIVE_RELEASE",
-            "version": "fixture-writing-1", "workbench_version": "v0.1",
+            "version": "fixture-writing-1", "workbench_version": current["active_workbench_version"],
             "implementation_commit": self.impl,
             "runtime_files": [self.item(p) for p in RUNTIME],
             "spec": self.item(current["active_workbench_spec"]),
@@ -93,8 +94,9 @@ class StableWritingProfileTests(unittest.TestCase):
         self.cfg["module_policy"] = {"e18_loop": "STABLE"}
         self.cfg["pins"]["modules"] = []
         self.cfg["module_commits"] = {}
-        for name, path in (("deepwrite", "deepwrite/versions/v0.1.md"),
-                           ("wish_delivery", "wish-delivery/versions/v7.6.md")):
+        self.cfg["pins"]["protocols"]["deepwrite"]["version"] = current["active_workbench_version"]
+        for name, path in (("deepwrite", current["active_workbench_spec"]),
+                           ("wish_delivery", parent["active_spec"])):
             self.cfg["pins"]["protocols"][name]["commit"] = self.impl
             self.cfg["pins"]["protocols"][name]["spec_sha"] = self.git("rev-parse", self.impl + ":" + path)
 
