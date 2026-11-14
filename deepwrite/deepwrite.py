@@ -165,8 +165,9 @@ def pins(project_id, commit: str, current: dict):
                 "spec_sha": git("rev-parse", commit + ":" + current["parent_spec"])
             }
         },
-        "modules": [{"id": ident, "commit": commit}
-                    for ident in ("e18_loop", "source_first_architecture")]
+        "modules": ([] if effective_channel() == "STABLE" else
+                    [{"id": ident, "commit": commit}
+                     for ident in ("e18_loop", "source_first_architecture")])
     }
 
 
@@ -233,7 +234,8 @@ def prepare(request_file: Path, private_root: Path, *, allow_fixture=False):
         "modules": {"e18_loop": True, "source_first_architecture": True},
         "module_policy": {name: ("STABLE" if channel == "STABLE" else "CANDIDATE")
                           for name in ("e18_loop", "source_first_architecture")},
-        "module_commits": {"e18_loop": commit, "source_first_architecture": commit},
+        "module_commits": ({} if channel == "STABLE" else
+                           {"e18_loop": commit, "source_first_architecture": commit}),
         "pins": pins(request["project_id"], commit, ident),
         "sources": rows,
         "execution_contract": {
