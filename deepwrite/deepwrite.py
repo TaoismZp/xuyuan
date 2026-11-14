@@ -78,6 +78,21 @@ def official_identity():
     }
 
 
+def effective_channel():
+    """Resolve formally verified stable engine; never run an unactivated writer on main."""
+    ident = official_identity()
+    if ident["formal_engine_active"]:
+        activation = load("deepwrite_default_release_resolver", DEEPWRITE / "release/activation.py")
+        released = activation.resolve(ROOT)
+        if (released.get("status") != "ACTIVE_ENGINE_IDENTITY_VERIFIED_QUALITY_NOT_IMPLIED" or
+                released.get("runner") != "deepwrite/deepwrite.py"):
+            raise Blocked("DEEPWRITE_DEFAULT_RUNNER_NOT_FORMALLY_RELEASED")
+        return "STABLE"
+    if git("branch", "--show-current") == "main":
+        raise Blocked("DEEPWRITE_MAIN_CURRENT_V0_1_NO_RELEASED_WRITER")
+    return "CANDIDATE_OPT_IN"
+
+
 def validate_request(request):
     if not isinstance(request, dict) or request.get("schema") != REQUEST_SCHEMA:
         raise Blocked("DEEPWRITE_EXPLICIT_USER_REQUEST_SCHEMA_REQUIRED")
@@ -139,7 +154,7 @@ def pins(project_id, commit: str, current: dict):
         if not isinstance(current.get(key), str):
             raise Blocked("DEEPWRITE_PROTOCOL_SPEC_REQUIRED")
     return {
-        "project_id": project_id, "channel": "CANDIDATE_OPT_IN",
+        "project_id": project_id, "channel": effective_channel(),
         "protocols": {
             "deepwrite": {
                 "version": current["formal_workbench_version"], "commit": commit,
@@ -179,6 +194,7 @@ def prepare(request_file: Path, private_root: Path, *, allow_fixture=False):
     (evidence / "USER_REQUEST.json").write_bytes(raw_request)
     commit = git("rev-parse", "HEAD")
     ident = official_identity()
+    channel = effective_channel()
     rows = []
     for relative, raw in files:
         path = project / relative
@@ -205,7 +221,7 @@ def prepare(request_file: Path, private_root: Path, *, allow_fixture=False):
         "wish": request["wish"],
         "reader_goal": request["reader_goal"],
         "adapter": request["adapter"], "model": request["model"],
-        "channel": "CANDIDATE_OPT_IN",
+        "channel": channel,
         "guard": "on", "run_mode": "fresh",
         "token_budget": request["token_budget"],
         "discovery_token_budget": request["discovery_token_budget"],
@@ -215,7 +231,8 @@ def prepare(request_file: Path, private_root: Path, *, allow_fixture=False):
         "min_chapters": request["min_chapters"], "max_chapters": request["max_chapters"],
         "insight_origin_scan": True,
         "modules": {"e18_loop": True, "source_first_architecture": True},
-        "module_policy": {"e18_loop": "CANDIDATE", "source_first_architecture": "CANDIDATE"},
+        "module_policy": {name: ("STABLE" if channel == "STABLE" else "CANDIDATE")
+                          for name in ("e18_loop", "source_first_architecture")},
         "module_commits": {"e18_loop": commit, "source_first_architecture": commit},
         "pins": pins(request["project_id"], commit, ident),
         "sources": rows,
