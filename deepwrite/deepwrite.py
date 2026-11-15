@@ -407,11 +407,47 @@ def finalize_execution(project, evidence, final, result, *, research_model=None,
         prior = json.loads(previous.read_text("utf-8"))
         if (prior.get("writer_state_sha256") == state_sha and
                 prior.get("writer_config_sha256") == config_sha and
-                prior.get("writer_result", {}).get("status") == result["status"] and
-                prior.get("bookwide_topology_recheck", {}).get("status") != "NOT_RUN"):
-            # A completed or blocked final gate remains authoritative for these
-            # exact bytes. Resume must not replace it with the raw writer result.
-            return prior
+                prior.get("writer_result", {}).get("status") == result["status"]):
+            gate = prior.get("bookwide_topology_recheck")
+            gate = gate if isinstance(gate, dict) else {}
+            gate_status = gate.get("status")
+            terminal = None
+            if gate_status in ("BOOKWIDE_STRUCTURE_RECHECK_BLOCKED",
+                               "REPLAN_CONTENT_LOSS_REQUIRES_INDEPENDENT_REVIEW"):
+                terminal = "BLOCKED_BOOKWIDE_TOPOLOGY_QUALITY"
+            elif gate_status == "REPLAN_DERIVATION_PENDING_HUMAN" and isinstance(gate.get("derived_writer_result"), dict):
+                terminal = (result["status"] if gate["derived_writer_result"].get("status") in complete
+                            else "BLOCKED_DERIVED_BOOK_WRITE")
+            elif gate_status == "STRUCTURE_KEPT_MODEL_INTERNAL_ONLY":
+                terminal = result["status"]
+            if (str(prior.get("status", "")).startswith("BLOCKED") and
+                    terminal not in ("BLOCKED_BOOKWIDE_TOPOLOGY_QUALITY", "BLOCKED_DERIVED_BOOK_WRITE")):
+                prior["status"] = "BLOCKED_FINAL_REVIEW_RECEIPT_UNVERIFIED"
+                prior["next_step"] = "INSPECT_FINAL_REVIEW_RECEIPT_OR_CREATE_DERIVED_REPAIR"
+                save_execution_evidence(previous, prior)
+                return prior
+            if terminal in ("BLOCKED_BOOKWIDE_TOPOLOGY_QUALITY", "BLOCKED_DERIVED_BOOK_WRITE"):
+                # A recorded hard problem stays blocked even if the outer
+                # summary was lost or incorrectly edited to say ready.
+                if prior.get("status") != terminal:
+                    prior["status"] = terminal
+                    save_execution_evidence(previous, prior)
+                return prior
+            proof_ok = False
+            if terminal in complete:
+                try:
+                    request = json.loads(private_path(evidence / "bookwide_topology.request.json").read_text("utf-8"))
+                    response = json.loads(private_path(evidence / "bookwide_topology.response.json").read_text("utf-8"))
+                    identity = gate.get("model_review", gate)
+                    proof_ok = (gate.get("original_book_sha256") == sha((project / "book.md").read_bytes()) and
+                                request.get("role") == "bookwide_topology_recheck" and
+                                request.get("payload", {}).get("book_manuscript") == (project / "book.md").read_text("utf-8")[:230000] and
+                                bool(identity.get("response_id")) and response.get("response_id") == identity["response_id"] and
+                                sha(response["text"].encode("utf-8")) == identity.get("response_sha256"))
+                except (OSError, ValueError, KeyError, TypeError, AttributeError):
+                    proof_ok = False
+            if proof_ok and prior.get("status") == terminal:
+                return prior
     replan = {"status": "NOT_RUN", "reason": "ASSISTED_AUTHOR_GATE_OR_WRITER_INCOMPLETE"}
     if (final["execution_contract"]["mode"] == "AUTONOMOUS_FULL_DRAFT" and
             result["status"] in ("CANDIDATE_PENDING_HUMAN", "ENGINEERING_FIXTURE_ONLY_NOT_LIVE")):
@@ -495,7 +531,43 @@ def status(path: Path):
             if (result.get("writer_state_sha256") == sha(raw) and
                     result.get("writer_config_sha256") == sha(config_file.read_bytes()) and
                     result.get("writer_result", {}).get("status") == state["status"]):
-                project_status, latest = result["status"], result_file
+                config = json.loads(config_file.read_text("utf-8"))
+                if (state["status"] not in ("CANDIDATE_PENDING_HUMAN", "ENGINEERING_FIXTURE_ONLY_NOT_LIVE") or
+                        config["execution_contract"]["mode"] != "AUTONOMOUS_FULL_DRAFT"):
+                    project_status, latest = result["status"], result_file
+                else:
+                    gate = result.get("bookwide_topology_recheck")
+                    gate = gate if isinstance(gate, dict) else {}
+                    gate_status = gate.get("status")
+                    terminal = None
+                    if gate_status in ("BOOKWIDE_STRUCTURE_RECHECK_BLOCKED",
+                                       "REPLAN_CONTENT_LOSS_REQUIRES_INDEPENDENT_REVIEW"):
+                        terminal = "BLOCKED_BOOKWIDE_TOPOLOGY_QUALITY"
+                    elif gate_status == "REPLAN_DERIVATION_PENDING_HUMAN" and isinstance(gate.get("derived_writer_result"), dict):
+                        terminal = (state["status"] if gate["derived_writer_result"].get("status") in
+                                    ("CANDIDATE_PENDING_HUMAN", "ENGINEERING_FIXTURE_ONLY_NOT_LIVE")
+                                    else "BLOCKED_DERIVED_BOOK_WRITE")
+                    elif gate_status == "STRUCTURE_KEPT_MODEL_INTERNAL_ONLY":
+                        terminal = state["status"]
+                    proof_ok = False
+                    if terminal == state["status"]:
+                        try:
+                            request = json.loads(private_path(evidence / "bookwide_topology.request.json").read_text("utf-8"))
+                            response = json.loads(private_path(evidence / "bookwide_topology.response.json").read_text("utf-8"))
+                            identity = gate.get("model_review", gate)
+                            book = private_path(path / "writer_project/book.md").read_bytes()
+                            proof_ok = (gate.get("original_book_sha256") == sha(book) and
+                                        request.get("role") == "bookwide_topology_recheck" and
+                                        request.get("payload", {}).get("book_manuscript") == book.decode("utf-8")[:230000] and
+                                        bool(identity.get("response_id")) and response.get("response_id") == identity["response_id"] and
+                                        sha(response["text"].encode("utf-8")) == identity.get("response_sha256"))
+                        except (OSError, ValueError, KeyError, TypeError, AttributeError):
+                            proof_ok = False
+                    if (str(result.get("status", "")).startswith("BLOCKED") and
+                            terminal not in ("BLOCKED_BOOKWIDE_TOPOLOGY_QUALITY", "BLOCKED_DERIVED_BOOK_WRITE")):
+                        project_status, latest = "BLOCKED_FINAL_REVIEW_RECEIPT_UNVERIFIED", result_file
+                    elif terminal in ("BLOCKED_BOOKWIDE_TOPOLOGY_QUALITY", "BLOCKED_DERIVED_BOOK_WRITE") or proof_ok:
+                        project_status, latest = terminal, result_file
         for relative, expected in state.get("files", {}).items():
             parts = Path(relative).parts
             if Path(relative).is_absolute() or ".." in parts or not parts:

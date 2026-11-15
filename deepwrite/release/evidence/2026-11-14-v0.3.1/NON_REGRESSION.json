@@ -29,7 +29,7 @@
     "deepwrite/release/release_verify.py"
   ],
   "original_research_reader_topology_policy_ast_frozen": true,
-  "scoped_runtime_tests": 16,
+  "scoped_runtime_tests": 21,
   "scoped_release_tests": 87,
   "live_models": 0,
   "parent_and_v03_spec_bytes_unchanged": true,

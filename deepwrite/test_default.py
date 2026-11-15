@@ -251,6 +251,92 @@ class DefaultInvocationTests(unittest.TestCase):
         self.assertFalse((self.destination / "writer_project/book.md").exists())
         self.assertEqual(json.loads(state_file.read_text())["execution_mode"], "ASSISTED_AUTHOR_GATED")
 
+    def test_missing_or_unknown_final_gate_is_not_ready_and_is_rechecked(self):
+        result, _ = self.invoke()
+        evidence = self.destination / "discovery_evidence"
+        receipt_file = evidence / "RESULT.json"
+        intact = json.loads(receipt_file.read_text())
+        for gate in (None, {"status": "UNKNOWN_FUTURE_GATE"}):
+            with self.subTest(gate=gate):
+                broken = copy.deepcopy(intact)
+                if gate is None:
+                    del broken["bookwide_topology_recheck"]
+                else:
+                    broken["bookwide_topology_recheck"] = gate
+                old = dw.canonical(broken)
+                receipt_file.write_bytes(old)
+                self.assertEqual(dw.status(self.destination)["project_status"], "AWAIT_FINAL_BOOK_REVIEW")
+                reviewer = StudyModel()
+                state = self.destination / "writer_project/run_state.json"
+                resumed = dw.resume(self.destination, dw.sha(state.read_bytes()),
+                                    research_model=reviewer, writer_model=writer_test.ScriptedModel())
+                self.assertEqual(reviewer.roles, ["bookwide_topology_recheck"])
+                self.assertEqual(resumed["status"], result["status"])
+                self.assertEqual(resumed["bookwide_topology_recheck"]["status"], "STRUCTURE_KEPT_MODEL_INTERNAL_ONLY")
+                self.assertEqual((evidence / "history" / ("RESULT." + dw.sha(old) + ".json")).read_bytes(), old)
+
+    def test_missing_actual_final_review_response_cannot_reuse_ready_receipt(self):
+        result, _ = self.invoke()
+        (self.destination / "discovery_evidence/bookwide_topology.response.json").unlink()
+        self.assertEqual(dw.status(self.destination)["project_status"], "AWAIT_FINAL_BOOK_REVIEW")
+        reviewer = StudyModel()
+        state = self.destination / "writer_project/run_state.json"
+        resumed = dw.resume(self.destination, dw.sha(state.read_bytes()),
+                            research_model=reviewer, writer_model=writer_test.ScriptedModel())
+        self.assertEqual(reviewer.roles, ["bookwide_topology_recheck"])
+        self.assertEqual(resumed["status"], result["status"])
+
+    def test_explicit_final_hold_survives_incorrect_outer_ready_summary(self):
+        self.invoke()
+        receipt_file = self.destination / "discovery_evidence/RESULT.json"
+        receipt = json.loads(receipt_file.read_text())
+        receipt["bookwide_topology_recheck"] = {
+            "status": "BOOKWIDE_STRUCTURE_RECHECK_BLOCKED", "reason": "A recorded major structure problem remains unresolved."}
+        receipt_file.write_bytes(dw.canonical(receipt))
+        self.assertEqual(dw.status(self.destination)["project_status"], "BLOCKED_BOOKWIDE_TOPOLOGY_QUALITY")
+        reviewer = StudyModel()
+        state = self.destination / "writer_project/run_state.json"
+        resumed = dw.resume(self.destination, dw.sha(state.read_bytes()),
+                            research_model=reviewer, writer_model=writer_test.ScriptedModel())
+        self.assertEqual(reviewer.roles, [])
+        self.assertEqual(resumed["status"], "BLOCKED_BOOKWIDE_TOPOLOGY_QUALITY")
+        self.assertEqual(json.loads(receipt_file.read_text())["status"], "BLOCKED_BOOKWIDE_TOPOLOGY_QUALITY")
+
+    def test_complete_final_keep_receipt_reuses_actual_review_without_new_calls(self):
+        result, _ = self.invoke()
+        reviewer = StudyModel()
+        state = self.destination / "writer_project/run_state.json"
+        resumed = dw.resume(self.destination, dw.sha(state.read_bytes()),
+                            research_model=reviewer, writer_model=writer_test.ScriptedModel())
+        self.assertEqual(reviewer.roles, [])
+        self.assertEqual(resumed["status"], result["status"])
+        self.assertEqual(dw.status(self.destination)["project_status"], result["status"])
+
+    def test_missing_gate_cannot_erase_an_explicit_prior_quality_hold(self):
+        state_sha = self.invoke_paused()
+
+        class BadTopology(StudyModel):
+            def generate(self, *args, **kwargs):
+                result = super().generate(*args, **kwargs)
+                result.text = json.dumps({"decision": "REPLAN", "reason": "A major structural issue remains unresolved."})
+                return result
+
+        first = dw.resume(self.destination, state_sha, research_model=BadTopology(),
+                          writer_model=writer_test.ScriptedModel())
+        self.assertEqual(first["status"], "BLOCKED_BOOKWIDE_TOPOLOGY_QUALITY")
+        receipt_file = self.destination / "discovery_evidence/RESULT.json"
+        broken = json.loads(receipt_file.read_text())
+        del broken["bookwide_topology_recheck"]
+        receipt_file.write_bytes(dw.canonical(broken))
+        self.assertEqual(dw.status(self.destination)["project_status"], "BLOCKED_FINAL_REVIEW_RECEIPT_UNVERIFIED")
+        reviewer = StudyModel()
+        state = self.destination / "writer_project/run_state.json"
+        resumed = dw.resume(self.destination, dw.sha(state.read_bytes()),
+                            research_model=reviewer, writer_model=writer_test.ScriptedModel())
+        self.assertEqual(resumed["status"], "BLOCKED_FINAL_REVIEW_RECEIPT_UNVERIFIED")
+        self.assertEqual(reviewer.roles, [])
+        self.assertEqual(resumed["next_step"], "INSPECT_FINAL_REVIEW_RECEIPT_OR_CREATE_DERIVED_REPAIR")
+
     def test_changed_engine_blocks_resume_before_any_model_call(self):
         state_sha = self.invoke_paused()
         current = copy.deepcopy(dw.official_identity())

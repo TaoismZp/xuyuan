@@ -58,7 +58,7 @@ v7.5 的历史增量包括：**效果图 → 施工图 → 按图施工 → 独�
 
 - [启动与恢复](deepwrite/START_HERE.md)：新书读取正式 CURRENT，旧项目保持版本锁。
 - [正式版本指针](deepwrite/CURRENT.json)：工作台与引擎身份的唯一来源，候选 PR 不自动生效。
-- [演化概览](deepwrite/HISTORY.md#h12从演化积累回到可调用可恢复的同一系统2026-11-14)：已接线能力和未完成的作品验证分开记录。
+- [演化概览](deepwrite/HISTORY.md)：已接线能力和未完成的作品验证分开记录。
 - [真实执行命令](deepwrite/DEFAULT_INVOCATION.md)：需要 Git、Python、模型授权及私有存储；普通聊天读取规范不等于执行引擎。
 
 三层读者价值、整书质量和真实人类验收不能由工程 CI 代替。未发表书稿与私人评审保持私有。
