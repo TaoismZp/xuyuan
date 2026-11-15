@@ -1,140 +1,127 @@
 {
   "schema": "deepwrite/release-work-state/v1",
-  "updated_date": "2026-11-13",
-  "task": "ACTIVATION_BLACKBOX_READER_SOURCE_EXECUTION_REPAIR",
-  "status": "ENGINEERING_VERIFIED_NOT_ACTIVE",
+  "updated_date": "2026-11-14",
+  "task": "EVOLUTION_REVIEW_ENTRY_AND_RECOVERY_ENGINEERING_PATCH",
+  "status": "READ_CURRENT_FOR_ACTIVE_IDENTITY_GOVERNANCE_BLOCKED_QUALITY_UNVERIFIED",
   "repository": "TaoismZp/xuyuan",
-  "intake_main_commit": "6b81a45d8576aa0636d29950f9a2d86f2a5cf8b1",
-  "intake_pr14_commit": "d2ef373c5e0dcb7736c56a00e0aefb32d63b0b1a",
-  "latest_effective_versions_observed": {
-    "deepwrite": "v0.1",
-    "wish_delivery": "v7.6"
+  "source_of_truth": {
+    "current": "main:deepwrite/CURRENT.json",
+    "parent": "main:wish-delivery/CURRENT.json",
+    "release_record": "CURRENT.active_engine.release_record",
+    "rule": "This file records dated observations and work gates; it does not select the active version."
   },
-  "current_modified": false,
-  "formal_release_completed": false,
+  "last_verified_formal_release": {
+    "observed_main_commit": "dae2c7de1bcda8c3f511bc05d690c4269deae4c2",
+    "observed_workbench_version": "v0.3",
+    "observed_engine_version": "v0.3.0",
+    "observed_parent_version": "v7.6",
+    "merge_pr": 21,
+    "merge_time_utc": "2026-11-14T10:05:08Z",
+    "merged_by": "TaoismZp",
+    "merge_method": "MERGE_WITH_TWO_PARENTS_IMPLEMENTATION_ANCESTRY_PRESERVED",
+    "actions_run": 43583578870,
+    "actions_url": "https://github.com/TaoismZp/xuyuan/actions/runs/43583578870",
+    "engineering_tests": 312,
+    "fresh_main_actual_identity": "PASS",
+    "runtime_sha_matches": 23,
+    "scope": "ENGINEERING_IDENTITY_NOT_BOOK_QUALITY"
+  },
   "repository_configuration": {
     "status": "BLOCKED_ADMINISTRATION_API_403",
-    "permissions_metadata": "ADMIN_TRUE_DOES_NOT_ESTABLISH_TOKEN_ADMINISTRATION_SCOPE",
-    "actual_failures": [
+    "observation_scope": "2026-11-14_POST_PR21_MERGE_REVERIFY_BEFORE_WRITING",
+    "ruleset_id": 27040989,
+    "required_approvals_observed": 0,
+    "required_checks_observed": [],
+    "strict_observed": false,
+    "bypass_actors_observed": [],
+    "allow_auto_merge_observed": false,
+    "trusted_main_controller": "INSTALLED_BY_PR21",
+    "actual_management_error": "HTTP403 Resource not accessible by integration",
+    "device_login": "SUCCEEDED_NOT_PROOF_OF_ADMINISTRATION_WRITE",
+    "required_checks_target": [
       {
-        "method": "GET",
-        "endpoint": "repos/TaoismZp/xuyuan/branches/main/protection",
-        "http_status": 403,
-        "reason": "Resource not accessible by integration"
+        "context": "activation-and-runtime-regressions",
+        "integration_id": 15368
       },
       {
-        "method": "PATCH",
-        "endpoint": "repos/TaoismZp/xuyuan",
-        "intent": "allow_auto_merge=true",
-        "http_status": 403,
-        "reason": "Resource not accessible by integration"
-      },
-      {
-        "method": "PUT",
-        "endpoint": "repos/TaoismZp/xuyuan/rulesets/27040989",
-        "time_utc": "2026-11-12T00:18:02.730649+00:00",
-        "http_status": 403,
-        "reason": "Resource not accessible by integration"
+        "context": "owner-release-authorization",
+        "integration_id": 15368
       }
     ],
-    "required_check_target": "activation-and-runtime-regressions",
-    "configuration_write_and_readback": "NOT_ESTABLISHED",
-    "required_checks_target": [
-      "activation-and-runtime-regressions",
-      "owner-release-authorization"
-    ],
-    "owner_approval_plan": "zero independent reviews; exact-head owner release check; no simulated independent approval"
+    "strict_target": true,
+    "owner_approval_model": "EXACT_HEAD_REAL_OWNER_RELEASE_NOT_INDEPENDENT_REVIEW",
+    "premerge_required_policy_enforcement": "NOT_EVIDENCED_DO_NOT_BACKDATE"
   },
-  "evidence": {
-    "inventory": "deepwrite/release/evidence/2026-11-12/INVENTORY.md",
-    "baseline_local_unittests": {
-      "release": 15,
-      "review_closeout": 42,
-      "source_frame_candidate": 17,
-      "writing_runner": 27,
-      "status": "PASS_ENGINEERING_FIXTURES_ONLY"
-    },
-    "restored_packager_tests": {
-      "source_commit": "e5a1c9f0b057f5483022bd196a53790e905b0896",
-      "source_git_blob": "4f04fe618c0d08b33460c2c578b3db1f2e2e4f6a",
-      "sha256": "5e56fb7d850f64cb51eaf1d77be9cf819c7f451a25f516f6df5f94651a380013",
-      "bytes": 10810,
-      "exact_source_match": true,
-      "actual_local_test_count": 15,
-      "status": "PASS_ENGINEERING_ONLY"
-    },
-    "existing_pr14_ci": {
-      "head_commit": "d2ef373c5e0dcb7736c56a00e0aefb32d63b0b1a",
-      "pull_request_run": 43042185352,
-      "push_run": 43042177261,
-      "check_name": "activation-and-runtime-regressions",
-      "app_id": 15368,
-      "api_conclusion": "success"
-    },
-    "actual_github_failure_and_repair": "deepwrite/release/evidence/2026-11-12/NEGATIVE_CONTROL_RECEIPT.json",
-    "runtime_integration": "deepwrite/release/evidence/2026-11-12/runtime-integration/RECEIPT.json",
-    "local_release_tests_last_observed": 72,
-    "latest_integrated_local_tests": {
-      "release": 73,
-      "guard": 42,
-      "packager": 15,
-      "E23_reader": 51,
-      "writer_execution": 49,
-      "meaning": "ENGINEERING_FIXTURES_NOT_MODEL_OR_READER_QUALITY"
-    },
-    "quality_increment": "deepwrite/release/evidence/2026-11-13/QUALITY_INCREMENT.json",
-    "current_callchain": "deepwrite/release/evidence/2026-11-13/CALLCHAIN_AUDIT.md",
-    "quality_ci": "deepwrite/release/evidence/2026-11-13/QUALITY_CI_RECEIPT.json",
-    "committed_fixture": "deepwrite/release/evidence/2026-11-13/COMMITTED_FIXTURE_RECEIPT.json",
-    "new_checkpoint_actual_restore": "81_DECLARED_FILES_BYTE_EQUAL_NO_REPEAT_MODEL_CALLS",
-    "positive_stable_profile_fixture": "deepwrite/release/evidence/2026-11-13/stable-profile-probe/RECEIPT.json"
+  "iteration_authorization": {
+    "user_requested": "REVIEW_EVOLUTION_FIX_AND_PUBLISH_THIS_ITERATION",
+    "scope": "ENGINEERING_REPAIR_WITHOUT_CLAIMING_QUALITY_VALIDATION",
+    "github_controls": "MUST_RECHECK_AND_SATISFY_NO_FAKE_REVIEW"
+  },
+  "acceptance_layers": {
+    "ENGINEERING_VERIFIED": "PR21_MAIN_312_FIXTURE_TESTS_PASS_NEW_PATCH_REQUIRES_ITS_OWN_CI",
+    "RUNNER_ACTIVE_VERIFIED": "PR21_NEW_MAIN_IDENTITY_PASS_LATEST_ENGINE_FROM_CURRENT",
+    "MODEL_INTERNAL_QUALITY_REVIEW": "NOT_RUN_BY_RELEASE_IDENTITY_CHECK",
+    "AUTHOR_ACCEPTANCE": "PENDING_REAL_OUTPUTS",
+    "HUMAN_BLIND_EVALUATION": "NOT_RUN",
+    "PUBLISHED": false
   },
   "open_gates": {
-    "required_ci_enforced_on_all_main_prs": "PENDING_REAL_CONFIGURATION_AND_RECHECK",
-    "owner_release_authorization_verified": "PENDING_AUTHENTICATED_IMPLEMENTATION",
-    "auto_merge_enabled_and_exercised": "PENDING_REAL_CONFIGURATION",
-    "failed_candidate_merge_blocked": "CI_ACTUALLY_FAILED_AND_REPAIRED_REQUIRED_POLICY_NOT_YET_ENFORCED",
-    "official_current_and_program_identity": "IMPLEMENTED_AND_TEMPORARY_GIT_INTEGRATION_PASS_MAIN_NOT_ACTIVATED",
-    "fresh_environment_official_invocation": "TEMPORARY_GIT_CLONE_ACTUAL_PASS_NOT_FORMAL_MAIN_RELEASE",
-    "official_release_rollback": "TEMPORARY_GIT_FAULT_CHECKOUT_AND_13_FILES_RESTORE_PASS_NOT_FORMAL_MAIN_RELEASE",
-    "E1_autonomous_full_book": "NOT_PROVEN",
+    "required_ci_enforced_on_all_main_prs": "BLOCKED_ACTUAL_CONFIGURATION",
+    "owner_release_authorization_verified": "CONTROLLER_PRESENT_POLICY_CONFIGURATION_BLOCKED",
+    "auto_merge_enabled_and_exercised": "BLOCKED_FALSE",
+    "new_engineering_patch_ci_and_fresh_main_readback": "REQUIRED_FOR_EACH_PATCH",
+    "E1_real_model_autonomous_full_book": "NOT_PROVEN",
     "E2_fair_complete_work_reader_validation": "NOT_RUN",
-    "cognitive_candidate_promotion": "NOT_AUTHORIZED_BY_ENGINEERING_TESTS",
-    "live_new_model_loop": "BLOCKED_ACTUAL_HTTP_401",
-    "fair_B0_B1_B2": "BLOCKED_MODEL_AND_HISTORICAL_BUDGET_IDENTITY",
-    "quality_candidate_remote_ci": "PASS_43403926705_NOT_WRITING_QUALITY",
-    "positive_formal_stable_writing_profile": "TEMP_GIT_IDENTITY_SELECTED_WRITING_PROFILE_ENGINEERING_PASS_FORMAL_MAIN_NOT_ACTIVATED",
-    "source_learning_semantic_truth": "MODEL_JUDGMENT_REQUIRES_EXTERNAL_VALIDATION",
-    "author_raw_approval_evidence": "NOT_REVERIFIED_DO_NOT_INFER_FROM_OTHER_PROJECT"
+    "three_reader_actual_gain": "UNVERIFIED",
+    "knowledge_compounding_actual_transfer": "UNVERIFIED",
+    "independent_insight_origin": "UNVERIFIED",
+    "BLACKBOX_QUALITY_NONINFERIORITY": "UNVERIFIED",
+    "provider_authentication": "REVERIFY_IN_ACTUAL_EXECUTION_ENVIRONMENT_HISTORICAL_401_NOT_CURRENT_PROOF"
   },
+  "recovery_evidence": {
+    "isolated_code_pointer_rollback": "PASS_OLD_V0_1_WITHOUT_RUNNER_SAFELY_REFUSED_NEW_MAIN_REINVOKED",
+    "checkpoint_bytes": "PASS_FOUR_PUBLIC_FIXTURE_FILES_SHA_EQUAL_CORRUPT_COPY_REFUSED",
+    "formal_main_rollback": "NOT_PERFORMED",
+    "real_manuscript_full_project_resume": "NOT_PROVEN_BY_BYTE_FIXTURE"
+  },
+  "historical_evidence": {
+    "release_20261112": "deepwrite/release/evidence/2026-11-12/INVENTORY.md",
+    "quality_20261113": "deepwrite/release/evidence/2026-11-13/QUALITY_INCREMENT.json",
+    "callchain_20261113": "deepwrite/release/evidence/2026-11-13/CALLCHAIN_AUDIT.md",
+    "historical_private_recovery": {
+      "repository": "TaoismZp/deepwrite-work-0006-private",
+      "branch": "codex/full-execution-recovery-20261113",
+      "entry": "workbench/EXECUTION_REPAIR_20261113/RECOVERY.md",
+      "source_contract_archive_commit": "6b698435c2aaae82a9749dd77b22066315c5b43f",
+      "D_replay_commit": "f8561d5cecedc5f1c4609ea7345f3b4805cb3b5b",
+      "fixed_archive_commit": "b791ec173638ba3eb94cec2f9e5e27524c580487"
+    }
+  },
+  "private_recovery": {
+    "repository": "TaoismZp/deepwrite-work-0006-private",
+    "branch": "codex/v03-publication-takeover-20261114",
+    "entry": "workbench/RELEASE_V03_20261114/RECOVERY.md",
+    "verified_archive_commit": "39b05f5b19e2ed868c87741faba88da891920f4e",
+    "policy": "Append actual patch evidence and read back; never publish manuscripts or credentials."
+  },
+  "AUTONOMOUS_FULL_DRAFT_SUPPORTED": "PARTIAL_ENGINEERING_PATH_ACTIVE_REAL_MODEL_WHOLE_BOOK_UNVERIFIED",
+  "READER_SOURCE_TRANSFER_GATE": "ENGINEERING_ONLY",
+  "next_actor": "CODEX",
+  "next_action": "Read CURRENT and actual GitHub release status. After this engineering repair is formally active, use its run/status/resume entry for an isolated private real-provider book experiment; E1, neutral-topic origination and actual reader value remain unverified. Repository auto-merge governance remains separately BLOCKED until actual Administration writes and readback succeed.",
   "privacy": {
     "private_manuscripts_published": false,
     "original_manuscripts_overwritten": false,
     "bridge_state_modified": false
   },
-  "next_actor": "CHATGPT",
-  "next_action": "Review the final PR14 code and fixed private evidence. Author decisions are required before controlled live model use, repository-protection changes, merge or formal activation. Do not reopen closed local thought-card experiments.",
-  "acceptance_layers": {
-    "ENGINEERING_VERIFIED": "ACTUAL_LOCAL_AND_GITHUB_CI_PASS_NOT_QUALITY",
-    "RUNNER_ACTIVE_VERIFIED": "NOT_ACTIVE",
-    "MODEL_INTERNAL_QUALITY_REVIEW": "PRIVATE_CASE_D_AI_SCOPED_NO_LIVE_WRITER",
-    "AUTHOR_ACCEPTANCE": "NOT_RUN_BY_THIS_SYSTEM",
-    "HUMAN_BLIND_EVALUATION": "NOT_RUN",
-    "PUBLISHED": false
-  },
-  "AUTONOMOUS_FULL_DRAFT_SUPPORTED": "PARTIAL",
-  "READER_SOURCE_TRANSFER_GATE": "ENGINEERING_ONLY",
-  "private_text_reader_assessment": "AI_SCOPED_PRIVATE_CH01_REPLAY_NOT_GENERAL_EFFECTIVENESS",
-  "BLACKBOX_QUALITY_NONINFERIORITY": "UNVERIFIED",
-  "private_recovery": {
-    "repository": "TaoismZp/deepwrite-work-0006-private",
-    "branch": "codex/full-execution-recovery-20261113",
-    "entry": "workbench/EXECUTION_REPAIR_20261113/RECOVERY.md",
-    "source_contract_archive_commit": "6b698435c2aaae82a9749dd77b22066315c5b43f",
-    "D_replay_commit": "f8561d5cecedc5f1c4609ea7345f3b4805cb3b5b",
-    "fixed_archive_commit": "b791ec173638ba3eb94cec2f9e5e27524c580487"
-  },
-  "verified_quality_code_commit": "6356c8ca879cfef1e9e7210427b7c27f4782cb80",
-  "private_reader_gate_replay": "AI_SCOPED_ACTUAL_PRIVATE_TEXTS_AND_HELPER_NOT_HUMAN",
-  "reader_source_gate_runtime": "ENGINEERING_VERIFIED_CANDIDATE_ONLY"
+  "current_patch": {
+    "scope": "ENGINEERING_PATCH",
+    "engine_version": "v0.3.1",
+    "base_commit": "dae2c7de1bcda8c3f511bc05d690c4269deae4c2",
+    "evidence_directory": "deepwrite/release/evidence/2026-11-14-v0.3.1",
+    "status": "RESOLVE_CURRENT_AND_LIVE_PR_FOR_ACTUAL_RELEASE_STATUS",
+    "author_release_authorization": "CURRENT_USER_REQUEST_FIX_AND_PUBLISH",
+    "automatic_controller": "BLOCKED_ON_EXISTING_ADMINISTRATION_CONFIGURATION_AND_OLD_BASE_SCOPE_BUG",
+    "release_method": "MANUAL_OWNER_AUTHORIZED_NORMAL_MERGE_AFTER_EXACT_HEAD_RUNTIME_CI_IF_GITHUB_RULES_ALLOW_NO_ADMIN_BYPASS",
+    "quality_upgrade_claim": false
+  }
 }

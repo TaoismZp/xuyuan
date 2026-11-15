@@ -261,9 +261,64 @@ def prepare(request_file: Path, private_root: Path, *, allow_fixture=False):
         "module_selection": "AUTOMATIC_ALL_APPLICABLE_GATES",
         "source_sha256": rows, "formal_version": ident["formal_workbench_version"],
         "formal_engine_active": ident["formal_engine_active"],
+        "engine_lock": ident["formal_engine"],
         "author_human_approval": "NOT_RUN", "next_step": "EXECUTE_SOURCE_DOMAIN_DISCOVERY"
     }))
     return project, evidence, base
+
+
+def archive_execution_evidence(path: Path):
+    """Preserve actual earlier bytes; the next attempt may update the live name."""
+    path = private_path(path)
+    if path.exists():
+        previous = path.read_bytes()
+        archived = private_path(path.parent / "history" / (path.stem + "." + sha(previous) + path.suffix))
+        archived.parent.mkdir(parents=True, exist_ok=True)
+        if archived.exists() and archived.read_bytes() != previous:
+            raise Blocked("DEEPWRITE_EXECUTION_HISTORY_IDENTITY_CONFLICT")
+        if not archived.exists():
+            archived.write_bytes(previous)
+
+
+def save_execution_evidence(path: Path, value):
+    """Keep earlier attempts before updating a private execution receipt."""
+    path = private_path(path)
+    raw = canonical(value)
+    if path.exists() and path.read_bytes() != raw:
+        archive_execution_evidence(path)
+    path.write_bytes(raw)
+
+
+def project_engine_lock(path: Path, *, enforce=True):
+    """Recover the engine from the frozen protocol commit, never from its label."""
+    try:
+        evidence = path / "discovery_evidence"
+        config = json.loads(private_path(evidence / "research/writer_config.json").read_text("utf-8"))
+        commit = config["pins"]["protocols"]["deepwrite"]["commit"]
+        if not isinstance(commit, str) or not re.fullmatch(r"[0-9a-f]{40}", commit):
+            raise Blocked("DEEPWRITE_PROJECT_PROTOCOL_COMMIT_UNVERIFIED")
+        state = json.loads(private_path(path / "writer_project/run_state.json").read_text("utf-8"))
+        if state.get("config_sha256") != sha(canonical(config)):
+            raise Blocked("DEEPWRITE_PROJECT_FROZEN_CONFIG_CHANGED")
+        historical = json.loads(git("show", commit + ":deepwrite/CURRENT.json"))
+        locked = historical.get("active_engine")
+        start_file = private_path(evidence / "START_STATE.json")
+        if start_file.is_file():
+            start = json.loads(start_file.read_text("utf-8"))
+            if start.get("code_commit") != commit or ("engine_lock" in start and start["engine_lock"] != locked):
+                raise Blocked("DEEPWRITE_PROJECT_START_LOCK_CONFLICTS_WITH_FROZEN_PIN")
+        current = official_identity()["formal_engine"]
+        result = {"status": "MATCH" if locked == current else "PINNED_DIFFERENT_ENGINE_REQUIRES_ORIGINAL_CHECKOUT",
+                  "project_engine": locked, "current_engine": current,
+                  "original_checkout_commit": commit, "lock_source": "FROZEN_PROTOCOL_COMMIT_CURRENT"}
+        if enforce and locked != current:
+            raise Blocked("DEEPWRITE_PROJECT_ENGINE_PIN_MISMATCH_USE_ORIGINAL_CHECKOUT:" + commit)
+        return result
+    except (OSError, ValueError, KeyError, TypeError) as error:
+        if enforce:
+            raise Blocked("DEEPWRITE_PROJECT_ENGINE_LOCK_BLOCKED:" + str(error)) from error
+        return {"status": "UNVERIFIED", "reason": str(error),
+                "next_step": "RECOVER_ORIGINAL_FROZEN_PROTOCOL_COMMIT_DO_NOT_UPGRADE_PROJECT"}
 
 
 def run_bounded_bookwide_topology_check(project, evidence, cfg, writer_result, model=None, *, derived_writer_model=None):
@@ -342,6 +397,97 @@ def run_bounded_bookwide_topology_check(project, evidence, cfg, writer_result, m
         return blocked
 
 
+def finalize_execution(project, evidence, final, result, *, research_model=None, writer_model=None):
+    """Shared fresh/resumed finish: an E18 book is not the whole invocation."""
+    state_sha = sha((project / "run_state.json").read_bytes())
+    config_sha = sha((evidence / "research/writer_config.json").read_bytes())
+    complete = ("CANDIDATE_PENDING_HUMAN", "ENGINEERING_FIXTURE_ONLY_NOT_LIVE")
+    previous = evidence / "RESULT.json"
+    if previous.is_file() and result["status"] in complete:
+        prior = json.loads(previous.read_text("utf-8"))
+        if (prior.get("writer_state_sha256") == state_sha and
+                prior.get("writer_config_sha256") == config_sha and
+                prior.get("writer_result", {}).get("status") == result["status"]):
+            gate = prior.get("bookwide_topology_recheck")
+            gate = gate if isinstance(gate, dict) else {}
+            gate_status = gate.get("status")
+            terminal = None
+            if gate_status in ("BOOKWIDE_STRUCTURE_RECHECK_BLOCKED",
+                               "REPLAN_CONTENT_LOSS_REQUIRES_INDEPENDENT_REVIEW"):
+                terminal = "BLOCKED_BOOKWIDE_TOPOLOGY_QUALITY"
+            elif gate_status == "REPLAN_DERIVATION_PENDING_HUMAN" and isinstance(gate.get("derived_writer_result"), dict):
+                terminal = (result["status"] if gate["derived_writer_result"].get("status") in complete
+                            else "BLOCKED_DERIVED_BOOK_WRITE")
+            elif gate_status == "STRUCTURE_KEPT_MODEL_INTERNAL_ONLY":
+                terminal = result["status"]
+            if (str(prior.get("status", "")).startswith("BLOCKED") and
+                    terminal not in ("BLOCKED_BOOKWIDE_TOPOLOGY_QUALITY", "BLOCKED_DERIVED_BOOK_WRITE")):
+                prior["status"] = "BLOCKED_FINAL_REVIEW_RECEIPT_UNVERIFIED"
+                prior["next_step"] = "INSPECT_FINAL_REVIEW_RECEIPT_OR_CREATE_DERIVED_REPAIR"
+                save_execution_evidence(previous, prior)
+                return prior
+            if terminal in ("BLOCKED_BOOKWIDE_TOPOLOGY_QUALITY", "BLOCKED_DERIVED_BOOK_WRITE"):
+                # A recorded hard problem stays blocked even if the outer
+                # summary was lost or incorrectly edited to say ready.
+                if prior.get("status") != terminal:
+                    prior["status"] = terminal
+                    save_execution_evidence(previous, prior)
+                return prior
+            proof_ok = False
+            if terminal in complete:
+                try:
+                    request = json.loads(private_path(evidence / "bookwide_topology.request.json").read_text("utf-8"))
+                    response = json.loads(private_path(evidence / "bookwide_topology.response.json").read_text("utf-8"))
+                    identity = gate.get("model_review", gate)
+                    proof_ok = (gate.get("original_book_sha256") == sha((project / "book.md").read_bytes()) and
+                                request.get("role") == "bookwide_topology_recheck" and
+                                request.get("payload", {}).get("book_manuscript") == (project / "book.md").read_text("utf-8")[:230000] and
+                                bool(identity.get("response_id")) and response.get("response_id") == identity["response_id"] and
+                                sha(response["text"].encode("utf-8")) == identity.get("response_sha256"))
+                except (OSError, ValueError, KeyError, TypeError, AttributeError):
+                    proof_ok = False
+            if proof_ok and prior.get("status") == terminal:
+                return prior
+    replan = {"status": "NOT_RUN", "reason": "ASSISTED_AUTHOR_GATE_OR_WRITER_INCOMPLETE"}
+    if (final["execution_contract"]["mode"] == "AUTONOMOUS_FULL_DRAFT" and
+            result["status"] in ("CANDIDATE_PENDING_HUMAN", "ENGINEERING_FIXTURE_ONLY_NOT_LIVE")):
+        # Keep prior failed attempts; never reset a gate by deleting its evidence.
+        for name in ("bookwide_topology.request.json", "bookwide_topology.response.json",
+                     "bookwide_topology_outcome.json", "topology_r2_writer_config.json"):
+            archive_execution_evidence(evidence / name)
+        try:
+            replan = run_bounded_bookwide_topology_check(project, evidence, final, result,
+                                                        research_model or writer_model, derived_writer_model=writer_model)
+        except Exception as error:
+            replan = {"status": "BOOKWIDE_STRUCTURE_RECHECK_BLOCKED",
+                      "reason": type(error).__name__ + ": " + str(error)[:180],
+                      "next_step": "INSPECT_REVIEW_EVIDENCE_DO_NOT_PROMOTE_MODEL_JUDGMENT"}
+            save_execution_evidence(evidence / "bookwide_topology_outcome.json", replan)
+    project_status = result["status"]
+    if replan["status"] in ("BOOKWIDE_STRUCTURE_RECHECK_BLOCKED", "REPLAN_CONTENT_LOSS_REQUIRES_INDEPENDENT_REVIEW"):
+        project_status = "BLOCKED_BOOKWIDE_TOPOLOGY_QUALITY"
+    elif replan["status"] == "REPLAN_DERIVATION_PENDING_HUMAN" and replan["derived_writer_result"]["status"] not in (
+            "CANDIDATE_PENDING_HUMAN", "ENGINEERING_FIXTURE_ONLY_NOT_LIVE"):
+        project_status = "BLOCKED_DERIVED_BOOK_WRITE"
+    receipt = {
+        "schema": "deepwrite/one-call-execution-receipt/v1",
+        "status": project_status, "project_id": final["project_id"],
+        "source_study_sha256": final["source_first_architecture"]["source_study"]["sha256"],
+        "chapter_count_proposed": len(final["chapters"]),
+        "chapter_count_author_approved": False,
+        "module_selection": "AUTOMATIC",
+        "bookwide_topology_recheck": replan,
+        "writer_result": result, "author_acceptance": "NOT_RUN",
+        "independent_reader_quality": "NOT_RUN",
+        "real_model_verified": bool(result["status"] == "CANDIDATE_PENDING_HUMAN"),
+        "default_formal_main_pointer_changed": False
+    }
+    receipt["writer_state_sha256"] = state_sha
+    receipt["writer_config_sha256"] = config_sha
+    save_execution_evidence(evidence / "RESULT.json", receipt)
+    return receipt
+
+
 def run(request_file: Path, private_root: Path, *, research_model=None, writer_model=None):
     """One invocation performs discovery and E18; no manual source module flags."""
     project, evidence, base = prepare(request_file, private_root)
@@ -358,32 +504,8 @@ def run(request_file: Path, private_root: Path, *, research_model=None, writer_m
     writer = load("deepwrite_one_call_writer", DEEPWRITE / "tools/writing_loop_experimental.py")
     final = json.loads((research_evidence / "writer_config.json").read_text("utf-8"))
     result = writer.WritingLoop(project, final, model=writer_model).run()
-    replan = {"status": "NOT_RUN", "reason": "ASSISTED_AUTHOR_GATE_OR_WRITER_INCOMPLETE"}
-    if (final["execution_contract"]["mode"] == "AUTONOMOUS_FULL_DRAFT" and
-            result["status"] in ("CANDIDATE_PENDING_HUMAN", "ENGINEERING_FIXTURE_ONLY_NOT_LIVE")):
-        replan = run_bounded_bookwide_topology_check(project, evidence, final, result,
-                                                     research_model or writer_model, derived_writer_model=writer_model)
-    project_status = result["status"]
-    if replan["status"] in ("BOOKWIDE_STRUCTURE_RECHECK_BLOCKED", "REPLAN_CONTENT_LOSS_REQUIRES_INDEPENDENT_REVIEW"):
-        project_status = "BLOCKED_BOOKWIDE_TOPOLOGY_QUALITY"
-    elif replan["status"] == "REPLAN_DERIVATION_PENDING_HUMAN" and replan["derived_writer_result"]["status"] not in (
-            "CANDIDATE_PENDING_HUMAN", "ENGINEERING_FIXTURE_ONLY_NOT_LIVE"):
-        project_status = "BLOCKED_DERIVED_BOOK_WRITE"
-    receipt = {
-        "schema": "deepwrite/one-call-execution-receipt/v1",
-        "status": project_status, "project_id": final["project_id"],
-        "source_study_sha256": preflight["study_sha256"],
-        "chapter_count_proposed": preflight["chapter_count"],
-        "chapter_count_author_approved": False,
-        "module_selection": "AUTOMATIC",
-        "bookwide_topology_recheck": replan,
-        "writer_result": result, "author_acceptance": "NOT_RUN",
-        "independent_reader_quality": "NOT_RUN",
-        "real_model_verified": bool(result["status"] == "CANDIDATE_PENDING_HUMAN"),
-        "default_formal_main_pointer_changed": False
-    }
-    (evidence / "RESULT.json").write_bytes(canonical(receipt))
-    return receipt
+    return finalize_execution(project, evidence, final, result,
+                              research_model=research_model, writer_model=writer_model)
 
 
 def status(path: Path):
@@ -392,31 +514,107 @@ def status(path: Path):
     evidence = path / "discovery_evidence"
     if not path.exists():
         return {"status": "PROJECT_NOT_FOUND", **identity}
-    for name in ("RESULT.json", "research/STATE.json", "START_STATE.json"):
+    writer_state = private_path(path / "writer_project/run_state.json")
+    if writer_state.is_file():
+        raw = writer_state.read_bytes()
+        state = json.loads(raw)
+        project_status = state["status"]
+        latest = writer_state
+        # A status query succeeds independently of whether its manuscript is
+        # paused, blocked or ready. Do not hide a final gate behind E18 success.
+        if project_status in ("CANDIDATE_PENDING_HUMAN", "ENGINEERING_FIXTURE_ONLY_NOT_LIVE"):
+            project_status = "AWAIT_FINAL_BOOK_REVIEW"
+        result_file = private_path(evidence / "RESULT.json")
+        config_file = private_path(evidence / "research/writer_config.json")
+        if result_file.is_file() and config_file.is_file():
+            result = json.loads(result_file.read_text("utf-8"))
+            if (result.get("writer_state_sha256") == sha(raw) and
+                    result.get("writer_config_sha256") == sha(config_file.read_bytes()) and
+                    result.get("writer_result", {}).get("status") == state["status"]):
+                config = json.loads(config_file.read_text("utf-8"))
+                if (state["status"] not in ("CANDIDATE_PENDING_HUMAN", "ENGINEERING_FIXTURE_ONLY_NOT_LIVE") or
+                        config["execution_contract"]["mode"] != "AUTONOMOUS_FULL_DRAFT"):
+                    project_status, latest = result["status"], result_file
+                else:
+                    gate = result.get("bookwide_topology_recheck")
+                    gate = gate if isinstance(gate, dict) else {}
+                    gate_status = gate.get("status")
+                    terminal = None
+                    if gate_status in ("BOOKWIDE_STRUCTURE_RECHECK_BLOCKED",
+                                       "REPLAN_CONTENT_LOSS_REQUIRES_INDEPENDENT_REVIEW"):
+                        terminal = "BLOCKED_BOOKWIDE_TOPOLOGY_QUALITY"
+                    elif gate_status == "REPLAN_DERIVATION_PENDING_HUMAN" and isinstance(gate.get("derived_writer_result"), dict):
+                        terminal = (state["status"] if gate["derived_writer_result"].get("status") in
+                                    ("CANDIDATE_PENDING_HUMAN", "ENGINEERING_FIXTURE_ONLY_NOT_LIVE")
+                                    else "BLOCKED_DERIVED_BOOK_WRITE")
+                    elif gate_status == "STRUCTURE_KEPT_MODEL_INTERNAL_ONLY":
+                        terminal = state["status"]
+                    proof_ok = False
+                    if terminal == state["status"]:
+                        try:
+                            request = json.loads(private_path(evidence / "bookwide_topology.request.json").read_text("utf-8"))
+                            response = json.loads(private_path(evidence / "bookwide_topology.response.json").read_text("utf-8"))
+                            identity = gate.get("model_review", gate)
+                            book = private_path(path / "writer_project/book.md").read_bytes()
+                            proof_ok = (gate.get("original_book_sha256") == sha(book) and
+                                        request.get("role") == "bookwide_topology_recheck" and
+                                        request.get("payload", {}).get("book_manuscript") == book.decode("utf-8")[:230000] and
+                                        bool(identity.get("response_id")) and response.get("response_id") == identity["response_id"] and
+                                        sha(response["text"].encode("utf-8")) == identity.get("response_sha256"))
+                        except (OSError, ValueError, KeyError, TypeError, AttributeError):
+                            proof_ok = False
+                    if (str(result.get("status", "")).startswith("BLOCKED") and
+                            terminal not in ("BLOCKED_BOOKWIDE_TOPOLOGY_QUALITY", "BLOCKED_DERIVED_BOOK_WRITE")):
+                        project_status, latest = "BLOCKED_FINAL_REVIEW_RECEIPT_UNVERIFIED", result_file
+                    elif terminal in ("BLOCKED_BOOKWIDE_TOPOLOGY_QUALITY", "BLOCKED_DERIVED_BOOK_WRITE") or proof_ok:
+                        project_status, latest = terminal, result_file
+        for relative, expected in state.get("files", {}).items():
+            parts = Path(relative).parts
+            if Path(relative).is_absolute() or ".." in parts or not parts:
+                raise Blocked("DEEPWRITE_STATUS_UNSAFE_TRACKED_PATH")
+            artifact = private_path(path / "writer_project" / relative)
+            if not artifact.is_file() or sha(artifact.read_bytes()) != expected:
+                project_status = "BLOCKED_ARTIFACT_IDENTITY_MISMATCH"
+                latest = writer_state
+                break
+        engine = project_engine_lock(path, enforce=False)
+        if engine["status"] != "MATCH":
+            project_status = "BLOCKED_PROJECT_ENGINE_PIN_MISMATCH_OR_UNVERIFIED"
+        return {"status": "PROJECT_STATUS", "project": str(path),
+                "latest_checkpoint": str(latest), "writer_state_sha256": sha(raw),
+                "project_status": project_status, "formal": identity,
+                "engine_alignment": engine,
+                "author_acceptance": "NOT_RUN"}
+    for name in ("research/STATE.json", "START_STATE.json"):
         file = evidence / name
         if file.is_file():
             value = json.loads(file.read_text("utf-8"))
-            return {"project": str(path), "latest_checkpoint": str(file),
+            return {"status": "PROJECT_STATUS", "project": str(path), "latest_checkpoint": str(file),
                     "project_status": value.get("status"), "formal": identity,
                     "author_acceptance": value.get("author_acceptance", "NOT_RUN")}
     return {"status": "NO_VERIFIED_PRIVATE_CHECKPOINT", **identity}
 
 
-def resume(path: Path, expected_state_sha: str, author_approval_receipt=None, author_approval_sha256=None, *, writer_model=None):
+def resume(path: Path, expected_state_sha: str, author_approval_receipt=None, author_approval_sha256=None, *,
+           writer_model=None, research_model=None):
     path = private_path(path)
     project = path / "writer_project"
     frozen = path / "discovery_evidence" / "research" / "writer_config.json"
     if not frozen.is_file():
         raise Blocked("DEEPWRITE_NO_FROZEN_DISCOVERY_CONFIG_TO_RESUME")
+    project_engine_lock(path)
     writer = load("deepwrite_one_call_resume_writer", DEEPWRITE / "tools/writing_loop_experimental.py")
     if not re.fullmatch(r"[0-9a-f]{64}", str(expected_state_sha)):
         raise Blocked("DEEPWRITE_EXTERNAL_EXPECTED_STATE_SHA_REQUIRED")
-    result = writer.WritingLoop(project, json.loads(frozen.read_text("utf-8")),
+    final = json.loads(frozen.read_text("utf-8"))
+    result = writer.WritingLoop(project, final,
                                 model=writer_model, expected_state_sha=expected_state_sha,
                                 author_approval_receipt=author_approval_receipt,
                                 expected_author_approval_sha=author_approval_sha256).run()
-    (path / "discovery_evidence" / "RESUME_RESULT.json").write_bytes(canonical(result))
-    return result
+    receipt = finalize_execution(project, path / "discovery_evidence", final, result,
+                                 research_model=research_model, writer_model=writer_model)
+    save_execution_evidence(path / "discovery_evidence" / "RESUME_RESULT.json", receipt)
+    return receipt
 
 
 def main():
@@ -450,7 +648,7 @@ def main():
     print(json.dumps(result, ensure_ascii=False, indent=2))
     return 0 if result.get("status") in ("CANDIDATE_PENDING_HUMAN",
                                         "ENGINEERING_FIXTURE_ONLY_NOT_LIVE", "AWAIT_AUTHOR_REVIEW",
-                                        "IDENTITY_ONLY_NOT_BOOK_QUALITY") else 2
+                                        "IDENTITY_ONLY_NOT_BOOK_QUALITY", "PROJECT_STATUS") else 2
 
 
 if __name__ == "__main__":

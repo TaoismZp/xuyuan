@@ -1,0 +1,56 @@
+{
+  "utc": "2026-11-14T10:37:23.246694+00:00",
+  "scope": "LOCAL_EXPLICIT_CANDIDATE_PUBLIC_FIXTURE_ONLY_NOT_LIVE_MODEL_OR_FORMAL_RELEASE",
+  "default_integration_tests": 16,
+  "tests_passed": 16,
+  "formal_stable_tests": "PENDING_RELEASE_RECORD_BINDING_BY_PARENT",
+  "normal_resume": {
+    "status": "ENGINEERING_FIXTURE_ONLY_NOT_LIVE",
+    "status_command_reports": "ENGINEERING_FIXTURE_ONLY_NOT_LIVE",
+    "status_command_exit": 0,
+    "topology_model_roles": [
+      "bookwide_topology_recheck"
+    ],
+    "actual_book_sha256": "b365282488fe2638afcb7e4e1038e5a5e00c89c44679e2b7645c1cab77a5054d",
+    "topology_request_exists": true,
+    "prior_paused_receipt_preserved": true
+  },
+  "unresolved_topology": {
+    "first_resume_status": "BLOCKED_BOOKWIDE_TOPOLOGY_QUALITY",
+    "again_status": "BLOCKED_BOOKWIDE_TOPOLOGY_QUALITY",
+    "status_command_reports": "BLOCKED_BOOKWIDE_TOPOLOGY_QUALITY",
+    "later_review_calls": [],
+    "actual_book_preserved": true
+  },
+  "engine_change": {
+    "blocked": true,
+    "failure": "DEEPWRITE_PROJECT_ENGINE_LOCK_BLOCKED:DEEPWRITE_PROJECT_ENGINE_PIN_MISMATCH_USE_ORIGINAL_CHECKOUT:dae2c7de1bcda8c3f511bc05d690c4269deae4c2",
+    "writer_calls": [],
+    "reviewer_calls": []
+  },
+  "changed_existing_functions": [
+    "prepare",
+    "run",
+    "status",
+    "resume",
+    "main"
+  ],
+  "added_engineering_helpers": [
+    "archive_execution_evidence",
+    "save_execution_evidence",
+    "project_engine_lock",
+    "finalize_execution"
+  ],
+  "unchanged_strategy_functions": {
+    "validate_request": true,
+    "pins": true,
+    "official_identity": true,
+    "run_bounded_bookwide_topology_check": true
+  },
+  "limitations": [
+    "No real provider/book/reader quality trial; fixtures prove routing and failure blocking only.",
+    "Old v0.3.0 projects must use their frozen original engine; this patch does not silently migrate them.",
+    "Discovery-stage provider failure recovery and global topology token budget redesign are outside this focused patch.",
+    "A matching stored outer HOLD remains HOLD on repeated resume; it cannot be washed into E18 readiness."
+  ]
+}

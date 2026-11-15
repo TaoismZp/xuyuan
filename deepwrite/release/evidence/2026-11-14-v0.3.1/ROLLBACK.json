@@ -1,0 +1,21 @@
+{
+  "status": "PASS_ENGINEERING_IDENTITY_BASELINE_ONLY",
+  "command": [
+    "python3",
+    "-B",
+    "deepwrite/release/activation.py",
+    "--root",
+    "/workspace/deepwrite-v03-main-verification",
+    "--run",
+    "--",
+    "identity"
+  ],
+  "exit_code": 0,
+  "baseline_main_commit": "dae2c7de1bcda8c3f511bc05d690c4269deae4c2",
+  "baseline_engine": "v0.3.0",
+  "baseline_current_sha256": "8f6664d66aa867dd7c6b64216546dd539db150b09015ff98acc9046501a6c9ad",
+  "stdout_sha256": "00bc7c53a81f0368db0c3332e73120ea4c04dec21780c3f2ae2676d67d0d5a80",
+  "formal_main_rollback_performed": false,
+  "private_manuscripts_touched": false,
+  "note": "Final post-publication check will select this preserved complete engine in an isolated fresh worktree."
+}

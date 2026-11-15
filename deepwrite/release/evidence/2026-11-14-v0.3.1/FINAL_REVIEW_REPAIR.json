@@ -1,0 +1,21 @@
+{
+  "tested_utc": "2026-11-15T01:10:28.537571+00:00",
+  "mode": "EXPLICIT_CANDIDATE_FIXTURE_NOT_FORMAL_ACTIVATION",
+  "tests": 21,
+  "failures": 0,
+  "errors": 0,
+  "all_pass": true,
+  "entry_ast_engineering_scope_pass": true,
+  "new_helper_added": false,
+  "cognitive_prompts_changed": false,
+  "real_model_calls": 0,
+  "cases": [
+    "missing final gate forces actual final review",
+    "unknown terminal status forces actual final review",
+    "missing actual response file forbids cached ready",
+    "explicit gate HOLD clamps incorrect outer ready summary",
+    "missing gate cannot erase explicit prior HOLD",
+    "complete actual KEEP reuses cached review without new model call"
+  ],
+  "log_sha256": "48f82c5e40820d235fc03f8377348743d258f89c4cae59f7e3aaec3cda9e53c9"
+}

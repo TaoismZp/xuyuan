@@ -4,12 +4,6 @@
   "user_invocation": "调用 DeepWrite",
   "intended_formal_entrypoint": "deepwrite/deepwrite.py",
   "launch_contract": "deepwrite/DEFAULT_INVOCATION.md",
-  "current_formal_state": {
-    "branch": "main",
-    "path": "deepwrite/CURRENT.json",
-    "active_workbench_version": "v0.1",
-    "active_engine": null
-  },
   "integration": {
     "pr": 20,
     "branch": "deepwrite/unified-default-engine-20261114",
@@ -23,7 +17,8 @@
       18,
       19
     ],
-    "excluded_negative_control_pr": 15
+    "excluded_negative_control_pr": 15,
+    "record_role": "HISTORICAL_PR20_INTEGRATION_BEFORE_PR21_RELEASE"
   },
   "automatic_pipeline": [
     "VALIDATE_EXPLICIT_AUTHOR_SCOPE_AND_PRIVATE_SOURCE_BYTES",
@@ -62,7 +57,8 @@
     "total": 312,
     "real_provider_calls": 0,
     "real_external_human_readers": 0,
-    "permission_to_skip_repo_pr_review": false
+    "permission_to_skip_repo_pr_review": false,
+    "record_role": "HISTORICAL_RC2_ENGINEERING_RUN_NOT_LATEST_CI"
   },
   "remaining_unverified": {
     "live_model_long_book_end_to_end": "NOT_RUN",
@@ -71,11 +67,33 @@
     "independent_origination_originality": "UNVERIFIED",
     "full_book_not_worse_than_sequential": "UNVERIFIED",
     "post_book_structure_topology_revision": "BOUNDED_ONE_REVIEW_AND_DERIVED_E18_RERUN_ENGINEERING_FIXTURE_PASS_HUMAN_QUALITY_UNVERIFIED",
-    "provider_authentication": "HISTORICAL_401_NOT_RESOLVED",
-    "official_main_release": "PENDING_REVIEW_AND_GOVERNED_CURRENT_PROMOTION",
+    "provider_authentication": "REVERIFY_ACTUAL_PROVIDER_PER_ENVIRONMENT; HISTORICAL_401_IS_NOT_CURRENT_AUTH_PROOF",
+    "official_main_release": "PR21_MERGED_AND_IDENTITY_VERIFIED; NEWEST_IDENTITY_FROM_CURRENT; GOVERNANCE_CONFIGURATION_REMAINS_SEPARATE",
     "real_model_full_book_comparison": "NOT_RUN",
     "all_new_chat_platform_default_tool_injection": "NOT_SUPPORTED_BY_GITHUB_CODE_ALONE"
   },
   "note": "Engineering component inclusion is not evidence of real manuscript quality or formal release. Private user material stays private.",
-  "next_step": "VERIFY_PROVIDER_AND_HUMAN_QUALITY_WITH_PRIVATE_SOURCE_PROJECT; RESOLVE_GITHUB_OWNER_REVIEW_AND_RELEASE; POINT MAIN CURRENT TO ONE VERIFIED DEEPWRITE ENTRY_ONLY_AFTER_APPROVAL"
+  "next_step": "READ_LIVE_CURRENT_AND_RELEASE_STATE; CONTINUE_EXISTING_PROJECT_PINS; VERIFY_PRIVATE_REAL_PROVIDER_AND_READER_QUALITY_WITHOUT_REOPENING_COMPLETED_RC_INSTALLATION",
+  "record_role": "HISTORICAL_RC_INTEGRATION_LEDGER_NOT_CURRENT_RELEASE_POINTER",
+  "historical_rc_formal_state": {
+    "branch": "main",
+    "path": "deepwrite/CURRENT.json",
+    "active_workbench_version": "v0.1",
+    "active_engine": null,
+    "observed_at": "RC2_BEFORE_PR21_MERGE"
+  },
+  "current_formal_state": {
+    "read_from": "main:deepwrite/CURRENT.json",
+    "resolve_with": "python3 -B deepwrite/release/activation.py --root . --run -- identity",
+    "rule": "No copied version in this historical ledger determines the active engine."
+  },
+  "merged_release_evidence": {
+    "pr": 21,
+    "main_commit": "dae2c7de1bcda8c3f511bc05d690c4269deae4c2",
+    "actions_run": 43583578870,
+    "tests": 312,
+    "fresh_main_identity": "SUCCESS",
+    "scope": "ENGINEERING_IDENTITY_ONLY_NOT_BOOK_QUALITY",
+    "latest_identity_pointer": "main:deepwrite/CURRENT.json"
+  }
 }

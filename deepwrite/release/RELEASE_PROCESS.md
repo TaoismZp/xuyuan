@@ -1,52 +1,55 @@
-# DeepWrite 正式激活与两类发布
+# DeepWrite 正式激活与发布
 
-正式身份只来自 main 的 `deepwrite/CURRENT.json`，不是聊天记忆或候选分支。工作台规范版本与工程引擎版本独立：保持正式 v0.1 规范时，可以发布只负责身份、装订、检查点与恢复的工程引擎；不能由此默认启用 E18/PR12/E23 认知策略。
+正式身份来自 GitHub main 的 `deepwrite/CURRENT.json` 及其绑定的不可变 release record。工作台规范版本与工程引擎版本独立；历史候选登记、旧恢复页和聊天记忆都不定义最新版。
 
-当前实际配置与未关闭门见 `STATE.json`；本轮 API 回执见 `evidence/2026-11-12/`。配置请求 JSON 是待执行目标，403 回执不代表设置已生效。
+## 唯一正式入口
 
-## 唯一执行入口
-
-需要 Git、Python 3.10+、可读的完整 Git 历史及私有输出目录。普通 ChatGPT 对话若没有命令执行能力，只能读取版本、准备愿望和调用具备执行环境的 Codex/Work；不能声称已经运行引擎。
+需要 Git、Python、可核的完整实现历史、有效模型权限及私有项目存储。先在新检出或隔离工作树核对实际 main；保留已有修改。普通 GPT 对话若不能执行命令，只能转交具备能力的环境，不能自称已运行引擎。
 
 ```bash
-python3 deepwrite/release/activation.py --root .
-python3 deepwrite/release/activation.py --root . --run -- identity
-python3 deepwrite/release/activation.py --root . --run -- init /private/project-config.json /private/new-project
+python3 -B deepwrite/release/activation.py --root . --run -- identity
+python3 -B deepwrite/release/activation.py --root . --run -- \
+    run /private/deepwrite-user-request.json /private/deepwrite-project
+python3 -B deepwrite/release/activation.py --root . --run -- \
+    status /private/deepwrite-project
+python3 -B deepwrite/release/activation.py --root . --run -- \
+    resume /private/deepwrite-project --expected-state-sha256 <64-hex>
 ```
 
-当前 main 若没有 `active_engine`，第一条如实报告工作台规范，后两条拒绝运行候选。正式合并工程引擎后，入口会核验实际 implementation commit、祖先关系、全部已声明依赖、规范、父版本及不可变发布记录，再真正执行工程 runtime。它不是自主成书质量认证。
+解析器验证当前指针、规范和父协议、release record、真实 implementation commit 祖先及全部声明文件 SHA，再实际启动默认执行器。请求格式见 [DEFAULT_INVOCATION.md](../DEFAULT_INVOCATION.md)；新项目记录来源、请求、双层版本及模块身份。旧项目按锁定版本恢复，不静默升级。
 
-新项目自动写 `PROJECT_LOCK.json`、双层 pins、源文件 SHA 和阶段 STATE；私有素材复制进独立目录，不覆盖原件。项目配置最小为 `{ "project_id": "my-book", "wish": "作者愿望", "channel": "STABLE", "modules": {} }`，可加相对配置文件目录的 `sources:[{path,sha256}]`。禁止 `guard:off`，未验收候选不进入稳定项目。
+当前统一入口支持 `identity/run/status/resume`。旧工程 runtime 的 `init/assemble/checkpoint/restore` 只适用于其原版本；不能作为当前启动命令。恢复要求外部保存的 `writer_project/run_state.json` SHA，样章继续还需项目/合同/正文绑定的真实作者回执。现有 E15、装订和 checkpoint 工具由工作流复用，不要求作者手动逐项调度。
 
-`assemble` 实际调用修复后的 E15 文件门和 PR12 安全装订器，要求审稿清单覆盖所有装订源、外部冻结发现 SHA、真实正文与断言；语义/文学质量仍待作者与读者。`checkpoint` 和 `restore` 调用原有字节恢复工具。每次阶段返回新的 STATE SHA；后续命令须提供该外部 SHA。恢复目标必须是新目录。旧项目 pin 不同则阻断，不能静默升级；使用锁中 activation_commit 检出原正式入口后继续。
+## 两类发布分别验收
 
-## 可自动发布的范围
+- **ENGINEERING_PATCH**：身份、恢复、日志、错误阻断及既有行为的执行修复。需要实际 CI、负向回归、回退证据、精确 HEAD 的所有者发布授权及不改变认知策略的理由；不能用测试绿灯掩盖已知事实/隐私失败。
+- **QUALITY_BEHAVIOR_CHANGE**：研究视角、问题定义、选择/返工策略、文风或认知提示的改变。还需实际作品对照、失败回归、作者判断与独立读者证据。当前控制器对此类自动晋升保持 HOLD；作者授权研发/发布不等于这些质量证据已取得。
 
-ENGINEERING_PATCH：实现身份、日志、恢复、装订、已生效规则的执行修复。必须有真实 CI、回归、恢复证据及所有者对精确 PR head 的授权。工作台规范与认知模块不能在此通道改变。
+已正式接线的写作能力可以继续使用；工程发布只说明实际调用身份与行为回归，不保证作品质量。E1真实模型整书、E2完整作品公平对照、三层真人阅读收益和黑箱非劣须保留真实状态。
 
-QUALITY_BEHAVIOR_CHANGE：研究视角、问题定义、选择/返工决策、文风或认知提示。除工程证据外还需真实作品比较、失败回归、作者判断和独立读者。当前控制器直接 HOLD 此类自动晋升，不能把 AI 评分、JSON PASS 或一个 owner comment 当成这些证据。
+代码先提交，再以独立提交生成绑定 implementation commit 和全部文件 SHA 的 release record，并原子更新 CURRENT。旧记录不可改写。正式合并只使用 **MERGE COMMIT**，保留 implementation 祖先；SQUASH/REBASE 不适用。
 
-工程发布的不可变记录列出全部 runtime 文件及 SHA、真实 implementation commit、规范与父协议身份和回退提交。代码先提交，再在后续提交中原子更新发布记录和 CURRENT，避免自引用 commit/hash。正式激活必须使用 MERGE 合并保留 implementation_commit 祖先；SQUASH/REBASE 会破坏此身份，不能用于此发布链。
+## 所有者授权与必需 CI
 
-## 单人所有者授权与 CI
+目标保护为 main 禁删、禁强推、无 bypass、strict 最新基线、两项必需检查（Actions app15368）：
 
-仓库目标规则为 main 禁删/禁强推、strict 最新基线、两项必需 Checks（Actions app 15368）：
+- `activation-and-runtime-regressions`：真实 main PR CI，不以路径过滤使其他 PR 悬空。
+- `owner-release-authorization`：只运行可信 main 控制器，根据真实所有者身份、精确 HEAD、实际 CI 和差异范围生成；新 HEAD 不继承旧授权。
 
-- `activation-and-runtime-regressions`：对所有 main PR 报告，不用路径过滤使其他 PR 悬空；涵盖 release、guard、packager、E18/E23 工程回归。
-- `owner-release-authorization`：由 main 的可信控制器根据真实 API 身份、实际 CI、精确 head 与发布差异生成。新 head 不能继承旧授权。
-
-单人仓库不伪造另一位 reviewer；计划将批准人数调整为 0，以第二项必需检查承担可追踪发布授权。所有者命令第一行：
+单人仓库用可追踪的 owner 发布决定，不能伪造另一位独立 reviewer。作者已授权本次工程发布时，执行者可在该范围内提交并保存精确 HEAD 的所有者回执；不能扩大为未来任意认知发布。命令第一行：
 
 ```text
 /deepwrite authorize ENGINEERING_PATCH <完整40位PR-head-SHA> governance
 ```
 
-`governance` 仅在本次明确授权治理控制代码变更时使用。授权是所有者发布决定，不是独立审稿。`/deepwrite revoke <完整head-SHA>` 撤销。新提交、失败 CI、撤销授权或身份冲突使发布 HOLD。控制器只运行 main 的代码，候选只作为数据检查；它不在高权限 job 中运行候选代码。批准后自动进入 auto-merge，main 合并后的新宿主重读 CURRENT 并实际调用已发布身份。
+仅控制平面实际变更且已授权时使用 `governance`。`/deepwrite revoke <完整head-SHA>` 撤销。控制器从 main 运行，候选仅作数据检查，不执行候选高权限代码；真实配置、授权和 CI 满足后才启用正常 merge 的 auto-merge。
 
-GitHub 对同一 Actions App 的状态名无法证明运行的是某段特定代码；拥有仓库 write 的恶意主体仍属信任边界。这里不宣称替代独立安全审批。控制器主线、精确授权与公开证据用于避免误发布；质量判断也不能由该脚本证明。
+现有控制器在 PR21 合并后已进入 main，早期“控制器尚未安装”的说法是历史。**配置是否生效必须重新读 API**：最近证据仍为 reviews=0、required_checks=[]、strict=false、auto_merge=false；管理 PUT/PATCH 返回403。准确观察及未关门见 [STATE.json](STATE.json)，不得把目标配置当作已部署。GitHub同一Actions App的状态名也不能证明来自某段指定代码；恶意write主体仍是信任边界，不宣称替代独立安全审批。
 
-## 首次安装及回退
+## 发布后的真实验收与回退
 
-当前管理 API 写入实际返回 403，auto-merge 为 false，规则仍要求一人批准且无具体 required checks。尚未安装的 main 控制器不能替自己完成首次安装。必须取得该仓库 Administration 写权限，按已归档请求修改并回读设置；首次 bootstrap 授权要绑定完整 head，不能把一次口头授权扩大为未来任意认知发布。此阻断保留在 STATE，不伪造已部署。
+合并后重新读取 main/CURRENT、release record 与 Git SHA；从新检出的 main 实际运行 `activation.py --run -- identity`，确认默认入口和实现祖先。读取合并后 push/main CI 中的全新环境调用步骤，不能沿用 PR 中 skipped 的结果。保存命令、退出码、实际 CI/check ID、授权来源与私有恢复入口，并回读 Git Blob。
 
-每轮结束保存实际命令、commit、CI/check ID、授权评论、CURRENT/record SHA、全新调用、恢复回执。回退是新的授权 PR：恢复旧 CURRENT 及其匹配 runtime，保留失败候选和所有私有书稿；合并后再次读 main 并调用原版本。仅临时 Git fixture 的故障/恢复演练不等于正式 main 发布回退。
+回退优先在隔离工作树演练：检出 release record 的 rollback commit，核验旧 CURRENT 与对应文件；不覆盖书稿。旧版本若无正式 runner，应安全拒绝，不伪造“旧版也能自动写书”。checkpoint 恢复以独立目标目录和逐文件 SHA 验证，损坏副本必须被拒绝。
+
+正式 main 回退须另有授权 PR，恢复旧 CURRENT 及匹配 runtime，保留失败候选与私人作品；合并后重新运行旧正式身份。隔离代码回退、字节恢复、完整项目resume和作品质量分别记录，不互相冒充。

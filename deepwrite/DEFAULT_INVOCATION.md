@@ -1,4 +1,4 @@
-# 调用 DeepWrite｜统一默认调用契约（工程 RC；正式生效以 main/CURRENT 为准）
+# 调用 DeepWrite｜统一默认调用契约
 
 > 用户愿望：“只要说调用 DeepWrite，就能自动使用以前完成的所有适用功能，而不必知道版本、PR号、候选模块或自己决定目录。”
 
@@ -33,18 +33,18 @@ python3 -B deepwrite/release/activation.py --root . --run -- \
     run /private/deepwrite-user-request.json /private/deepwrite-project
 ```
 
-在尚未激活的 **当前研发候选 branch**上，可只作为工程试用（非正式默认）：
+查询正式项目也经过同一发行解析器：
 
 ```bash
-python3 -B deepwrite/deepwrite.py run /private/deepwrite-user-request.json /private/deepwrite-project
-python3 -B deepwrite/deepwrite.py status /private/deepwrite-project
+python3 -B deepwrite/release/activation.py --root . --run -- \
+    status /private/deepwrite-project
 ```
 
-恢复先提供**外部实际STATE SHA**，而不是让模型自行宣布已取得作者批准：
+恢复先核验项目的版本锁，使用锁定版本检出；提供**外部保存的 `writer_project/run_state.json` 实际 SHA**，而不是让模型自行宣布已取得作者批准：
 
 ```bash
-python3 -B deepwrite/deepwrite.py resume /private/deepwrite-project \
-    --expected-state-sha256 <64-hex>
+python3 -B deepwrite/release/activation.py --root . --run -- \
+    resume /private/deepwrite-project --expected-state-sha256 <64-hex>
 ```
 
 样章审过后，追加外部作者回执 `--author-approval-receipt /private/approved.json --author-approval-sha256 <64-hex>`，回执必须绑定**精确项目、执行合同SHA、首章稿件SHA与非模型的作者决定**；没有则继续等待而非自动同意。
@@ -78,26 +78,30 @@ python3 -B deepwrite/deepwrite.py resume /private/deepwrite-project \
 
 作者明确一次授权全书时，才使用 `mode=AUTONOMOUS_FULL_DRAFT` 且 `authorized_scope=ALL_CANDIDATE_CHAPTERS`；不要将用户的“继续”误当签收或新增整个项目的授权。原始request文件只能由有权限的人在私人工作区提供，CLI保存原字节及SHA；**请求文件存在不等于加密身份鉴真。**
 
-## 深度功能分层（截至本RC）
+## 能力与证据分层
 
 |能力|执行状态|仍需外部检验的边界|
 |---|---|---|
-|源学科独立研究和竞争解释|真实模型阶段已接线；工程模拟PASS|是否得出真正好的发现UNVERIFIED|
-|不预定章数、研究后动态生成章节|真实阶段顺序/配置接线；模拟PASS|生成章数是否最佳、全书后再次重构尚未实现|
+|源学科独立研究和竞争解释|模型调用阶段已接线；脚本模型工程回归通过|是否得出真正好的发现UNVERIFIED|
+|不预定章数、研究后动态生成章节|真实阶段顺序/配置接线；模拟PASS|章数/章序是否合理、结构重编是否改善全书UNVERIFIED|
 |E18章节真实文件生产/源码优先/审稿返工|真实文件工程样例PASS|实际合法provider长书闭环未完成|
 |两种作者模式|模拟样章停机和一次性写作PASS|真实作者身份与签收不由模型判|
 |读者三层和六维知识复利|真实章节审稿门/新情境探针PASS（结构）|真实新手/熟手/高手的增益和迁移UNVERIFIED|
-|独立洞见 vs 作者指导|PR17候选函数集已集成；默认源问题竞争与作者来源归类|“真正原创”/盲揭示仍不能靠模型自己证明|
+|独立洞见 vs 作者指导|源问题竞争与作者来源归类已接入默认链|“真正原创”/盲揭示仍不能靠模型自己证明|
 |跨章深审/整书修订/失误闭环|合成文件、原稿保护与检查点PASS；现有全书重查后可KEEP或在证据支持下派生新目录并完成E18第二次全书候选（模拟PASS）|改稿效果、真人比较及实战一次成书不劣于逐章UNVERIFIED|
 |盲评A/B与外部人类评分|`deepwrite/evaluation/blind_reader_trial.py` 实际封存作品A/B、分离映射密钥并采集真实读者答卷；工程测试PASS|真人样本/公平等预算对照未做，不能用AI评分代替真人|
-|统一入口与版本恢复|本文件对应 `deepwrite/deepwrite.py`，集成工程测试以当前最新run为准|正式main CURRENT仍v0.1，PR未合并，不得声称全局生效|
+|统一入口与版本恢复|发行解析器核对CURRENT/record及实际入口；新main调用已有工程证据|实际版本每次重读CURRENT；不自动把能力注入所有普通GPT会话|
 
-## 版本语义
+## 思想来源与读者目标
 
-当前用户明示目标是**统一正式默认入口**，不是要求每次手工激活候选。为此新代码包含STABLE只在main激活器实际返回正确身份、校验来源文件全部在正式release inventory并绑定SHA后才允许运行；主线仍v0.1时会拒绝伪造“自动写书已启用”。
+“新手看得懂、熟手有纠偏、高手能检查机制与边界”是同一篇可读叙事的目标，不是三个固定小节或三项自评分。新手需要理解源场景并处理变式，熟手需要实质认知修正，专家需要可检验机制和反例；实际收益须另验。
 
-本PR通过真实CI、独立质量验证、GitHub分支发布权限及作者发布决定后，按 `release/RELEASE_PROCESS.md` 固定实现commit、runtime文件SHA、父协议、发布回执，并将 `CURRENT.json` 的唯一默认engine指向 `deepwrite/deepwrite.py`。**需要GitHub保护规则下的批准，不能靠文档声明完成。**
+R4 的积极反馈来自作者引导下的一章，可作为私有回归参照，不能记为模型自主发现或跨主题成功。请求若含已知作者指导，应将其保存在 `source_files`，用可选的零基 `author_guidance_source_index` 固定对应来源；执行器记录 `AUTHOR_GUIDED`、`USER_SUPPLIED_PERSPECTIVE` 和 `count_as_autonomous:false`。未揭示的模型建议仍为原创性待验，不因自报“独立”而通过。
 
-## 2026-11-14 RC2 工程回执
+## 正式身份与历史工程回执
 
-完整PR #20的工程CI run [43563215064](https://github.com/TaoismZp/xuyuan/actions/runs/43563215064)，head `3d3f3878d2ceeb7bf456f3d296b8127a03d6517b`（该head之后任何新提交需重新验CI），**312 synthetic/fixture tests PASS**。其中真实模拟：一次统一调用的来源研究、三种源问题提案、研究后生成目录、E18正文与返工、跨章整书评审、新增全书结构 REPLAN→独立第二份完整书稿（保留原稿），首章模式等待作者SHA审批；另有A/B遮蔽真实读者评估文件工具但尚无真人。模型身份和读者质量的真实结果仍未取得，正式 main `CURRENT.json` 仍是 v0.1，绝不可凭本段宣称已全局部署。最新唯一候选状态从[UNIFIED_RELEASE_CANDIDATE.json](UNIFIED_RELEASE_CANDIDATE.json)与GitHub实际HEAD重读。
+每次调用先读取远端 main 的 CURRENT，用新的检出或隔离工作树核实提交，再由 activation 验证真实引擎。仅候选分支存在不生效；新正式版本也不静默升级旧项目。候选试用须有项目级授权和独立私有目录。
+
+PR #21 合并后的固定工程证据：main `dae2c7de1bcda8c3f511bc05d690c4269deae4c2`，[Actions 43583578870](https://github.com/TaoismZp/xuyuan/actions/runs/43583578870)，312项工程测试成功，全新 main 的正式身份调用成功。它不是真实模型整书或读者质量验收。后续版本以 CURRENT 及其 release record 为准，本段不定义“最新版”。
+
+此前 RC2/PR20/247或312项候选测试及“main仍v0.1”的说法属于当时记录，见 [UNIFIED_RELEASE_CANDIDATE.json](UNIFIED_RELEASE_CANDIDATE.json) 的历史字段。当前发布与治理门见 [release/STATE.json](release/STATE.json)：现有管理 API 403、必需检查配置或 auto-merge 缺口不能因入口已激活而改记 PASS。
