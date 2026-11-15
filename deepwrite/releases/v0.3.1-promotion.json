@@ -7,7 +7,7 @@
   "parent_wish_version": "v7.6",
   "release_channel": "STABLE",
   "change_scope": "ENGINEERING_PATCH",
-  "candidate_commit": "64e94b518f7b2454d2629d900f787f0a29d84938",
+  "candidate_commit": "b35f88baad2fd76e80ac34ba3474ebf0a974e943",
   "rollback_commit": "dae2c7de1bcda8c3f511bc05d690c4269deae4c2",
   "old_artifact_preserved": true,
   "spec": {
@@ -16,7 +16,7 @@
   },
   "runner": {
     "path": "deepwrite/deepwrite.py",
-    "sha256": "38b9f4aae7730d4c52dee6e6bfdacf6d9d8499f0405073c27030540b9e6894df"
+    "sha256": "bf8fd86fb56daa4e14c1f3eeacfed7b4bc5ee422c34205aa66283bf68980e5e8"
   },
   "gates": {
     "engineering": "PASS",
@@ -35,7 +35,7 @@
   "evidence_artifacts": {
     "engineering": {
       "path": "deepwrite/release/evidence/2026-11-14-v0.3.1/ENGINEERING.json",
-      "sha256": "0aaf0ec8108d30fbd6cc30ce23dc215c020ef9a7cb03dfa6df5a41d469e77cf4"
+      "sha256": "e13c953af03fe41be09b784fa58def83b43e13cc6c26a457c6ba69caaa8506eb"
     },
     "rollback_test": {
       "path": "deepwrite/release/evidence/2026-11-14-v0.3.1/ROLLBACK.json",
@@ -43,7 +43,7 @@
     },
     "non_regression": {
       "path": "deepwrite/release/evidence/2026-11-14-v0.3.1/NON_REGRESSION.json",
-      "sha256": "17eb2fa42535444a83daeec51d34e3c11d966ac43d2b5bd583fdbf20e7b0e355"
+      "sha256": "a60344e9834fb800f2f933c3e8423c0d98e8a530b3bae9b80dc306cdef29c304"
     }
   },
   "human_authorization_evidence": {

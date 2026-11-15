@@ -3,7 +3,7 @@
   "status": "ACTIVE_RELEASE",
   "version": "v0.3.1",
   "workbench_version": "v0.3",
-  "implementation_commit": "64e94b518f7b2454d2629d900f787f0a29d84938",
+  "implementation_commit": "b35f88baad2fd76e80ac34ba3474ebf0a974e943",
   "rollback_commit": "dae2c7de1bcda8c3f511bc05d690c4269deae4c2",
   "spec": {
     "path": "deepwrite/versions/v0.3.md",
@@ -20,7 +20,7 @@
   "runtime_files": [
     {
       "path": "deepwrite/deepwrite.py",
-      "sha256": "38b9f4aae7730d4c52dee6e6bfdacf6d9d8499f0405073c27030540b9e6894df"
+      "sha256": "bf8fd86fb56daa4e14c1f3eeacfed7b4bc5ee422c34205aa66283bf68980e5e8"
     },
     {
       "path": "deepwrite/tools/writing_loop_experimental.py",
