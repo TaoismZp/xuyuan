@@ -187,6 +187,28 @@ class TwoPhaseDiscoveryTests(unittest.TestCase):
             discovery.discover(self.cfg, self.project, self.out, model=ScriptedDiscovery(book=bad))
         self.assertFalse((self.out/"writer_config.json").exists())
 
+    def test_author_guided_model_first_sees_only_native_source_then_reveal(self):
+        author_text = b"Author-supplied hypothesis: all easy decisions mean the market knows the outcome.\n"
+        (self.sources/"guide.md").write_bytes(author_text)
+        self.cfg["sources"].insert(1, {"path": "sources/guide.md", "sha256": h(author_text)})
+        self.cfg["author_guidance"] = {
+            "schema": "deepwrite/author-guided-frame/v0.1",
+            "mode": "AUTHOR_GUIDED", "origin": "USER_SUPPLIED_PERSPECTIVE",
+            "count_as_autonomous": False, "experiment_or_project_id": "two-phase-fixture",
+            "source_path": "sources/guide.md"}
+        model = ScriptedDiscovery()
+        state = discovery.discover(self.cfg, self.project, self.out, model=model)
+        first, second = model.previews
+        self.assertNotIn("sources/guide.md", first["payload"]["sources"])
+        self.assertNotIn("Author-supplied hypothesis", json.dumps(first, ensure_ascii=False))
+        reveal = second["payload"]["author_guidance_revealed_after_source_study"]
+        self.assertEqual(reveal["text"], author_text.decode("utf-8"))
+        self.assertEqual(reveal["source_sha256"], h(author_text))
+        self.assertEqual(state["insight_origin_provenance"]["mode"], "AUTHOR_GUIDED")
+        self.assertFalse(state["insight_origin_provenance"]["count_as_autonomous"])
+        self.assertEqual(state["insight_origin_provenance"]["true_blind_origin_claim"], "NOT_VERIFIED")
+        self.assertTrue((self.out/"writer_config.json").is_file())
+
     def test_guided_author_source_cannot_be_cited_as_native_discovery(self):
         author_text = b"Author-supplied hypothesis: the conclusion must be selected before observing facts.\n"
         (self.sources/"guide.md").write_bytes(author_text)
