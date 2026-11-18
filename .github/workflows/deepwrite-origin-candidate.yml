@@ -32,8 +32,9 @@ jobs:
           python3 -B deepwrite/release/activation.py --root . > /tmp/isolated-candidate-activation.txt 2>&1
           status=$?
           set -e
-          test "$status" -ne 0
-          grep -q 'RUNTIME_FILE_BYTES_MISMATCH' /tmp/isolated-candidate-activation.txt
+          cat /tmp/isolated-candidate-activation.txt
+          test "$status" -eq 2
+          grep -q 'DEEPWRITE_ACTIVATION_BLOCKED' /tmp/isolated-candidate-activation.txt
       - name: Checkout independently released main
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
