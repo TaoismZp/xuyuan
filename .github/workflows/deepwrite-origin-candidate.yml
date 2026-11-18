@@ -39,6 +39,7 @@ jobs:
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           ref: main
+          fetch-depth: 0
           path: released-main
       - name: Existing formal main remains fully activated
         working-directory: released-main
