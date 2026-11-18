@@ -270,6 +270,10 @@ def discover(config: dict, project: Path, out: Path, model=None):
         gate = module("deepwrite_author_guidance", DEEPWRITE / "candidates/e23-frame-wiring/insight_origin_gate.py")
         origin_receipt = gate.check_author_guided_contract(config)
         origin_receipt["semantic_independence"] = "NOT_CLAIMED_USER_GUIDED"
+        origin_receipt["mode"] = "AUTHOR_GUIDED"
+        origin_receipt["count_as_autonomous"] = False
+        origin_receipt["true_blind_origin_claim"] = "NOT_VERIFIED"
+        origin_receipt["pre_reveal_author_guidance_excluded"] = True
         guided_path = origin_receipt["source_path"]
         # The author's supplied thesis is NOT native source evidence. Keep it
         # frozen, reveal it after the first model proposal, and never label the
