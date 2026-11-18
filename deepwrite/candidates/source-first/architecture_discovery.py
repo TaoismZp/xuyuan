@@ -274,6 +274,7 @@ def discover(config: dict, project: Path, out: Path, model=None):
         # The author's supplied thesis is NOT native source evidence. Keep it
         # frozen, reveal it after the first model proposal, and never label the
         # result as a clean-room independent discovery.
+    guided_source_sha256 = origin_receipt.get("source_sha256") if guided_path else None
     if model is None:
         writer = module("deepwrite_discovery_writer", DEEPWRITE / "tools/writing_loop_experimental.py")
         if config["adapter"] == "codex":
@@ -343,7 +344,7 @@ def discover(config: dict, project: Path, out: Path, model=None):
             "author_guidance_revealed_after_source_study": (
                 {"origin": "USER_SUPPLIED_PERSPECTIVE",
                  "source_path": guided_path,
-                 "source_sha256": origin_receipt["guided_source_sha256"],
+                 "source_sha256": guided_source_sha256,
                  "text": sources[guided_path].decode("utf-8")}
                 if guided_path is not None else None),
             "reader_goal": config.get("reader_goal", ""),
