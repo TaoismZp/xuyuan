@@ -100,12 +100,20 @@ def validate(config: dict, read_bytes) -> dict:
         raise ValueError("SOURCE_FIRST_CHAPTER_CONTRIBUTIONS_REQUIRED")
     if {c.get("chapter_id") for c in allocations if isinstance(c, dict)} != set(ids):
         raise ValueError("SOURCE_FIRST_CHAPTER_COVERAGE_MISMATCH")
+    distinct_changes = set()
     for c in allocations:
         deps = c.get("source_concept_ids")
         if not isinstance(deps, list) or not deps or not set(deps) <= concept_ids:
             raise ValueError("SOURCE_FIRST_CHAPTER_NATIVE_SOURCE_DEPENDENCY_REQUIRED")
         if not text(c.get("distinct_reader_change")):
             raise ValueError("SOURCE_FIRST_CHAPTER_READER_CHANGE_REQUIRED")
+        # Identical reader outcomes across chapters are evidence of copy-paste
+        # architecture, not two independently justified chapters. This is an
+        # exact normalized duplicate guard; semantic novelty remains unverified.
+        normalized_change = re.sub(r"[\W_]+", "", c["distinct_reader_change"].casefold())
+        if normalized_change in distinct_changes:
+            raise ValueError("SOURCE_FIRST_DUPLICATE_CHAPTER_READER_CHANGE")
+        distinct_changes.add(normalized_change)
     return {
         "status": "PASS_ENGINEERING_ONLY_PROVISIONAL_SOURCE_ARCHITECTURE",
         "project_id": config["project_id"],

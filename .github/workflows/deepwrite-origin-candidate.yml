@@ -1,0 +1,47 @@
+name: DeepWrite origin isolation candidate verification
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "deepwrite/**"
+      - ".github/workflows/deepwrite-origin-candidate.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  isolation-and-stable-lock:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout isolated candidate
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          path: candidate
+      - name: Run candidate source discovery and provenance regressions
+        working-directory: candidate
+        run: |
+          python3 -B -m py_compile deepwrite/candidates/source-first/architecture_discovery.py deepwrite/candidates/source-first/source_first_gate.py
+          python3 -B -m unittest discover -s deepwrite/candidates/source-first -p test_architecture_discovery.py -v
+          python3 -B -m unittest discover -s deepwrite/candidates/e23-frame-wiring -p test_insight_origin_gate.py -v
+      - name: Candidate must not impersonate active v0.3.1
+        working-directory: candidate
+        run: |
+          set +e
+          python3 -B deepwrite/release/activation.py --root . > /tmp/isolated-candidate-activation.txt 2>&1
+          status=$?
+          set -e
+          cat /tmp/isolated-candidate-activation.txt
+          test "$status" -eq 2
+          grep -q 'DEEPWRITE_ACTIVATION_BLOCKED' /tmp/isolated-candidate-activation.txt
+      - name: Checkout independently released main
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: main
+          fetch-depth: 0
+          path: released-main
+      - name: Existing formal main remains fully activated
+        working-directory: released-main
+        run: |
+          python3 -B deepwrite/release/activation.py --root . --run -- identity

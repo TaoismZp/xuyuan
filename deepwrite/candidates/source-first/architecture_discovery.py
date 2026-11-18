@@ -190,8 +190,8 @@ def _study(data, sources, excluded):
             raise Blocked("DISCOVERY_SOURCE_CONCEPT_ID_DUPLICATE")
         ids.add(c["id"])
         path = c.get("source_path")
-        if path not in sources or path == excluded:
-            raise Blocked("DISCOVERY_ORIGINAL_NOT_AUTHORIZATION_SOURCE_REQUIRED")
+        if path not in sources or path in excluded:
+            raise Blocked("DISCOVERY_SOURCE_QUOTE_FROM_AUTHORIZATION_OR_AUTHOR_GUIDANCE")
         try:
             decoded = sources[path].decode("utf-8")
         except UnicodeDecodeError as error:
@@ -265,10 +265,20 @@ def discover(config: dict, project: Path, out: Path, model=None):
     sources, authority = validate_intake(config, project, out)
     out.mkdir(parents=True, exist_ok=True)
     origin_receipt = {"status": "NOT_REQUESTED", "independent_novelty": "UNVERIFIED"}
+    guided_path = None
     if config.get("author_guidance") is not None:
         gate = module("deepwrite_author_guidance", DEEPWRITE / "candidates/e23-frame-wiring/insight_origin_gate.py")
         origin_receipt = gate.check_author_guided_contract(config)
         origin_receipt["semantic_independence"] = "NOT_CLAIMED_USER_GUIDED"
+        origin_receipt["mode"] = "AUTHOR_GUIDED"
+        origin_receipt["count_as_autonomous"] = False
+        origin_receipt["true_blind_origin_claim"] = "NOT_VERIFIED"
+        origin_receipt["pre_reveal_author_guidance_excluded"] = True
+        guided_path = origin_receipt["source_path"]
+        # The author's supplied thesis is NOT native source evidence. Keep it
+        # frozen, reveal it after the first model proposal, and never label the
+        # result as a clean-room independent discovery.
+    guided_source_sha256 = origin_receipt.get("source_sha256") if guided_path else None
     if model is None:
         writer = module("deepwrite_discovery_writer", DEEPWRITE / "tools/writing_loop_experimental.py")
         if config["adapter"] == "codex":
@@ -294,9 +304,12 @@ def discover(config: dict, project: Path, out: Path, model=None):
         tokens += cost
         return response
     try:
-        readable = {k: v.decode("utf-8") for k, v in sources.items() if k != authority}
+        excluded = {authority}
+        if guided_path is not None:
+            excluded.add(guided_path)
+        readable = {k: v.decode("utf-8") for k, v in sources.items() if k not in excluded}
         if not readable:
-            raise Blocked("DISCOVERY_NO_NATIVE_SOURCE")
+            raise Blocked("DISCOVERY_NO_NEUTRAL_SOURCE_AFTER_AUTHOR_GUIDANCE_QUARANTINE")
         first = call("source_domain_study", {
             "wish": config["wish"], "sources": readable,
             "origin_requirement": ("ALSO_PROPOSE_THREE_SOURCE_GROUNDED_RIVAL_DECISION_FRAMES_UNVERIFIED" if config.get("insight_origin_scan") else "SOURCE_FIRST_ONLY"),
@@ -308,13 +321,19 @@ def discover(config: dict, project: Path, out: Path, model=None):
                     "lenses (at least three): id,default_question,alternative_question,decision_before,decision_after,"
                     "source_falsifier,source_anchor:{path,quote}; each quote must appear in source bytes. "
                     "No chapter outline in this phase; do not borrow an older book's chapter map."})
-        _study(first, sources, authority)
+        _study(first, sources, excluded)
         if config.get("insight_origin_scan"):
             gate = module("deepwrite_source_question_origin", DEEPWRITE / "candidates/e23-frame-wiring/insight_origin_gate.py")
             scan = gate.inspect_proposals(first, readable)
             if scan["status"] != "PASS_STRUCTURAL_ORIGIN_FROZEN_SEMANTICS_UNVERIFIED":
                 raise Blocked("DISCOVERY_ORIGIN_QUESTION_COMPETITION_INVALID: " + str(scan["errors"])[:140])
-            origin_receipt = {**scan, "mode": ("AUTHOR_GUIDED" if config.get("author_guidance") else "SOURCE_FIRST_PROPOSAL_NOT_ATTESTED_BLIND"),
+            origin_receipt = {**scan,
+                              "mode": ("AUTHOR_GUIDED" if guided_path else "SOURCE_FIRST_PROPOSAL_NOT_ATTESTED_BLIND"),
+                              "origin": ("USER_SUPPLIED_PERSPECTIVE" if guided_path else "MODEL_SOURCE_PROPOSAL_UNVERIFIED"),
+                              "count_as_autonomous": False,
+                              "pre_reveal_author_guidance_excluded": bool(guided_path),
+                              "guided_source_sha256": (origin_receipt.get("source_sha256") if guided_path else None),
+                              "wish_and_context_semantically_blind": "UNVERIFIED",
                               "true_blind_origin_claim": "NOT_VERIFIED", "human_quality": "NOT_RUN"}
             (out / "source_question_origination.json").write_bytes(encoded(origin_receipt))
         study_path = "sources/discovery_native_study.md"
@@ -326,6 +345,12 @@ def discover(config: dict, project: Path, out: Path, model=None):
             "wish": config["wish"], "source_study": first["study_markdown"],
             "source_concepts": first["source_concepts"],
             "rival_directions": first["rival_directions"],
+            "author_guidance_revealed_after_source_study": (
+                {"origin": "USER_SUPPLIED_PERSPECTIVE",
+                 "source_path": guided_path,
+                 "source_sha256": guided_source_sha256,
+                 "text": sources[guided_path].decode("utf-8")}
+                if guided_path is not None else None),
             "reader_goal": config.get("reader_goal", ""),
             "chapter_bounds": [config["min_chapters"], config["max_chapters"]],
             "task": "Only NOW derive a provisional chapter count/order from reader knowledge dependencies. "

@@ -484,15 +484,39 @@ class DefaultInvocationTests(unittest.TestCase):
         self.assertEqual(cfg["execution_contract"]["allowed_unapproved_candidate_chapters"],[])
 
     def test_author_guidance_is_attributed_not_called_blind(self):
-        self.data["author_guidance_source_index"]=0
+        guidance="Author-supplied perspective: always count the same objects before extrapolating."
+        guide=self.base/"author_thesis.md"
+        guide.write_text(guidance,encoding="utf-8")
+        self.data["source_files"].append(str(guide))
+        self.data["author_guidance_source_index"]=1
         self.save_request()
         result,_=self.invoke()
         self.assertEqual(result["status"],"ENGINEERING_FIXTURE_ONLY_NOT_LIVE",result)
-        cfg=json.loads((self.destination/"discovery_evidence/research/writer_config.json").read_text())
+        evidence=self.destination/"discovery_evidence/research"
+        first=json.loads((evidence/"source_domain_study.request.json").read_text())
+        second=json.loads((evidence/"book_architecture_discovery.request.json").read_text())
+        self.assertIn("sources/native_001.md",first["payload"]["sources"])
+        self.assertNotIn("sources/native_002.md",first["payload"]["sources"])
+        self.assertNotIn(guidance,json.dumps(first,ensure_ascii=False))
+        revealed=second["payload"]["author_guidance_revealed_after_source_study"]
+        self.assertEqual(revealed["text"],guidance)
+        self.assertEqual(revealed["source_path"],"sources/native_002.md")
+        self.assertEqual(revealed["source_sha256"],hashlib.sha256(guidance.encode()).hexdigest())
+        cfg=json.loads((evidence/"writer_config.json").read_text())
         self.assertEqual(cfg["author_guidance"]["origin"],"USER_SUPPLIED_PERSPECTIVE")
-        receipt=json.loads((self.destination/"discovery_evidence/research/STATE.json").read_text())
+        receipt=json.loads((evidence/"STATE.json").read_text())
         self.assertEqual(receipt["insight_origin_provenance"]["mode"],"AUTHOR_GUIDED")
+        self.assertFalse(receipt["insight_origin_provenance"]["count_as_autonomous"])
+        self.assertTrue(receipt["insight_origin_provenance"]["pre_reveal_author_guidance_excluded"])
         self.assertEqual(receipt["insight_origin_provenance"]["true_blind_origin_claim"],"NOT_VERIFIED")
+
+    def test_only_author_thesis_without_neutral_source_is_blocked_before_model(self):
+        self.data["author_guidance_source_index"]=0
+        self.save_request()
+        result,model=self.invoke()
+        self.assertEqual(result["status"],"BLOCKED_DISCOVERY",result)
+        self.assertIn("NO_NEUTRAL_SOURCE_AFTER_AUTHOR_GUIDANCE_QUARANTINE",result["failure_code"])
+        self.assertEqual(model.roles,[])
 
     def test_request_without_author_scope_fails_before_copying_sources(self):
         del self.data["authorized_scope"]
