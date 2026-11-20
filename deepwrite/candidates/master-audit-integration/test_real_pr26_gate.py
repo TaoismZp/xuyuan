@@ -25,7 +25,7 @@ class RealGate(unittest.TestCase):
         self.tmp = tempfile.TemporaryDirectory()
         self.addCleanup(self.tmp.cleanup)
         self.root = Path(self.tmp.name)
-        self.source = ("# 序言\n证据一二三四五六七八。\n# 第一章\n证据九十十一十二十三十四。\n").encode()
+        self.source = ("# 序言：这是合成测试标题一二三四五六。\n证据一二三四五六七八九十。\n# 第一章：这是合成测试标题九八七六。\n证据九十十一十二十三十四十五。\n").encode()
         self.write("book.md", self.source)
         self.parts = []
         start = 0
