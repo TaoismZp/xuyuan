@@ -330,7 +330,10 @@ class WritingLoop:
 
     def assert_stable_entry(self):
         resolver = module("e18_formal_activation", DEEPWRITE / "release/activation.py")
-        resolved = resolver.resolve(DEEPWRITE.parent)
+        try:
+            resolved = resolver.resolve(DEEPWRITE.parent)
+        except (OSError, ValueError, KeyError, TypeError) as error:
+            raise Blocked("STABLE_WRITER_NOT_FORMALLY_SELECTED_BY_CURRENT") from error
         if (resolved.get("status") != "ACTIVE_ENGINE_IDENTITY_VERIFIED_QUALITY_NOT_IMPLIED" or
                 resolved.get("runner") not in ("deepwrite/tools/writing_loop_experimental.py", "deepwrite/deepwrite.py") or
                 self.config.get("guard") != "on"):
@@ -1140,8 +1143,11 @@ def main():
                              expected_author_approval_sha=args.author_approval_sha256).run()
     except Exception as error:
         result = {"status": "BLOCKED", "error_type": type(error).__name__, "message": redact(str(error))[:600]}
+    if result["status"] in ("CANDIDATE_PENDING_HUMAN", "ENGINEERING_FIXTURE_ONLY_NOT_LIVE"):
+        result = dict(result, status="BOOK_DRAFT_REQUIRES_MASTER_AUDIT",
+                      next_step="USE_UNIFIED_CANDIDATE_ENTRY_FOR_TOPOLOGY_AND_MASTER_AUDIT")
     print(json.dumps(result, ensure_ascii=False, indent=2))
-    return 0 if result["status"] in ("CANDIDATE_PENDING_HUMAN", "PAUSED") else 2
+    return 0 if result["status"] == "PAUSED" else 2
 
 
 if __name__ == "__main__":

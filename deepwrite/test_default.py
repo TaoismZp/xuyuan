@@ -127,6 +127,19 @@ class StudyModel:
             else:
                 result={"schema":"deepwrite/bookwide-topology-audit/v1", "decision":"KEEP",
                         "reason":"No independently evidenced need to change chapter topology after full book review."}
+        elif req["role"] == "master_audit_section":
+            result = {"section_id": req["payload"]["section_id"],
+                      "mechanism": "Engineering fixture records the specific source contribution.",
+                      "counterargument": "A model receipt cannot establish true reader comprehension.",
+                      "issues": []}
+        elif req["role"] == "master_audit_book":
+            result = {"covered_section_ids": req["payload"]["section_ids"], "issues": [],
+                      "dimensions": {k: "Fixture scope only. No external quality claim." for k in req["payload"]["dimensions"]}}
+        elif req["role"] == "master_audit_full_read":
+            excerpt = next(line.strip() for line in req["payload"]["body"].splitlines() if len(line.strip()) >= 8)
+            result = {"id": req["payload"]["chunk"]["id"], "quote": excerpt,
+                      "semantic_function": "This is a source-located engineering receipt, not a quality assertion.",
+                      "concern": None}
         elif self.prepared is not None and req["role"] == "book_architecture_discovery":
             result=self.prepared
         return SimpleNamespace(model="synthetic-study-model", provider_kind="fixture",
@@ -137,6 +150,9 @@ class StudyModel:
 
 class DefaultInvocationTests(unittest.TestCase):
     def setUp(self):
+        candidate = patch.object(dw, "_MASTER_AUDIT_CANDIDATE", True)
+        candidate.start()
+        self.addCleanup(candidate.stop)
         self.tmp=tempfile.TemporaryDirectory(prefix="deepwrite-one-call-")
         self.base=Path(self.tmp.name)
         self.src=self.base/"source.md"
@@ -203,7 +219,8 @@ class DefaultInvocationTests(unittest.TestCase):
         result = dw.resume(self.destination, state_sha, research_model=reviewer,
                            writer_model=writer_test.ScriptedModel())
         self.assertEqual(result["status"], "ENGINEERING_FIXTURE_ONLY_NOT_LIVE", result)
-        self.assertEqual(reviewer.roles, ["bookwide_topology_recheck"])
+        self.assertEqual(reviewer.roles[0], "bookwide_topology_recheck")
+        self.assertEqual(reviewer.roles.count("master_audit_full_read"), 2)
         self.assertEqual(result["bookwide_topology_recheck"]["status"], "STRUCTURE_KEPT_MODEL_INTERNAL_ONLY")
         self.assertEqual(dw.status(self.destination)["project_status"], result["status"])
         archived = self.destination / "discovery_evidence/history" / ("RESULT." + dw.sha(previous) + ".json")
@@ -252,43 +269,35 @@ class DefaultInvocationTests(unittest.TestCase):
         self.assertEqual(json.loads(state_file.read_text())["execution_mode"], "ASSISTED_AUTHOR_GATED")
 
     def test_missing_or_unknown_final_gate_is_not_ready_and_is_rechecked(self):
-        result, _ = self.invoke()
-        evidence = self.destination / "discovery_evidence"
-        receipt_file = evidence / "RESULT.json"
+        self.invoke()
+        receipt_file = self.destination / "discovery_evidence/TOPOLOGY.json"
         intact = json.loads(receipt_file.read_text())
         for gate in (None, {"status": "UNKNOWN_FUTURE_GATE"}):
             with self.subTest(gate=gate):
-                broken = copy.deepcopy(intact)
-                if gate is None:
-                    del broken["bookwide_topology_recheck"]
-                else:
-                    broken["bookwide_topology_recheck"] = gate
-                old = dw.canonical(broken)
-                receipt_file.write_bytes(old)
-                self.assertEqual(dw.status(self.destination)["project_status"], "AWAIT_FINAL_BOOK_REVIEW")
+                broken = dict(intact, bookwide_topology_recheck=gate or {})
+                receipt_file.write_bytes(dw.canonical(broken))
+                self.assertEqual(dw.status(self.destination)["project_status"], "BLOCKED_MASTER_AUDIT")
                 reviewer = StudyModel()
                 state = self.destination / "writer_project/run_state.json"
                 resumed = dw.resume(self.destination, dw.sha(state.read_bytes()),
                                     research_model=reviewer, writer_model=writer_test.ScriptedModel())
-                self.assertEqual(reviewer.roles, ["bookwide_topology_recheck"])
-                self.assertEqual(resumed["status"], result["status"])
-                self.assertEqual(resumed["bookwide_topology_recheck"]["status"], "STRUCTURE_KEPT_MODEL_INTERNAL_ONLY")
-                self.assertEqual((evidence / "history" / ("RESULT." + dw.sha(old) + ".json")).read_bytes(), old)
+                self.assertEqual(reviewer.roles, [])
+                self.assertEqual(resumed["status"], "BLOCKED_MASTER_AUDIT")
 
     def test_missing_actual_final_review_response_cannot_reuse_ready_receipt(self):
-        result, _ = self.invoke()
+        self.invoke()
         (self.destination / "discovery_evidence/bookwide_topology.response.json").unlink()
-        self.assertEqual(dw.status(self.destination)["project_status"], "AWAIT_FINAL_BOOK_REVIEW")
+        self.assertEqual(dw.status(self.destination)["project_status"], "BLOCKED_MASTER_AUDIT")
         reviewer = StudyModel()
         state = self.destination / "writer_project/run_state.json"
         resumed = dw.resume(self.destination, dw.sha(state.read_bytes()),
                             research_model=reviewer, writer_model=writer_test.ScriptedModel())
-        self.assertEqual(reviewer.roles, ["bookwide_topology_recheck"])
-        self.assertEqual(resumed["status"], result["status"])
+        self.assertEqual(reviewer.roles, [])
+        self.assertEqual(resumed["status"], "BLOCKED_MASTER_AUDIT")
 
     def test_explicit_final_hold_survives_incorrect_outer_ready_summary(self):
         self.invoke()
-        receipt_file = self.destination / "discovery_evidence/RESULT.json"
+        receipt_file = self.destination / "discovery_evidence/TOPOLOGY.json"
         receipt = json.loads(receipt_file.read_text())
         receipt["bookwide_topology_recheck"] = {
             "status": "BOOKWIDE_STRUCTURE_RECHECK_BLOCKED", "reason": "A recorded major structure problem remains unresolved."}
@@ -324,11 +333,11 @@ class DefaultInvocationTests(unittest.TestCase):
         first = dw.resume(self.destination, state_sha, research_model=BadTopology(),
                           writer_model=writer_test.ScriptedModel())
         self.assertEqual(first["status"], "BLOCKED_BOOKWIDE_TOPOLOGY_QUALITY")
-        receipt_file = self.destination / "discovery_evidence/RESULT.json"
+        receipt_file = self.destination / "discovery_evidence/TOPOLOGY.json"
         broken = json.loads(receipt_file.read_text())
         del broken["bookwide_topology_recheck"]
         receipt_file.write_bytes(dw.canonical(broken))
-        self.assertEqual(dw.status(self.destination)["project_status"], "BLOCKED_FINAL_REVIEW_RECEIPT_UNVERIFIED")
+        self.assertEqual(dw.status(self.destination)["project_status"], "BLOCKED_BOOKWIDE_TOPOLOGY_QUALITY")
         reviewer = StudyModel()
         state = self.destination / "writer_project/run_state.json"
         resumed = dw.resume(self.destination, dw.sha(state.read_bytes()),
@@ -432,7 +441,8 @@ class DefaultInvocationTests(unittest.TestCase):
     def test_one_command_autoselects_all_gates_to_actual_book(self):
         result,model=self.invoke()
         self.assertEqual(result["status"],"ENGINEERING_FIXTURE_ONLY_NOT_LIVE",result)
-        self.assertEqual(model.roles,["source_domain_study","book_architecture_discovery","bookwide_topology_recheck"])
+        self.assertEqual(model.roles[:3],["source_domain_study","book_architecture_discovery","bookwide_topology_recheck"])
+        self.assertEqual(model.roles.count("master_audit_full_read"), 2)
         self.assertEqual(result["chapter_count_proposed"],1)
         self.assertFalse(result["chapter_count_author_approved"])
         self.assertFalse(result["default_formal_main_pointer_changed"])

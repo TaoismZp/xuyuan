@@ -1,0 +1,25 @@
+name: DeepWrite master audit source/receipt gate
+on:
+  pull_request:
+    paths:
+      - "deepwrite/master-audit/**"
+      - "deepwrite/AGENTS.md"
+      - "deepwrite/START_HERE.md"
+      - "deepwrite/DEFAULT_INVOCATION.md"
+      - "AGENTS.md"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  synthetic-audit-regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Fail-closed evidence/receipt regression tests
+        run: python3 -m unittest discover -s deepwrite/master-audit -p "test_audit_gate.py" -v
