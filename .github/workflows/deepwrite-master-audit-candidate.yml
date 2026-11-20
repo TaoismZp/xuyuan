@@ -35,3 +35,7 @@ jobs:
       - name: Actual PR26 gate synthetic regression
         run: |
           python deepwrite/candidates/master-audit-integration/test_real_pr26_gate.py deepwrite/master-audit/audit_gate.py
+
+      - name: Candidate bridge regression with trusted gate identity
+        run: |
+          python deepwrite/candidates/master-audit-integration/test_master_audit_closure.py
