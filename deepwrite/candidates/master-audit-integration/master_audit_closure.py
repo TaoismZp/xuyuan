@@ -12,7 +12,9 @@ from pathlib import Path
 import subprocess
 import sys
 
-TRUSTED_GATE_GIT_BLOB_SHA1 = "f790049eaa9b3583b6bd0cb3bd51674eb59f47d4"\n\nclass Hold(ValueError):
+TRUSTED_GATE_GIT_BLOB_SHA1 = "f790049eaa9b3583b6bd0cb3bd51674eb59f47d4"
+
+class Hold(ValueError):
     pass
 
 def digest(data):
@@ -38,7 +40,11 @@ def require(condition, msg):
         raise Hold(msg)
 
 def verify(project, bundle, gate):
-    project, bundle = project.resolve(), bundle.resolve()\n    require(gate.is_file() and not gate.is_symlink(), "TRUSTED_AUDIT_GATE_MISSING_OR_SYMLINK")\n    gate_bytes = gate.read_bytes()\n    actual_gate_blob = hashlib.sha1(b"blob " + str(len(gate_bytes)).encode() + b"\\0" + gate_bytes).hexdigest()\n    require(actual_gate_blob == TRUSTED_GATE_GIT_BLOB_SHA1, "UNTRUSTED_AUDIT_GATE_IDENTITY")
+    project, bundle = project.resolve(), bundle.resolve()
+    require(gate.is_file() and not gate.is_symlink(), "TRUSTED_AUDIT_GATE_MISSING_OR_SYMLINK")
+    gate_bytes = gate.read_bytes()
+    actual_gate_blob = hashlib.sha1(b"blob " + str(len(gate_bytes)).encode() + b"\0" + gate_bytes).hexdigest()
+    require(actual_gate_blob == TRUSTED_GATE_GIT_BLOB_SHA1, "UNTRUSTED_AUDIT_GATE_IDENTITY")
     require(not bundle.is_relative_to(project / "writer_project"), "AUDIT_EVIDENCE_CANNOT_OVERWRITE_WRITER")
     binding = load(safe(bundle, "BINDING.json"))
     book = safe(project, binding.get("selected_book_relative", ""))
