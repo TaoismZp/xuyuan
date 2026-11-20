@@ -230,14 +230,54 @@ def resolve(root: Path, project_state: Path | None = None) -> dict:
     return output
 
 
+def resolve_master_audit_candidate(root):
+    """Explicit opt-in for this committed candidate. No writes to CURRENT."""
+    root = checked_root(root)
+    current = read_current(root)
+    official = current["active_engine"]
+    official_record = safe_relative(root, official["release_record"])
+    if sha256(official_record.read_bytes()) != official["release_record_sha256"]:
+        raise ValueError("CANDIDATE_BASE_RELEASE_RECORD_CHANGED")
+    baseline = json.loads(official_record.read_bytes())
+    additions = (
+        "deepwrite/candidates/master-audit-integration/master_audit_runtime.py",
+        "deepwrite/candidates/master-audit-integration/master_audit_closure.py",
+        "deepwrite/master-audit/audit_gate.py",
+    )
+    paths = ["deepwrite/CURRENT.json", "wish-delivery/CURRENT.json", official["release_record"],
+             current["active_workbench_spec"], baseline["parent"]["spec"]["path"],
+             *[entry["path"] for entry in baseline["runtime_files"]], *additions]
+    inventory = {}
+    for relative in dict.fromkeys(paths):
+        raw = safe_relative(root, relative).read_bytes()
+        verify_git_file(root, "HEAD", relative, raw)
+        inventory[relative] = sha256(raw)
+    return {"status": "MASTER_AUDIT_CANDIDATE_IDENTITY_ONLY", "runner": "deepwrite/deepwrite.py",
+            "candidate_commit": git(root, "rev-parse", "HEAD").decode().strip(),
+            "release_channel": "CANDIDATE_OPT_IN", "formal_activation": False,
+            "runtime_files": inventory}
+
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", type=Path, default=Path(__file__).resolve().parents[2])
     parser.add_argument("--project-state", type=Path)
     parser.add_argument("--run", action="store_true")
+    parser.add_argument("--master-audit-candidate", action="store_true")
     parser.add_argument("runner_args", nargs=argparse.REMAINDER)
     args = parser.parse_args()
     try:
+        runner_args = args.runner_args[1:] if args.runner_args[:1] == ["--"] else args.runner_args
+        if args.master_audit_candidate:
+            if args.project_state is not None:
+                raise ValueError("CANDIDATE_USES_ITS_OWN_PROJECT_COMMIT_PIN")
+            data = resolve_master_audit_candidate(args.root)
+            print(json.dumps(data, ensure_ascii=False, indent=2), flush=True)
+            if not args.run:
+                return 0
+            return subprocess.run([sys.executable, "-B", str(safe_relative(args.root, data["runner"])),
+                                   "--master-audit-candidate", *runner_args], check=False).returncode
         data = resolve(args.root, args.project_state)
         print(json.dumps(data, ensure_ascii=False, indent=2), flush=True)
         if not args.run:

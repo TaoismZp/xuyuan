@@ -1,44 +1,20 @@
-# Post-book master-audit integration spike (candidate only)
+# DeepWrite 总审整书候选
 
-**Not active; not a DeepWrite v0.3.1 release. No model or human quality certification.**
+候选入口从一个已提交的检出验证代码和版本指针。请在私有输出目录使用它。
 
-This is a reversible, public-only code experiment based on the unmerged `deepwrite-master-audit-gate-20261120` branch (PR #26). It must not contain private manuscripts, source read receipts, or user evaluations.
-
-## Why this exists
-
-The formal writer currently performs E18 chapter adversarial reviews, a cross-chapter review, a full-book recheck, packages `writer_project/book.md`, and may return `CANDIDATE_PENDING_HUMAN`. `deepwrite/deepwrite.py:finalize_execution` then performs a separate bookwide topology KEEP/REPLAN check. Neither step currently requires the new byte-contiguous PR #26 audit evidence. Merely adding `audit_gate.py` and an agent policy does not wire the released engine.
-
-`master_audit_closure.py` is a **candidate validator**. It binds the selected book SHA-256 to the E18 run/config SHA, topology KEEP/REPLAN selection, audited chunk receipts, chapter semantics, issue resolution, final version read report, and still returns `ENGINEERING_EVIDENCE_PASS_BOOK_QUALITY_UNVERIFIED`. It invokes the PR #26 audit CLI. It does not generate actual read receipts or verify that a model understood a manuscript.
-
-## Experiment command
-
-```bash
-python3 -B deepwrite/candidates/master-audit-integration/master_audit_closure.py \
-  --project /private/isolated-book-project \
-  --bundle /private/isolated-audit-bundle \
-  --audit-gate deepwrite/master-audit/audit_gate.py
-
-python3 -m unittest discover \
-  -s deepwrite/candidates/master-audit-integration \
-  -p 'test_master_audit_closure.py' -v
+```sh
+python3 -B deepwrite/release/activation.py --master-audit-candidate --run -- identity
+python3 -B deepwrite/release/activation.py --master-audit-candidate --run -- run /private/request.json /private/book-project
+python3 -B deepwrite/release/activation.py --master-audit-candidate --run -- status /private/book-project
+python3 -B deepwrite/release/activation.py --master-audit-candidate --run -- resume /private/book-project --expected-state-sha256 <sha256>
 ```
 
-The 11 included regressions use a **mock PR #26 gate** and a toy synthetic book, not a real model, not the actual audit backend. Local Python 3 tests on 2026-11-20: 11/11 passed. GitHub CI, actual PR #26 gate integration, end-to-end model execution, and reader testing are still pending.
+运行请求沿用正式工作台格式。恢复使用同一候选提交和外部保存的 `writer_project/run_state.json` SHA。样章先审模式继续要求外部作者回执。
 
-## Integration seam (not yet wired)
+G6/G7 写作阶段复核和装订之后，统一入口验证拓扑决定和完整装订清单。KEEP 审原稿，REPLAN 审实际派生版本并重新生成分片清单。模型逐节报告机制、反方和定位问题，再用章报告检查全书。总审还对装订字节做逐片模型调用与引用核对。重要问题触发至多一轮关联章节全文返工、定位复核及修订稿整书审读。显著缩减、未关闭问题、缺少凭证或预算超限会停在候选阻断状态。
 
-1. Keep E18 per-chapter review, G6 `review_cycle(cross)`, G7 `review_cycle(full_book_recheck)`, and `package`. Treat E18's status as an internal draft candidate, not external author-ready completion.
-2. Keep `run_bounded_bookwide_topology_check` in `finalize_execution`; bind actual selected original/derived `book.md`. Note the current topology prompt uses `book[:230000]`, so it cannot prove complete reading of a longer book.
-3. After topology, orchestrate source-full-read/chapter-semantic/cross-chapter issue cluster repairs and final full sequential read. Make the validator fail closed on the final source blob.
-4. Wire the identical requirement into `run`, `resume`, and `status`, and into a newly versioned release manifest. Do not edit integrity-bound main v0.3.1 code in place. Synthetic tests are not human quality PASS.
+审计凭证保存在项目的 `discovery_evidence/master_audit` 下。逐次记录模型实际请求和响应并以原子文件提交，最终就绪由 `status` 和 `resume` 重放同一证据链算出。已保存的响应可以继续复用。若中断发生在已发请求和响应入账之间，调用成本未知，需要先核对该请求。手改外层 `RESULT.json` 不会关闭问题。具有整个项目存储写权限的人可以篡改所有本地材料，发布验收仍须对照独立保存的检查点和作者验收凭证。
 
-## Open negative checks
+独立的 PR #26 CLI 只核凭证和字节。总审运行时额外验证章映射、走过的模型审查和实际修订。模型仍可能漏判、误判或无法做外部事实核验。代码记录的模型审读不提供真人判断。超过单章上下文上限将说明阻断原因。
 
-- Explicitly pin the expected PR #26 gate module byte identity in the future release, rather than accepting a caller-provided executable without governance.
-- Verify actual gate CLI with real manuscript-bound receipt fixtures and strong semantic coverage. Reject false-pass audit wrappers.
-- Audit REPLAN derived `writer_project_topology_r2/manifest.json` separately; this spike currently checks section count against the original manifest and must not be accepted as complete REPLAN support.
-- Handle large books via genuine bounded batches (usually 3 full chapters / ~10–20 chunks), clear downsizing reasons, and model/context evidence, rather than assuming one huge prompt read everything.
-- Formalize stop/loop budget, stable issue cluster IDs, content retention and full revised chapter author delivery. Do not reuse prior full-read PASS after any book-byte change.
-- Preserve ASSISTED_AUTHOR_GATED sample stop, external author signatures, privacy checks and real human reader trials.
-
-**Gate:** no promotion to STABLE or PR merge merely because this spike exists.
+CI 用合成稿和脚本模型跑同一写书链及真实 PR #26 门禁。真人作者和读者验收、自然场景下的质量改进及黑箱和逐章写作非劣性继续待证。已发布引擎由 main 的 CURRENT 指向，候选提交需经过单独授权才能进入正式发布。

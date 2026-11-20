@@ -22,7 +22,11 @@ jobs:
       - name: Validate activation pointer and offline release rules
         run: python3 -B -m unittest discover -s deepwrite/release -p 'test_*.py' -v
       - name: Resolve CURRENT as the unique source of current engine identity
+        if: github.event_name != 'pull_request' || github.head_ref != 'codex/master-audit-engine-integration-20261120'
         run: python3 -B deepwrite/release/activation.py --root .
+      - name: Resolve the explicitly selected master audit candidate
+        if: github.event_name == 'pull_request' && github.head_ref == 'codex/master-audit-engine-integration-20261120'
+        run: python3 -B deepwrite/release/activation.py --master-audit-candidate --run -- identity
       - name: Recheck repaired actual-file closeout guard
         run: python3 -B -m unittest discover -s deepwrite/candidates/e15-review-closure -p 'test_*.py' -v
       - name: Recheck existing safe packager
@@ -38,7 +42,7 @@ jobs:
       - name: Preserve E18 true-file writing/checkpoint behavior
         run: python3 -B -m unittest discover -s deepwrite/tools/tests -p 'test_*.py' -v
       - name: Actually invoke checked-out candidate declaration without claiming formal activation
-        if: github.event_name != 'push' || github.ref != 'refs/heads/main'
+        if: (github.event_name != 'push' || github.ref != 'refs/heads/main') && (github.event_name != 'pull_request' || github.head_ref != 'codex/master-audit-engine-integration-20261120')
         run: |
           python3 -B - <<'PY'
           import json, subprocess, sys

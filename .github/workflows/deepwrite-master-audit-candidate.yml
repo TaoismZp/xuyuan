@@ -1,18 +1,25 @@
 name: DeepWrite master audit candidate checks
 on:
   push:
-    branches: [deepwrite-master-audit-engine-spike-20261120]
+    branches: [deepwrite-master-audit-engine-spike-20261120, codex/master-audit-engine-integration-20261120]
   pull_request:
     paths:
       - 'deepwrite/candidates/master-audit-integration/**'
-      - 'deepwrite/master-audit/audit_gate.py'
+      - 'deepwrite/master-audit/**'
+      - 'deepwrite/deepwrite.py'
+      - 'deepwrite/release/activation.py'
+      - '.github/workflows/deepwrite-master-audit-candidate.yml'
+  workflow_dispatch:
 jobs:
   candidate-audit:
     runs-on: ubuntu-latest
     permissions:
       contents: read
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          fetch-depth: 0
+          persist-credentials: false
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
@@ -39,3 +46,9 @@ jobs:
       - name: Candidate bridge regression with trusted gate identity
         run: |
           python deepwrite/candidates/master-audit-integration/test_master_audit_closure.py
+
+      - name: Exercise committed candidate entry and integrated writer lifecycle
+        run: |
+          python -m py_compile deepwrite/deepwrite.py deepwrite/release/activation.py deepwrite/candidates/master-audit-integration/master_audit_runtime.py
+          python -B deepwrite/release/activation.py --master-audit-candidate --run -- identity
+          python -B deepwrite/candidates/master-audit-integration/test_engine_master_audit.py

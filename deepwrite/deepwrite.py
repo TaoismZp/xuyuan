@@ -25,6 +25,8 @@ REQUEST_SCHEMA = "deepwrite/one-call-author-request/v1"
 MODES = {"AUTONOMOUS_FULL_DRAFT": "ALL_CANDIDATE_CHAPTERS",
          "ASSISTED_AUTHOR_GATED": "FIRST_SAMPLE_AFTER_DISCOVERY"}
 SAFE_ID = re.compile(r"[A-Za-z0-9_-]{4,100}\Z")
+_MASTER_AUDIT_CANDIDATE = False
+
 
 
 class Blocked(ValueError):
@@ -80,6 +82,8 @@ def official_identity():
 
 def effective_channel():
     """Resolve formally verified stable engine; never run an unactivated writer on main."""
+    if _MASTER_AUDIT_CANDIDATE:
+        return "CANDIDATE_OPT_IN"
     ident = official_identity()
     if ident["formal_engine_active"]:
         activation = load("deepwrite_default_release_resolver", DEEPWRITE / "release/activation.py")
@@ -286,7 +290,16 @@ def save_execution_evidence(path: Path, value):
     raw = canonical(value)
     if path.exists() and path.read_bytes() != raw:
         archive_execution_evidence(path)
-    path.write_bytes(raw)
+    import tempfile
+    with tempfile.NamedTemporaryFile(dir=path.parent, delete=False) as handle:
+        temporary = Path(handle.name)
+        try:
+            handle.write(raw)
+            handle.flush()
+            os.fsync(handle.fileno())
+            os.replace(temporary, path)
+        finally:
+            temporary.unlink(missing_ok=True)
 
 
 def project_engine_lock(path: Path, *, enforce=True):
@@ -397,12 +410,15 @@ def run_bounded_bookwide_topology_check(project, evidence, cfg, writer_result, m
         return blocked
 
 
-def finalize_execution(project, evidence, final, result, *, research_model=None, writer_model=None):
-    """Shared fresh/resumed finish: an E18 book is not the whole invocation."""
+def finalize_topology(project, evidence, final, result, *, research_model=None, writer_model=None):
+    """Select the book for audit. This internal receipt is never author readiness."""
     state_sha = sha((project / "run_state.json").read_bytes())
     config_sha = sha((evidence / "research/writer_config.json").read_bytes())
     complete = ("CANDIDATE_PENDING_HUMAN", "ENGINEERING_FIXTURE_ONLY_NOT_LIVE")
-    previous = evidence / "RESULT.json"
+    previous = evidence / "TOPOLOGY.json"
+    audit_started = (evidence / "master_audit/BINDING.json").exists()
+    if audit_started and not previous.is_file():
+        raise Blocked("MASTER_AUDIT_TOPOLOGY_RECEIPT_MISSING")
     if previous.is_file() and result["status"] in complete:
         prior = json.loads(previous.read_text("utf-8"))
         if (prior.get("writer_state_sha256") == state_sha and
@@ -418,8 +434,11 @@ def finalize_execution(project, evidence, final, result, *, research_model=None,
             elif gate_status == "REPLAN_DERIVATION_PENDING_HUMAN" and isinstance(gate.get("derived_writer_result"), dict):
                 terminal = (result["status"] if gate["derived_writer_result"].get("status") in complete
                             else "BLOCKED_DERIVED_BOOK_WRITE")
-            elif gate_status == "STRUCTURE_KEPT_MODEL_INTERNAL_ONLY":
+            elif gate_status in ("STRUCTURE_KEPT_MODEL_INTERNAL_ONLY", "KEEP_AUTHOR_SCOPE"):
                 terminal = result["status"]
+            if (gate_status == "KEEP_AUTHOR_SCOPE" and
+                    final["execution_contract"]["mode"] == "ASSISTED_AUTHOR_GATED" and prior.get("status") == terminal):
+                return prior
             if (str(prior.get("status", "")).startswith("BLOCKED") and
                     terminal not in ("BLOCKED_BOOKWIDE_TOPOLOGY_QUALITY", "BLOCKED_DERIVED_BOOK_WRITE")):
                 prior["status"] = "BLOCKED_FINAL_REVIEW_RECEIPT_UNVERIFIED"
@@ -448,6 +467,8 @@ def finalize_execution(project, evidence, final, result, *, research_model=None,
                     proof_ok = False
             if proof_ok and prior.get("status") == terminal:
                 return prior
+    if audit_started:
+        raise Blocked("MASTER_AUDIT_TOPOLOGY_RECEIPT_CHANGED")
     replan = {"status": "NOT_RUN", "reason": "ASSISTED_AUTHOR_GATE_OR_WRITER_INCOMPLETE"}
     if (final["execution_contract"]["mode"] == "AUTONOMOUS_FULL_DRAFT" and
             result["status"] in ("CANDIDATE_PENDING_HUMAN", "ENGINEERING_FIXTURE_ONLY_NOT_LIVE")):
@@ -463,6 +484,9 @@ def finalize_execution(project, evidence, final, result, *, research_model=None,
                       "reason": type(error).__name__ + ": " + str(error)[:180],
                       "next_step": "INSPECT_REVIEW_EVIDENCE_DO_NOT_PROMOTE_MODEL_JUDGMENT"}
             save_execution_evidence(evidence / "bookwide_topology_outcome.json", replan)
+    if (result["status"] in complete and
+            final["execution_contract"]["mode"] == "ASSISTED_AUTHOR_GATED"):
+        replan = {"status": "KEEP_AUTHOR_SCOPE", "author_acceptance": "NOT_RUN"}
     project_status = result["status"]
     if replan["status"] in ("BOOKWIDE_STRUCTURE_RECHECK_BLOCKED", "REPLAN_CONTENT_LOSS_REQUIRES_INDEPENDENT_REVIEW"):
         project_status = "BLOCKED_BOOKWIDE_TOPOLOGY_QUALITY"
@@ -484,12 +508,64 @@ def finalize_execution(project, evidence, final, result, *, research_model=None,
     }
     receipt["writer_state_sha256"] = state_sha
     receipt["writer_config_sha256"] = config_sha
+    save_execution_evidence(evidence / "TOPOLOGY.json", receipt)
+    return receipt
+
+
+def master_audit_module():
+    directory = DEEPWRITE / "candidates/master-audit-integration"
+    load("master_audit_closure", directory / "master_audit_closure.py")
+    return load("deepwrite_master_audit_runtime", directory / "master_audit_runtime.py")
+
+
+def audit_projection(project, evidence, topology, *, model=None, read_only=False):
+
+    gate_status = topology.get("bookwide_topology_recheck", {}).get("status")
+    if gate_status in ("BOOKWIDE_STRUCTURE_RECHECK_BLOCKED", "REPLAN_CONTENT_LOSS_REQUIRES_INDEPENDENT_REVIEW"):
+        return {"status": "BLOCKED_BOOKWIDE_TOPOLOGY_QUALITY", "author_acceptance": "NOT_RUN",
+                "book_quality": "UNVERIFIED"}
+    if topology.get("status") not in ("CANDIDATE_PENDING_HUMAN", "ENGINEERING_FIXTURE_ONLY_NOT_LIVE"):
+        project_status = topology.get("status", "AWAIT_BOOKWIDE_TOPOLOGY")
+        if not isinstance(project_status, str) or project_status not in ("AWAIT_AUTHOR_REVIEW", "PAUSED") and not project_status.startswith("BLOCKED"):
+            project_status = "AWAIT_BOOKWIDE_TOPOLOGY"
+        return {"status": project_status, "author_acceptance": "NOT_RUN", "book_quality": "UNVERIFIED"}
+    audit = master_audit_module()
+    try:
+        return audit.drive(project, evidence, topology["bookwide_topology_recheck"], model, read_only=read_only)
+    except (Exception, SystemExit) as error:
+        reason = str(error)[:240]
+        pending = read_only and reason in ("MASTER_AUDIT_NOT_STARTED", "MASTER_AUDIT_RESPONSE_MISSING")
+        return {"status": "AWAIT_MASTER_AUDIT" if pending else "BLOCKED_MASTER_AUDIT",
+                "reason": reason, "author_acceptance": "NOT_RUN", "book_quality": "UNVERIFIED",
+                "next_step": "RESUME_WITH_FROZEN_WRITER_STATE_OR_INSPECT_AUDIT_JOURNAL"}
+
+
+def finalize_execution(project, evidence, final, result, *, research_model=None, writer_model=None):
+    """G6/G7 package → topology → master audit → final read → author queue."""
+    try:
+        topology = finalize_topology(project, evidence, final, result,
+                                     research_model=research_model, writer_model=writer_model)
+    except (OSError, ValueError, KeyError, TypeError) as error:
+        return {"status": "BLOCKED_MASTER_AUDIT", "reason": str(error)[:240],
+                "author_acceptance": "NOT_RUN", "book_quality": "UNVERIFIED"}
+    model = research_model or writer_model
+    if model is None and topology["status"] in ("CANDIDATE_PENDING_HUMAN", "ENGINEERING_FIXTURE_ONLY_NOT_LIVE"):
+        writer = load("deepwrite_master_model_factory", DEEPWRITE / "tools/writing_loop_experimental.py")
+        if final["adapter"] == "codex":
+            model = writer.CodexExec(final["model"], timeout=final.get("call_timeout", 600))
+        else:
+            model = writer.transport.OpenAIResponses(final["model"])
+            model.is_live = True
+    outcome = audit_projection(project, evidence, topology, model=model)
+    receipt = dict(topology, status=outcome["status"], master_audit=outcome,
+                   author_acceptance="NOT_RUN", independent_reader_quality="NOT_RUN")
     save_execution_evidence(evidence / "RESULT.json", receipt)
     return receipt
 
 
 def run(request_file: Path, private_root: Path, *, research_model=None, writer_model=None):
     """One invocation performs discovery and E18; no manual source module flags."""
+    effective_channel()
     project, evidence, base = prepare(request_file, private_root)
     discovery = load("deepwrite_one_call_discovery", DEEPWRITE / "candidates/source-first/architecture_discovery.py")
     research_evidence = evidence / "research"
@@ -517,57 +593,28 @@ def status(path: Path):
     writer_state = private_path(path / "writer_project/run_state.json")
     if writer_state.is_file():
         raw = writer_state.read_bytes()
+        audit_details = None
         state = json.loads(raw)
         project_status = state["status"]
         latest = writer_state
-        # A status query succeeds independently of whether its manuscript is
-        # paused, blocked or ready. Do not hide a final gate behind E18 success.
-        if project_status in ("CANDIDATE_PENDING_HUMAN", "ENGINEERING_FIXTURE_ONLY_NOT_LIVE"):
-            project_status = "AWAIT_FINAL_BOOK_REVIEW"
-        result_file = private_path(evidence / "RESULT.json")
+        result_file = private_path(evidence / "TOPOLOGY.json")
         config_file = private_path(evidence / "research/writer_config.json")
-        if result_file.is_file() and config_file.is_file():
-            result = json.loads(result_file.read_text("utf-8"))
-            if (result.get("writer_state_sha256") == sha(raw) and
-                    result.get("writer_config_sha256") == sha(config_file.read_bytes()) and
-                    result.get("writer_result", {}).get("status") == state["status"]):
-                config = json.loads(config_file.read_text("utf-8"))
-                if (state["status"] not in ("CANDIDATE_PENDING_HUMAN", "ENGINEERING_FIXTURE_ONLY_NOT_LIVE") or
-                        config["execution_contract"]["mode"] != "AUTONOMOUS_FULL_DRAFT"):
-                    project_status, latest = result["status"], result_file
-                else:
-                    gate = result.get("bookwide_topology_recheck")
-                    gate = gate if isinstance(gate, dict) else {}
-                    gate_status = gate.get("status")
-                    terminal = None
-                    if gate_status in ("BOOKWIDE_STRUCTURE_RECHECK_BLOCKED",
-                                       "REPLAN_CONTENT_LOSS_REQUIRES_INDEPENDENT_REVIEW"):
-                        terminal = "BLOCKED_BOOKWIDE_TOPOLOGY_QUALITY"
-                    elif gate_status == "REPLAN_DERIVATION_PENDING_HUMAN" and isinstance(gate.get("derived_writer_result"), dict):
-                        terminal = (state["status"] if gate["derived_writer_result"].get("status") in
-                                    ("CANDIDATE_PENDING_HUMAN", "ENGINEERING_FIXTURE_ONLY_NOT_LIVE")
-                                    else "BLOCKED_DERIVED_BOOK_WRITE")
-                    elif gate_status == "STRUCTURE_KEPT_MODEL_INTERNAL_ONLY":
-                        terminal = state["status"]
-                    proof_ok = False
-                    if terminal == state["status"]:
-                        try:
-                            request = json.loads(private_path(evidence / "bookwide_topology.request.json").read_text("utf-8"))
-                            response = json.loads(private_path(evidence / "bookwide_topology.response.json").read_text("utf-8"))
-                            identity = gate.get("model_review", gate)
-                            book = private_path(path / "writer_project/book.md").read_bytes()
-                            proof_ok = (gate.get("original_book_sha256") == sha(book) and
-                                        request.get("role") == "bookwide_topology_recheck" and
-                                        request.get("payload", {}).get("book_manuscript") == book.decode("utf-8")[:230000] and
-                                        bool(identity.get("response_id")) and response.get("response_id") == identity["response_id"] and
-                                        sha(response["text"].encode("utf-8")) == identity.get("response_sha256"))
-                        except (OSError, ValueError, KeyError, TypeError, AttributeError):
-                            proof_ok = False
-                    if (str(result.get("status", "")).startswith("BLOCKED") and
-                            terminal not in ("BLOCKED_BOOKWIDE_TOPOLOGY_QUALITY", "BLOCKED_DERIVED_BOOK_WRITE")):
-                        project_status, latest = "BLOCKED_FINAL_REVIEW_RECEIPT_UNVERIFIED", result_file
-                    elif terminal in ("BLOCKED_BOOKWIDE_TOPOLOGY_QUALITY", "BLOCKED_DERIVED_BOOK_WRITE") or proof_ok:
-                        project_status, latest = terminal, result_file
+        if project_status in ("CANDIDATE_PENDING_HUMAN", "ENGINEERING_FIXTURE_ONLY_NOT_LIVE"):
+            project_status = "AWAIT_BOOKWIDE_TOPOLOGY"
+            if (evidence / "master_audit/BINDING.json").exists() and not result_file.is_file():
+                project_status = "BLOCKED_MASTER_AUDIT"
+            if result_file.is_file() and config_file.is_file():
+                try:
+                    result = json.loads(result_file.read_text("utf-8"))
+                    if (result.get("writer_state_sha256") != sha(raw) or
+                            result.get("writer_config_sha256") != sha(config_file.read_bytes()) or
+                            result.get("writer_result", {}).get("status") != state["status"]):
+                        raise Blocked("TOPOLOGY_WRITER_STATE_OR_CONFIG_CHANGED")
+                    outcome = audit_projection(path / "writer_project", evidence, result, read_only=True)
+                    project_status, latest = outcome["status"], result_file
+                    audit_details = outcome
+                except (OSError, ValueError, TypeError, KeyError):
+                    project_status = "BLOCKED_MASTER_AUDIT"
         for relative, expected in state.get("files", {}).items():
             parts = Path(relative).parts
             if Path(relative).is_absolute() or ".." in parts or not parts:
@@ -578,11 +625,13 @@ def status(path: Path):
                 latest = writer_state
                 break
         engine = project_engine_lock(path, enforce=False)
-        if engine["status"] != "MATCH":
+        if (engine["status"] != "MATCH" or (_MASTER_AUDIT_CANDIDATE and
+                engine.get("original_checkout_commit") != git("rev-parse", "HEAD"))):
             project_status = "BLOCKED_PROJECT_ENGINE_PIN_MISMATCH_OR_UNVERIFIED"
         return {"status": "PROJECT_STATUS", "project": str(path),
                 "latest_checkpoint": str(latest), "writer_state_sha256": sha(raw),
                 "project_status": project_status, "formal": identity,
+                "master_audit": audit_details if audit_details and audit_details["status"] == project_status else None,
                 "engine_alignment": engine,
                 "author_acceptance": "NOT_RUN"}
     for name in ("research/STATE.json", "START_STATE.json"):
@@ -597,12 +646,18 @@ def status(path: Path):
 
 def resume(path: Path, expected_state_sha: str, author_approval_receipt=None, author_approval_sha256=None, *,
            writer_model=None, research_model=None):
+    effective_channel()
     path = private_path(path)
     project = path / "writer_project"
     frozen = path / "discovery_evidence" / "research" / "writer_config.json"
     if not frozen.is_file():
         raise Blocked("DEEPWRITE_NO_FROZEN_DISCOVERY_CONFIG_TO_RESUME")
     project_engine_lock(path)
+    if _MASTER_AUDIT_CANDIDATE:
+        config = json.loads(frozen.read_text("utf-8"))
+        if (config.get("channel") != "CANDIDATE_OPT_IN" or
+                config["pins"]["protocols"]["deepwrite"]["commit"] != git("rev-parse", "HEAD")):
+            raise Blocked("MASTER_AUDIT_CANDIDATE_PROJECT_COMMIT_MISMATCH")
     writer = load("deepwrite_one_call_resume_writer", DEEPWRITE / "tools/writing_loop_experimental.py")
     if not re.fullmatch(r"[0-9a-f]{64}", str(expected_state_sha)):
         raise Blocked("DEEPWRITE_EXTERNAL_EXPECTED_STATE_SHA_REQUIRED")
@@ -631,10 +686,20 @@ def main():
     rs.add_argument("--expected-state-sha256", required=True)
     rs.add_argument("--author-approval-receipt", type=Path)
     rs.add_argument("--author-approval-sha256")
+    parser.add_argument("--master-audit-candidate", action="store_true")
     args = parser.parse_args()
     try:
+        if args.master_audit_candidate:
+            global _MASTER_AUDIT_CANDIDATE
+            activation = load("deepwrite_candidate_identity", DEEPWRITE / "release/activation.py")
+            activation.resolve_master_audit_candidate(ROOT)
+            _MASTER_AUDIT_CANDIDATE = True
         if args.cmd == "identity":
-            result = {"status": "IDENTITY_ONLY_NOT_BOOK_QUALITY", **official_identity()}
+            effective_channel()
+            result = ({"status": "IDENTITY_ONLY_NOT_BOOK_QUALITY", "candidate": True,
+                       "formal_engine_active": False, "candidate_commit": git("rev-parse", "HEAD")}
+                      if _MASTER_AUDIT_CANDIDATE else
+                      {"status": "IDENTITY_ONLY_NOT_BOOK_QUALITY", **official_identity()})
         elif args.cmd == "run":
             result = run(args.user_request, args.private_project_root)
         elif args.cmd == "resume":
@@ -646,7 +711,7 @@ def main():
         result = {"status": "BLOCKED", "type": type(error).__name__, "reason": str(error)[:260],
                   "formal": official_identity()}
     print(json.dumps(result, ensure_ascii=False, indent=2))
-    return 0 if result.get("status") in ("CANDIDATE_PENDING_HUMAN",
+    return 0 if result.get("status") in ("CANDIDATE_PENDING_AUTHOR",
                                         "ENGINEERING_FIXTURE_ONLY_NOT_LIVE", "AWAIT_AUTHOR_REVIEW",
                                         "IDENTITY_ONLY_NOT_BOOK_QUALITY", "PROJECT_STATUS") else 2
 

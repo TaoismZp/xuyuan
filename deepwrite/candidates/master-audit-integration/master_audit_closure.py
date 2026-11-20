@@ -13,6 +13,7 @@ import subprocess
 import sys
 
 TRUSTED_GATE_GIT_BLOB_SHA1 = "f790049eaa9b3583b6bd0cb3bd51674eb59f47d4"
+TRUSTED_GATE_SHA256 = "b4b11844951271ebd1646bd85a5605e043f74d450315c17dc11b80127d73fc1b"
 
 class Hold(ValueError):
     pass
@@ -39,12 +40,32 @@ def require(condition, msg):
     if not condition:
         raise Hold(msg)
 
-def verify(project, bundle, gate):
-    project, bundle = project.resolve(), bundle.resolve()
+def verify_gate_identity(gate):
     require(gate.is_file() and not gate.is_symlink(), "TRUSTED_AUDIT_GATE_MISSING_OR_SYMLINK")
     gate_bytes = gate.read_bytes()
     actual_gate_blob = hashlib.sha1(b"blob " + str(len(gate_bytes)).encode() + b"\0" + gate_bytes).hexdigest()
-    require(actual_gate_blob == TRUSTED_GATE_GIT_BLOB_SHA1, "UNTRUSTED_AUDIT_GATE_IDENTITY")
+    require(actual_gate_blob == TRUSTED_GATE_GIT_BLOB_SHA1 and digest(gate_bytes) == TRUSTED_GATE_SHA256,
+            "UNTRUSTED_AUDIT_GATE_IDENTITY")
+    return gate_bytes
+
+def run_gate(gate, book, contract, manifest, ledger, receipts):
+    gate_bytes = verify_gate_identity(gate)
+    cmd = [sys.executable, "-I", "-B", "-", "complete", "--source", str(book),
+           "--contract", str(contract),
+           "--manifest", str(manifest),
+           "--semantic-ledger", str(ledger)]
+    for rec in receipts:
+        cmd += ["--receipt", str(rec)]
+    proc = subprocess.run(cmd, input=gate_bytes.decode("utf-8"), capture_output=True, text=True, timeout=30)
+    require(proc.returncode == 0, "PR26_SOURCE_AUDIT_GATE_FAILED:" + proc.stderr[:180])
+    gate_report = json.loads(proc.stdout)
+    require(gate_report.get("status") == "SOURCE_RECEIPTS_COMPLETE_SCOPED", "SOURCE_AUDIT_NOT_COMPLETE")
+    return gate_report
+
+
+def verify(project, bundle, gate):
+    project, bundle = project.resolve(), bundle.resolve()
+    verify_gate_identity(gate)
     require(not bundle.is_relative_to(project / "writer_project"), "AUDIT_EVIDENCE_CANNOT_OVERWRITE_WRITER")
     binding = load(safe(bundle, "BINDING.json"))
     book = safe(project, binding.get("selected_book_relative", ""))
@@ -82,16 +103,8 @@ def verify(project, bundle, gate):
     require(binding.get("author_acceptance") == "NOT_RUN", "MODEL_MUST_NOT_SIGN_AUTHOR")
     receipts = binding.get("receipts", [])
     require(isinstance(receipts, list) and receipts, "ACTUAL_READ_RECEIPTS_REQUIRED")
-    cmd = [sys.executable, str(gate), "complete", "--source", str(book),
-           "--contract", str(safe(bundle, "CONTRACT.json")),
-           "--manifest", str(safe(bundle, "MANIFEST.json")),
-           "--semantic-ledger", str(safe(bundle, "SEMANTIC_LEDGER.json"))]
-    for rec in receipts:
-        cmd += ["--receipt", str(safe(bundle, rec))]
-    proc = subprocess.run(cmd, capture_output=True, text=True, timeout=30)
-    require(proc.returncode == 0, "PR26_SOURCE_AUDIT_GATE_FAILED:" + proc.stderr[:180])
-    gate_report = json.loads(proc.stdout)
-    require(gate_report.get("status") == "SOURCE_RECEIPTS_COMPLETE_SCOPED", "SOURCE_AUDIT_NOT_COMPLETE")
+    gate_report = run_gate(gate, book, safe(bundle, "CONTRACT.json"), safe(bundle, "MANIFEST.json"),
+                           safe(bundle, "SEMANTIC_LEDGER.json"), [safe(bundle, rec) for rec in receipts])
     record = load(safe(bundle, "SEMANTIC_LEDGER.json"))
     require(record.get("book_sha256") == book_sha, "SEMANTIC_LEDGER_STALE")
     require(isinstance(record.get("sections"), list) and record["sections"], "SECTION_SEMANTICS_MISSING")
@@ -100,7 +113,7 @@ def verify(project, bundle, gate):
     reread = record["final_read"]
     require(reread.get("book_sha256") == book_sha, "FINAL_READ_STALE")
     require(reread.get("status") == "READ_CONFIRMED" and bool(reread.get("response_id")), "FINAL_READ_RECEIPT_MISSING")
-    manifest = load(safe(project, "writer_project/manifest.json"))
+    manifest = load(safe(project, book.parent.relative_to(project) / "manifest.json"))
     ids = ["FRONT", *[f"CH{i+1:02d}" for i in range(len(manifest.get("chapters", [])))], "TAIL"]
     section_map = {s.get("id"): s for s in record["sections"]}
     require(set(section_map) == set(ids) and len(section_map) == len(ids), "WHOLE_CHAPTER_SEMANTIC_COVERAGE_REQUIRED")
