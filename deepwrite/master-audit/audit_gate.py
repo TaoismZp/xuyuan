@@ -29,7 +29,7 @@ def sha256(blob: bytes) -> str:
 
 
 def git_blob(blob: bytes) -> str:
-    return hashlib.sha1(b"blob " + str(len(blob)).encode() + b"\\0" + blob).hexdigest()
+    return hashlib.sha1(b"blob " + str(len(blob)).encode() + b"\0" + blob).hexdigest()
 
 
 def validate_contract(contract: dict, actual_sha: str) -> None:
