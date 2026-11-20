@@ -31,7 +31,7 @@ class TestMasterAuditBridge(unittest.TestCase):
         self.root = Path(self.tmp.name)
         self.project = self.root / 'private'
         self.bundle = self.root / 'audit'
-        self.gate = write(self.root / 'candidate_gate.py', b'# mock gate only')
+        self.gate = Path(__file__).resolve().parents[2] / 'master-audit/audit_gate.py'
         book = write(self.project / 'writer_project/book.md', '序言：这是冻结的样本文本。\n第一章：证据不是论证。\n尾声：保留未决。'.encode())
         digest = sha(book.read_bytes())
         self.state = {'status':'ENGINEERING_FIXTURE_ONLY_NOT_LIVE','files':{'book.md':digest}}
@@ -73,6 +73,11 @@ class TestMasterAuditBridge(unittest.TestCase):
         write(self.project/'discovery_evidence/RESULT.json',self.result)
         self.binding['writer_result_sha256']=sha((self.project/'discovery_evidence/RESULT.json').read_bytes())
         self.update_binding()
+
+    def test_reject_substituted_gate(self):
+        fake = write(self.root / 'candidate_gate.py', b'# fake success')
+        with self.assertRaisesRegex(Hold, 'UNTRUSTED_AUDIT_GATE_IDENTITY'):
+            verify(self.project, self.bundle, fake)
 
     def test_positive_fixture_only_not_quality(self):
         out=self.run_check()
