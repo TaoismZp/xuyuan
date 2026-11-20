@@ -11,3 +11,9 @@
 7. 对未知源领域不要机械复制先前《孙子兵法》或《NO FOLD》章节图/视角；不得因过去得到高分就形成新路径依赖。三层读者与王路知识复利是一个贯穿全书的质量目标，不是固定六点、三段评分模板。
 
 所有具体调用命令、受控默认范围和历史功能状态见 `DEFAULT_INVOCATION.md`、`UNIFIED_RELEASE_CANDIDATE.json`。本文件在未合并分支上只是候选操作契约，不是 ChatGPT 产品已内置的可执行插件。
+
+## Mandatory review-mode routing: MASTER_AUDIT
+
+When the author's task is to **review/audit an existing whole book** rather than produce a new draft, before any chapter read load `deepwrite/master-audit/MASTER_AUDIT_POLICY_v1.md`. Restore the private author intent and frozen manuscript. The strict source-byte manifest + actual read receipts are the **coverage** unit, a full chapter is the **meaning** unit, and issue dependency groups are the **repair** unit. None substitutes for the other. In supported CLI environments run `deepwrite/master-audit/audit_gate.py` preflight and progress/complete checks; absent a runnable environment use manual source-bound equivalent checks and explicitly mark CLI enforcement pending.
+
+Batch adaptively: prefer **3 complete chapters / ~10–20 chunks per batch**, not 3 chunks + request another “继续”. Reduce only with documented `BATCH_DOWNSIZE_REASON`. Record exact chunks read and chapters reviewed. Reuse same-blob genuine evidence, never fabricate receipt coverage. Preserve original version and send the author **the entire revised chapter** whenever it changes. No internal review can sign author quality acceptance.
