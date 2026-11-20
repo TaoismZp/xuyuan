@@ -105,11 +105,3 @@ R4 的积极反馈来自作者引导下的一章，可作为私有回归参照�
 PR #21 合并后的固定工程证据：main `dae2c7de1bcda8c3f511bc05d690c4269deae4c2`，[Actions 43583578870](https://github.com/TaoismZp/xuyuan/actions/runs/43583578870)，312项工程测试成功，全新 main 的正式身份调用成功。它不是真实模型整书或读者质量验收。后续版本以 CURRENT 及其 release record 为准，本段不定义“最新版”。
 
 此前 RC2/PR20/247或312项候选测试及“main仍v0.1”的说法属于当时记录，见 [UNIFIED_RELEASE_CANDIDATE.json](UNIFIED_RELEASE_CANDIDATE.json) 的历史字段。当前发布与治理门见 [release/STATE.json](release/STATE.json)：现有管理 API 403、必需检查配置或 auto-merge 缺口不能因入口已激活而改记 PASS。
-
-## 另一路由：已完成书稿的“总审”不是新一轮写书
-
-用户说“DeepWrite总审／整书审稿／继续总审”时，必须先读取`deepwrite/master-audit/MASTER_AUDIT_POLICY_v1.md`及旧项目私有RECOVERY/STATE，而非直接以E18写章流程取代审书。目标是：
-- 固定精确源+完整UTF-8字节无缝分片+真实逐片引句回执，不能让“已生成片段清单”冒充“已看过全部片段”；
-- 每次以**约3章（10–20片）**的可变批次在同一工作中完成逐片阅读和章级反方/数学/古典源区分/跨章对照。真实能力不够才缩小并记录原因，不强制用户每三片回一次继续；
-- 每个改动的完整章节全文交作者，源冻结不覆盖，候选内部评价与作者验收严格分层；
-- 在可运行的Git/Python环境用master-audit CLI证据门，不可运行时标人工检查及自动化未接入，禁止声称已由正式DeepWrite引擎自动执行总审。
