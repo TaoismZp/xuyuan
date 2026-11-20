@@ -1,0 +1,37 @@
+name: DeepWrite master audit candidate checks
+on:
+  push:
+    branches: [deepwrite-master-audit-engine-spike-20261120]
+  pull_request:
+    paths:
+      - 'deepwrite/candidates/master-audit-integration/**'
+      - 'deepwrite/master-audit/audit_gate.py'
+jobs:
+  candidate-audit:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Compile reviewed candidate and actual gate
+        run: |
+          python -m py_compile deepwrite/master-audit/audit_gate.py
+          python -m py_compile deepwrite/candidates/master-audit-integration/master_audit_closure.py
+          python -m py_compile deepwrite/candidates/master-audit-integration/test_real_pr26_gate.py
+      - name: Verify actual gate identity
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib
+          p=Path('deepwrite/master-audit/audit_gate.py').read_bytes()
+          got=hashlib.sha1(b'blob '+str(len(p)).encode()+b'\0'+p).hexdigest()
+          expected='f790049eaa9b3583b6bd0cb3bd51674eb59f47d4'
+          assert got==expected, (got,expected)
+          print('TRUSTED_GATE_BLOB_PASS',got)
+          PY
+      - name: Actual PR26 gate synthetic regression
+        run: |
+          python deepwrite/candidates/master-audit-integration/test_real_pr26_gate.py deepwrite/master-audit/audit_gate.py
