@@ -54,7 +54,7 @@ def blob(raw):
 def module(path, name):
     spec = importlib.util.spec_from_file_location(name, path)
     loaded = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(loaded)
+    exec(compile(path.read_bytes(), str(path), "exec"), loaded.__dict__)
     return loaded
 
 
@@ -399,11 +399,25 @@ def gate_bundle(root, name, raw, chunks, receipts, sections, issues, gate, *, re
                     directory / "SEMANTIC_LEDGER.json", [directory / "RECEIPTS.json"])
 
 
+def check_sequential_reference(config, evidence, candidate):
+    """A length alert against an author-chosen baseline, never a quality verdict."""
+    pinned = config.get("master_audit_sequential_baseline_sha256")
+    if pinned is None:
+        return "NO_FROZEN_SEQUENTIAL_REFERENCE"
+    baseline = read(evidence, "SEQUENTIAL_BASELINE.md")
+    require(bool(baseline) and digest(baseline) == pinned, "MASTER_AUDIT_SEQUENTIAL_REFERENCE_CHANGED")
+    require(len(candidate.decode("utf-8").strip()) * 4 >= len(baseline.decode("utf-8").strip()) * 3,
+            "BLACKBOX_SEQUENTIAL_LENGTH_ANOMALY_CONTENT_RETENTION_REVIEW_REQUIRED")
+    return "LENGTH_ALERT_NOT_TRIGGERED_QUALITY_COMPARISON_UNVERIFIED"
+
+
+
 def drive(project, evidence, topology, model=None, *, read_only=False):
     gate = Path(__file__).resolve().parents[2] / "master-audit/audit_gate.py"
     verify_gate_identity(gate)
     chosen, snapshot, writer_tokens, topology_tokens, topology_live = selected_book(project, evidence, topology)
     state, config, manifest, sections, text = snapshot
+    comparison = check_sequential_reference(config, evidence, text)
     ledger = safe(evidence, "master_audit")
     binding = {"selected_book_sha256": digest(text), "selected_writer": chosen.name,
                "selected_manifest_sha256": digest(read(chosen, "manifest.json")),
@@ -447,6 +461,7 @@ def drive(project, evidence, topology, model=None, *, read_only=False):
             final_path = safe(ledger, "revised/book.md")
             final_reports, final_findings = review_sections(journal, final_sections, "revised", context)
             require(not any(x["severity"] in SEVERE for x in final_findings), "MASTER_AUDIT_REVISED_MAJOR_ISSUE_OPEN")
+        comparison = check_sequential_reference(config, evidence, final_text)
         final_chunks, final_reads, final_issues = full_read(journal, final_text, "final", final_sections)
         require(not final_issues, "MASTER_AUDIT_FINAL_READ_MAJOR_ISSUE_OPEN")
         mechanical = gate_bundle(ledger, "final", final_text, final_chunks, final_reads, final_reports,
@@ -464,7 +479,7 @@ def drive(project, evidence, topology, model=None, *, read_only=False):
                   "repaired_major_issues": [i["id"] for i in severe],
                   "final_read_chunks": len(final_reads), "author_acceptance": "NOT_RUN",
                   "human_blind_evaluation": "NOT_RUN", "book_quality": "UNVERIFIED",
-                  "blackbox_noninferiority": "UNVERIFIED"}
+                  "blackbox_anomaly_detection": comparison, "blackbox_noninferiority": "UNVERIFIED"}
         if read_only:
             require(load(safe(ledger, "COMPLETION.json")) == result, "MASTER_AUDIT_COMPLETION_MISSING_OR_CHANGED")
         else:

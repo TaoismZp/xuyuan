@@ -45,7 +45,7 @@ def load(name, filename):
     spec = importlib.util.spec_from_file_location(name, filename)
     module = importlib.util.module_from_spec(spec)
     sys.modules[name] = module
-    spec.loader.exec_module(module)
+    exec(compile(filename.read_bytes(), str(filename), "exec"), module.__dict__)
     return module
 
 
@@ -188,6 +188,18 @@ def prepare(request_file: Path, private_root: Path, *, allow_fixture=False):
     request = json.loads(raw_request)
     mode = validate_request(request)
     files = source_bytes(request)
+    baseline = request.get("sequential_baseline")
+    baseline_raw = None
+    if baseline is not None:
+        if not isinstance(baseline, dict) or set(baseline) != {"path", "sha256"}:
+            raise Blocked("MASTER_AUDIT_REFERENCE_REQUIRES_PATH_AND_EXTERNAL_SHA")
+        reference = private_path(baseline["path"])
+        if not reference.is_file() or not 0 < reference.stat().st_size <= 15_000_000:
+            raise Blocked("MASTER_AUDIT_REFERENCE_UNAVAILABLE_OR_OVERSIZED")
+        baseline_raw = reference.read_bytes()
+        baseline_raw.decode("utf-8")
+        if sha(baseline_raw) != baseline["sha256"]:
+            raise Blocked("MASTER_AUDIT_REFERENCE_SHA_MISMATCH")
     if private_root.exists():
         raise Blocked("DEEPWRITE_PROJECT_ALREADY_EXISTS_USE_RESUME_OR_NEW_ID")
     private_root.parent.mkdir(parents=True, exist_ok=True)
@@ -248,6 +260,9 @@ def prepare(request_file: Path, private_root: Path, *, allow_fixture=False):
                 "provenance": "USER_REQUEST_EXPLICIT_SCOPE_SHA256:" + sha(raw_request)}
         }
     }
+    if baseline_raw is not None:
+        (evidence / "SEQUENTIAL_BASELINE.md").write_bytes(baseline_raw)
+        base["master_audit_sequential_baseline_sha256"] = sha(baseline_raw)
     if request.get("author_guidance_source_index") is not None:
         index = request["author_guidance_source_index"] + 1
         base["author_guidance"] = {
@@ -558,6 +573,8 @@ def finalize_execution(project, evidence, final, result, *, research_model=None,
             model.is_live = True
     outcome = audit_projection(project, evidence, topology, model=model)
     receipt = dict(topology, status=outcome["status"], master_audit=outcome,
+                   writer_model_execution_recorded=topology.get("real_model_verified", False),
+                   real_model_verified=outcome["status"] == "CANDIDATE_PENDING_AUTHOR",
                    author_acceptance="NOT_RUN", independent_reader_quality="NOT_RUN")
     save_execution_evidence(evidence / "RESULT.json", receipt)
     return receipt

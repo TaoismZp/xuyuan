@@ -147,6 +147,21 @@ class MasterAuditFlow(unittest.TestCase):
         self.assertEqual(result["master_audit"]["book_quality"], "UNVERIFIED")
         self.assertFalse((self.audit / "revised/book.md").exists())
 
+    def test_frozen_sequential_baseline_flags_batch_truncation_without_claiming_quality(self):
+        baseline = self.fixture.base / "sequential.md"
+        baseline.write_text("# Sequential reference fixture\n\n" + "\n".join(
+            f"Worked counterexample {i} keeps the two groups separate before measuring." for i in range(25)))
+        self.fixture.data["sequential_baseline"] = {"path": str(baseline),
+                                                    "sha256": dw.sha(baseline.read_bytes())}
+        self.fixture.save_request()
+        reviewer = AuditModel()
+        result = self.write_book(reviewer)
+        self.assertEqual(result["status"], "BLOCKED_MASTER_AUDIT")
+        self.assertIn("BLACKBOX_SEQUENTIAL_LENGTH_ANOMALY", result["master_audit"]["reason"])
+        self.assertEqual(result["master_audit"]["book_quality"], "UNVERIFIED")
+        self.assertNotIn("master_audit_full_read", reviewer.roles)
+        self.assertEqual(dw.status(self.project)["project_status"], "BLOCKED_MASTER_AUDIT")
+
     def test_missing_chapter_and_forged_acceptance_fail_in_actual_chain(self):
         result = self.write_book(AuditModel(missing_chapter=True))
         self.assertEqual(result["status"], "BLOCKED_MASTER_AUDIT", result)
