@@ -1,0 +1,19 @@
+{
+  "project_id": "GLOBAL-GOAL-INTEGRITY-20261121",
+  "updated_at": "2026-11-21",
+  "status": "ACTIVE_CANDIDATE_CONSTRUCTION",
+  "governing_protocol": "wish-delivery/CURRENT.json v7.6",
+  "candidate_branch": "feat/goal-integrity-guard-20261121",
+  "gates": {
+    "design": "PASS_SCOPED",
+    "static_code": "PENDING_TEST",
+    "simulation": "PENDING_TEST",
+    "real_execution_chain": "UNVERIFIED",
+    "ten_turn_live_test": "UNVERIFIED",
+    "independent_supervision": "PENDING",
+    "author_acceptance": "PENDING"
+  },
+  "next_executable_action": "Run exact committed tests, record evidence, then integrate into actual execution chain and run adversarial multi-turn regression",
+  "privacy": "PUBLIC_GENERIC_ONLY",
+  "activation": "NOT_ACTIVE"
+}
