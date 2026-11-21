@@ -338,6 +338,9 @@ class EditorialInvocationTests(unittest.TestCase):
                         "fixture-confirmation", "fixture-model", json.dumps({"findings": rows}),
                         {"input_tokens": 10, "output_tokens": 10}, "scripted_fixture")
                 reply = super().generate(instructions, prompt, max_output_tokens)
+                if role == "front_matter":
+                    return fixture.writer_test.loop.transport.ModelResult(
+                        reply.response_id, reply.model, "#" + reply.text, reply.usage, reply.provider_kind)
                 if role not in {"review", "source_evidence_review"}:
                     return reply
                 value = json.loads(reply.text)
@@ -364,6 +367,7 @@ class EditorialInvocationTests(unittest.TestCase):
         book = (project / "book.md").read_text()
         self.assertIn("2 + 2 = 4", book)
         self.assertNotIn("2 + 2 = 5", book)
+        self.assertTrue((project / "front.md").read_text().startswith("# Preface\n"))
         self.assertIn(fixture.writer_test.DRAFT.strip(), [p.read_text().strip() for p in (project / "chapters").glob("*.md")])
         self.assertEqual((project / "sources/native_001.md").read_text(), fixture.NATIVE)
         self.assertLess(model.calls.index("editorial_confirmation"), model.calls.index("revise"))

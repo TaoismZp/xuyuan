@@ -774,6 +774,10 @@ class WritingLoop:
     def save_text_call(self, key, role, payload, path, manuscript=False):
         data = self.call(key, role, payload)
         text = data["text"].strip() + "\n"
+        if self.editorial_stop_guard is not None and role in {"front_matter", "afterword"} and text.startswith("## "):
+            # The response journal retains the original Markdown. Standardize
+            # only the title level of otherwise complete front/back matter.
+            text = text[1:]
         if manuscript and (not text.startswith("# ") or len(text.splitlines()) < 3):
             raise Blocked("NO_COMPLETE_MARKDOWN_MANUSCRIPT")
         self.write(path, text)
