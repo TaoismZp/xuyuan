@@ -1,6 +1,6 @@
 # DeepWrite｜有效改稿 vs 版本冲动：编辑收束门候选（2026-11-21）
 
-**状态：CANDIDATE_OPT_IN / 24_NEGATIVE_CONTROLS_PASS_ON_OBSERVED_CI / FORMAL_RELEASE_RAIL_FAILED / HUMAN_QUALITY_UNVERIFIED / NOT_ACTIVE.**
+**状态：CANDIDATE_OPT_IN / 24_NEGATIVE_CONTROLS_PASS_ON_PRIOR_CI_28_PENDING / FORMAL_RELEASE_RAIL_FAILED / HUMAN_QUALITY_UNVERIFIED / NOT_ACTIVE.**
 
 权威正式指针：`main:deepwrite/CURRENT.json` 在开发前核实为工作台 v0.3、引擎 v0.3.1；上游 `main:wish-delivery/CURRENT.json` 正式 v7.6。**本分支不修改两个CURRENT，也不覆盖任何私人稿。** 当前项目完整恢复入口是本文件，`deepwrite/RECOVERY.md` 是上层目录。
 
@@ -35,7 +35,7 @@
 - `STYLE_ONLY`：自动降为有记录的KEEP，不为了改而改。
 - 找不到对应原文、空洞的伤害说明、缺少最小修法：**HOLD**，而不是让模型假装发现大问题或轻描淡写为通过。
 - 相同书稿片段、相同artifact的提案重复出现：**HOLD_REPEAT**；如果真的重新出现新事实，应经独立外部证据另行确认，不能靠模型改ID。**同一冻结章节/同一审稿ID/相同文件SHA的断线恢复重放**不是新一次修改，应被识别为 `REPLAY_SAME_FROZEN_SCOPE`，继续原状态，不重复计数；新的审稿scope仍须阻断旧问题翻案。
-- `NOTE/MINOR/KEEP` 及已有独立reader gate不因本模块升级为强制改稿；已有内容保全、源头审查、人工授权仍不受影响。
+- `NOTE/MINOR/KEEP` 及已有独立reader gate不因本模块升级为强制改稿；已有内容保全、源头审查、人工授权仍不受影响。纯源洞见/读者解释类型的P2自动返工上限为**两次**；仍有未解决的关键问题则`HOLD_P2_ONLY_REWRITE_BUDGET_EXHAUSTED`，保留候选、等待作者或独立读者裁决，不自动继续刷版本；事实、算术及事前因果硬错误仍按原有重大缺陷规则处理。
 - 事实/数学修复仍不能保证全书文学风格更好，需记录改稿代价。
 
 ## 真实可调用模式与版本边界
@@ -54,7 +54,7 @@
 
 - 负控：数学无错但事后信息误导（应可提案）、用根本不存在的原文取证（HOLD）、空洞理由（HOLD）、把风格偏好升为重大缺陷（KEEP）、同一错误改名重复出现（HOLD）、没有重大问题（无强制修稿）、空白改写（HOLD）。
 - 代码/身份：在真实writer的review和revision调用点有hook，writer_config冻结选用的模块，老项目不因脚本升级而静默变更。
-- 工程回归：`python -m unittest discover -s deepwrite/tests -p test_editorial_stop_gate.py -v`（24项候选负控，包含中断安全重放）。PR Action `.github/workflows/editorial-stop-gate-candidate.yml` 测试。**测试结果必须以真实Actions run、实际pass/fail和SHA为准。**
+- 工程回归：`python -m unittest discover -s deepwrite/tests -p test_editorial_stop_gate.py -v`（28项候选负控，包含中断安全重放与P2返工次数上限）。PR Action `.github/workflows/editorial-stop-gate-candidate.yml` 测试。**测试结果必须以真实Actions run、实际pass/fail和SHA为准。**
 - 质量对照：同样素材/模型/预算下，冻结一本稳定旧稿，比较(1)无门禁旧流程；(2)启用候选。通过两类考试：
   - **抓漏**：包含事前/事后偷换的隐含逻辑缺陷能否在**首次**全书审稿抓出，而非第30轮；
   - **停手**：无明确重要缺陷的版本能否理直气壮地KEEP，是否减少错误翻案和自己引入冗余。
