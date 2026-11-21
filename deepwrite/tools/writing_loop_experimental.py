@@ -809,6 +809,7 @@ class WritingLoop:
         reviewed = self.call(key + "_review", "review", payload)
         identity = reviewed["provider_kind"] + ":" + reviewed["model"] + ":" + reviewed["response_id"]
         initial = parse_object(reviewed["text"])
+        proposal = None
         if self.editorial_stop_guard is not None:
             proposal = self.editorial_stop_guard.audit_initial(
                 initial.get("findings"),
@@ -834,12 +835,19 @@ class WritingLoop:
         expected = copy.deepcopy(findings)
         record = self.record(baseline, current, findings)
         outcome = self.check_record(record, expected)
+        soft_limit = (self.editorial_stop_guard.soft_revision_budget(proposal)
+                      if self.editorial_stop_guard is not None else None)
         for turn in range(self.config["max_revision_rounds"] + 1):
             self.write("reviews/" + key + "." + str(turn) + ".json",
                        json_bytes({"record": record, "guard": outcome}))
             unresolved = any(f["status"] == "OPEN" and f["severity"] in ("MAJOR", "CRITICAL") for f in findings)
             if not unresolved and outcome["status"] in ("PASS_STRUCTURAL_ONLY", "BYPASSED_BASELINE_ARM"):
                 return current
+            if unresolved and soft_limit is not None and turn >= soft_limit:
+                self.event("EDITORIAL_STOP_GATE", key, "HOLD_P2_ONLY_REWRITE_BUDGET_EXHAUSTED",
+                           {"attempts": turn, "author_acceptance": "PENDING",
+                            "reader_quality": "UNVERIFIED"})
+                raise Blocked("EDITORIAL_STOP_HOLD_P2_REWRITE_BUDGET_EXHAUSTED_" + key)
             if turn == self.config["max_revision_rounds"]:
                 raise Blocked("BLOCKED_QUALITY_UNRESOLVED_REVIEW_STILL_OPEN_" + key)
             affected = {f["artifact_id"] for f in findings if f["status"] == "OPEN"}
