@@ -2,6 +2,16 @@
 
 **正式身份只由 GitHub main 的 [CURRENT.json](CURRENT.json) 与[父协议 CURRENT](../wish-delivery/CURRENT.json)决定。** 先核对远端提交及实际文件，再运行 `release/activation.py --run -- identity`。本页与候选历史不替代版本指针。
 
+## 2026-11-21｜审稿收束门候选的独立恢复入口（尚非正式版本）
+
+本次迭代来自反复全书审稿中暴露的两种失败：第一轮没有把算术正确与事前推理成立分开；后续又可能把换写法或修补上一轮冗余当成新的质量提升。现已在候选分支 `deepwrite/editorial-no-churn-gate-20261121` 将可执行证据门接入 `deepwrite.py → writing_loop_experimental.py:review_cycle → editorial_stop_gate.py`，连同源文件段落定位、重开拦截、同一冻结审稿安全重放、候选PR CI和24项模拟负控。**正式 CURRENT 未更改，候选只允许非main私有项目 opt-in；工程测试不代表真人质量验收。**
+
+- [独立项目恢复与下一唯一关卡](research/editorial-stopping/RECOVERY.md)
+- [候选审稿策略](candidates/EDITORIAL_LOOP.md)
+- [PR #29（草稿，非生效）](https://github.com/TaoismZp/xuyuan/pull/29)
+
+任何续接先查 PR真实HEAD和Actions结果、main两个CURRENT、书稿项目自己的版本锁，再决定是否修补/放行；不能从本段直接宣布默认引擎升级。真实私有作品只留在授权私库。
+
 ## 当前可恢复事实
 
 - 正式统一入口在 PR #21 合并后已实际验证；固定工程证据为 main `dae2c7de1bcda8c3f511bc05d690c4269deae4c2`、[main CI 43583578870](https://github.com/TaoismZp/xuyuan/actions/runs/43583578870)。该次工程测试和全新 main 身份调用成功，不证明作品质量。
