@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": [
+    "project_id",
+    "goal_version",
+    "user_authorized_goal",
+    "non_goals",
+    "quality_evidence",
+    "approval",
+    "privacy"
+  ],
+  "properties": {
+    "project_id": {
+      "type": "string"
+    },
+    "goal_version": {
+      "type": "string"
+    },
+    "user_authorized_goal": {
+      "type": "string",
+      "minLength": 10
+    },
+    "non_goals": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "quality_evidence": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "approval": {
+      "enum": [
+        "USER_CONFIRMED",
+        "CANDIDATE_UNCONFIRMED"
+      ]
+    },
+    "privacy": {
+      "enum": [
+        "PUBLIC_GENERIC",
+        "PRIVATE_PROJECT"
+      ]
+    }
+  }
+}
