@@ -139,6 +139,22 @@ class EditorialStopGateTests(unittest.TestCase):
         self.audit(rows)
         self.assertEqual(rows, original)
 
+    def test_p2_only_edits_have_two_attempt_budget_then_hold(self):
+        proposal = self.audit([finding("READER_CAUSAL_GAP")])
+        self.assertEqual(gate.soft_revision_budget(proposal), 2)
+
+    def test_hard_factual_error_does_not_inherit_soft_budget(self):
+        proposal = self.audit([finding("EX_ANTE_CAUSAL_ERROR")])
+        self.assertIsNone(gate.soft_revision_budget(proposal))
+
+    def test_no_actionable_issue_has_no_extra_rewrite_budget(self):
+        proposal = self.audit([finding("STYLE_ONLY")])
+        self.assertIsNone(gate.soft_revision_budget(proposal))
+
+    def test_invalid_soft_budget_rejected(self):
+        with self.assertRaises(ValueError):
+            gate.soft_revision_budget({}, limit=0)
+
     def test_whitespace_only_rewrite_is_not_quality_gain(self):
         self.assertEqual(gate.verify_edit_result("文字 有 证据", "文 字有证据")["status"],
                          "HOLD_NO_SUBSTANTIVE_CHANGE")
@@ -158,6 +174,7 @@ class EditorialStopGateTests(unittest.TestCase):
         self.assertIn("self.editorial_stop_guard.audit_initial(", source)
         self.assertIn("self.editorial_stop_guard.verify_edit_result(", source)
         self.assertIn("EDITORIAL_STOP_HOLD_UNGROUNDED_OR_REPEATED_PROPOSAL_", source)
+        self.assertIn("EDITORIAL_STOP_HOLD_P2_REWRITE_BUDGET_EXHAUSTED_", source)
 
     def test_author_opt_in_routes_to_frozen_candidate_contract(self):
         source = (ROOT / "deepwrite/deepwrite.py").read_text("utf-8")
