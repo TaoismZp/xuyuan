@@ -107,6 +107,21 @@ class EditorialStopGateTests(unittest.TestCase):
     def test_duplicate_same_review_is_not_a_second_repair(self):
         result = self.audit([finding(id="first"), finding(id="second")])
         self.assertEqual(result["status"], "HOLD")
+        self.assertEqual(result["holds"][0]["reason"], "DUPLICATE_DEFECT_IN_SAME_REVIEW")
+
+    def test_resume_replays_frozen_review_without_false_churn(self):
+        earlier = gate.audit_initial([finding()], {ART: TEXT}, scope="ch03")
+        later = gate.audit_initial([finding()], {ART: TEXT}, earlier["new_history"], scope="ch03")
+        self.assertEqual(later["status"], "PASS_PROPOSALS_ONLY")
+        self.assertEqual(later["decisions"][0]["decision"], "REPLAY_SAME_FROZEN_SCOPE")
+        self.assertEqual(later["new_history"], {})
+
+    def test_same_defect_in_new_scope_must_not_evade_stopping(self):
+        earlier = gate.audit_initial([finding()], {ART: TEXT}, scope="ch03")
+        later = gate.audit_initial([finding()], {ART: TEXT}, earlier["new_history"], scope="cross")
+        self.assertEqual(later["status"], "HOLD")
+        self.assertEqual(later["holds"][0]["reason"],
+                         "REPEATED_BASELINE_DEFECT_WITHOUT_NEW_INDEPENDENT_EVIDENCE")
 
     def test_distinct_artifact_same_quote_not_false_duplicate(self):
         row = finding(art="ch05")
