@@ -1,6 +1,6 @@
 # DeepWrite｜有效改稿 vs 版本冲动：编辑收束门候选（2026-11-21）
 
-**状态：CANDIDATE_OPT_IN / ENGINEERING_TEST_PENDING / HUMAN_QUALITY_UNVERIFIED / NOT_ACTIVE.**
+**状态：CANDIDATE_OPT_IN / 24_NEGATIVE_CONTROLS_PASS_ON_OBSERVED_CI / FORMAL_RELEASE_RAIL_FAILED / HUMAN_QUALITY_UNVERIFIED / NOT_ACTIVE.**
 
 权威正式指针：`main:deepwrite/CURRENT.json` 在开发前核实为工作台 v0.3、引擎 v0.3.1；上游 `main:wish-delivery/CURRENT.json` 正式 v7.6。**本分支不修改两个CURRENT，也不覆盖任何私人稿。** 当前项目完整恢复入口是本文件，`deepwrite/RECOVERY.md` 是上层目录。
 
@@ -64,6 +64,8 @@
 ## 可靠身份与下一唯一关卡
 
 - 试验代码位于GitHub候选分支 `deepwrite/editorial-no-churn-gate-20261121`。不能直接合并或晋级`main:deepwrite/CURRENT.json`。本公共仓只保存抽象规则/虚构测试，不保存私人书稿、旧项目差异、秘密或真实读者身份。
-- 首次保存时尚待PR Actions CI实际执行，**ENGINEERING_TEST_PENDING**；自动模型整本书E1、三陌生题材E2和作者/真人盲审均 **PENDING**。
-- 唯一NEXT：**核实PR上的真实CI及从候选检出实际run/reader guard结果，对发现/停手机制做负控；如果不能证明工程回归PASS，不推广。工程过关后用私有项目做同预算新题材对照，读者增益无证不晋级正式主线。**
+- 已查GitHub Actions在已提交候选HEAD `fa78029dc25a93ee5a12feba44ec941959e6e235` 上的实际工作流：[`editorial-stop-gate-candidate` run 44863796732](https://github.com/TaoismZp/xuyuan/actions/runs/44863796732) 的 `Compile candidate runtime` 与 `Execute editorial negative controls` job **SUCCESS**（测试文件24项）；同次可见 `owner-release-authorization` job **FAILURE**，不得仅按工作流总体conclusion“success”声称所有发布门通过。
+- [`DeepWrite activation rail` run 44863796797](https://github.com/TaoismZp/xuyuan/actions/runs/44863796797) **FAILURE**，失败步骤为 `Resolve CURRENT as the unique source of current engine identity`：候选修改了被正式v0.3.1 release record钉住的文件，而正式CURRENT未发布新SHA，因此不允许冒充stable运行。这是**正式发布身份门阻断**，不是此候选已完成发布或作品质量验收；不能绕过CI或静默更新CURRENT。
+- 当前能证实的只有 **候选24项工程负控和Python编译PASS_SCOPED**；全链正式回归 **FAIL/BLOCKED**，实际合法provider完整写书E1、三个陌生题材公平质量E2、作者/真人盲评均 **PENDING**。
+- 唯一NEXT：**保留PR #29草稿；对Release rail与owner-authorization阻断进行正式工程/所有者审批，不擅自合并或更新CURRENT。在隔离私有实验上执行真实候选run与交叉reader guard，补真实首次查错与停手对照；通过完整正式回归、合法release签名和作者决定后才讨论晋级。任何人类阅读质量改善无证时不得宣称正式DeepWrite已经具备质量停止能力。**
 
