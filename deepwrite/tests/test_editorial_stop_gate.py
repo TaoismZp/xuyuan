@@ -345,9 +345,11 @@ class EditorialInvocationTests(unittest.TestCase):
                 return fixture.writer_test.loop.transport.ModelResult(
                     reply.response_id, reply.model, json.dumps(value), reply.usage, reply.provider_kind)
 
+        architecture = fixture.book()
+        architecture["knowledge_compounding"] = architecture["reader_prior_knowledge_contract"].pop("knowledge_compounding")
         model = Model()
         result = self.dw.run(self.request.request, self.request.destination,
-                             research_model=fixture.StudyModel(), writer_model=model)
+                             research_model=fixture.StudyModel(prepared=architecture), writer_model=model)
         self.assertEqual(result["status"], "ENGINEERING_FIXTURE_ONLY_NOT_LIVE", result)
         project = self.request.destination / "writer_project"
         book = (project / "book.md").read_text()
@@ -359,6 +361,8 @@ class EditorialInvocationTests(unittest.TestCase):
         self.assertEqual(model.calls.count("revise"), 1)
         self.assertEqual(model.calls.count("source_evidence_review"), 2)
         self.assertTrue((project / "reader_reviews/alpha_source_0_evidence.first.json").is_file())
+        arch = json.loads((self.request.destination / "discovery_evidence/research/architecture.json").read_text())
+        self.assertEqual(arch["response_normalization"], "RELOCATED_ROOT_KNOWLEDGE_COMPOUNDING_TO_READER_CONTRACT")
         self.assertEqual(self.dw.status(self.request.destination)["engine_alignment"]["status"], "MATCH")
 
     def test_opt_in_assisted_pause_resume_keeps_author_scope(self):
