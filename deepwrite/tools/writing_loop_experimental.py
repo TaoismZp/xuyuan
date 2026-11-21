@@ -507,12 +507,16 @@ class WritingLoop:
             payload["source_texts"] = sources
         if self.editorial_stop_guard is not None:
             task = payload["task"]
+            if stage != "SOURCE_LEARNING":
+                payload["source_evidence"] = self.editorial_sources()
             task["required_source_locations"] = {concept: task["source_dimensions"]
                                                  for concept in task["required_source_concepts"]}
             task["task"] += (
+                " Use the supplied frozen sources or located excerpts to check fidelity. State any uncovered limits. "
                 " Return one source_evidence row for every listed concept and each of its listed dimensions. "
                 "A short exact excerpt can support more than one row only when it shows each of those dimensions. "
                 "If the real text does not support a row, omit it and locate a material source defect when warranted. "
+                "Use exactly NOTE, MINOR, MAJOR or CRITICAL for each finding severity. "
                 "Keep explanations concise so evidence fits in the response budget.")
         role = "source_evidence_review" if stage == "SOURCE_LEARNING" else "reader_source_review"
         response_key = key

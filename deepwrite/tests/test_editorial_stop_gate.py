@@ -316,6 +316,10 @@ class EditorialInvocationTests(unittest.TestCase):
             def generate(self, instructions, prompt, max_output_tokens=6000):
                 request = json.loads(prompt)
                 role = request["role"]
+                if role == "reader_source_review":
+                    source = request["payload"]["source_evidence"]
+                    if source["texts"]["sources/native_001.md"] != fixture.NATIVE:
+                        raise AssertionError("The chapter reviewer did not receive the frozen source")
                 if role == "editorial_confirmation":
                     self.calls.append(role)
                     rows = [{"id": allegation["id"], "verdict": "CONFIRMED",
