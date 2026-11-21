@@ -4,7 +4,7 @@
 
 ## 2026-11-21｜审稿收束门候选的独立恢复入口（尚非正式版本）
 
-本次迭代来自反复全书审稿中暴露的两种失败：第一轮没有把算术正确与事前推理成立分开；后续又可能把换写法或修补上一轮冗余当成新的质量提升。现已在候选分支 `deepwrite/editorial-no-churn-gate-20261121` 将可执行证据门接入 `deepwrite.py → writing_loop_experimental.py:review_cycle → editorial_stop_gate.py`，连同源文件段落定位、重开拦截、同一冻结审稿安全重放、候选PR CI和24项模拟负控。**正式 CURRENT 未更改，候选只允许非main私有项目 opt-in；工程测试不代表真人质量验收。**
+本次迭代来自反复全书审稿中暴露的两种失败：第一轮没有把算术正确与事前推理成立分开；后续又可能把换写法或修补上一轮冗余当成新的质量提升。现已在候选分支 `deepwrite/editorial-no-churn-gate-20261121` 将可执行证据门接入 `deepwrite.py → writing_loop_experimental.py:review_cycle → editorial_stop_gate.py`，连同源文件段落定位、重开拦截、同一冻结审稿安全重放、P2-only两次返工上限、候选PR CI和28项模拟负控。**正式 CURRENT 未更改，候选只允许非main私有项目 opt-in；工程测试不代表真人质量验收。**
 
 - [独立项目恢复与下一唯一关卡](research/editorial-stopping/RECOVERY.md)
 - [候选审稿策略](candidates/EDITORIAL_LOOP.md)
