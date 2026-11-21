@@ -1066,8 +1066,10 @@ class WritingLoop:
                 recheck_request["task"] += (
                     " Compare complete chapters before and after. Check source and decision premises, "
                     "lost insights, renamed old issues, duplicate passages introduced by new scenes, "
-                    "and cross-chapter regressions. Record each material regression in new_findings "
-                    "with an exact quote in the new text. Do not treat more text as improvement.")
+                    "and cross-chapter regressions. For every new_findings item use one exact quote in a "
+                    "single paragraph of the new text as quote, a one-based integer paragraph, and one "
+                    "of NOTE, MINOR, MAJOR, CRITICAL. Describe other repetitions in evidence. "
+                    "Do not treat more text as improvement.")
             data = self.call(key + "_recheck_" + str(turn+1), "recheck", recheck_request)
             rechecked = parse_object(data["text"])
             new_findings = rechecked.get("new_findings", [])
@@ -1075,8 +1077,14 @@ class WritingLoop:
                 raise Blocked("NEW_FINDINGS_NOT_LIST")
             if new_findings:
                 self.write("reviews/" + key + ".new_findings." + str(turn+1) + ".json", json_bytes(new_findings))
+                if proposal is not None:
+                    for index, fresh in enumerate(new_findings):
+                        if isinstance(fresh, dict) and fresh.get("artifact_id") in current:
+                            after = recheck_request["manuscripts"][fresh["artifact_id"]]
+                            new_findings[index] = self.editorial_stop_guard.locate_regression(fresh, after)
+                    self.write("reviews/" + key + ".located_regressions." + str(turn+1) + ".json", json_bytes(new_findings))
                 for fresh in new_findings:
-                    if (fresh.get("artifact_id") not in current or fresh.get("severity") not in
+                    if (not isinstance(fresh, dict) or fresh.get("artifact_id") not in current or fresh.get("severity") not in
                             ("NOTE", "MINOR", "MAJOR", "CRITICAL") or not fresh.get("issue") or not fresh.get("evidence")):
                         raise Blocked("INVALID_NEW_FINDING")
                     self.location(current[fresh["artifact_id"]], fresh.get("paragraph"))

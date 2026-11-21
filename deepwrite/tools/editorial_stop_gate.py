@@ -184,3 +184,24 @@ def verify_edit_result(old_text, new_text):
     if old == new:
         return {"status": "HOLD_NO_SUBSTANTIVE_CHANGE", "semantic_quality": "UNVERIFIED"}
     return {"status": "CHANGED_NEEDS_SEMANTIC_RECHECK", "semantic_quality": "UNVERIFIED"}
+
+
+def locate_regression(finding, manuscript):
+    """Use actual quotation locations when a regression is repeated in the new draft."""
+    observed = dict(finding)
+    if isinstance(observed.get("severity"), str):
+        observed["severity"] = observed["severity"].upper()
+    if observed.get("severity") not in SERIOUS:
+        return observed
+    quote = observed.get("quote", observed.get("evidence"))
+    matches = []
+    if isinstance(quote, str) and len(quote.strip()) >= 8:
+        matches = [i for i, part in enumerate(paragraphs(manuscript), 1) if quote in part]
+    if matches:
+        paragraph = observed.get("paragraph")
+        if type(paragraph) is not int or paragraph not in matches:
+            paragraph = matches[0]
+        observed.update(quote=quote, paragraph=paragraph, matched_paragraphs=matches)
+    else:
+        observed.pop("quote", None)
+    return observed

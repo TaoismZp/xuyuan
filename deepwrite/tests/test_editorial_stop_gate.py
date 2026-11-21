@@ -182,6 +182,15 @@ class EditorialStopGateTests(unittest.TestCase):
         self.assertEqual(response["status"], "CHANGED_NEEDS_SEMANTIC_RECHECK")
         self.assertEqual(response["semantic_quality"], "UNVERIFIED")
 
+    def test_new_redundancy_uses_real_occurrences_with_noncanonical_report(self):
+        phrase = "The same unnecessary scene returns without advancing the claim."
+        report = {"severity": "major", "paragraph": "2–3", "evidence": phrase}
+        located = gate.locate_regression(report, "# Heading\n\n" + phrase + "\n\n" + phrase)
+        self.assertEqual(located["severity"], "MAJOR")
+        self.assertEqual(located["paragraph"], 2)
+        self.assertEqual(located["matched_paragraphs"], [2, 3])
+        self.assertNotIn("quote", gate.locate_regression(report, "# Heading\n\nOther text only."))
+
     def test_malformed_findings_fail_closed(self):
         with self.assertRaises(ValueError):
             self.audit({"findings": [finding()]})
