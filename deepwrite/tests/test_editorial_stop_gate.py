@@ -6,6 +6,9 @@ Engineering checks only. These do not certify literary or reader quality.
 import ast
 import copy
 import importlib.util
+import json
+import tempfile
+from types import SimpleNamespace
 from pathlib import Path
 import unittest
 
@@ -148,6 +151,65 @@ class EditorialStopGateTests(unittest.TestCase):
         self.assertIn('"editorial_stopping": True', source)
         self.assertIn('channel = "CANDIDATE_OPT_IN"', source)
         self.assertIn("DEEPWRITE_EDITORIAL_STOP_REQUIRES_CANDIDATE_BRANCH", source)
+
+
+    def _live_review_cycle_fixture(self, proposed):
+        """Exercise the actual runner review_cycle, not a copy of its gate logic."""
+        tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(tmp.cleanup)
+        project = Path(tmp.name)
+        (project / "chapters").mkdir()
+        (project / "chapters/ch03.md").write_text(TEXT, encoding="utf-8")
+        path = ROOT / "deepwrite/tools/writing_loop_experimental.py"
+        spec = importlib.util.spec_from_file_location("editorial_writer_runtime_under_test", path)
+        runner = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(runner)
+        work = runner.WritingLoop.__new__(runner.WritingLoop)
+        work.config = {"max_revision_rounds": 1, "guard": "on",
+                       "reader_prior_knowledge_contract": {}}
+        work.state = {"editorial_stop_history": {}}
+        work.editorial_stop_guard = gate
+        work.guard = SimpleNamespace(paragraphs=gate.paragraphs)
+        work.path = lambda name: project / name
+        work.event = lambda *args, **kwargs: None
+        work.save_state = lambda: None
+        work.reader_review = lambda *args, **kwargs: ({}, {"status": "MODEL_INTERNAL_REVIEW_RECORDED"})
+        work.reader_findings = lambda *args, **kwargs: []
+        work.check_record = lambda record, expected: {"status": "PASS_STRUCTURAL_ONLY"}
+        def write(relative, raw):
+            dest = project / relative
+            dest.parent.mkdir(parents=True, exist_ok=True)
+            dest.write_bytes(raw)
+        work.write = write
+        calls = []
+        def call(key, role, payload):
+            calls.append(role)
+            if role != "review":
+                self.fail("Unexpected edit/model call occurred before evidence gate")
+            return {"text": json.dumps({"findings": [proposed]}, ensure_ascii=False),
+                    "provider_kind": "fixture", "model": "fixture", "response_id": "r"}
+        work.call = call
+        return runner, work, calls, project
+
+    def test_actual_runner_blocks_missing_case_before_any_revise(self):
+        proposed = finding()
+        proposed.pop("edit_case")
+        runner, work, calls, project = self._live_review_cycle_fixture(proposed)
+        with self.assertRaisesRegex(runner.Blocked, "EDITORIAL_STOP_HOLD_"):
+            work.review_cycle("ch03", {"ch03": "chapters/ch03.md"})
+        self.assertEqual(calls, ["review"])
+        receipt = json.loads((project / "reviews/ch03.editorial_stop.json").read_text())
+        self.assertEqual(receipt["status"], "HOLD")
+        self.assertEqual(list((project / "chapters").iterdir())[0].name, "ch03.md")
+
+    def test_actual_runner_style_only_keep_has_no_revision_call(self):
+        runner, work, calls, project = self._live_review_cycle_fixture(finding("STYLE_ONLY"))
+        result = work.review_cycle("ch03", {"ch03": "chapters/ch03.md"})
+        self.assertEqual(result, {"ch03": "chapters/ch03.md"})
+        self.assertEqual(calls, ["review"])
+        receipt = json.loads((project / "reviews/ch03.editorial_stop.json").read_text())
+        self.assertEqual(receipt["decisions"][0]["decision"], "KEEP_STYLE_NO_CHURN")
+        self.assertEqual(receipt["author_acceptance"], "PENDING")
 
 
 if __name__ == "__main__":
