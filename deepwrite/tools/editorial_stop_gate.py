@@ -30,7 +30,7 @@ def substantive(value):
     return isinstance(value, str) and len(value.strip()) >= 12 and len(set(value.strip())) >= 6
 
 
-def audit_initial(findings, manuscripts, history=None):
+def audit_initial(findings, manuscripts, history=None, *, scope=None):
     """Return checked proposals, a durable receipt, and newly seen issue identities.
 
     Only model-origin OPEN MAJOR/CRITICAL findings can authorize automated rewriting.
@@ -87,16 +87,32 @@ def audit_initial(findings, manuscripts, history=None):
                            "compare with independent readers before reconsidering.")
             rows.append({"id": issue_id, "artifact_id": art, "decision": "KEEP_STYLE_NO_CHURN",
                          "fingerprint": key, "semantic_quality": "UNVERIFIED"})
-        elif key in history or key in new_history:
+        elif key in new_history:
             holds.append({"id": issue_id, "artifact_id": art,
-                          "reason": "REPEATED_BASELINE_DEFECT_WITHOUT_NEW_INDEPENDENT_EVIDENCE",
+                          "reason": "DUPLICATE_DEFECT_IN_SAME_REVIEW",
                           "fingerprint": key})
+        elif key in history:
+            prior = history[key]
+            baseline_sha = hashlib.sha256(manuscripts[art].encode("utf-8")).hexdigest()
+            if (scope is not None and isinstance(prior, dict) and
+                    prior.get("scope") == scope and prior.get("id") == issue_id and
+                    prior.get("baseline_sha256") == baseline_sha):
+                # A paused stage may re-evaluate the same frozen review on resume.
+                # Reusing the exact prior decision is recovery, not a new edit.
+                rows.append({"id": issue_id, "artifact_id": art,
+                             "decision": "REPLAY_SAME_FROZEN_SCOPE",
+                             "fingerprint": key, "semantic_quality": "UNVERIFIED"})
+            else:
+                holds.append({"id": issue_id, "artifact_id": art,
+                              "reason": "REPEATED_BASELINE_DEFECT_WITHOUT_NEW_INDEPENDENT_EVIDENCE",
+                              "fingerprint": key})
         else:
             rows.append({"id": issue_id, "artifact_id": art, "decision": "ALLOW_ONE_EVIDENCED_REPAIR",
                          "classification": kind, "fingerprint": key,
                          "semantic_quality": "MODEL_PROPOSAL_UNVERIFIED"})
             new_history[key] = {"id": issue_id, "artifact_id": art, "classification": kind,
-                                "baseline_quote": case["baseline_quote"],
+                                "baseline_quote": case["baseline_quote"], "scope": scope,
+                                "baseline_sha256": hashlib.sha256(manuscripts[art].encode("utf-8")).hexdigest(),
                                 "semantic_quality": "UNVERIFIED"}
         checked.append(f)
 
