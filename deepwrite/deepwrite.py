@@ -126,6 +126,8 @@ def validate_request(request):
         raise Blocked("DEEPWRITE_READER_GOAL_REQUIRED")
     if request.get("chapter_titles") or request.get("fixed_outline") or request.get("modules"):
         raise Blocked("DEEPWRITE_NO_PRESET_OUTLINE_OR_MANUAL_MODULE_SELECTION")
+    if type(request.get("experimental_editorial_stop_gate", False)) is not bool:
+        raise Blocked("DEEPWRITE_EDITORIAL_STOP_OPT_IN_MUST_BE_BOOLEAN")
     guide = request.get("author_guidance_source_index")
     if guide is not None and (type(guide) is not int or guide < 0 or guide >= len(request["source_files"])):
         raise Blocked("DEEPWRITE_AUTHOR_GUIDANCE_INDEX_INVALID")
@@ -149,12 +151,13 @@ def source_bytes(request):
     return items
 
 
-def pins(project_id, commit: str, current: dict):
+def pins(project_id, commit: str, current: dict, *, channel=None, optional_modules=()):
+    resolved_channel = channel or effective_channel()
     for key in ("current_spec", "parent_spec"):
         if not isinstance(current.get(key), str):
             raise Blocked("DEEPWRITE_PROTOCOL_SPEC_REQUIRED")
     return {
-        "project_id": project_id, "channel": effective_channel(),
+        "project_id": project_id, "channel": resolved_channel,
         "protocols": {
             "deepwrite": {
                 "version": current["formal_workbench_version"], "commit": commit,
@@ -165,9 +168,9 @@ def pins(project_id, commit: str, current: dict):
                 "spec_sha": git("rev-parse", commit + ":" + current["parent_spec"])
             }
         },
-        "modules": ([] if effective_channel() == "STABLE" else
+        "modules": ([] if resolved_channel == "STABLE" else
                     [{"id": ident, "commit": commit}
-                     for ident in ("e18_loop", "source_first_architecture")])
+                     for ident in ("e18_loop", "source_first_architecture", *optional_modules)])
     }
 
 
@@ -196,6 +199,12 @@ def prepare(request_file: Path, private_root: Path, *, allow_fixture=False):
     commit = git("rev-parse", "HEAD")
     ident = official_identity()
     channel = effective_channel()
+    editorial_opt_in = request.get("experimental_editorial_stop_gate", False)
+    if editorial_opt_in:
+        # Explicit caller opt-in only from a non-main checkout; never silently promote a pinned release.
+        if git("branch", "--show-current") in ("", "main"):
+            raise Blocked("DEEPWRITE_EDITORIAL_STOP_REQUIRES_CANDIDATE_BRANCH")
+        channel = "CANDIDATE_OPT_IN"
     rows = []
     for relative, raw in files:
         path = project / relative
@@ -231,12 +240,16 @@ def prepare(request_file: Path, private_root: Path, *, allow_fixture=False):
         "max_revision_rounds": request["max_revision_rounds"],
         "min_chapters": request["min_chapters"], "max_chapters": request["max_chapters"],
         "insight_origin_scan": True,
-        "modules": {"e18_loop": True, "source_first_architecture": True},
+        "modules": {"e18_loop": True, "source_first_architecture": True,
+                    **({"editorial_stopping": True} if editorial_opt_in else {})},
         "module_policy": {name: ("STABLE" if channel == "STABLE" else "CANDIDATE")
-                          for name in ("e18_loop", "source_first_architecture")},
+                          for name in ("e18_loop", "source_first_architecture",
+                                       *(["editorial_stopping"] if editorial_opt_in else []))},
         "module_commits": ({} if channel == "STABLE" else
-                           {"e18_loop": commit, "source_first_architecture": commit}),
-        "pins": pins(request["project_id"], commit, ident),
+                           {name: commit for name in ("e18_loop", "source_first_architecture",
+                                                    *(["editorial_stopping"] if editorial_opt_in else []))}),
+        "pins": pins(request["project_id"], commit, ident, channel=channel,
+                     optional_modules=(("editorial_stopping",) if editorial_opt_in else ())),
         "sources": rows,
         "execution_contract": {
             "mode": mode, "authorization": {
@@ -258,7 +271,8 @@ def prepare(request_file: Path, private_root: Path, *, allow_fixture=False):
         "schema": "deepwrite/one-call-start/v1",
         "status": "SOURCE_BYTES_FROZEN_AUTHOR_SCOPE_UNVERIFIED_MODEL_NOT_RUN",
         "request_sha256": sha(raw_request), "code_commit": commit,
-        "module_selection": "AUTOMATIC_ALL_APPLICABLE_GATES",
+        "module_selection": ("AUTHOR_OPT_IN_EDITORIAL_STOP_CANDIDATE_WITH_FROZEN_ID"
+                             if editorial_opt_in else "AUTOMATIC_ALL_APPLICABLE_GATES"),
         "source_sha256": rows, "formal_version": ident["formal_workbench_version"],
         "formal_engine_active": ident["formal_engine_active"],
         "engine_lock": ident["formal_engine"],
