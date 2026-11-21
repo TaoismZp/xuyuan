@@ -228,6 +228,13 @@ def _architecture(data, source_data, cfg, project, study_path, study_bytes):
     if not isinstance(book, dict):
         raise Blocked("DISCOVERY_BOOK_DESIGN_REQUIRED")
     contract = data.get("reader_prior_knowledge_contract")
+    normalization = None
+    if (cfg.get("modules", {}).get("editorial_stopping") and isinstance(contract, dict)
+            and "knowledge_compounding" not in contract and isinstance(data.get("knowledge_compounding"), dict)):
+        # Preserve the original response. The supplied contract still has to
+        # pass the same validation after relocating the unambiguous field.
+        contract = {**contract, "knowledge_compounding": data["knowledge_compounding"]}
+        normalization = "RELOCATED_ROOT_KNOWLEDGE_COMPOUNDING_TO_READER_CONTRACT"
     reader_gate = module("deepwrite_discovery_reader_gate", DEEPWRITE / "candidates/e23-frame-wiring/reader_source_gate.py")
     if not isinstance(contract, dict) or contract.get("knowledge_compounding", {}).get("enabled") is not True:
         raise Blocked("DISCOVERY_COMPOUNDING_CONTRACT_REQUIRED")
@@ -244,6 +251,8 @@ def _architecture(data, source_data, cfg, project, study_path, study_bytes):
             "book_design": {"status": "PROVISIONAL",
                             "why_these_chapters_not_source_outline": book.get("why_these_chapters_not_source_outline"),
                             "chapter_contributions": book.get("chapter_contributions")}}
+    if normalization:
+        arch["response_normalization"] = normalization
     frozen = copy.deepcopy(cfg)
     for key in ("discovery_token_budget", "discovery_output_cap", "min_chapters", "max_chapters", "allow_fixture"):
         frozen.pop(key, None)

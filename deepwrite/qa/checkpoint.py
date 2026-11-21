@@ -4,7 +4,8 @@
 The external manifest SHA256 must be saved separately. Pins are syntactically
 checked, not checked against GitHub or author authority. No CURRENT is changed.
 Only new directories are published; source files and failed trials stay intact.
-Atomic no-clobber publication requires Linux renameat2 (or Windows rename).
+Atomic no-clobber publication uses Linux renameat2, macOS renamex_np,
+or Windows rename.
 """
 import argparse
 import ctypes
@@ -113,6 +114,33 @@ def validate_records(manifest):
     return records
 
 
+def rename_directory_exclusive(source, destination):
+    if sys.platform == "win32":
+        os.rename(source, destination)  # Windows rename refuses existing destinations.
+        return
+
+    libc = ctypes.CDLL(None, use_errno=True)
+    source_bytes = os.fsencode(source)
+    destination_bytes = os.fsencode(destination)
+    if sys.platform == "darwin":
+        rename = getattr(libc, "renamex_np", None)
+        require(rename is not None, "atomic no-clobber renamex_np unavailable")
+        rename.argtypes = [ctypes.c_char_p, ctypes.c_char_p, ctypes.c_uint]
+        rename.restype = ctypes.c_int
+        result = rename(source_bytes, destination_bytes, 0x00000004)  # RENAME_EXCL
+    else:
+        rename = getattr(libc, "renameat2", None)
+        require(rename is not None, "atomic no-clobber renameat2 unavailable")
+        rename.argtypes = [ctypes.c_int, ctypes.c_char_p, ctypes.c_int, ctypes.c_char_p, ctypes.c_uint]
+        rename.restype = ctypes.c_int
+        at_fdcwd = -100
+        result = rename(at_fdcwd, source_bytes, at_fdcwd, destination_bytes, 1)  # RENAME_NOREPLACE
+
+    if result != 0:
+        err = ctypes.get_errno()
+        raise OSError(err, os.strerror(err), str(destination))
+
+
 def publish_directory(destination, writer):
     """Stage a complete directory, then atomically publish without replacement."""
     dest = no_symlinks(destination)
@@ -121,17 +149,7 @@ def publish_directory(destination, writer):
     stage = Path(tempfile.mkdtemp(prefix=".deepwrite-checkpoint-", dir=dest.parent))
     try:
         writer(stage)
-        if sys.platform == "win32":
-            os.rename(stage, dest)  # Windows rename refuses existing destinations.
-        else:
-            libc = ctypes.CDLL(None, use_errno=True)
-            rename = getattr(libc, "renameat2", None)
-            require(rename is not None, "atomic no-clobber renameat2 unavailable")
-            rename.argtypes = [ctypes.c_int, ctypes.c_char_p, ctypes.c_int, ctypes.c_char_p, ctypes.c_uint]
-            rename.restype = ctypes.c_int
-            if rename(-100, os.fsencode(stage), -100, os.fsencode(dest), 1) != 0:
-                err = ctypes.get_errno()
-                raise OSError(err, os.strerror(err), str(dest))
+        rename_directory_exclusive(stage, dest)
     finally:
         if stage.exists():
             shutil.rmtree(stage)

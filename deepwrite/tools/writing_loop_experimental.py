@@ -65,12 +65,14 @@ def json_bytes(obj):
     return (json.dumps(obj, ensure_ascii=False, indent=2, sort_keys=True) + "\n").encode("utf-8")
 
 
-def parse_object(text):
+def parse_object(text, *, list_key=None):
     text = text.strip()
     if text.startswith("\x60\x60\x60"):
         text = re.sub(r"^\x60\x60\x60(?:json)?\s*", "", text, count=1)
         text = re.sub(r"\s*\x60\x60\x60$", "", text, count=1)
     value = json.loads(text)
+    if list_key is not None and isinstance(value, list):
+        return {list_key: value}
     if not isinstance(value, dict):
         raise Blocked("MODEL_RESPONSE_NOT_OBJECT")
     return value
@@ -138,6 +140,8 @@ class WritingLoop:
         self.cfg_sha = digest(json_bytes(config))
         self.stop_after, self.steps_this_turn = stop_after, 0
         self.guard = module("e18_closeout", DEEPWRITE / "candidates/e15-review-closure/review_closure_guard.py")
+        self.editorial_stop_guard = (module("e18_editorial_stop", DEEPWRITE / "tools/editorial_stop_gate.py")
+                                    if config.get("modules", {}).get("editorial_stopping") else None)
         self.reader_guard = module("e18_reader_source", DEEPWRITE / "candidates/e23-frame-wiring/reader_source_gate.py")
         self.source_first_guard = (module("e18_source_first", DEEPWRITE / "candidates/source-first/source_first_gate.py")
                                    if config.get("modules", {}).get("source_first_architecture") else None)
@@ -262,7 +266,9 @@ class WritingLoop:
         if c["channel"] == "STABLE":
             self.assert_stable_entry()
         supported = {"e18_loop", "reader_source_transfer", "e23_frame", "e23_perspective", "e23",
-                     "source_first_architecture"}
+                     "source_first_architecture", "editorial_stopping"}
+        if c.get("modules", {}).get("editorial_stopping") and c["channel"] == "STABLE":
+            raise Blocked("EDITORIAL_STOP_GATE_NOT_YET_IN_FORMAL_STABLE_RELEASE")
         if c.get("modules", {}).get("source_first_architecture") and c["channel"] == "STABLE":
             resolved = module("e18_released_source_first", DEEPWRITE / "release/activation.py").resolve(DEEPWRITE.parent)
             required = {"deepwrite/deepwrite.py",
@@ -398,6 +404,8 @@ class WritingLoop:
         loaded = {"e18_loop": self.file_identity("tools/writing_loop_experimental.py"),
                   "reader_source_transfer": self.file_identity("candidates/e23-frame-wiring/reader_source_gate.py"),
                   "actual_file_closeout": self.file_identity("candidates/e15-review-closure/review_closure_guard.py")}
+        if requested.get("editorial_stopping"):
+            loaded["editorial_stopping"] = self.file_identity("tools/editorial_stop_gate.py")
         if requested.get("source_first_architecture"):
             loaded["source_first_architecture"] = self.file_identity("candidates/source-first/source_first_gate.py")
         if any(requested.get(name) for name in ("e23", "e23_frame", "e23_perspective")):
@@ -488,24 +496,88 @@ class WritingLoop:
             raise AuthorReviewRequired("AWAIT_AUTHOR_REVIEW_FROZEN_PROJECT_CONTRACT")
 
     def reader_review(self, key, art, relative, stage, sources=None):
-        text = self.path(relative).read_text(encoding="utf-8")
+        artifact = self.path(relative).read_bytes()
+        text = artifact.decode("utf-8")
         contract = self.config["reader_prior_knowledge_contract"]
         payload = {"chapter_id": art, "stage": stage, "manuscript": text,
-                   "artifact_sha256": digest(self.path(relative).read_bytes()),
+                   "artifact_sha256": digest(artifact),
                    "contract_sha256": self.reader_contract_sha, "reader_contract": contract,
                    "task": self.reader_guard.review_instructions(contract, art, stage)}
         if sources is not None:
             payload["source_texts"] = sources
-        data = self.call(key, "source_evidence_review" if stage == "SOURCE_LEARNING" else "reader_source_review", payload)
-        review = parse_object(data["text"])
-        review["reviewer"] = data["provider_kind"] + ":" + data["model"] + ":" + data["response_id"]
-        result = self.reader_guard.evaluate(contract, art, text, review, stage=stage, source_texts=sources)
+        if self.editorial_stop_guard is not None:
+            task = payload["task"]
+            if stage != "SOURCE_LEARNING":
+                payload["source_evidence"] = self.editorial_sources()
+            task["required_source_locations"] = {concept: task["source_dimensions"]
+                                                 for concept in task["required_source_concepts"]}
+            task["task"] += (
+                " Use the supplied frozen sources or located excerpts to check fidelity. State any uncovered limits. "
+                " Return one source_evidence row for every listed concept and each of its listed dimensions. "
+                "A short exact excerpt can support more than one row only when it shows each of those dimensions. "
+                "If the real text does not support a row, omit it and locate a material source defect when warranted. "
+                "Use exactly NOTE, MINOR, MAJOR or CRITICAL for each finding severity. "
+                "Keep explanations concise so evidence fits in the response budget.")
+        role = "source_evidence_review" if stage == "SOURCE_LEARNING" else "reader_source_review"
+        response_key = key
+        data = self.call(response_key, role, payload)
+        review, result, evidence = self.evaluate_reader_response(art, artifact, payload, stage, sources, data)
+        if (self.editorial_stop_guard is not None and result["errors"] and not result["blocking_findings"]
+                and all(error.startswith("MISSING_LOCATED_SOURCE_EVIDENCE:") for error in result["errors"])):
+            first_path = "reader_reviews/" + key + ".first.json"
+            self.write(first_path, json_bytes({"artifact": relative, "review": review, "result": result,
+                                               **evidence, "human_acceptance": "NOT_RUN"}))
+            followup = {**payload, "omitted_locations": result["errors"], "first_review": review,
+                        "followup_task": "Re-read the same unchanged text. Return a complete new report. "
+                                         "Locate each omitted item if the actual text supports it. Preserve valid prior "
+                                         "observations. Leave unsupported dimensions unverified; never invent evidence."}
+            response_key = key + "_locate_missing"
+            data = self.call(response_key, role, followup)
+            review, result, evidence = self.evaluate_reader_response(art, artifact, payload, stage, sources, data)
+            evidence["earlier_unresolved_review"] = first_path
+        if self.editorial_stop_guard is not None and self.path(relative).read_bytes() != artifact:
+            raise Blocked("READER_REVIEW_ARTIFACT_CHANGED_DURING_CALL")
         path = "reader_reviews/" + key + ".json"
         self.write(path, json_bytes({"artifact": relative, "review": review, "result": result,
-                                    "human_acceptance": "NOT_RUN"}))
+                                    **evidence, "human_acceptance": "NOT_RUN"}))
         self.event("EVIDENCE" if stage == "SOURCE_LEARNING" else "READER_SOURCE_REVIEW", art,
-                   result["status"], {"review": path, "response": "calls/" + key + ".response.json"})
+                   result["status"], {"review": path, "response": "calls/" + response_key + ".response.json"})
+        if self.editorial_stop_guard is not None and result["status"] == "HOLD_REVIEW_EVIDENCE":
+            raise Blocked("EDITORIAL_READER_HOLD_UNVERIFIED_" + key)
         return review, result
+
+    def evaluate_reader_response(self, art, artifact, payload, stage, sources, data):
+        text = artifact.decode("utf-8")
+        review = parse_object(data["text"])
+        reported_identity, resolved_locations = None, []
+        if self.editorial_stop_guard is not None:
+            # The transport journal binds the response to the actual supplied request.
+            reported_identity = {field: review.get(field) for field in ("artifact_sha256", "contract_sha256")}
+            for field in reported_identity:
+                review[field] = payload[field]
+            locations = [review[field] for field in ("source_evidence", "reader_checks", "findings")
+                         if isinstance(review.get(field), list)]
+            common = [(text, row) for rows in locations for row in rows]
+            common.append((text, review.get("knowledge_compounding_probe")))
+            if isinstance(review.get("source_material_evidence"), list):
+                common.extend(((sources or {}).get(row.get("source_id"), ""), row)
+                              for row in review["source_material_evidence"] if isinstance(row, dict))
+            for bytes_text, row in common:
+                if not isinstance(row, dict) or not isinstance(row.get("quote"), str) or not row["quote"].strip():
+                    continue
+                parts = self.reader_guard.paragraphs(bytes_text)
+                report_number = row.get("paragraph")
+                candidates = [number for number, part in enumerate(parts, 1) if row["quote"] in part]
+                if len(candidates) == 1 and (type(report_number) is not int or report_number != candidates[0]):
+                    resolved_locations.append({"reported_paragraph": report_number, "canonical_paragraph": candidates[0],
+                                               "quote": row["quote"]})
+                    row["paragraph"] = candidates[0]
+            self.verify_files()
+        review["reviewer"] = data["provider_kind"] + ":" + data["model"] + ":" + data["response_id"]
+        result = self.reader_guard.evaluate(payload["reader_contract"], art, text, review, stage=stage, source_texts=sources)
+        evidence = ({"reported_identity": reported_identity, "resolved_locations": resolved_locations,
+                     "request_sha256": data["request_sha256"]} if reported_identity is not None else {})
+        return review, result, evidence
 
     def prepare_chapter(self, art, row, sources, research, plan):
         self.event("DISCOVERY", art, "ENTERED")
@@ -702,6 +774,10 @@ class WritingLoop:
     def save_text_call(self, key, role, payload, path, manuscript=False):
         data = self.call(key, role, payload)
         text = data["text"].strip() + "\n"
+        if self.editorial_stop_guard is not None and role in {"front_matter", "afterword"} and text.startswith("## "):
+            # The response journal retains the original Markdown. Standardize
+            # only the title level of otherwise complete front/back matter.
+            text = text[1:]
         if manuscript and (not text.startswith("# ") or len(text.splitlines()) < 3):
             raise Blocked("NO_COMPLETE_MARKDOWN_MANUSCRIPT")
         self.write(path, text)
@@ -760,6 +836,43 @@ class WritingLoop:
             return {"status": "BYPASSED_BASELINE_ARM", "semantic_status": "NOT_CERTIFIED"}
         return self.guard.check(record, self.root, expected_findings=expected)
 
+    def editorial_sources(self):
+        native = [row["path"] for row in self.config.get("sources", [])
+                  if re.fullmatch(r"sources/native_[0-9]+[.]md", row["path"])]
+        if sum(self.path(path).stat().st_size for path in native) <= 24_000:
+            return {"coverage": "FROZEN_PRIMARY_TEXTS",
+                    "texts": {path: self.path(path).read_text(encoding="utf-8") for path in native}}
+        concepts = self.config.get("source_first_architecture", {}).get("source_concepts", [])
+        return {"coverage": "FROZEN_LOCATED_EXCERPTS_ONLY",
+                "anchors": [{"path": c["source_path"], "quote": c["quote"]} for c in concepts
+                            if c["source_path"] in native and len(c["quote"].encode()) <= 1_500][:12]}
+
+    def editorial_proposal(self, key, reviewed, initial, manuscripts, source_evidence):
+        receipt = "reviews/" + key + ".editorial_stop.json"
+        if self.path(receipt).is_file():
+            self.verify_files()
+            previous = json.loads(self.path(receipt).read_bytes())
+            if previous.get("review_sha256") != digest(reviewed["text"].encode()):
+                raise Blocked("EDITORIAL_STOP_FROZEN_REVIEW_CHANGED")
+            return previous
+        report = self.editorial_stop_guard.audit_initial(
+            initial.get("findings"), manuscripts, self.state.get("editorial_stop_history", {}), scope=key)
+        pending = [{"id": f["id"], "artifact_id": f["artifact_id"], "issue": f["issue"],
+                    "classification": f["edit_case"]["classification"]}
+                   for f in report["findings"] if f.get("status") == "OPEN" and isinstance(f.get("edit_case"), dict)]
+        if pending and not report["holds"]:
+            verification = self.call(key + "_editorial_confirmation", "editorial_confirmation", {
+                "manuscripts": manuscripts, "source_evidence": source_evidence, "allegations": pending,
+                "task": "Independently reconstruct the logic from the original text and evidence before judging "
+                        "each allegation. Return {findings:[{id, verdict, quote, reason}]}. Use CONFIRMED only "
+                        "for a material and demonstrable defect. Use PREFERENCE_ONLY for cosmetic or subjective "
+                        "proposals and UNVERIFIED for unproven claims. Include one exact original quote and a "
+                        "concrete reason for each. No proposed rewrites or reader acceptance scores."})
+            self.editorial_stop_guard.corroborate(report, parse_object(verification["text"]), manuscripts)
+        report["review_sha256"] = digest(reviewed["text"].encode())
+        self.write(receipt, json_bytes(report))
+        return report
+
     def review_cycle(self, key, current):
         baseline = dict(current)
         self.event("BOOKWIDE_REVIEW" if len(current) > 1 or key in ("cross", "full_book_recheck") else "ADVERSARIAL_REVIEW", key, "ENTERED")
@@ -778,7 +891,7 @@ class WritingLoop:
                    "part_kinds": {a: ("FRONT_MATTER" if a == FRONT_PART else "AFTERWORD" if a == TAIL_PART else "CHAPTER")
                                   for a in current},
                    "task": "Review actual prose and cross-chapter contribution when multiple chapters. "
-                   "Return JSON findings; each manuscript needs at least one located finding or justified NOTE KEEP. "
+                   'Return a JSON object with a findings array. Each manuscript needs at least one located finding or justified NOTE KEEP. '
                    "Findings: id,artifact_id,kind(model_review or computable),severity,status(OPEN or KEEP),"
                    "issue,evidence,paragraph(1-based blank-line-delimited),reason for KEEP. "
                    "Computable assertions only contains/not_contains/literal_count with value/count. "
@@ -789,14 +902,43 @@ class WritingLoop:
                    "for claims, source consistency and overstatement; do not require a chapter's source-learning template there. "
                    "Mathematical correctness alone is not thought quality. Flag formulaic prose "
                    "without imposing a new template. G0/G1/G2/G3/G4/G6 still govern. "
-                   "Do not invent defects to force rewriting.",
+                   "Use exactly NOTE, MINOR, MAJOR or CRITICAL for severity. "
+                   "Do not invent defects to force rewriting. If candidate module editorial_stopping is "
+                   "enabled, for each OPEN MAJOR/CRITICAL model_review finding supply edit_case: "
+                   "{classification: FACT_OR_MATH_ERROR / EX_ANTE_CAUSAL_ERROR / SOURCE_MECHANISM_MISSING / "
+                   "READER_CAUSAL_GAP / LITERARY_COMPREHENSION_GAP / STYLE_ONLY, baseline_quote: exact substring of numbered paragraph, "
+                   "reader_harm: concrete misinterpretation, minimal_remedy: smallest necessary change, "
+                   "regression_risk: what might become worse}. STYLE_ONLY is not a mandatory repair; "
+                   "use KEEP with a reason when no genuine defect evidence exists.",
                    "reader_contract": self.config["reader_prior_knowledge_contract"]}
+        if self.editorial_stop_guard is not None:
+            payload["source_evidence"] = self.editorial_sources()
+            payload["task"] += (
+                " Review every section in this first pass. Compare what was known at each decision with "
+                "what was only observed later, reconstruct what could actually be executed, then verify "
+                "the arithmetic. Inspect source meaning and attribution, transfer prerequisites, distinct "
+                "chapter contribution, duplication and passages that materially prevent understanding. "
+                "Use KEEP for sound decisions and optional style. Do not invent unwitnessed human judgments.")
         if known:
             payload["caller_frozen_known_findings"] = known
             payload["task"] += " Known finding ids belong to the caller; do not duplicate or override them."
         reviewed = self.call(key + "_review", "review", payload)
         identity = reviewed["provider_kind"] + ":" + reviewed["model"] + ":" + reviewed["response_id"]
-        initial = parse_object(reviewed["text"])
+        initial = parse_object(reviewed["text"], list_key="findings")
+        proposal = None
+        if self.editorial_stop_guard is not None:
+            proposal = self.editorial_proposal(key, reviewed, initial, payload["manuscripts"], payload["source_evidence"])
+            self.event("EDITORIAL_STOP_GATE", key, proposal["disposition"],
+                       {"receipt": "reviews/" + key + ".editorial_stop.json",
+                        "semantic_quality": "UNVERIFIED", "human_acceptance": "NOT_RUN"})
+            if proposal["status"] != "PASS_PROPOSALS_ONLY":
+                raise Blocked("EDITORIAL_STOP_HOLD_UNGROUNDED_OR_REPEATED_PROPOSAL_" + key)
+            initial["findings"] = proposal["findings"]
+            actionable_ids = {f["id"] for f in proposal["findings"] if f.get("status") == "OPEN"}
+            self.state.setdefault("editorial_stop_history", {}).update(
+                {fingerprint: row for fingerprint, row in proposal["new_history"].items()
+                 if row["id"] in actionable_ids})
+            self.save_state()
         initial["findings"] = initial.get("findings", []) + reader_rows
         if known:
             reported = initial.get("findings", [])
@@ -808,6 +950,8 @@ class WritingLoop:
         expected = copy.deepcopy(findings)
         record = self.record(baseline, current, findings)
         outcome = self.check_record(record, expected)
+        soft_ids = {f["id"] for f in (proposal or {}).get("findings", [])
+                    if (f.get("edit_case") or {}).get("classification") in self.editorial_stop_guard.P2}
         for turn in range(self.config["max_revision_rounds"] + 1):
             self.write("reviews/" + key + "." + str(turn) + ".json",
                        json_bytes({"record": record, "guard": outcome}))
@@ -816,8 +960,23 @@ class WritingLoop:
                 return current
             if turn == self.config["max_revision_rounds"]:
                 raise Blocked("BLOCKED_QUALITY_UNRESOLVED_REVIEW_STILL_OPEN_" + key)
-            affected = {f["artifact_id"] for f in findings if f["status"] == "OPEN"}
-            if outcome["status"] == "HOLD" and not affected:
+            eligible = [f for f in findings if f["status"] == "OPEN"]
+            if proposal is not None:
+                attempts = self.state.setdefault("editorial_p2_attempts", {})
+                uncapped = []
+                for f in eligible:
+                    art = f["artifact_id"]
+                    used = attempts.get(art, [])
+                    attempt = f"{key}:{art}:{turn + 1}"
+                    if f["id"] not in soft_ids or attempt in used or len(used) < 2:
+                        uncapped.append(f)
+                if eligible and not uncapped:
+                    self.event("EDITORIAL_STOP_GATE", key, "HOLD_P2_ONLY_REWRITE_BUDGET_EXHAUSTED",
+                               {"author_acceptance": "PENDING", "reader_quality": "UNVERIFIED"})
+                    raise Blocked("EDITORIAL_STOP_HOLD_P2_REWRITE_BUDGET_EXHAUSTED_" + key)
+                eligible = uncapped
+            affected = {f["artifact_id"] for f in eligible}
+            if proposal is None and outcome["status"] == "HOLD" and not affected:
                 affected = {f["artifact_id"] for f in findings
                             if f["status"] == "CLOSED" and f["severity"] in ("MAJOR", "CRITICAL")}
             if not affected:
@@ -826,15 +985,35 @@ class WritingLoop:
             for art in sorted(affected):
                 old = current[art]
                 path = "chapters/" + art + "." + key + ".r" + str(turn+1) + ".md"
+                selected = [f for f in eligible if f["artifact_id"] == art]
+                selected_ids = {f["id"] for f in selected}
                 prompt = {"chapter": self.path(old).read_text(),
-                          "frozen_findings": [f for f in expected if f["artifact_id"] == art],
-                          "recheck": [f for f in findings if f["artifact_id"] == art],
+                          "frozen_findings": [f for f in expected if f["artifact_id"] == art
+                                              and (proposal is None or f["id"] in selected_ids)],
+                          "recheck": [f for f in findings if f["artifact_id"] == art
+                                      and (proposal is None or f["id"] in selected_ids)],
                           "reader_contract": self.config["reader_prior_knowledge_contract"],
                           "prepared_source_learning": self.state["completed"].get("prepare_" + art),
                           "task": "Return a complete revised Markdown chapter, not a plan or review. "
                                   "Repair the findings while preserving sound prose. Original remains frozen."}
+                if proposal is not None:
+                    prompt["source_evidence"] = payload["source_evidence"]
+                    prompt["task"] += " Make minimal local changes. Preserve valid arguments, scenes and all source conditions. Do not add decorative stories or new claims."
+                    if selected_ids & soft_ids:
+                        attempt = f"{key}:{art}:{turn + 1}"
+                        used = attempts.setdefault(art, [])
+                        if attempt not in used:
+                            used.append(attempt)
+                            self.save_state()
                 self.save_text_call(key + "_" + art + "_revise_" + str(turn+1), "revise",
                                     prompt, path, manuscript=True)
+                if self.editorial_stop_guard is not None:
+                    delta = self.editorial_stop_guard.verify_edit_result(
+                        self.path(old).read_text(), self.path(path).read_text())
+                    self.write("reviews/" + key + "." + art + "." + str(turn+1)
+                               + ".editorial_delta.json", json_bytes(delta))
+                    if delta["status"] != "CHANGED_NEEDS_SEMANTIC_RECHECK":
+                        raise Blocked("EDITORIAL_STOP_HOLD_NON_SUBSTANTIVE_REWRITE_" + art)
                 diff = "".join(difflib.unified_diff(self.path(old).read_text().splitlines(True),
                         self.path(path).read_text().splitlines(True), fromfile=old, tofile=path))
                 self.write("diffs/" + art + "." + key + "." + str(turn+1) + ".patch", diff)
@@ -876,24 +1055,47 @@ class WritingLoop:
                         f["severity"] in ("MAJOR", "CRITICAL") for f in expected)
                     if not existing_reader_major:
                         raise Blocked("BLOCKED_QUALITY_UNRESOLVED_NEW_READER_MAJOR_" + art)
-            data = self.call(key + "_recheck_" + str(turn+1), "recheck",
-                    {"frozen_findings": expected,
+            recheck_request = {"frozen_findings": expected,
                      "manuscripts": {a: self.path(p).read_text() for a, p in current.items()},
                      "task": "Return JSON findings exactly covering frozen ids: id,status(OPEN/CLOSED/KEEP),"
                              "paragraph,evidence,reason if KEEP. Re-read actual manuscript; do not claim closure from intent. "
                              "Use new_findings:[{artifact_id,severity,issue,evidence,paragraph}] for newly discovered "
-                             "issues; never drop a major new issue or replace a frozen id."})
+                             "issues; never drop a major new issue or replace a frozen id."}
+            if proposal is not None:
+                context = {art: rel for row in self.config.get("chapters", [])
+                           for art, rel in self.state["completed"].get("close_" + row["artifact_id"], {}).items()
+                           if art not in current}
+                recheck_request.update(original_manuscripts=payload["manuscripts"], source_evidence=payload["source_evidence"],
+                                       related_chapters={art: self.path(rel).read_text() for art, rel in context.items()})
+                recheck_request["task"] += (
+                    " Compare complete chapters before and after. Check source and decision premises, "
+                    "lost insights, renamed old issues, duplicate passages introduced by new scenes, "
+                    "and cross-chapter regressions. For every new_findings item use one exact quote in a "
+                    "single paragraph of the new text as quote, a one-based integer paragraph, and one "
+                    "of NOTE, MINOR, MAJOR, CRITICAL. Describe other repetitions in evidence. "
+                    "Do not treat more text as improvement.")
+            data = self.call(key + "_recheck_" + str(turn+1), "recheck", recheck_request)
             rechecked = parse_object(data["text"])
             new_findings = rechecked.get("new_findings", [])
             if not isinstance(new_findings, list):
                 raise Blocked("NEW_FINDINGS_NOT_LIST")
             if new_findings:
                 self.write("reviews/" + key + ".new_findings." + str(turn+1) + ".json", json_bytes(new_findings))
+                if proposal is not None:
+                    for index, fresh in enumerate(new_findings):
+                        if isinstance(fresh, dict) and fresh.get("artifact_id") in current:
+                            after = recheck_request["manuscripts"][fresh["artifact_id"]]
+                            new_findings[index] = self.editorial_stop_guard.locate_regression(fresh, after)
+                    self.write("reviews/" + key + ".located_regressions." + str(turn+1) + ".json", json_bytes(new_findings))
                 for fresh in new_findings:
-                    if (fresh.get("artifact_id") not in current or fresh.get("severity") not in
+                    if (not isinstance(fresh, dict) or fresh.get("artifact_id") not in current or fresh.get("severity") not in
                             ("NOTE", "MINOR", "MAJOR", "CRITICAL") or not fresh.get("issue") or not fresh.get("evidence")):
                         raise Blocked("INVALID_NEW_FINDING")
                     self.location(current[fresh["artifact_id"]], fresh.get("paragraph"))
+                    if (proposal is not None and fresh["severity"] in ("MAJOR", "CRITICAL")
+                            and (not isinstance(fresh.get("quote"), str) or not fresh["quote"].strip()
+                                 or fresh["quote"] not in self.path(current[fresh["artifact_id"]]).read_text())):
+                        raise Blocked("EDITORIAL_RECHECK_REGRESSION_NOT_LOCATED")
                 if any(f["severity"] in ("MAJOR", "CRITICAL") for f in new_findings):
                     raise Blocked("NEW_MAJOR_FINDINGS_HOLD_REVIEW_SCOPE_NOT_SILENTLY_EXPANDED")
             replies = rechecked.get("findings", [])
