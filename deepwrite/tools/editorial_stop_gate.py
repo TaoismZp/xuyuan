@@ -122,6 +122,20 @@ def audit_initial(findings, manuscripts, history=None, *, scope=None):
             "quality_improvement": "UNVERIFIED"}
 
 
+def soft_revision_budget(proposal, *, limit=2):
+    """Limit automated P2-only literature rewrites; hard factual repairs retain their normal guard.
+
+    A budget exhaustion must HOLD for reader/editor decision, never be marked closed.
+    """
+    if type(limit) is not int or limit < 1:
+        raise ValueError("INVALID_EDITORIAL_SOFT_REVISION_LIMIT")
+    decisions = proposal.get("decisions", []) if isinstance(proposal, dict) else []
+    actionable = [x for x in decisions if x.get("decision") == "ALLOW_ONE_EVIDENCED_REPAIR"]
+    if actionable and all(x.get("classification") in P2 for x in actionable):
+        return limit
+    return None
+
+
 def verify_edit_result(old_text, new_text):
     """Mechanical no-op detector only. Full prose/reader improvement is not computable."""
     old = "".join(old_text.split())
