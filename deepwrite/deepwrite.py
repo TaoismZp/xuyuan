@@ -198,13 +198,15 @@ def prepare(request_file: Path, private_root: Path, *, allow_fixture=False):
     (evidence / "USER_REQUEST.json").write_bytes(raw_request)
     commit = git("rev-parse", "HEAD")
     ident = official_identity()
-    channel = effective_channel()
     editorial_opt_in = request.get("experimental_editorial_stop_gate", False)
     if editorial_opt_in:
-        # Explicit caller opt-in only from a non-main checkout; never silently promote a pinned release.
+        # A candidate checkout intentionally differs from the pinned stable release:
+        # do not resolve the stable runtime before selecting this explicit opt-in.
         if git("branch", "--show-current") in ("", "main"):
             raise Blocked("DEEPWRITE_EDITORIAL_STOP_REQUIRES_CANDIDATE_BRANCH")
         channel = "CANDIDATE_OPT_IN"
+    else:
+        channel = effective_channel()
     rows = []
     for relative, raw in files:
         path = project / relative
