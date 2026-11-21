@@ -1,0 +1,28 @@
+name: editorial-stop-gate-candidate
+
+on:
+  pull_request:
+    paths:
+      - 'deepwrite/tools/editorial_stop_gate.py'
+      - 'deepwrite/tools/writing_loop_experimental.py'
+      - 'deepwrite/deepwrite.py'
+      - 'deepwrite/tests/test_editorial_stop_gate.py'
+      - '.github/workflows/editorial-stop-gate-candidate.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  editorial-stop-gate-negative-controls:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Compile candidate runtime
+        run: |
+          python -m py_compile deepwrite/tools/editorial_stop_gate.py deepwrite/tools/writing_loop_experimental.py deepwrite/deepwrite.py deepwrite/tests/test_editorial_stop_gate.py
+      - name: Execute editorial negative controls
+        run: python -m unittest discover -s deepwrite/tests -p test_editorial_stop_gate.py -v
