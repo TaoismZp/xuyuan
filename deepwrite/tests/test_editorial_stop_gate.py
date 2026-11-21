@@ -11,6 +11,7 @@ import tempfile
 from types import SimpleNamespace
 from pathlib import Path
 import unittest
+from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[2]
 GUARD_PATH = ROOT / "deepwrite/tools/editorial_stop_gate.py"
@@ -77,10 +78,18 @@ class EditorialStopGateTests(unittest.TestCase):
         self.assertEqual(result["status"], "HOLD")
         self.assertEqual(result["holds"][0]["reason"], "BASELINE_QUOTE_NOT_IN_LOCATED_PARAGRAPH")
 
-    def test_wrong_paragraph_is_refused(self):
+    def test_unique_original_quote_can_repair_wrong_paragraph_number(self):
         row = finding()
         row["paragraph"] = 1
-        self.assertEqual(self.audit([row])["status"], "HOLD")
+        result = self.audit([row])
+        self.assertEqual(result["status"], "PASS_PROPOSALS_ONLY")
+        self.assertEqual(result["findings"][0]["reported_paragraph"], 1)
+        self.assertEqual(result["findings"][0]["paragraph"], 2)
+
+    def test_wrong_paragraph_with_nonunique_quote_holds(self):
+        row = finding()
+        row["paragraph"] = 1
+        self.assertEqual(self.audit([row], manuscripts={ART: TEXT + "\n\n股票跌到了七十元"})["status"], "HOLD")
 
     def test_missing_required_justification_holds_not_keeps(self):
         row = finding()
@@ -128,10 +137,11 @@ class EditorialStopGateTests(unittest.TestCase):
         result = self.audit([finding(), row], manuscripts={ART: TEXT, "ch05": TEXT})
         self.assertEqual(result["status"], "PASS_PROPOSALS_ONLY")
 
-    def test_generated_reader_major_stays_with_reader_guard(self):
+    def test_model_cannot_bypass_gate_with_reader_prefix(self):
         row = finding(id="reader_ch03_gate")
+        row.pop("edit_case")
         result = self.audit([row])
-        self.assertEqual(result["decisions"][0]["decision"], "DELEGATED_TO_EXISTING_READER_GATE")
+        self.assertEqual(result["status"], "HOLD")
 
     def test_input_is_not_modified(self):
         rows = [finding("STYLE_ONLY")]
@@ -139,21 +149,29 @@ class EditorialStopGateTests(unittest.TestCase):
         self.audit(rows)
         self.assertEqual(rows, original)
 
-    def test_p2_only_edits_have_two_attempt_budget_then_hold(self):
-        proposal = self.audit([finding("READER_CAUSAL_GAP")])
-        self.assertEqual(gate.soft_revision_budget(proposal), 2)
+    def test_changed_quote_length_cannot_reopen_same_passage(self):
+        first = self.audit([finding(quote="股票跌到了七十元，他看到这个价格")])
+        later = self.audit([finding(id="renamed", quote="他看到这个价格便立即投入")], first["new_history"])
+        self.assertEqual(later["status"], "HOLD")
+        self.assertEqual(later["holds"][0]["reason"], "REPEATED_BASELINE_DEFECT_WITHOUT_NEW_INDEPENDENT_EVIDENCE")
 
-    def test_hard_factual_error_does_not_inherit_soft_budget(self):
-        proposal = self.audit([finding("EX_ANTE_CAUSAL_ERROR")])
-        self.assertIsNone(gate.soft_revision_budget(proposal))
+    def test_optional_minor_does_not_hitchhike_on_hard_rewrite(self):
+        cosmetic = finding("STYLE_ONLY", id="wording", severity="MINOR")
+        output = self.audit([finding(), cosmetic])
+        self.assertEqual([item["status"] for item in output["findings"]], ["OPEN", "KEEP"])
 
-    def test_no_actionable_issue_has_no_extra_rewrite_budget(self):
-        proposal = self.audit([finding("STYLE_ONLY")])
-        self.assertIsNone(gate.soft_revision_budget(proposal))
+    def test_corroboration_does_not_silently_downgrade_hard_claim(self):
+        output = self.audit([finding()])
+        gate.corroborate(output, {"findings": [{"id": "bad_path", "verdict": "PREFERENCE_ONLY",
+                        "quote": "股票跌到了七十元", "reason": "No defect has been established by this second reading."}]}, {ART: TEXT})
+        self.assertEqual(output["disposition"], "HOLD_UNVERIFIED")
 
-    def test_invalid_soft_budget_rejected(self):
-        with self.assertRaises(ValueError):
-            gate.soft_revision_budget({}, limit=0)
+    def test_corroborated_style_disagreement_can_keep_supported_prose(self):
+        output = self.audit([finding("READER_CAUSAL_GAP")])
+        gate.corroborate(output, {"findings": [{"id": "bad_path", "verdict": "PREFERENCE_ONLY",
+                        "quote": "股票跌到了七十元", "reason": "An equally readable formulation is just a preference."}]}, {ART: TEXT})
+        self.assertEqual(output["disposition"], "KEEP_NO_CHURN")
+        self.assertEqual(output["findings"][0]["status"], "KEEP")
 
     def test_whitespace_only_rewrite_is_not_quality_gain(self):
         self.assertEqual(gate.verify_edit_result("文字 有 证据", "文 字有证据")["status"],
@@ -242,6 +260,112 @@ class EditorialStopGateTests(unittest.TestCase):
         receipt = json.loads((project / "reviews/ch03.editorial_stop.json").read_text())
         self.assertEqual(receipt["decisions"][0]["decision"], "KEEP_STYLE_NO_CHURN")
         self.assertEqual(receipt["author_acceptance"], "PENDING")
+
+    def test_actual_runner_counts_soft_budget_across_scopes_before_revise(self):
+        proposed = finding("READER_CAUSAL_GAP")
+        runner, work, calls, project = self._live_review_cycle_fixture(proposed)
+        work.state["editorial_p2_attempts"] = {ART: ["first", "second"]}
+        work.config["max_revision_rounds"] = 5
+        work.config["chapters"] = []
+        original_call = work.call
+        def call(key, role, payload):
+            if role == "editorial_confirmation":
+                calls.append(role)
+                return {"text": json.dumps({"findings": [{"id": "bad_path", "verdict": "CONFIRMED",
+                        "quote": "股票跌到了七十元", "reason": "An independent read confirms a material gap."}]})}
+            return original_call(key, role, payload)
+        work.call = call
+        with self.assertRaisesRegex(runner.Blocked, "HOLD_P2_REWRITE_BUDGET_EXHAUSTED"):
+            work.review_cycle("cross", {ART: "chapters/ch03.md"})
+        self.assertEqual(calls, ["review", "editorial_confirmation"])
+        self.assertEqual(work.state["editorial_p2_attempts"][ART], ["first", "second"])
+
+
+def invocation_fixture():
+    spec = importlib.util.spec_from_file_location("editorial_one_call_fixture", ROOT / "deepwrite/test_default.py")
+    fixture = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(fixture)
+    return fixture
+
+
+class EditorialInvocationTests(unittest.TestCase):
+    def setUp(self):
+        self.fixture = invocation_fixture()
+        self.request = self.fixture.DefaultInvocationTests()
+        # macOS may give tempfile a symlinked default directory. Production
+        # continues to refuse such paths; the fixture constructs a real one.
+        previous_directory = tempfile.gettempdir()
+        with patch.object(tempfile, "tempdir", str(Path(previous_directory).resolve())):
+            self.request.setUp()
+        self.addCleanup(self.request.tearDown)
+        self.request.data["experimental_editorial_stop_gate"] = True
+        self.request.save_request()
+        self.dw = self.fixture.dw
+        git = self.dw.git
+        # GitHub pull-request checkout is detached. Exercise actual HEAD and
+        # file validation while supplying the explicit opt-in branch label.
+        branch = patch.object(self.dw, "git", side_effect=lambda *args:
+                            "editorial-test" if args == ("branch", "--show-current") else git(*args))
+        branch.start()
+        self.addCleanup(branch.stop)
+
+    def test_opt_in_full_book_repairs_and_preserves_original_and_sources(self):
+        fixture = self.fixture
+
+        class Model(fixture.writer_test.ScriptedModel):
+            def generate(self, instructions, prompt, max_output_tokens=6000):
+                request = json.loads(prompt)
+                role = request["role"]
+                if role == "editorial_confirmation":
+                    self.calls.append(role)
+                    rows = [{"id": allegation["id"], "verdict": "CONFIRMED",
+                             "quote": "2 + 2 = 5", "reason": "Counting two pairs gives four and contradicts five."}
+                            for allegation in request["payload"]["allegations"]]
+                    return fixture.writer_test.loop.transport.ModelResult(
+                        "fixture-confirmation", "fixture-model", json.dumps({"findings": rows}),
+                        {"input_tokens": 10, "output_tokens": 10}, "scripted_fixture")
+                reply = super().generate(instructions, prompt, max_output_tokens)
+                if role != "review":
+                    return reply
+                value = json.loads(reply.text)
+                for row in value["findings"]:
+                    if row["status"] == "OPEN":
+                        row["edit_case"] = {"classification": "FACT_OR_MATH_ERROR", "baseline_quote": "2 + 2 = 5",
+                            "reader_harm": "The calculation supplies an erroneous number of items.",
+                            "minimal_remedy": "Count the two groups to obtain four objects.",
+                            "regression_risk": "Preserve the distinction between counts and decisions."}
+                return fixture.writer_test.loop.transport.ModelResult(
+                    reply.response_id, reply.model, json.dumps(value), reply.usage, reply.provider_kind)
+
+        model = Model()
+        result = self.dw.run(self.request.request, self.request.destination,
+                             research_model=fixture.StudyModel(), writer_model=model)
+        self.assertEqual(result["status"], "ENGINEERING_FIXTURE_ONLY_NOT_LIVE", result)
+        project = self.request.destination / "writer_project"
+        book = (project / "book.md").read_text()
+        self.assertIn("2 + 2 = 4", book)
+        self.assertNotIn("2 + 2 = 5", book)
+        self.assertIn(fixture.writer_test.DRAFT.strip(), [p.read_text().strip() for p in (project / "chapters").glob("*.md")])
+        self.assertEqual((project / "sources/native_001.md").read_text(), fixture.NATIVE)
+        self.assertLess(model.calls.index("editorial_confirmation"), model.calls.index("revise"))
+        self.assertEqual(model.calls.count("revise"), 1)
+        self.assertEqual(self.dw.status(self.request.destination)["engine_alignment"]["status"], "MATCH")
+
+    def test_opt_in_assisted_pause_resume_keeps_author_scope(self):
+        self.request.data.update(mode="ASSISTED_AUTHOR_GATED", authorized_scope="FIRST_SAMPLE_AFTER_DISCOVERY")
+        self.request.save_request()
+        original_model = self.fixture.writer_test.ScriptedModel
+        with patch.object(self.fixture.writer_test, "ScriptedModel", lambda: original_model(clean=True)):
+            digest = self.request.invoke_paused()
+        model = original_model(clean=True)
+        result = self.dw.resume(self.request.destination, digest, research_model=self.fixture.StudyModel(), writer_model=model)
+        self.assertEqual(result["status"], "AWAIT_AUTHOR_REVIEW", result)
+        self.assertFalse((self.request.destination / "writer_project/book.md").exists())
+        self.assertNotIn("revise", model.calls)
+        self.assertEqual(self.dw.status(self.request.destination)["project_status"], "AWAIT_AUTHOR_REVIEW")
+        with self.dw.editorial_execution_lock(self.request.destination, True):
+            with self.assertRaisesRegex(self.dw.Blocked, "EDITORIAL_PROJECT_ALREADY_RUNNING"):
+                self.dw.resume(self.request.destination, digest, writer_model=model)
 
 
 if __name__ == "__main__":

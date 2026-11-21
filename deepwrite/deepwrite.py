@@ -9,6 +9,7 @@ approve a manuscript, publish the work, or create an implicit author signature.
 from __future__ import annotations
 
 import argparse
+from contextlib import contextmanager
 import hashlib
 import importlib.util
 import json
@@ -174,6 +175,40 @@ def pins(project_id, commit: str, current: dict, *, channel=None, optional_modul
     }
 
 
+def verify_editorial_checkout(commit):
+    if git("branch", "--show-current") in ("", "main"):
+        raise Blocked("DEEPWRITE_EDITORIAL_STOP_REQUIRES_CANDIDATE_BRANCH")
+    if git("rev-parse", "HEAD") != commit:
+        raise Blocked("DEEPWRITE_EDITORIAL_CANDIDATE_REQUIRES_EXACT_CHECKOUT:" + commit)
+    pointer_paths = {"deepwrite/CURRENT.json", "wish-delivery/CURRENT.json"}
+    deepwrite_pointer = json.loads(git("show", commit + ":deepwrite/CURRENT.json"))
+    parent_pointer = json.loads(git("show", commit + ":wish-delivery/CURRENT.json"))
+    record_path = deepwrite_pointer["active_engine"]["release_record"]
+    record = json.loads(git("show", commit + ":" + record_path))
+    runtime = {row["path"] for row in record["runtime_files"]}
+    extra = {record_path, deepwrite_pointer["active_workbench_spec"], parent_pointer["active_spec"],
+             "deepwrite/tools/editorial_stop_gate.py", "deepwrite/discovery-gate/execute_codex_cli.py"}
+    for relative in sorted(runtime | pointer_paths | extra):
+        if (any(p.is_symlink() for p in (ROOT / relative, *(ROOT / relative).parents)) or
+                git("hash-object", "--no-filters", relative) != git("rev-parse", commit + ":" + relative)):
+            raise Blocked("DEEPWRITE_EDITORIAL_CANDIDATE_FILE_CHANGED:" + relative)
+
+
+@contextmanager
+def editorial_execution_lock(private_root, enabled):
+    if not enabled:
+        yield
+        return
+    import fcntl
+    lock_path = private_path(private_root / ".editorial-execution.lock")
+    with lock_path.open("a", encoding="utf-8") as lock:
+        try:
+            fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except BlockingIOError as error:
+            raise Blocked("DEEPWRITE_EDITORIAL_PROJECT_ALREADY_RUNNING") from error
+        yield
+
+
 def prepare(request_file: Path, private_root: Path, *, allow_fixture=False):
     """Create immutable input and two-stage config, never trust AI-made approval.
 
@@ -186,6 +221,10 @@ def prepare(request_file: Path, private_root: Path, *, allow_fixture=False):
     raw_request = request_file.read_bytes()
     request = json.loads(raw_request)
     mode = validate_request(request)
+    editorial_opt_in = request.get("experimental_editorial_stop_gate", False)
+    commit = git("rev-parse", "HEAD")
+    if editorial_opt_in:
+        verify_editorial_checkout(commit)
     files = source_bytes(request)
     if private_root.exists():
         raise Blocked("DEEPWRITE_PROJECT_ALREADY_EXISTS_USE_RESUME_OR_NEW_ID")
@@ -196,14 +235,10 @@ def prepare(request_file: Path, private_root: Path, *, allow_fixture=False):
     (project / "sources").mkdir()
     evidence.mkdir()
     (evidence / "USER_REQUEST.json").write_bytes(raw_request)
-    commit = git("rev-parse", "HEAD")
     ident = official_identity()
-    editorial_opt_in = request.get("experimental_editorial_stop_gate", False)
     if editorial_opt_in:
         # A candidate checkout intentionally differs from the pinned stable release:
         # do not resolve the stable runtime before selecting this explicit opt-in.
-        if git("branch", "--show-current") in ("", "main"):
-            raise Blocked("DEEPWRITE_EDITORIAL_STOP_REQUIRES_CANDIDATE_BRANCH")
         channel = "CANDIDATE_OPT_IN"
     else:
         channel = effective_channel()
@@ -324,6 +359,10 @@ def project_engine_lock(path: Path, *, enforce=True):
             if start.get("code_commit") != commit or ("engine_lock" in start and start["engine_lock"] != locked):
                 raise Blocked("DEEPWRITE_PROJECT_START_LOCK_CONFLICTS_WITH_FROZEN_PIN")
         current = official_identity()["formal_engine"]
+        if config.get("modules", {}).get("editorial_stopping"):
+            verify_editorial_checkout(commit)
+        elif enforce and config.get("channel") == "STABLE":
+            effective_channel()
         result = {"status": "MATCH" if locked == current else "PINNED_DIFFERENT_ENGINE_REQUIRES_ORIGINAL_CHECKOUT",
                   "project_engine": locked, "current_engine": current,
                   "original_checkout_commit": commit, "lock_source": "FROZEN_PROTOCOL_COMMIT_CURRENT"}
@@ -507,6 +546,11 @@ def finalize_execution(project, evidence, final, result, *, research_model=None,
 def run(request_file: Path, private_root: Path, *, research_model=None, writer_model=None):
     """One invocation performs discovery and E18; no manual source module flags."""
     project, evidence, base = prepare(request_file, private_root)
+    with editorial_execution_lock(project.parent, base.get("modules", {}).get("editorial_stopping")):
+        return execute_new_project(project, evidence, base, research_model=research_model, writer_model=writer_model)
+
+
+def execute_new_project(project, evidence, base, *, research_model=None, writer_model=None):
     discovery = load("deepwrite_one_call_discovery", DEEPWRITE / "candidates/source-first/architecture_discovery.py")
     research_evidence = evidence / "research"
     try:
@@ -517,6 +561,8 @@ def run(request_file: Path, private_root: Path, *, research_model=None, writer_m
                 "private_project": str(project), "next_step": "INSPECT_FROZEN_DISCOVERY_FAILURE"}
     if not preflight["status"].startswith("ENGINEERING_STRUCTURE"):
         raise Blocked("DEEPWRITE_DISCOVERY_UNFINISHED")
+    if base.get("modules", {}).get("editorial_stopping"):
+        verify_editorial_checkout(base["pins"]["protocols"]["deepwrite"]["commit"])
     writer = load("deepwrite_one_call_writer", DEEPWRITE / "tools/writing_loop_experimental.py")
     final = json.loads((research_evidence / "writer_config.json").read_text("utf-8"))
     result = writer.WritingLoop(project, final, model=writer_model).run()
@@ -618,18 +664,19 @@ def resume(path: Path, expected_state_sha: str, author_approval_receipt=None, au
     frozen = path / "discovery_evidence" / "research" / "writer_config.json"
     if not frozen.is_file():
         raise Blocked("DEEPWRITE_NO_FROZEN_DISCOVERY_CONFIG_TO_RESUME")
-    project_engine_lock(path)
-    writer = load("deepwrite_one_call_resume_writer", DEEPWRITE / "tools/writing_loop_experimental.py")
     if not re.fullmatch(r"[0-9a-f]{64}", str(expected_state_sha)):
         raise Blocked("DEEPWRITE_EXTERNAL_EXPECTED_STATE_SHA_REQUIRED")
     final = json.loads(frozen.read_text("utf-8"))
-    result = writer.WritingLoop(project, final,
-                                model=writer_model, expected_state_sha=expected_state_sha,
-                                author_approval_receipt=author_approval_receipt,
-                                expected_author_approval_sha=author_approval_sha256).run()
-    receipt = finalize_execution(project, path / "discovery_evidence", final, result,
-                                 research_model=research_model, writer_model=writer_model)
-    save_execution_evidence(path / "discovery_evidence" / "RESUME_RESULT.json", receipt)
+    with editorial_execution_lock(path, final.get("modules", {}).get("editorial_stopping")):
+        project_engine_lock(path)
+        writer = load("deepwrite_one_call_resume_writer", DEEPWRITE / "tools/writing_loop_experimental.py")
+        result = writer.WritingLoop(project, final,
+                                    model=writer_model, expected_state_sha=expected_state_sha,
+                                    author_approval_receipt=author_approval_receipt,
+                                    expected_author_approval_sha=author_approval_sha256).run()
+        receipt = finalize_execution(project, path / "discovery_evidence", final, result,
+                                     research_model=research_model, writer_model=writer_model)
+        save_execution_evidence(path / "discovery_evidence" / "RESUME_RESULT.json", receipt)
     return receipt
 
 

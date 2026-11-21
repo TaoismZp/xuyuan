@@ -1,6 +1,20 @@
 # DeepWrite｜有效改稿 vs 版本冲动：编辑收束门候选（2026-11-21）
 
-**状态：CANDIDATE_OPT_IN / 28_NEGATIVE_CONTROLS_PASS_ON_CODE_COMMIT_dd9c049e / FORMAL_RELEASE_RAIL_FAILED / HUMAN_QUALITY_UNVERIFIED / NOT_ACTIVE.**
+**状态：CANDIDATE_OPT_IN / FORMAL_RELEASE_BLOCKED / HUMAN_QUALITY_UNVERIFIED.**
+
+## PR #29 独立复核与续作
+
+原候选冻结为 `b86d2d8732105d2423eec1f363e93167621a0ef0`。审查发现，模型能以 `reader_` ID 或 `computable` 类型跳过原证据门，轻微开放意见可能搭载硬问题改稿，同一缺陷用重叠引文可换名重提，两次软返工上限未跨审稿范围累计。恢复时同一冻结审稿会重算不同的回执。原专用 CI 通过。正式 CI 因 `ACTIVE_RUNNER_BYTES_MISMATCH` 失败，所有者检查返回 `NOT_READY_MAIN_PR`。主分支规则 API 显示 `required_status_checks=[]`、`strict=false`，实际保护仍低于发布协议要求。[原候选专用 CI](https://github.com/TaoismZp/xuyuan/actions/runs/44864055132) · [正式 CI](https://github.com/TaoismZp/xuyuan/actions/runs/44864055136) · [主分支规则](https://github.com/TaoismZp/xuyuan/rules/27040989)
+
+改后，首次对原文、来源与时序提出候选问题，重大主张由新模型调用重新核对原文和损害。精确唯一引文可恢复段落编号，歧义和引文缺失留待复查。一般风格偏好可 KEEP。原回执、改稿尝试及跨阶段软返工计数在私有工作区冻结。候选须明确请求、检出原提交并核对运行文件，恢复期间同一项目加执行锁。修改后对比整章前后、邻章、来源和新增故事冗余，保留旧稿、候选及实际 diff。局部证据可复核，语义判断仍由模型作出。独立人类阅读和作者判断均待取得。
+
+首次真实对照用 `gpt-6.2-sol` 复跑原候选与 `4632a011cf0bf2b987e8a6d5c483c245bc4e5c83`。两边都首轮发现后见信息误用及单一路径收益不能证明策略有效；修正版独立列出并再次定位来源给出的两类可用行动。两边的无重大缺陷样稿均 2/2 KEEP，自动改稿均 0。原候选共 55,314 输入、1,124 输出 token；修正版含额外核对共 71,671 输入、2,540 输出 token。固定每次请求上限 4,200，CLI 事后计量。本对照只测首次审稿和改稿前决定，拦截实际 revise。重复 B 使用两份新审稿会话。样本不足以证明更高的发现率、更少的误报或书稿质量增益。
+
+复跑脚本 `deepwrite/tests/editorial_live_trial.py` 只含公开可复用的虚构材料和本地运行说明。精确候选工程入口回归使用 `python3 -B -m unittest discover -s deepwrite/tests`。需另外执行全书真实模型、完整公平作品对照和独立读者盲评，保留真实失败状态。`PASS_ENGINEERING` 指工程测试，`PASS_SCOPED` 指复核范围内的结论，`KEEP_NO_CHURN` 指本次无足够理由改稿，`HOLD_UNVERIFIED` 指材料不足或待明确的缺陷。作品质量继续标 `PENDING_HUMAN_READER`、`PENDING_AUTHOR` 或 `FAIL`，视实际验收而定。
+
+发布类型为 `QUALITY_BEHAVIOR_CHANGE`。先完成候选作品质量证据审查，再由所有者通过正式协议处理授权、保护配置与发布身份。保留草稿，两个 CURRENT、正式记录和现有项目的钉住原样保留。
+
+下文保留原候选的设计和当时的运行证据。
 
 权威正式指针：`main:deepwrite/CURRENT.json` 在开发前核实为工作台 v0.3、引擎 v0.3.1；上游 `main:wish-delivery/CURRENT.json` 正式 v7.6。**本分支不修改两个CURRENT，也不覆盖任何私人稿。** 当前项目完整恢复入口是本文件，`deepwrite/RECOVERY.md` 是上层目录。
 
