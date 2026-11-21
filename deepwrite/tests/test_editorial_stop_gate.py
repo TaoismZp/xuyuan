@@ -325,15 +325,19 @@ class EditorialInvocationTests(unittest.TestCase):
                         "fixture-confirmation", "fixture-model", json.dumps({"findings": rows}),
                         {"input_tokens": 10, "output_tokens": 10}, "scripted_fixture")
                 reply = super().generate(instructions, prompt, max_output_tokens)
-                if role != "review":
+                if role not in {"review", "source_evidence_review"}:
                     return reply
                 value = json.loads(reply.text)
-                for row in value["findings"]:
-                    if row["status"] == "OPEN":
-                        row["edit_case"] = {"classification": "FACT_OR_MATH_ERROR", "baseline_quote": "2 + 2 = 5",
-                            "reader_harm": "The calculation supplies an erroneous number of items.",
-                            "minimal_remedy": "Count the two groups to obtain four objects.",
-                            "regression_risk": "Preserve the distinction between counts and decisions."}
+                if role == "source_evidence_review":
+                    if "omitted_locations" not in request["payload"]:
+                        value["source_evidence"].pop()
+                else:
+                    for row in value["findings"]:
+                        if row["status"] == "OPEN":
+                            row["edit_case"] = {"classification": "FACT_OR_MATH_ERROR", "baseline_quote": "2 + 2 = 5",
+                                "reader_harm": "The calculation supplies an erroneous number of items.",
+                                "minimal_remedy": "Count the two groups to obtain four objects.",
+                                "regression_risk": "Preserve the distinction between counts and decisions."}
                 return fixture.writer_test.loop.transport.ModelResult(
                     reply.response_id, reply.model, json.dumps(value), reply.usage, reply.provider_kind)
 
@@ -349,6 +353,8 @@ class EditorialInvocationTests(unittest.TestCase):
         self.assertEqual((project / "sources/native_001.md").read_text(), fixture.NATIVE)
         self.assertLess(model.calls.index("editorial_confirmation"), model.calls.index("revise"))
         self.assertEqual(model.calls.count("revise"), 1)
+        self.assertEqual(model.calls.count("source_evidence_review"), 2)
+        self.assertTrue((project / "reader_reviews/alpha_source_0_evidence.first.json").is_file())
         self.assertEqual(self.dw.status(self.request.destination)["engine_alignment"]["status"], "MATCH")
 
     def test_opt_in_assisted_pause_resume_keeps_author_scope(self):

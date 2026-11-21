@@ -505,7 +505,45 @@ class WritingLoop:
                    "task": self.reader_guard.review_instructions(contract, art, stage)}
         if sources is not None:
             payload["source_texts"] = sources
-        data = self.call(key, "source_evidence_review" if stage == "SOURCE_LEARNING" else "reader_source_review", payload)
+        if self.editorial_stop_guard is not None:
+            task = payload["task"]
+            task["required_source_locations"] = {concept: task["source_dimensions"]
+                                                 for concept in task["required_source_concepts"]}
+            task["task"] += (
+                " Return one source_evidence row for every listed concept and each of its listed dimensions. "
+                "A short exact excerpt can support more than one row only when it shows each of those dimensions. "
+                "If the real text does not support a row, omit it and locate a material source defect when warranted. "
+                "Keep explanations concise so evidence fits in the response budget.")
+        role = "source_evidence_review" if stage == "SOURCE_LEARNING" else "reader_source_review"
+        response_key = key
+        data = self.call(response_key, role, payload)
+        review, result, evidence = self.evaluate_reader_response(art, artifact, payload, stage, sources, data)
+        if (self.editorial_stop_guard is not None and result["errors"] and not result["blocking_findings"]
+                and all(error.startswith("MISSING_LOCATED_SOURCE_EVIDENCE:") for error in result["errors"])):
+            first_path = "reader_reviews/" + key + ".first.json"
+            self.write(first_path, json_bytes({"artifact": relative, "review": review, "result": result,
+                                               **evidence, "human_acceptance": "NOT_RUN"}))
+            followup = {**payload, "omitted_locations": result["errors"], "first_review": review,
+                        "followup_task": "Re-read the same unchanged text. Return a complete new report. "
+                                         "Locate each omitted item if the actual text supports it. Preserve valid prior "
+                                         "observations. Leave unsupported dimensions unverified; never invent evidence."}
+            response_key = key + "_locate_missing"
+            data = self.call(response_key, role, followup)
+            review, result, evidence = self.evaluate_reader_response(art, artifact, payload, stage, sources, data)
+            evidence["earlier_unresolved_review"] = first_path
+        if self.editorial_stop_guard is not None and self.path(relative).read_bytes() != artifact:
+            raise Blocked("READER_REVIEW_ARTIFACT_CHANGED_DURING_CALL")
+        path = "reader_reviews/" + key + ".json"
+        self.write(path, json_bytes({"artifact": relative, "review": review, "result": result,
+                                    **evidence, "human_acceptance": "NOT_RUN"}))
+        self.event("EVIDENCE" if stage == "SOURCE_LEARNING" else "READER_SOURCE_REVIEW", art,
+                   result["status"], {"review": path, "response": "calls/" + response_key + ".response.json"})
+        if self.editorial_stop_guard is not None and result["status"] == "HOLD_REVIEW_EVIDENCE":
+            raise Blocked("EDITORIAL_READER_HOLD_UNVERIFIED_" + key)
+        return review, result
+
+    def evaluate_reader_response(self, art, artifact, payload, stage, sources, data):
+        text = artifact.decode("utf-8")
         review = parse_object(data["text"])
         reported_identity, resolved_locations = None, []
         if self.editorial_stop_guard is not None:
@@ -531,21 +569,11 @@ class WritingLoop:
                                                "quote": row["quote"]})
                     row["paragraph"] = candidates[0]
             self.verify_files()
-            if self.path(relative).read_bytes() != artifact:
-                raise Blocked("READER_REVIEW_ARTIFACT_CHANGED_DURING_CALL")
         review["reviewer"] = data["provider_kind"] + ":" + data["model"] + ":" + data["response_id"]
-        result = self.reader_guard.evaluate(contract, art, text, review, stage=stage, source_texts=sources)
-        path = "reader_reviews/" + key + ".json"
-        self.write(path, json_bytes({"artifact": relative, "review": review, "result": result,
-                                    **({"reported_identity": reported_identity,
-                                        "resolved_locations": resolved_locations,
-                                        "request_sha256": data["request_sha256"]} if reported_identity is not None else {}),
-                                    "human_acceptance": "NOT_RUN"}))
-        self.event("EVIDENCE" if stage == "SOURCE_LEARNING" else "READER_SOURCE_REVIEW", art,
-                   result["status"], {"review": path, "response": "calls/" + key + ".response.json"})
-        if self.editorial_stop_guard is not None and result["status"] == "HOLD_REVIEW_EVIDENCE":
-            raise Blocked("EDITORIAL_READER_HOLD_UNVERIFIED_" + key)
-        return review, result
+        result = self.reader_guard.evaluate(payload["reader_contract"], art, text, review, stage=stage, source_texts=sources)
+        evidence = ({"reported_identity": reported_identity, "resolved_locations": resolved_locations,
+                     "request_sha256": data["request_sha256"]} if reported_identity is not None else {})
+        return review, result, evidence
 
     def prepare_chapter(self, art, row, sources, research, plan):
         self.event("DISCOVERY", art, "ENTERED")

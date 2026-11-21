@@ -12,6 +12,8 @@
 
 复跑脚本 `deepwrite/tests/editorial_live_trial.py` 只含公开可复用的虚构材料和本地运行说明。精确候选工程入口回归使用 `python3 -B -m unittest discover -s deepwrite/tests`。需另外执行全书真实模型、完整公平作品对照和独立读者盲评，保留真实失败状态。`PASS_ENGINEERING` 指工程测试，`PASS_SCOPED` 指复核范围内的结论，`KEEP_NO_CHURN` 指本次无足够理由改稿，`HOLD_UNVERIFIED` 指材料不足或待明确的缺陷。作品质量继续标 `PENDING_HUMAN_READER`、`PENDING_AUTHOR` 或 `FAIL`，视实际验收而定。
 
+真实单章写书试跑在下笔前发现来源审阅漏交了 15 个定位，冻结实现 `30ba3196ffd15974d5b914189fc677c53f93428a` 的完整运行因此 `HOLD_UNVERIFIED`。同一稿不重写，专门补一次实际引文位置。候选现在把应复核的概念与维度明确列出，保留第一份审阅，请模型对同一冻结文字补核一次。假引文、未解决的实质问题和其他证据异常仍由原门阻拦。第二次定位也失败则保留 HOLD。工程全链测试覆盖了漏交一次位置、保存原回执、补核成功、真正修正算术并完成装订；结果为 `PASS_ENGINEERING`。此处不能据此认定真实全书完成。
+
 发布类型为 `QUALITY_BEHAVIOR_CHANGE`。先完成候选作品质量证据审查，再由所有者通过正式协议处理授权、保护配置与发布身份。保留草稿，两个 CURRENT、正式记录和现有项目的钉住原样保留。
 
 下文保留原候选的设计和当时的运行证据。
