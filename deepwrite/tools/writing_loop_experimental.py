@@ -813,7 +813,7 @@ class WritingLoop:
             proposal = self.editorial_stop_guard.audit_initial(
                 initial.get("findings"),
                 {art: self.path(rel).read_text() for art, rel in current.items()},
-                self.state.get("editorial_stop_history", {}))
+                self.state.get("editorial_stop_history", {}), scope=key)
             self.write("reviews/" + key + ".editorial_stop.json", json_bytes(proposal))
             self.event("EDITORIAL_STOP_GATE", key, proposal["status"],
                        {"receipt": "reviews/" + key + ".editorial_stop.json",
