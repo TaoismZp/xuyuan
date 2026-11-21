@@ -138,6 +138,8 @@ class WritingLoop:
         self.cfg_sha = digest(json_bytes(config))
         self.stop_after, self.steps_this_turn = stop_after, 0
         self.guard = module("e18_closeout", DEEPWRITE / "candidates/e15-review-closure/review_closure_guard.py")
+        self.editorial_stop_guard = (module("e18_editorial_stop", DEEPWRITE / "tools/editorial_stop_gate.py")
+                                    if config.get("modules", {}).get("editorial_stopping") else None)
         self.reader_guard = module("e18_reader_source", DEEPWRITE / "candidates/e23-frame-wiring/reader_source_gate.py")
         self.source_first_guard = (module("e18_source_first", DEEPWRITE / "candidates/source-first/source_first_gate.py")
                                    if config.get("modules", {}).get("source_first_architecture") else None)
@@ -262,7 +264,9 @@ class WritingLoop:
         if c["channel"] == "STABLE":
             self.assert_stable_entry()
         supported = {"e18_loop", "reader_source_transfer", "e23_frame", "e23_perspective", "e23",
-                     "source_first_architecture"}
+                     "source_first_architecture", "editorial_stopping"}
+        if c.get("modules", {}).get("editorial_stopping") and c["channel"] == "STABLE":
+            raise Blocked("EDITORIAL_STOP_GATE_NOT_YET_IN_FORMAL_STABLE_RELEASE")
         if c.get("modules", {}).get("source_first_architecture") and c["channel"] == "STABLE":
             resolved = module("e18_released_source_first", DEEPWRITE / "release/activation.py").resolve(DEEPWRITE.parent)
             required = {"deepwrite/deepwrite.py",
@@ -398,6 +402,8 @@ class WritingLoop:
         loaded = {"e18_loop": self.file_identity("tools/writing_loop_experimental.py"),
                   "reader_source_transfer": self.file_identity("candidates/e23-frame-wiring/reader_source_gate.py"),
                   "actual_file_closeout": self.file_identity("candidates/e15-review-closure/review_closure_guard.py")}
+        if requested.get("editorial_stopping"):
+            loaded["editorial_stopping"] = self.file_identity("tools/editorial_stop_gate.py")
         if requested.get("source_first_architecture"):
             loaded["source_first_architecture"] = self.file_identity("candidates/source-first/source_first_gate.py")
         if any(requested.get(name) for name in ("e23", "e23_frame", "e23_perspective")):
@@ -789,7 +795,13 @@ class WritingLoop:
                    "for claims, source consistency and overstatement; do not require a chapter's source-learning template there. "
                    "Mathematical correctness alone is not thought quality. Flag formulaic prose "
                    "without imposing a new template. G0/G1/G2/G3/G4/G6 still govern. "
-                   "Do not invent defects to force rewriting.",
+                   "Do not invent defects to force rewriting. If candidate module editorial_stopping is "
+                   "enabled, for each OPEN MAJOR/CRITICAL model_review finding supply edit_case: "
+                   "{classification: FACT_OR_MATH_ERROR / EX_ANTE_CAUSAL_ERROR / SOURCE_MECHANISM_MISSING / "
+                   "READER_CAUSAL_GAP / STYLE_ONLY, baseline_quote: exact substring of numbered paragraph, "
+                   "reader_harm: concrete misinterpretation, minimal_remedy: smallest necessary change, "
+                   "regression_risk: what might become worse}. STYLE_ONLY is not a mandatory repair; "
+                   "use KEEP with a reason when no genuine defect evidence exists.",
                    "reader_contract": self.config["reader_prior_knowledge_contract"]}
         if known:
             payload["caller_frozen_known_findings"] = known
@@ -797,6 +809,20 @@ class WritingLoop:
         reviewed = self.call(key + "_review", "review", payload)
         identity = reviewed["provider_kind"] + ":" + reviewed["model"] + ":" + reviewed["response_id"]
         initial = parse_object(reviewed["text"])
+        if self.editorial_stop_guard is not None:
+            proposal = self.editorial_stop_guard.audit_initial(
+                initial.get("findings"),
+                {art: self.path(rel).read_text() for art, rel in current.items()},
+                self.state.get("editorial_stop_history", {}))
+            self.write("reviews/" + key + ".editorial_stop.json", json_bytes(proposal))
+            self.event("EDITORIAL_STOP_GATE", key, proposal["status"],
+                       {"receipt": "reviews/" + key + ".editorial_stop.json",
+                        "semantic_quality": "UNVERIFIED", "human_acceptance": "NOT_RUN"})
+            if proposal["status"] != "PASS_PROPOSALS_ONLY":
+                raise Blocked("EDITORIAL_STOP_HOLD_UNGROUNDED_OR_REPEATED_PROPOSAL_" + key)
+            initial["findings"] = proposal["findings"]
+            self.state.setdefault("editorial_stop_history", {}).update(proposal["new_history"])
+            self.save_state()
         initial["findings"] = initial.get("findings", []) + reader_rows
         if known:
             reported = initial.get("findings", [])
@@ -835,6 +861,13 @@ class WritingLoop:
                                   "Repair the findings while preserving sound prose. Original remains frozen."}
                 self.save_text_call(key + "_" + art + "_revise_" + str(turn+1), "revise",
                                     prompt, path, manuscript=True)
+                if self.editorial_stop_guard is not None:
+                    delta = self.editorial_stop_guard.verify_edit_result(
+                        self.path(old).read_text(), self.path(path).read_text())
+                    self.write("reviews/" + key + "." + art + "." + str(turn+1)
+                               + ".editorial_delta.json", json_bytes(delta))
+                    if delta["status"] != "CHANGED_NEEDS_SEMANTIC_RECHECK":
+                        raise Blocked("EDITORIAL_STOP_HOLD_NON_SUBSTANTIVE_REWRITE_" + art)
                 diff = "".join(difflib.unified_diff(self.path(old).read_text().splitlines(True),
                         self.path(path).read_text().splitlines(True), fromfile=old, tofile=path))
                 self.write("diffs/" + art + "." + key + "." + str(turn+1) + ".patch", diff)
