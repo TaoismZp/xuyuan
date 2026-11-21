@@ -1,0 +1,69 @@
+# DeepWrite｜有效改稿 vs 版本冲动：编辑收束门候选（2026-11-21）
+
+**状态：CANDIDATE_OPT_IN / ENGINEERING_TEST_PENDING / HUMAN_QUALITY_UNVERIFIED / NOT_ACTIVE.**
+
+权威正式指针：`main:deepwrite/CURRENT.json` 在开发前核实为工作台 v0.3、引擎 v0.3.1；上游 `main:wish-delivery/CURRENT.json` 正式 v7.6。**本分支不修改两个CURRENT，也不覆盖任何私人稿。** 当前项目完整恢复入口是本文件，`deepwrite/RECOVERY.md` 是上层目录。
+
+## 问题与目标锁
+
+一套带返工循环的长书系统，如果没有停止机制，会把“每次继续都会提出一个新的改善点”误当成提升质量。首次16/16整书阅读可以真实完成，却不等于事前信息约束、跨章文学体验与读者价值都已受审；算术PASS不等于核心推理PASS。已有改稿又会产生新冗余，下一轮再修自己带来的重复，造成连续多个“质量提升”假象。
+
+**目标是两种能力同时提高**：
+1. 第一遍就尽可能发现真正的重大缺口：源知识独立解释、当时信息/经济决策、数学事实、读者误解路径、跨章增量、文学节奏，同轮审查。
+2. 可靠拒绝无价值迭代：没有可定位伤害就KEEP；风格偏好不产生新R；旧问题无新证据不得换名重开；不能自己修完自己验收就宣称读者受益。
+
+这不是要求完稿“零问题”，而是**没有值得现在再改、证据又充分的关键缺陷，就应该停**。作者/真实读者对文学增益保留最终决定权。
+
+## 改稿前的证据门（接真实调用链，不是新表格替代正文）
+
+候选模块：`deepwrite/tools/editorial_stop_gate.py`；真实执行循环 `deepwrite/tools/writing_loop_experimental.py:review_cycle` 在任何`revise` 模型调用以前，检验`edit_case`、记录留存与身份；成功改稿后再检测是否真的改变了非空白实质文字，之后仍用现有E15及三层读者复核。不能用`semantic_quality=UNVERIFIED`自称思想质量PASS。
+
+需要的依据字段（仅OPEN MAJOR/CRITICAL模型审稿）：
+```json
+{
+  "classification": "FACT_OR_MATH_ERROR | EX_ANTE_CAUSAL_ERROR | SOURCE_MECHANISM_MISSING | READER_CAUSAL_GAP | STYLE_ONLY",
+  "baseline_quote": "必须是对应原文段落中真实存在的片段",
+  "reader_harm": "旧文究竟会导致什么错误认识或遗漏",
+  "minimal_remedy": "最小必要修正与验证方式",
+  "regression_risk": "改稿可能损失的机制、声音、推导或节奏"
+}
+```
+模型填一套貌似完整的字段并不构成事实核实或独立盲读；机器只验证**字段、段落真实存在、是否重复提案、是否有实质文本改动**。确切来源真实性、逻辑深度和“更好看”仍要单独审校。
+
+- `FACT_OR_MATH_ERROR`、`EX_ANTE_CAUSAL_ERROR`：真实影响理解与决策的可核问题，尽早修复。
+- `SOURCE_MECHANISM_MISSING`、`READER_CAUSAL_GAP`：有明确读者损害的候选深修；需先比较旧稿/新版，不凭模型满意度宣称收益。
+- `STYLE_ONLY`：自动降为有记录的KEEP，不为了改而改。
+- 找不到对应原文、空洞的伤害说明、缺少最小修法：**HOLD**，而不是让模型假装发现大问题或轻描淡写为通过。
+- 相同书稿片段、相同artifact的提案重复出现：**HOLD_REPEAT**；如果真的重新出现新事实，应经独立外部证据另行确认，不能靠模型改ID。
+- `NOTE/MINOR/KEEP` 及已有独立reader gate不因本模块升级为强制改稿；已有内容保全、源头审查、人工授权仍不受影响。
+- 事实/数学修复仍不能保证全书文学风格更好，需记录改稿代价。
+
+## 真实可调用模式与版本边界
+
+作者现有默认 `deepwrite/deepwrite.py run ...` **不受本候选修改影响**。未来若正式发布应通过release record＋CI＋真人质量实验；本候选阶段需要在私有新实验项目、明确试验授权下的请求JSON增加：
+
+```json
+"experimental_editorial_stop_gate": true
+```
+
+这只能在**已检出本候选分支、并具备Git/Python/模型/私有目录的授权执行环境**直接调用候选`python3 deepwrite/deepwrite.py run ...`；不得借正式stable activation冒用新模块，不能直接替旧项目改模块、稿件或项目钉住的引擎。请求文件必须保留原始SHA和合法作者范围。候选入口自动把工程通道标 `CANDIDATE_OPT_IN`，并在项目私有状态/配置钉住代码提交和模块身份；运行失败留可恢复证据。
+
+**停止原因不是胜利宣言。** 如果因缺真实证据而HOLD，标记`REVIEW_INCOMPLETE`/作者或独立读者PENDING；不能把没有发现的问题默认为“全书出版质量PASS”。
+
+## 测试与防止流程膨胀
+
+- 负控：数学无错但事后信息误导（应可提案）、用根本不存在的原文取证（HOLD）、空洞理由（HOLD）、把风格偏好升为重大缺陷（KEEP）、同一错误改名重复出现（HOLD）、没有重大问题（无强制修稿）、空白改写（HOLD）。
+- 代码/身份：在真实writer的review和revision调用点有hook，writer_config冻结选用的模块，老项目不因脚本升级而静默变更。
+- 工程回归：`python -m unittest discover -s deepwrite/tests -p test_editorial_stop_gate.py -v`（20项候选负控）。PR Action `.github/workflows/editorial-stop-gate-candidate.yml` 测试。**测试结果必须以真实Actions run、实际pass/fail和SHA为准。**
+- 质量对照：同样素材/模型/预算下，冻结一本稳定旧稿，比较(1)无门禁旧流程；(2)启用候选。通过两类考试：
+  - **抓漏**：包含事前/事后偷换的隐含逻辑缺陷能否在**首次**全书审稿抓出，而非第30轮；
+  - **停手**：无明确重要缺陷的版本能否理直气壮地KEEP，是否减少错误翻案和自己引入冗余。
+- 盲对照应把“修正真实错误”与“新增文学好处”分开，并记录模型/人工时间、成本、全书连续阅读负反馈、原始稿和候选稿SHA；3个未用于设计的陌生题材不能被熟悉材料的高评分替代。
+- 任何三层真实读者和作者评分未获得前：`ENGINEERING_ONLY`，不要声称已经证明质量提高。若提升不够而流程成本更高，则删掉/简化本模块。
+
+## 可靠身份与下一唯一关卡
+
+- 试验代码位于GitHub候选分支 `deepwrite/editorial-no-churn-gate-20261121`。不能直接合并或晋级`main:deepwrite/CURRENT.json`。本公共仓只保存抽象规则/虚构测试，不保存私人书稿、旧项目差异、秘密或真实读者身份。
+- 首次保存时尚待PR Actions CI实际执行，**ENGINEERING_TEST_PENDING**；自动模型整本书E1、三陌生题材E2和作者/真人盲审均 **PENDING**。
+- 唯一NEXT：**核实PR上的真实CI及从候选检出实际run/reader guard结果，对发现/停手机制做负控；如果不能证明工程回归PASS，不推广。工程过关后用私有项目做同预算新题材对照，读者增益无证不晋级正式主线。**
+
