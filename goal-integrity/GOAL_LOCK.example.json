@@ -1,0 +1,15 @@
+{
+  "project_id": "example-writing-review",
+  "goal_version": "v1",
+  "user_authorized_goal": "提升作品思想深度和文学质量，不以管理文件替代正文",
+  "non_goals": [
+    "只核对来源就宣称文学总审完成",
+    "只提交Git就宣称质量提升"
+  ],
+  "quality_evidence": [
+    "正文实质修改与前稿对比",
+    "独立读者评价"
+  ],
+  "approval": "CANDIDATE_UNCONFIRMED",
+  "privacy": "PUBLIC_GENERIC"
+}
