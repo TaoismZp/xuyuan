@@ -1,0 +1,19 @@
+name: Goal Integrity Candidate Tests
+on:
+  pull_request:
+    paths:
+      - 'goal-integrity/**'
+      - '.github/workflows/goal-integrity-candidate.yml'
+  workflow_dispatch:
+jobs:
+  static-regression:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Run candidate drift tests
+        run: node --test goal-integrity/tests/gate.test.mjs
