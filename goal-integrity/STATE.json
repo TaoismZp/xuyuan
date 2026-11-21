@@ -1,0 +1,29 @@
+{
+  "project_id": "GLOBAL-GOAL-INTEGRITY-20261121",
+  "updated_at": "2026-11-21",
+  "status": "CANDIDATE_STATIC_REGRESSION_PASS_RUNTIME_UNVERIFIED",
+  "governing_protocol": "wish-delivery/CURRENT.json v7.6",
+  "candidate_branch": "feat/goal-integrity-guard-20261121",
+  "gates": {
+    "design": "PASS_SCOPED",
+    "static_code": "PASS_SCOPED_CI",
+    "simulation": "PASS_SCOPED_24_TEST_CASES_INCLUDES_10_SEQUENTIAL_SIMULATED_TURNS",
+    "real_execution_chain": "UNVERIFIED",
+    "ten_turn_live_test": "UNVERIFIED",
+    "independent_supervision": "PENDING",
+    "author_acceptance": "PENDING"
+  },
+  "next_executable_action": "Implement actual trusted-context pre-action integration for an authorized execution chain (cannot infer semantic alignment from actor booleans); run real multi-turn adversarial recovery and independent supervision; do not promote official protocol without explicit approval.",
+  "privacy": "PUBLIC_GENERIC_ONLY",
+  "activation": "NOT_ACTIVE",
+  "latest_static_evidence": {
+    "pr": 28,
+    "head_commit": "93f18acec6d3d9150ff992a0916d8739ddc86540",
+    "workflow_run_id": 44859203233,
+    "workflow_name": "Goal Integrity Candidate Tests",
+    "conclusion": "success",
+    "test_cases": 24,
+    "test_scope": "STATIC_AND_SIMULATED_NOT_LIVE",
+    "mainline_pilot": "PRIVATE_SUNZI_R23_TO_R24_MANUAL_CONTENT_DELIVERY_NOT_AUTOMATIC_GUARD_ENFORCEMENT"
+  }
+}
